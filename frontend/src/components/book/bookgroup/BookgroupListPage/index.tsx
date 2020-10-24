@@ -1,20 +1,30 @@
 import React from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { useStateValue, addBookgroup, setSelectedBookgroup, clearSelectedBookgroup, setPage } from "../../../../state";
 import { Bookgroup, BookgroupNoID } from "../../../../types/book";
-import { create } from "../../../../services/book/bookgroups";
-import BookgroupDetailsPage from "../BookgroupDetailsPage";
-import AddBookgroupModal from "../AddBookgroupModal";
+
+import { RootState } from '../../../../state/store';
+import { setPage } from '../../../../state/page/actions';
+import { addBookgroup } from '../../../../state/book/bookgrouplist/actions';
+import { setSelectedBookgroup, clearSelectedBookgroup } from '../../../../state/book/selectedbookgroup/actions';
+
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { backgroundColor, styleMainMenu } from "../../../../constants";
+
+import BookgroupDetailsPage from "../BookgroupDetailsPage";
+import AddBookgroupModal from "../AddBookgroupModal";
 
 
 const BookgroupListPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | undefined>();
-    const [{ bookgroups, bookgroup }, dispatch] = useStateValue();
+    const dispatch = useDispatch();
+
+    const mainpage = useSelector((state: RootState) => state.page.mainpage);      
+    const bookgroups = useSelector((state: RootState) => state.bookgroups);      
+    const bookgroup = useSelector((state: RootState) => state.bookgroup);      
 
     const openModal = (): void => setModalOpen(true);
     const closeModal = (): void => {
@@ -23,8 +33,7 @@ const BookgroupListPage: React.FC = () => {
     };
 
     const handleNewBookgroup = async (values: BookgroupNoID) => {
-      const newBookgroup = await create(values);
-      dispatch(addBookgroup(newBookgroup));
+      dispatch(addBookgroup(values));
       closeModal();
     };
 
@@ -34,9 +43,15 @@ const BookgroupListPage: React.FC = () => {
 
     const handleClose = () => {
       dispatch(clearSelectedBookgroup());
-      dispatch(setPage('books'));
+      dispatch(setPage({ mainpage, subpage: 'books' }));
     }
 
+    if (bookgroup.id!=='') {
+      return (
+        <BookgroupDetailsPage/>
+      )
+    }
+      
     const buttons: Item[] = 
     [
       {
@@ -53,12 +68,6 @@ const BookgroupListPage: React.FC = () => {
       },
     ]; 
     
-    if (bookgroup) {
-      return (
-        <BookgroupDetailsPage/>
-      )
-    }
-      
     return (
         <div className="App">
           <AppHeaderH3Plus text='Buchgruppen' icon='list'/>

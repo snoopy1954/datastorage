@@ -30,6 +30,11 @@ export interface Version {
     version: string;
 }
 
+export interface SelectedVersions {
+    id: number;
+    versions: string[];
+}
+
 export interface Osversion {
     name: string;
     supplement: string;

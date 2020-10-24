@@ -1,21 +1,31 @@
 import React from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { useStateValue, addDevicetype, clearSelectedOs, clearSelectedDevice } from "../../../../state";
-import { Devicetype } from "../../../../types/network";
-import { create } from "../../../../services/device/devicetypes";
-import { DevicetypeFormValues } from "../AddDevicetypeModal/AddDevicetypeForm";
-import AddDevicetypeModal from "../AddDevicetypeModal";
-import { AppHeaderH3 } from "../../../basic/header";
-import AppMenu from "../../../basic/menu";
+import { Devicetype, DevicetypeNoID } from "../../../../types/network";
+
+import { RootState } from '../../../../state/store';
+import { addDevicetype } from  '../../../../state/network/devicetypelist/actions';
+import { setSelectedDevicetype } from "../../../../state/network/selecteddevicetype/actions";
+import { clearSelectedOs } from  '../../../../state/network/selectedos/actions';
+import { clearSelectedDevice} from  '../../../../state/network/selecteddevice/actions';
+
+import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppMenu, Item } from "../../../basic/menu";
+
 import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { Item } from "../../../basic/menu";
+
+import AddDevicetypeModal from "../AddDevicetypeModal";
+import DevicetypeDetailsPage from '../DevicetypeDetailsPage';
 
 
 const DevicetypeListPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | undefined>();
-    const [{ devicetypes }, dispatch] = useStateValue();
+    const dispatch = useDispatch();
+
+    const devicetypes = useSelector((state: RootState) => state.devicetypes);
+    const devicetype = useSelector((state: RootState) => state.devicetype);
 
     React.useEffect(() => {
       dispatch(clearSelectedDevice());
@@ -28,11 +38,20 @@ const DevicetypeListPage: React.FC = () => {
         setError(undefined);
     };
 
-    const submitNewDevicetype = async (values: DevicetypeFormValues) => {
-      const newDevicetype = await create(values);
-        dispatch(addDevicetype(newDevicetype));
-        closeModal();
+    const handleSelectedDevicetype = (devicetype: Devicetype) => {
+      dispatch(setSelectedDevicetype(devicetype));
+    }  
+
+    const submitNewDevicetype = async (values: DevicetypeNoID) => {
+      dispatch(addDevicetype(values));
+      closeModal();
     };
+
+    if (devicetype.id!=="") {
+      return (
+        <DevicetypeDetailsPage/>
+      )
+    }  
 
     const buttons: Item[] = 
     [
@@ -46,7 +65,14 @@ const DevicetypeListPage: React.FC = () => {
       
     return (
         <div className="App">
-          <AppHeaderH3 text='Gerätetypen'/>
+          <AppHeaderH3Plus text='Gerätetypen' icon='list'/>
+          <AddDevicetypeModal
+            modalOpen={modalOpen}
+            onSubmit={submitNewDevicetype}
+            error={error}
+            onClose={closeModal}
+          />
+          <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
           <Table celled>
             <Table.Header>
               <Table.Row>
@@ -56,20 +82,13 @@ const DevicetypeListPage: React.FC = () => {
             </Table.Header>
             <Table.Body>
               {Object.values(devicetypes).map((devicetype: Devicetype) => (
-                <Table.Row key={devicetype.id} >
+                <Table.Row key={devicetype.id}  onClick={() => handleSelectedDevicetype(devicetype)}>
                   <Table.Cell>{devicetype.name}</Table.Cell>
                   <Table.Cell>{devicetype.description}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
           </Table>
-          <AddDevicetypeModal
-            modalOpen={modalOpen}
-            onSubmit={submitNewDevicetype}
-            error={error}
-            onClose={closeModal}
-          />
-          <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
         </div>
       );
 }

@@ -10,8 +10,7 @@ const AppFooter = () => {
   
     return (
       <Container textAlign="left" style={footerStyle}>
-        <br></br>
-        Datenablage app by Snoopy 2020
+        Datenbanken app by Snoopy 2020
       </Container>
     )
   }

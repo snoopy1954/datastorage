@@ -1,12 +1,17 @@
 import React from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
+
+import { Edittype } from "../../../../types/basic";
+import { Bookgroup, BookWithFileNoID } from "../../../../types/book";
+
+import { RootState } from '../../../../state/store';
+import { setSelectedSubgroups } from '../../../../state/book/selectedsubgroups/actions';
+
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 import { TextField, SelectField, FileField, Option, SelectFieldWithChange, NumberField } from "./FormField";
-import { Edittype } from "../../../../types/basic";
-import { Bookgroup, BookWithFileNoID } from "../../../../types/book";
-import { useStateValue, setFilteredSubgroups } from "../../../../state";
 
 interface Props {
   edittype: Edittype;
@@ -15,12 +20,19 @@ interface Props {
 }
 
 export const AddBookForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const [{ bookgroups, formats, ownerships, tongues, book, selectedSubgroups }, dispatch] = useStateValue();
+  const dispatch = useDispatch();
+
+  const book = useSelector((state: RootState) => state.book);
+  const tongues = useSelector((state: RootState) => state.tongues);
+  const formats = useSelector((state: RootState) => state.formats);
+  const ownerships = useSelector((state: RootState) => state.ownerships);
+  const bookgroups = useSelector((state: RootState) => state.bookgroups);
+  const subgroups = useSelector((state: RootState) => state.subgroups);
 
   const handleGroupSelection = (selection: string) => {
     const selectedGroup: Bookgroup[] = Object.values(bookgroups).filter((bookgroup => bookgroup.groupname.name=== selection));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
-    dispatch(setFilteredSubgroups(selectedSubgroups));
+    dispatch(setSelectedSubgroups(selectedSubgroups));
   }
 
   const bookgroupOptions: Option[] = [];
@@ -56,7 +68,8 @@ export const AddBookForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
   });
 
   const subgroupOptions: Option[] = [];
-  selectedSubgroups.forEach(element => {
+  Object.values(subgroups).forEach(element => {
+    console.log(element)
     subgroupOptions.push({
       value: element,
       label: element

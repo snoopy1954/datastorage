@@ -3,16 +3,15 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { Divider, Container } from "semantic-ui-react";
 
-import { RootState } from './state2/store';
-import { setMainpage } from './state2/mainpage/actions';
-import { Page } from './state2/mainpage/types';
+import { RootState } from './state/store';
+import { setPage } from './state/page/actions';
+import { Page } from './state/page/types';
 
 import { checkService } from "./services/ping";
 
 import { AppHeaderH1 } from "./components/basic/header";
 import { AppMenu, Item } from "./components/basic/menu";
 import AppFooter from "./components/basic/footer";
-
 import { backgroundColor, styleMainMenu } from "./constants";
 
 import Home from "./components/home";
@@ -25,16 +24,17 @@ import Address from "./components/address";
 
 const App: React.FC = () => {
     const dispatch = useDispatch();
+    const mainpage = useSelector((state: RootState) => state.page.mainpage);      
 
     React.useEffect(() => {
         checkService();
-        const page: Page = { name: 'home' };
-        dispatch(setMainpage(page));
+        const page: Page = { mainpage: 'home', subpage: '' };
+        dispatch(setPage(page));
     }, [dispatch]);
 
     const handleSelection = (selected: string) => {
-        const page: Page = { name: selected };
-        dispatch(setMainpage(page));
+        const page: Page = { mainpage: selected, subpage: '' };
+        dispatch(setPage(page));
     };
 
     const buttons: Item[] = 
@@ -77,13 +77,11 @@ const App: React.FC = () => {
       },      
     ];
 
-    const mainpage = useSelector((state: RootState) => state.mainpage.name);      
-
     return (
         <div className="App">
             <Router>
                 <Container style={{ background: backgroundColor }}>
-                    <AppHeaderH1 text='Datenablagen' icon='database'/>
+                    <AppHeaderH1 text='Datenbanken' icon='database'/>
                     <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
                     <Divider/>
                     {mainpage==='home'&&<Home/>}

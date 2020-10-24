@@ -1,11 +1,12 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
-import AddOsForm, { OsFormValues } from './AddOsForm';
+import AddOsForm from './AddOsForm';
+import { OsNoID } from "../../../../types/network";
 
 interface Props {
   modalOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: OsFormValues) => void;
+  onSubmit: (values: OsNoID) => void;
   error?: string;
 }
 

@@ -1,11 +1,12 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
-import AddDevicetypeForm, { DevicetypeFormValues } from './AddDevicetypeForm';
+import AddDevicetypeForm from './AddDevicetypeForm';
+import { DevicetypeNoID } from "../../../../types/network";
 
 interface Props {
   modalOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: DevicetypeFormValues) => void;
+  onSubmit: (values: DevicetypeNoID) => void;
   error?: string;
 }
 

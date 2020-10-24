@@ -5,14 +5,14 @@ export const getContent = async (file: File) => {
     return data;
 }
 
-export const getImageUrl = (image: Image) => {
+export const getImageUrl = (image: Image): string => {
     const data: Image = Object.values(image)[0];
     const type: string = Object.values(image)[1];
-    const img = Object.values(data.data)[1];
-    const arrayBufferView = new Uint8Array( img );
-    const blob = new Blob([ arrayBufferView ], { type: type });
+    const img: number = Object.values(data.data)[1];
+    const arrayBufferView: Uint8Array = new Uint8Array( img );
+    const blob: Blob = new Blob([ arrayBufferView ], { type: type });
     const urlCreator = window.URL || window.webkitURL;
-    const imageUrl = urlCreator.createObjectURL( blob );
+    const imageUrl: string = urlCreator.createObjectURL( blob );
 
     return imageUrl;
 }

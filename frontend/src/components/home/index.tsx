@@ -1,11 +1,11 @@
 import React from 'react';
-import { Header } from "semantic-ui-react";
+
+import { AppHeaderH2 } from "../basic/header";
+
 
 const Home: React.FC = () => {  return (
     <div className="App">
-        <br></br>
-        <Header as="h3">Bitte Datenablage auswählen</Header>
-        <br></br>
+      <AppHeaderH2 text='Bitte Datenbank auswählen' icon='question'/>
     </div>
   );
 }

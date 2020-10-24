@@ -13,7 +13,8 @@ import formatsRouter from './routes/book/formats';
 import tonguesRouter from './routes/book/tongues';
 import booksRouter from './routes/book/books';
 import imagesRouter from './routes/image/images';
-
+import addressgroupsRouter from './routes/address/addressgroups';
+import addressesRouter from './routes/address/addresses';
 
 const app = express();
 app.use(express.static('build'));
@@ -30,6 +31,8 @@ app.use('/api/formats', formatsRouter);
 app.use('/api/tongues', tonguesRouter);
 app.use('/api/books', booksRouter);
 app.use('/api/images', imagesRouter);
+app.use('/api/addressgroups', addressgroupsRouter);
+app.use('/api/addresses', addressesRouter);
 app.get('/api/ping', (_req, res) => {
     console.log('someone pinged here');
     res.json('pong');

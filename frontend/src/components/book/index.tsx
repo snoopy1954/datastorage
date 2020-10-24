@@ -1,69 +1,57 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { useStateValue, 
-         setBookList, 
-         setBookgroupList, 
-         setOwnershipList, 
-         setFormatList, 
-         setTongueList, 
-         setPage, 
-       } from "../../state";
-import { getAll as getAllBooks } from "../../services/book/books";
-import { getAll as getAllBookgroups } from "../../services/book/bookgroups";
-import { getAll as getAllOwnerships } from "../../services/book/ownerships";
-import { getAll as getAllFormats } from "../../services/book/formats";
-import { getAll as getAllTongues } from "../../services/book/tongues";
+import { RootState } from '../../state/store';
+import { setPage } from '../../state/page/actions';
+import { initializeTongues } from '../../state/book/tonguelist/actions';
+import { initializeFormats } from '../../state/book/formatlist/actions';
+import { initializeOwnerships } from '../../state/book/ownershiplist/actions';
+import { initializeBookgroups } from '../../state/book/bookgrouplist/actions';
+import { initializeBooks } from '../../state/book/booklist/actions';
+
+import { AppHeaderH2 } from "../basic/header";
+import { AppMenu, Item } from "../basic/menu";
+import { backgroundColor, styleMainMenu } from "../../constants";
+
 import BookListPage from "./book/BookListPage";
 import BookgroupListPage from "./bookgroup/BookgroupListPage";
 import OwnershipListPage from "./ownership/OwnershipListPage";
 import FormatListPage from "./format/FormatListPage";
 import TongueListPage from "./tongue/TongueListPage";
-import { AppHeaderH2 } from "../basic/header";
-import { AppMenu, Item } from "../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../constants";
 
 
 const Book: React.FC = () => {
-  const [{ page }, dispatch] = useStateValue();
+  const dispatch = useDispatch();
+
+  const mainpage = useSelector((state: RootState) => state.page.mainpage);      
+  const subpage = useSelector((state: RootState) => state.page.subpage);      
 
   React.useEffect(() => {
-    const fetchBookgroupList = async () => {
-      const bookgroups = await getAllBookgroups();
-      dispatch(setBookgroupList(bookgroups));
-    };
-    fetchBookgroupList();
-
-    const fetchOwnershipList = async () => {
-      const ownerships = await getAllOwnerships();
-      dispatch(setOwnershipList(ownerships));
-    };
-    fetchOwnershipList();
-
-    const fetchFormatList = async () => {
-      const formats = await getAllFormats();
-      dispatch(setFormatList(formats));
-    };
-    fetchFormatList();
-
-    const fetchTongueList = async () => {
-      const tongues = await getAllTongues();
-      dispatch(setTongueList(tongues));
-    };
-    fetchTongueList();
-
-    const fetchBookList = async () => {
-      const books = await getAllBooks();
-      dispatch(setBookList(books));
-    };
-    fetchBookList();
+    dispatch(initializeBookgroups());
   }, [dispatch]);
 
   React.useEffect(() => {
-    dispatch(setPage('books'));
+    dispatch(initializeOwnerships());
   }, [dispatch]);
+
+  React.useEffect(() => {
+    dispatch(initializeFormats());
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    dispatch(initializeTongues());
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    dispatch(initializeBooks());
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    dispatch(setPage({ mainpage, subpage: 'books' }));
+  }, [mainpage, dispatch]);
  
   const handleSelection = (selected: string) => {
-      dispatch(setPage(selected));
+    dispatch(setPage({ mainpage, subpage: selected }));
   };
 
   const buttons: Item[] = 
@@ -104,11 +92,11 @@ const Book: React.FC = () => {
     <div className="App">
       <AppHeaderH2 text='Bücher' icon='book'/>
       <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
-      {page==='books'&&<BookListPage/>}
-      {page==='bookgroup'&&<BookgroupListPage/>}
-      {page==='ownership'&&<OwnershipListPage/>}
-      {page==='format'&&<FormatListPage/>}
-      {page==='tongue'&&<TongueListPage/>}
+      {subpage==='books'&&<BookListPage/>}
+      {subpage==='bookgroup'&&<BookgroupListPage/>}
+      {subpage==='ownership'&&<OwnershipListPage/>}
+      {subpage==='format'&&<FormatListPage/>}
+      {subpage==='tongue'&&<TongueListPage/>}
     </div>
   );
 }

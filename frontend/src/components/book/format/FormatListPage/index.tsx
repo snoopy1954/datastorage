@@ -1,19 +1,30 @@
 import React from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { useStateValue, addFormat, setSelectedFormat, clearSelectedFormat, setPage } from "../../../../state";
 import { Format, FormatNoID } from "../../../../types/book";
-import { create } from "../../../../services/book/formats";
-import AddFormatModal from "../AddFormatModal";
+
+import { RootState } from '../../../../state/store';
+import { setPage } from '../../../../state/page/actions';
+import { addFormat } from '../../../../state/book/formatlist/actions';
+import { setSelectedFormat, clearSelectedFormat } from '../../../../state/book/selectedformat/actions';
+
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { backgroundColor, styleMainMenu } from "../../../../constants";
+
+import AddFormatModal from "../AddFormatModal";
+import FormatDetailsPage from "../FormatDetailsPage";
 
 
 const FormatListPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | undefined>();
-    const [{ formats }, dispatch] = useStateValue();
+    const dispatchRedux = useDispatch();
+
+    const mainpage = useSelector((state: RootState) => state.page.mainpage);      
+    const formats = useSelector((state: RootState) => state.formats);      
+    const format = useSelector((state: RootState) => state.format);      
 
     const openModal = (): void => setModalOpen(true);
     const closeModal = (): void => {
@@ -22,20 +33,24 @@ const FormatListPage: React.FC = () => {
     };
 
     const handleNewFormat = async (values: FormatNoID) => {
-      const newFormat = await create(values);
-      dispatch(addFormat(newFormat));
+      dispatchRedux(addFormat(values));
       closeModal();
     };
 
     const handleSelection = (format: Format) => {
-      dispatch(setSelectedFormat(format));
-      dispatch(setPage('books'));
+      dispatchRedux(setSelectedFormat(format));
     };  
 
     const handleClose = () => {
-      dispatch(clearSelectedFormat());
-      dispatch(setPage('books'));
+      dispatchRedux(clearSelectedFormat());
+      dispatchRedux(setPage({ mainpage, subpage: 'books' }));
     };
+
+    if (format.id!=="") {
+      return (
+        <FormatDetailsPage/>
+      )
+    }  
       
     const buttons: Item[] = 
     [

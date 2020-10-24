@@ -1,3 +1,8 @@
+export interface Filter {
+    group: string;
+    subgroup: string;
+}
+
 export interface Name {
     seqnr: number;
     name: string;
@@ -70,4 +75,8 @@ export type BookNoID = Omit<Book, 'id'>;
 
 export interface BookWithFileNoID extends BookNoID {
     file: File;
+}
+
+export interface BookWithImageNoID extends BookNoID {
+    img: Uint8Array;
 }

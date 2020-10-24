@@ -1,36 +1,3 @@
-// export interface Measure {
-//     time: number;
-//     systolic: number;
-//     diastolic: number;
-//     pulse: number;
-// }
-
-// export interface Day {
-// 	weight: number;
-// 	early: Measure;
-// 	late: Measure;
-// }
-
-// export interface Month {
-//     id: string;
-//     date: string;
-//     weight_av: number;
-//     weight_in: number;           
-//     weight_out: number;	   
-//     diastolic_av_total: number;  
-//     diastolic_av_early: number;  
-//     diastolic_av_late: number; 	   
-//     systolic_av_total: number; 
-//     systolic_av_early: number; 
-//     systolic_av_late: number; 	   
-//     pulse_av_total: number;      
-//     pulse_av_early: number;      
-//     pulse_av_late: number; 
-//     days: Day[];
-// }
-
-// export type MonthNoID = Omit<Month, 'id'>;
-
 export interface Measure {
     time: string;
     systolic: string;

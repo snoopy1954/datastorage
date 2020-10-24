@@ -95,7 +95,6 @@ const parseVersion = (versions: any): string[] => {
         return [];
     }
 
-    console.log(versions, typeof versions);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return versions;
 };

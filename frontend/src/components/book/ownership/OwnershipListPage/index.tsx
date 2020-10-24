@@ -1,19 +1,30 @@
 import React from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { useStateValue, addOwnership, setSelectedOwnership, clearSelectedOwnership, setPage } from "../../../../state";
 import { Ownership, OwnershipNoID } from "../../../../types/book";
-import { create } from "../../../../services/book/ownerships";
-import AddOwnershipModal from "../AddOwnershipModal";
+
+import { RootState } from '../../../../state/store';
+import { setPage } from '../../../../state/page/actions';
+import { addOwnership } from '../../../../state/book/ownershiplist/actions';
+import { setSelectedOwnership, clearSelectedOwnership } from '../../../../state/book/selectedownership/actions';
+
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { backgroundColor, styleMainMenu } from "../../../../constants";
+
+import AddOwnershipModal from "../AddOwnershipModal";
+import OwnershipDetailsPage from "../OwnershipDetailsPage";
 
 
 const OwnershipListPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | undefined>();
-    const [{ ownerships }, dispatch] = useStateValue();
+    const dispatch = useDispatch();
+
+    const mainpage = useSelector((state: RootState) => state.page.mainpage);      
+    const ownerships = useSelector((state: RootState) => state.ownerships);      
+    const ownership = useSelector((state: RootState) => state.ownership);      
 
     const openModal = (): void => setModalOpen(true);
     const closeModal = (): void => {
@@ -22,20 +33,24 @@ const OwnershipListPage: React.FC = () => {
     };
 
     const handleNewOwnership = async (values: OwnershipNoID) => {
-      const newOwnership = await create(values);
-      dispatch(addOwnership(newOwnership));
+      dispatch(addOwnership(values));
       closeModal();
     };
 
     const handleSelection = (ownership: Ownership) => {
       dispatch(setSelectedOwnership(ownership));
-      dispatch(setPage('books'));
     };  
 
     const handleClose = () => {
       dispatch(clearSelectedOwnership());
-      dispatch(setPage('books'));
+      dispatch(setPage({ mainpage, subpage: 'books' }));
     };
+
+    if (ownership.id!=="") {
+      return (
+        <OwnershipDetailsPage/>
+      )
+    }
 
     const buttons: Item[] = 
     [
@@ -54,31 +69,31 @@ const OwnershipListPage: React.FC = () => {
     ];  
       
     return (
-        <div className="App">
-          <AppHeaderH3Plus text='Besitztypen' icon='list'/>
-          <AddOwnershipModal
-            modalOpen={modalOpen}
-            onSubmit={handleNewOwnership}
-            error={error}
-            onClose={closeModal}
-          />
-          <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
-          <Table celled>
-            <Table.Header>
-              <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
+      <div className="App">
+        <AppHeaderH3Plus text='Besitztypen' icon='list'/>
+        <AddOwnershipModal
+          modalOpen={modalOpen}
+          onSubmit={handleNewOwnership}
+          error={error}
+          onClose={closeModal}
+        />
+        <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
+        <Table celled>
+          <Table.Header>
+            <Table.Row>
+            <Table.HeaderCell>Name</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {Object.values(ownerships).map((ownership: Ownership) => (
+              <Table.Row key={ownership.id} onClick={() => handleSelection(ownership)}>
+                <Table.Cell>{ownership.ownershipname.name}</Table.Cell>
               </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {Object.values(ownerships).map((ownership: Ownership) => (
-                <Table.Row key={ownership.id} onClick={() => handleSelection(ownership)}>
-                  <Table.Cell>{ownership.ownershipname.name}</Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
-        </div>
-      );
+            ))}
+          </Table.Body>
+        </Table>
+      </div>
+    );
 }
 
 export default OwnershipListPage;

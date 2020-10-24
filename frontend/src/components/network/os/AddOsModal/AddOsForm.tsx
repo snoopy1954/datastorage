@@ -4,12 +4,10 @@ import { Field, Formik, Form } from "formik";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 import { TextField } from "./FormField";
-import { Os } from "../../../../types/network";
-
-export type OsFormValues = Omit<Os, "id">;
+import { OsNoID } from "../../../../types/network";
 
 interface Props {
-  onSubmit: (values: OsFormValues) => void;
+  onSubmit: (values: OsNoID) => void;
   onCancel: () => void;
 }
 

@@ -1,23 +1,31 @@
 import React from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { useStateValue, clearSelectedDevice, removeDevice, updateDevice, setPage } from "../../../../state";
-import { Network, Osversion } from "../../../../types/network";
+import { Network, Osversion, Device, DeviceNoID } from "../../../../types/network";
 import { Edittype } from "../../../../types/basic";
-import { DeviceFormValues } from "../AddDeviceModal/AddDeviceForm";
-import AddDeviceModal from "../AddDeviceModal";
-import { remove, update, getOne } from "../../../../services/device/devices";
-import AskModal from "../../../basic/askModal";
+
+import { RootState } from '../../../../state/store';
+import { setPage } from '../../../../state/page/actions';
+import { updateDevice, removeDevice } from  '../../../../state/network/devicelist/actions'; 
+import { clearSelectedDevice} from  '../../../../state/network/selecteddevice/actions';
+
+import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppMenu, Item } from "../../../basic/menu";
+import { AskModal } from "../../../basic/askModal";
+
 import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { AppHeaderH3 } from "../../../basic/header";
-import AppMenu from "../../../basic/menu";
-import { Item } from "../../../basic/menu";
+
+import AddDeviceModal from "../AddDeviceModal";
 
 
 const DeviceDetailsPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean]>([false, false]);
   const [error, setError] = React.useState<string | undefined>();
-  const [{ device }, dispatch] = useStateValue();
+  const dispatch = useDispatch();
+
+  const mainpage = useSelector((state: RootState) => state.page.mainpage);      
+  const device = useSelector((state: RootState) => state.device);
 
   const openModalChange = (): void => setModalOpen([true, false]);
   const openModalDelete = (): void => setModalOpen([false, true]);
@@ -26,20 +34,17 @@ const DeviceDetailsPage: React.FC = () => {
     setError(undefined);
   };
 
-  const submitChangedDevice = async (values: DeviceFormValues) => {
+  const submitChangedDevice = async (values: DeviceNoID) => {
     if (device) {
-      try {
-        await update(device.id, values);
-        const changedDevice = await getOne(device.id);
-        dispatch(updateDevice(changedDevice));
-      } catch (e) {
-        console.error(e.response.data);
-        setError(e.response.data.error);
-      }
+      const newDevice: Device = {
+        id: device.id,
+        ...values
+      };
+      dispatch(updateDevice(newDevice));
     }
     closeModal();
     dispatch(clearSelectedDevice());
-    setPage('devices')
+    dispatch(setPage({ mainpage, subpage: 'devices' }));
   };
 
   const handleClose = () => {
@@ -47,12 +52,9 @@ const DeviceDetailsPage: React.FC = () => {
   }
 
   const  handleDelete = async () => {
-    if (device) {
-      await remove(device.id);
-      dispatch(removeDevice(device.id));
-    }
+    dispatch(removeDevice(device.id));
     dispatch(clearSelectedDevice());
-    setPage('devices')
+    dispatch(setPage({ mainpage, subpage: 'devices' }));
   }
 
   const ShowNetwork: React.FC<{ network: Network; index: number }> = ({ network, index }) => {
@@ -75,7 +77,7 @@ const DeviceDetailsPage: React.FC = () => {
     );
   };
 
-  if (device===undefined) {
+  if (device.id==="") {
     return (
       <div>
         war wohl nix
@@ -107,7 +109,22 @@ const DeviceDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3 text={device.name}/>
+      <AppHeaderH3Plus text={device.name} icon='list'/>
+      <AddDeviceModal
+        edittype={Edittype.EDIT}
+        modalOpen={modalOpen[0]}
+        onSubmit={submitChangedDevice}
+        error={error}
+        onClose={closeModal}
+      />
+      <AskModal
+        header='Gerät löschen'
+        prompt='Gerät löschen'
+        modalOpen={modalOpen[1]}
+        onSubmit={handleDelete}
+        onClose={closeModal}
+      />
+      <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
       <Table celled>
         <Table.Header>
           <Table.Row>
@@ -158,21 +175,6 @@ const DeviceDetailsPage: React.FC = () => {
           </Table.Row>
         </Table.Body>
       </Table>
-      <AddDeviceModal
-        edittype={Edittype.EDIT}
-        modalOpen={modalOpen[0]}
-        onSubmit={submitChangedDevice}
-        error={error}
-        onClose={closeModal}
-      />
-      <AskModal
-        header='Gerät löschen'
-        prompt='Gerät löschen'
-        modalOpen={modalOpen[1]}
-        onSubmit={handleDelete}
-        onClose={closeModal}
-      />
-      <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
      </div>
   );
 }

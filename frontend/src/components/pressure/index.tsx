@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Year, MonthNoID } from "../../types/pressure";
 
-import { RootState } from '../../state2/store';
-import { setYearList } from '../../state2/pressure/yearlist/actions';
-import { setSelectedYear } from '../../state2/pressure/selectedyear/actions';
-import { addMonth, initializeMonths } from  '../../state2/pressure/monthlist/actions';
-import { clearSelectedMonth } from '../../state2/pressure/selectedmonth/actions';
-import { clearSelectedDay } from '../../state2/pressure/selectedday/actions';
+import { RootState } from '../../state/store';
+import { setYearList } from '../../state/pressure/yearlist/actions';
+import { setSelectedYear } from '../../state/pressure/selectedyear/actions';
+import { addMonth, initializeMonths } from  '../../state/pressure/monthlist/actions';
+import { clearSelectedMonth } from '../../state/pressure/selectedmonth/actions';
+import { clearSelectedDay } from '../../state/pressure/selectedday/actions';
 
 import { AppHeaderH2 } from "../basic/header";
 import { AppMenu, Item } from "../basic/menu";

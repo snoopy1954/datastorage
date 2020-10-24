@@ -1,4 +1,4 @@
-import { Book, Bookgroup } from '../types/book';
+import { Book, BookNoID, Bookgroup, Filter } from '../types/book';
 
 const sortBooks = (a: Book, b: Book) => {
     const nameA = a.title.seqnr;
@@ -12,14 +12,14 @@ const sortBooks = (a: Book, b: Book) => {
     return 0;
 };
 
-export const sortBookList = (books: Book[], bookgroups: Bookgroup[]) => {
+const sortBookList = (books: Book[], bookgroups: Bookgroup[]) => {
     let bookListSorted: Book[] = [];
     let sortedBookgroup;
     let sortedSubgroup;
 
     bookgroups.forEach(bookgroup => {
         sortedBookgroup = [];
-        if (bookgroup.subgroups===[]) {
+        if (bookgroup.subgroups.length===0) {
             sortedBookgroup = books.filter(book => book.bookgroup===bookgroup.groupname.name);
             bookListSorted = bookListSorted.concat(sortedBookgroup.sort(sortBooks));
         }
@@ -32,4 +32,52 @@ export const sortBookList = (books: Book[], bookgroups: Bookgroup[]) => {
     });
         
     return bookListSorted;
+}
+
+export const newBook = (): BookNoID => {
+    const book = {
+    title: {
+        name: "",
+        seqnr: 0
+      },
+      author: {
+        givenname: "",
+        familyname: ""
+      },
+      comment: "",
+      link: "",
+      launched: "",
+      read: "",
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+      bookgroup: "",
+      subgroup: "",
+      ownership: "",
+      format: "",
+      tongue: "",
+      content: {
+        filename: "",
+        filetype: "",
+        filesize: "",
+        dataId: ""
+      },
+    };
+
+    return book;
+}
+
+export const booklistTitle = (filters: Filter): string => {
+    let filter = (filters.group!=="") ? ': ' + filters.group : '';
+    filter += (filters.subgroup!=="") ? ' - ' + filters.subgroup : '';
+
+    return filter;
+}
+
+export const booklistFilter = (books: Book[], filters: Filter, bookgroups: Bookgroup[]): Book[] => {
+
+    let filteredBooks = (filters.group!=="") ? Object.values(books).filter(book => book.bookgroup===filters.group) : books;
+    filteredBooks = (filters.subgroup!=="") ? Object.values(filteredBooks).filter(book => book.subgroup===filters.subgroup) : filteredBooks;
+    const sortedBooks = sortBookList(Object.values(filteredBooks), Object.values(bookgroups));
+
+    return sortedBooks;
 }

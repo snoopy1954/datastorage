@@ -1,20 +1,27 @@
 import React from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { useStateValue, clearSelectedBookgroup } from "../../../../state";
 import { Subgroup, BookgroupNoID } from "../../../../types/book";
-import AddSubgroupModal from "../AddSubgroupModal";
+
+import { RootState } from '../../../../state/store';
+import { clearSelectedBookgroup } from '../../../../state/book/selectedbookgroup/actions';
+
 import { update } from "../../../../services/book/bookgroups";
+
 import { AppHeaderH3 } from "../../../basic/header";
-import AppMenu from "../../../basic/menu";
+import { AppMenu, Item }  from "../../../basic/menu";
 import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { Item } from "../../../basic/menu";
+
+import AddSubgroupModal from "../AddSubgroupModal";
 
 
 const BookgroupDetailsPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
-  const [{ bookgroup }, dispatch] = useStateValue();
+  const dispatch = useDispatch();
+
+  const bookgroup = useSelector((state: RootState) => state.bookgroup);      
 
   const openModal = (): void => setModalOpen(true);
   const closeModal = (): void => {
@@ -38,7 +45,7 @@ const BookgroupDetailsPage: React.FC = () => {
     dispatch(clearSelectedBookgroup());
   }
 
-  if (bookgroup===undefined) {
+  if (bookgroup.id==='') {
     return (
       <div>
         war wohl nix

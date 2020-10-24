@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
-import { RootState } from '../../../../state2/store';
+import { RootState } from '../../../../state/store';
 
 import { TextField, TextFieldCheck } from "./FormField";
 import { Day } from "../../../../types/pressure";

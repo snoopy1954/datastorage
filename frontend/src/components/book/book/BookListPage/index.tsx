@@ -1,34 +1,44 @@
 import React from "react";
-import { Table } from "semantic-ui-react";
+import { useSelector, useDispatch } from 'react-redux';
+import { Table, Button } from "semantic-ui-react";
 
-import { useStateValue, 
-         addBook, 
-         setSelectedBook, 
-         setImageUrl, 
-         clearSelectedBookgroupSelection, 
-         clearSelectedSubgroupSelection, 
-         setSelectedBookgroupSelection,
-         setSelectedSubgroupSelection, 
-         setPage 
-       } from "../../../../state";
-import { Book, BookNoID, BookWithFileNoID, Bookgroup } from "../../../../types/book";
+import { Book, BookNoID, BookWithFileNoID, Bookgroup, Filter } from "../../../../types/book";
 import { Image } from "../../../../types/image";
-import { create as createBook } from "../../../../services/book/books";
-import { create as createImage, getOne} from "../../../../services/image/images";
-import BookDetailsPage from "../BookDetailsPage";
-import AddBookModal from "../AddBookModal";
-import { getContent, getImageUrl } from "../../../../utils/image";
-import { Edittype } from "../../../../types/basic";
+import { Edittype, Direction } from "../../../../types/basic";
+
+import { RootState } from '../../../../state/store';
+import { setPage } from '../../../../state/page/actions';
+import { setFilter, clearFilter } from '../../../../state/book/filter/actions';
+import { setImage } from '../../../../state/image/actions';
+import { addBook, updateBook, exchangeBooks } from '../../../../state/book/booklist/actions';
+import { setSelectedBook } from '../../../../state/book/selectedbook/actions';
+import { addChangedBook, clearChangedBook } from '../../../../state/book/changedbooklist/actions';
+
+import { create } from "../../../../services/image/images";
+
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
+
 import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { sortBookList } from "../../../../utils/book";
+import { getContent } from "../../../../utils/image";
+import { booklistTitle, booklistFilter } from "../../../../utils/book";
+
+import BookDetailsPage from "../BookDetailsPage";
+import AddBookModal from "../AddBookModal";
 
 
 const BookListPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | undefined>();
-    const [{ books, book, bookgroups, selectedBookgroup, selectedSubgroup }, dispatch] = useStateValue();
+    const dispatch = useDispatch();
+
+    const mainpage: string = useSelector((state: RootState) => state.page.mainpage);      
+    const bookgroups: Bookgroup[] = useSelector((state: RootState) => state.bookgroups);      
+    const filters: Filter = useSelector((state: RootState) => state.filters);
+    const books: Book[] = useSelector((state: RootState) => state.books);
+    const book: Book = useSelector((state: RootState) => state.book);
+    const changedBooks: Book[] = useSelector((state: RootState) => state.changedbooklist);
+
 
     const openModal = (): void => setModalOpen(true);
     const closeModal = (): void => {
@@ -38,30 +48,27 @@ const BookListPage: React.FC = () => {
 
     const handleSelection = async (book: Book) => {
         const id: string = book.content.dataId;
-        const retImage: Image = await getOne(id);
-        const imageUrl = getImageUrl(retImage);
-        dispatch(setImageUrl(imageUrl));
+        dispatch(setImage(id));
         dispatch(setSelectedBook(book));
     };
 
     const handleSelectionClick = (filter: string, selection: string) => {
-      console.log('set ', filter, selection)
       switch (filter) {
         case 'Gruppe':
-          dispatch(setSelectedBookgroupSelection(selection));
+          dispatch(setFilter({ group: selection, subgroup: '' }));
           break;
         case 'Untergruppe':
-          dispatch(setSelectedSubgroupSelection(selection));
+          dispatch(setFilter({ group: filters.group, subgroup: selection }));
           break;
         default:
         }
     };
 
     const handleNewBook = async (values: BookWithFileNoID) => {
-        const filedata = await getContent(values.file);
-        const longInt8View = new Uint8Array(filedata);
-        const newImage: Image = await createImage(longInt8View);
-        const id = newImage.id;
+        const filedata: ArrayBuffer = await getContent(values.file);
+        const longInt8View: Uint8Array = new Uint8Array(filedata);
+        const newImage: Image = await create(longInt8View);
+        const id: string = newImage.id;
         const book: BookNoID = {
           title: { name: values.title.name, seqnr: values.title.seqnr },
           author: { givenname: values.author.givenname, familyname: values.author.familyname },
@@ -82,21 +89,42 @@ const BookListPage: React.FC = () => {
             filesize: String(values.file.size),
             dataId: id
           }
-        }
-        const newBook = await createBook(book);
-        dispatch(addBook(newBook));
+        };
+        dispatch(addBook(book));
         closeModal();
     };
 
     const handleClose = () => {
-      dispatch(clearSelectedBookgroupSelection());
-      dispatch(clearSelectedSubgroupSelection());
-      dispatch(setPage('books'));
+      dispatch(clearFilter());
+      dispatch(setPage({ mainpage, subpage: 'books' }));
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const handleDummy = () => {
     };
+
+    const handleUpDown = (direction: string, index: number, list: Book[]) => {
+      if ((direction===Direction.UP && index===0) || (direction===Direction.DOWN && index===list.length-1)) return;
+
+      const book1: Book = list[index]; 
+      const book2: Book = direction===Direction.UP ? list[index-1] : list[index+1];
+      const seqnr1 = book1.title.seqnr;
+      const seqnr2 = book2.title.seqnr;
+      book1.title.seqnr = seqnr2;
+      book2.title.seqnr = seqnr1;
+      const booksToChange: Book[] = [book1, book2];
+      dispatch(exchangeBooks(booksToChange));
+      dispatch(addChangedBook(book1));
+      dispatch(addChangedBook(book2));
+    };
+
+    const saveSequence = () => {
+      Object.values(changedBooks).forEach(changedBook => {
+        console.log('Save', changedBook)
+        dispatch(updateBook(changedBook));
+      });
+      dispatch(clearChangedBook());
+    }
 
     const bookgroupOptions: string[] = [];
     Object.values(bookgroups).forEach(element => {
@@ -109,7 +137,7 @@ const BookListPage: React.FC = () => {
     };
 
     const subgroupOptions: string[] = [];
-    const bookgroup = getBookgroup(selectedBookgroup);
+    const bookgroup = getBookgroup(filters.group);
     if (bookgroup)
     bookgroup.subgroups.forEach(element => {
       subgroupOptions.push(element);
@@ -154,22 +182,30 @@ const BookListPage: React.FC = () => {
       },
     ];
 
-    if (book) {
+    if (Object.values(changedBooks).length > 0) {
+      buttons[buttons.length] = {
+        name: 'Speichern',
+        title: 'Speichern',
+        color: 'blue',
+        type: '0',
+        options: [],    
+        onClick: saveSequence,
+        onSelection: handleDummy
+      };
+    }
+
+    if (book.id!=='') {
       return (
         <BookDetailsPage/>
       )
     }
 
-    let filter = (selectedBookgroup!=="") ? ': ' + selectedBookgroup : '';
-    filter += (selectedSubgroup!=="") ? ' - ' + selectedSubgroup : '';
+    const title = 'Bücherliste' + booklistTitle(filters);
+    const sortedBooks = booklistFilter(books, filters, bookgroups);
 
-    let filteredBooks = (selectedBookgroup!=="") ? Object.values(books).filter(book => book.bookgroup===selectedBookgroup) : books;
-    filteredBooks = (selectedSubgroup!=="") ? Object.values(filteredBooks).filter(book => book.subgroup===selectedSubgroup) : filteredBooks;
-    const sortedBooks = sortBookList(Object.values(filteredBooks), Object.values(bookgroups));
-    
     return (
         <div className="App">
-          <AppHeaderH3Plus text={'Bücherliste' + filter} icon='list'/>
+          <AppHeaderH3Plus text={title} icon='list'/>
           <AddBookModal
             edittype={Edittype.ADD}
             modalOpen={modalOpen}
@@ -185,15 +221,26 @@ const BookListPage: React.FC = () => {
               <Table.HeaderCell>Autor</Table.HeaderCell>
               <Table.HeaderCell>Gruppe</Table.HeaderCell>
               <Table.HeaderCell>Untergruppe</Table.HeaderCell>
+              <Table.HeaderCell>Sprache</Table.HeaderCell>
+              {filters.group!==''&&<Table.HeaderCell>Reihenfolge</Table.HeaderCell>}
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {Object.values(sortedBooks).map((book: Book) => (
-                <Table.Row key={book.id} onClick={() => handleSelection(book)}>
-                  <Table.Cell>{book.title.name}</Table.Cell>
+              {Object.values(sortedBooks).map((book: Book, index: number) => (
+                <Table.Row key={book.id}>
+                  <Table.Cell onClick={() => handleSelection(book)}>{book.title.name}</Table.Cell>
                   <Table.Cell>{book.author.givenname} {book.author.familyname}</Table.Cell>
                   <Table.Cell>{book.bookgroup}</Table.Cell>
                   <Table.Cell>{book.subgroup}</Table.Cell>
+                  <Table.Cell>{book.tongue}</Table.Cell>
+                  {filters.group!==''&&<Table.Cell>
+                    <Button className="ui icon button" color='green' onClick={() => handleUpDown(Direction.UP, index, sortedBooks) }>
+                      <i className="angle up icon"></i>
+                    </Button>
+                    <Button className="ui icon button" color='green' onClick={() => handleUpDown(Direction.DOWN, index, sortedBooks) }>
+                      <i className="angle down icon"></i>
+                    </Button>
+                  </Table.Cell>}
                 </Table.Row>
               ))}
             </Table.Body>

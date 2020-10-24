@@ -1,23 +1,33 @@
 import React from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { useStateValue, addDevice, clearSelectedOs, setSelectedDevice, clearFilteredVersions, addFilteredVersions, setFilteredVersions } from "../../../../state";
-import { Device, Os } from "../../../../types/network";
+import { Device, DeviceNoID, Os } from "../../../../types/network";
 import { Edittype } from "../../../../types/basic";
-import { create } from "../../../../services/device/devices";
-import { DeviceFormValues } from "../AddDeviceModal/AddDeviceForm";
+
+import { RootState } from '../../../../state/store';
+import { clearSelectedOs } from  '../../../../state/network/selectedos/actions';
+import { addDevice } from  '../../../../state/network/devicelist/actions'; 
+import { setSelectedDevice} from  '../../../../state/network/selecteddevice/actions';
+import { clearSelectedVersions, setSelectedVersions } from  '../../../../state/network/selectedversions/actions'; 
+
+import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppMenu, Item } from "../../../basic/menu";
+
+import { backgroundColor, styleMainMenu } from "../../../../constants";
+
 import AddDeviceModal from "../AddDeviceModal";
 import DeviceDetailsPage from "../DeviceDetailsPage";
-import { AppHeaderH3Plus } from "../../../basic/header";
-import AppMenu from "../../../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { Item } from "../../../basic/menu";
 
 
 const DeviceListPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
-  const [{ devices, device, oss }, dispatch] = useStateValue();
+  const dispatch = useDispatch();
+
+  const devices = useSelector((state: RootState) => state.devices);
+  const device = useSelector((state: RootState) => state.device);
+  const oss = useSelector((state: RootState) => state.oss);
 
   React.useEffect(() => {
     dispatch(clearSelectedOs());
@@ -29,29 +39,22 @@ const DeviceListPage: React.FC = () => {
     setError(undefined);
   };
 
-  const submitNewDevice = async (values: DeviceFormValues) => {
-    try {
-      const newDevice = await create(values);
-      dispatch(addDevice(newDevice));
-    } catch (e) {
-      console.error(e.response.data);
-      setError(e.response.data.error);
-    }
+  const submitNewDevice = (values: DeviceNoID) => {
+    dispatch(addDevice(values));
     closeModal();
   };
 
   const handleSelection = (device: Device) => {
     dispatch(setSelectedDevice(device))
-    dispatch(clearFilteredVersions());
+    dispatch(clearSelectedVersions());
     device.osversions.forEach((osversion, index) => {
       const selectedOs: Os[] = Object.values(oss).filter((os => os.name === osversion.name));
-      dispatch(addFilteredVersions());
       const selectedversions: string[] = selectedOs.length===0 ? [] : selectedOs[0].versions;
-      dispatch(setFilteredVersions({ id: index, versions: selectedversions }));
+      dispatch(setSelectedVersions(index, selectedversions));
     });    
   }
 
-  if (device) {
+  if (device.id!=='') {
     return (
       <DeviceDetailsPage/>
     )

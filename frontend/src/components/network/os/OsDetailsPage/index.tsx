@@ -1,36 +1,45 @@
 import React from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { useStateValue, clearSelectedOs } from "../../../../state";
-import { Version, OsNoID } from "../../../../types/network";
-import AddVersionModal from "../AddVersionModal";
-import { update } from "../../../../services/device/oss";
-import { AppHeaderH3 } from "../../../basic/header";
-import AppMenu from "../../../basic/menu";
+import { Version, Os } from "../../../../types/network";
+
+import { RootState } from '../../../../state/store';
+import { updateOs, removeOs } from  '../../../../state/network/oslist/actions';
+import { clearSelectedOs } from  '../../../../state/network/selectedos/actions';
+
+import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppMenu, Item } from "../../../basic/menu";
+import { AskModal } from "../../../basic/askModal";
+
 import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { Item } from "../../../basic/menu";
+
+import AddVersionModal from "../AddVersionModal";
 
 
 const OsDetailsPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean]>([false, false]);
   const [error, setError] = React.useState<string | undefined>();
-  const [{ os }, dispatch] = useStateValue();
+  const dispatch = useDispatch();
 
-  const openModal = (): void => setModalOpen(true);
+  const os = useSelector((state: RootState) => state.selectedos);
+
+  const openModalNew = (): void => setModalOpen([true, false]);
+  const openModalDelete = (): void => setModalOpen([false, true]);
+  enum ModalDialog {
+    ADD = 0,
+    DELETE = 1
+  }
+
   const closeModal = (): void => {
-    setModalOpen(false);
+    setModalOpen([false, false]);
     setError(undefined);
   };
 
   const submitNewVersion = async (values: Version) => {
-    if (os) {
-      const newOs: OsNoID = {
-        name: os.name,
-        versions: os.versions
-      };
+      const newOs: Os = os;
       newOs.versions.push(values.version);
-      update(os.id, newOs);
-    }
+      dispatch(updateOs(newOs));
     closeModal();
   };
 
@@ -38,7 +47,12 @@ const OsDetailsPage: React.FC = () => {
     dispatch(clearSelectedOs());
   }
 
-  if (os===undefined) {
+  const  handleDelete = async () => {
+    dispatch(removeOs(os.id));
+    dispatch(clearSelectedOs());
+  }   
+
+  if (os.id==='') {
     return (
       <div>
         war wohl nix
@@ -52,7 +66,7 @@ const OsDetailsPage: React.FC = () => {
       name: 'Neu',
       title: 'Neu',
       color: 'blue',
-      onClick: openModal
+      onClick: openModalNew
     },
     {
       name: 'Schliessen',
@@ -60,13 +74,33 @@ const OsDetailsPage: React.FC = () => {
       color: 'blue',
       onClick: handleClose
     },
+    {
+      name: 'Löschen',
+      title: 'Löschen',
+      color: 'red',
+      onClick: openModalDelete
+    },
   ];
 
   const versions: string[] = Object.values(os.versions);
 
   return (
     <div className="App">
-      <AppHeaderH3 text={os.name}/>
+      <AppHeaderH3Plus text={os.name} icon='list'/>
+      <AskModal
+        header='Os löschen'
+        prompt={'Os löschen ' + os.name}
+        modalOpen={modalOpen[ModalDialog.DELETE]}
+        onSubmit={handleDelete}
+        onClose={closeModal}
+      />
+      <AddVersionModal
+        modalOpen={modalOpen[ModalDialog.ADD]}
+        onSubmit={submitNewVersion}
+        error={error}
+        onClose={closeModal}
+      />
+      <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
       <Table celled>
         <Table.Header>
           <Table.Row>
@@ -81,13 +115,6 @@ const OsDetailsPage: React.FC = () => {
           ))}
         </Table.Body>
       </Table>
-      <AddVersionModal
-        modalOpen={modalOpen}
-        onSubmit={submitNewVersion}
-        error={error}
-        onClose={closeModal}
-      />
-      <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
     </div>
   );
 }

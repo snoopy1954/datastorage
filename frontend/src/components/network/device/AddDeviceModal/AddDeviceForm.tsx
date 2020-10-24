@@ -1,13 +1,18 @@
 import React from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Menu } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
-import { useStateValue, addFilteredVersions, setFilteredVersions } from "../../../../state";
-import { TextField, SelectField, Option, NetworkFieldArray, OsFieldArray } from "./FormField";
 import { Device, Os } from "../../../../types/network";
 import { Edittype } from "../../../../types/basic";
+
+import { RootState } from '../../../../state/store';
+import { setSelectedVersions } from  '../../../../state/network/selectedversions/actions'; 
+
 import { AppHeaderH3 } from "../../../basic/header";
 import { backgroundColor, styleMainMenu } from "../../../../constants";
+
+import { TextField, SelectField, Option, NetworkFieldArray, OsFieldArray } from "./FormField";
 
 export type DeviceFormValues = Omit<Device, "id">;
 
@@ -18,16 +23,21 @@ interface Props {
 }
 
 const AddDeviceForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const [{ device, devicetypes, oss, selectedversions }, dispatch] = useStateValue();
+  const dispatch = useDispatch();
+
+  const device = useSelector((state: RootState) => state.device);
+  const devicetypes = useSelector((state: RootState) => state.devicetypes);
+  const oss = useSelector((state: RootState) => state.oss);
+  const selectedversions = useSelector((state: RootState) => state.versions);
 
   const handleOsSelection = (current: number, selection: string) => {
     const selectedOs: Os[] = Object.values(oss).filter((os => os.name === selection));
     const selectedversions: string[] = selectedOs.length===0 ? [] : selectedOs[0].versions;
-    dispatch(setFilteredVersions({ id: current, versions: selectedversions }));
+    dispatch(setSelectedVersions(current, selectedversions));
   };
 
   const handleOsAdd = () => {
-    dispatch(addFilteredVersions());
+    dispatch(setSelectedVersions(selectedversions.length, []));
   };
 
   const devicetypeOptions: Option[] = [];
@@ -46,14 +56,17 @@ const AddDeviceForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
     })
   });
 
+  console.log(selectedversions)
   const versionoptions: Option[][] = [];
   Object.values(selectedversions).forEach(element => {
     const versionoptionsOs: Option[] = [];
-    element.forEach((item) => {
-      versionoptionsOs.push({
-        value: item,
-        label: item
-      });
+    console.log(element, element.id, element.versions)
+    element.versions.forEach((item) => {
+      console.log(item)
+       versionoptionsOs.push({
+         value: item,
+         label: item
+       });
     });
     versionoptions.push(versionoptionsOs); 
   });
@@ -62,7 +75,7 @@ const AddDeviceForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
     versionoptions.push([])
   }
 
-  const initialValues = edittype===Edittype.EDIT && device
+  const initialValues = edittype===Edittype.EDIT && device.id!==''
   ? {
       name: device.name,
       description: device.description,

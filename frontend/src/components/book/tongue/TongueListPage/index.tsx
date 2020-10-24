@@ -1,19 +1,30 @@
 import React from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { useStateValue, addTongue, setSelectedTongue, clearSelectedTongue, setPage } from "../../../../state";
 import { Tongue, TongueNoID } from "../../../../types/book";
-import { create } from "../../../../services/book/tongues";
-import AddTongueModal from "../AddTongueModal";
+
+import { RootState } from '../../../../state/store';
+import { setPage } from '../../../../state/page/actions';
+import { addTongue } from '../../../../state/book/tonguelist/actions';
+import { setSelectedTongue, clearSelectedTongue } from '../../../../state/book/selectedtongue/actions';
+
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { backgroundColor, styleMainMenu } from "../../../../constants";
+
+import TongueDetailsPage from "../TongueDetailsPage";
+import AddTongueModal from "../AddTongueModal";
 
 
 const TongueListPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | undefined>();
-    const [{ tongues }, dispatch] = useStateValue();
+    const dispatch = useDispatch();
+
+    const mainpage = useSelector((state: RootState) => state.page.mainpage);      
+    const tongues = useSelector((state: RootState) => state.tongues);
+    const tongue = useSelector((state: RootState) => state.tongue);
 
     const openModal = (): void => setModalOpen(true);
     const closeModal = (): void => {
@@ -22,20 +33,24 @@ const TongueListPage: React.FC = () => {
     };
 
     const submitNewTongue = async (values: TongueNoID) => {
-      const newTongue = await create(values);
-      dispatch(addTongue(newTongue));
+      dispatch(addTongue(values));
       closeModal();
     };
 
     const handleSelection = (tongue: Tongue) => {
       dispatch(setSelectedTongue(tongue));
-      dispatch(setPage('books'));
     };  
 
     const handleClose = () => {
       dispatch(clearSelectedTongue());
-      dispatch(setPage('books'));
+      dispatch(setPage({ mainpage, subpage: 'books' }));
     };
+
+    if (tongue.id!=="") {
+      return (
+        <TongueDetailsPage/>
+      )
+    }  
 
     const buttons: Item[] = 
     [
@@ -52,8 +67,7 @@ const TongueListPage: React.FC = () => {
         onClick: openModal
       },
     ];  
-
-      
+     
     return (
         <div className="App">
           <AppHeaderH3Plus text='Sprachen' icon='list'/>

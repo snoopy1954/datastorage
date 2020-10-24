@@ -1,14 +1,64 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { AppHeaderH2, AppHeaderH3 } from "../basic/header";
+import { RootState } from '../../state/store';
+import { setPage } from '../../state/page/actions';
+import { initializeAddressgroups } from '../../state/address/addressgrouplist/actions';
+import { initializeAddresses } from '../../state/address/addresslist/actions';
+
+import { AppHeaderH2 } from "../basic/header";
+import { AppMenu, Item } from "../basic/menu";
+import { backgroundColor, styleMainMenu } from "../../constants";
+
+import AddressgroupListPage from "./addressgroup/AddressgroupListPage";
+import AddressListPage from "./address/AddressListPage";
 
 
 const Address: React.FC = () => {
-    
+    const dispatch = useDispatch();
+  
+    const mainpage = useSelector((state: RootState) => state.page.mainpage);      
+    const subpage = useSelector((state: RootState) => state.page.subpage);      
+  
+    React.useEffect(() => {
+      dispatch(initializeAddressgroups());
+    }, [dispatch]);
+
+    React.useEffect(() => {
+      dispatch(initializeAddresses());
+    }, [dispatch]);
+  
+    React.useEffect(() => {
+      dispatch(setPage({ mainpage, subpage: 'addresses' }));
+    }, [mainpage, dispatch]);
+   
+    const handleSelection = (selected: string) => {
+      dispatch(setPage({ mainpage, subpage: selected }));
+    };
+  
+    const buttons: Item[] = 
+    [
+      {
+        name: 'addresses',
+        title: 'Adressen',
+        color: 'blue',
+        onClick: handleSelection
+      },
+      {
+        name: 'addressgroup',
+        title: 'Gruppe',
+        color: 'blue',
+        onClick: handleSelection
+      },
+    ];
+  
+
   return (
     <div className="App">
       <AppHeaderH2 text='Adressen' icon='address book'/>
-      <AppHeaderH3 text='noch nix da'/>
+      <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
+      {subpage==='addresses'&&<AddressListPage/>}
+      {subpage==='addressgroup'&&<AddressgroupListPage/>}
     </div>
   );
 }

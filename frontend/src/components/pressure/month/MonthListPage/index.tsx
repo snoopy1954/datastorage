@@ -4,9 +4,9 @@ import { Table, Button } from "semantic-ui-react";
 
 import { Month, MonthNoID } from "../../../../types/pressure";
 
-import { RootState } from '../../../../state2/store';
-import { addMonth } from '../../../../state2/pressure/monthlist/actions';
-import { setSelectedMonth } from '../../../../state2/pressure/selectedmonth/actions';
+import { RootState } from '../../../../state/store';
+import { addMonth } from '../../../../state/pressure/monthlist/actions';
+import { setSelectedMonth } from '../../../../state/pressure/selectedmonth/actions';
 
 import { create } from "../../../../services/pressure/months";
 import { getAll } from "../../../../services/pressure/exchange";
@@ -25,7 +25,6 @@ const MonthListPage: React.FC = () => {
   const year = useSelector((state: RootState) => state.selectedyear);
   const months = useSelector((state: RootState) => state.monthlist); 
   const month = useSelector((state: RootState) => state.selectedmonth);
-
 
   const createOne = async (migrateOne: MonthNoID) => {
     const newMonth = await create(migrateOne);

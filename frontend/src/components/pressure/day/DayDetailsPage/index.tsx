@@ -4,9 +4,9 @@ import { Table } from "semantic-ui-react";
 
 import { Day } from "../../../../types/pressure";
 
-import { RootState } from '../../../../state2/store';
-import { updateMonth } from '../../../../state2/pressure/monthlist/actions';
-import { clearSelectedDay } from '../../../../state2/pressure/selectedday/actions';
+import { RootState } from '../../../../state/store';
+import { updateMonth } from '../../../../state/pressure/monthlist/actions';
+import { clearSelectedDay } from '../../../../state/pressure/selectedday/actions';
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";

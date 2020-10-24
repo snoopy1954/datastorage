@@ -1,33 +1,37 @@
 import React from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { Table, Image } from "semantic-ui-react";
 
-import { useStateValue, 
-         clearSelectedBook, 
-         removeBook, 
-         updateBook, 
-         setPage 
-       } from "../../../../state";
 import { Edittype } from "../../../../types/basic";
-import { BookWithFileNoID, 
-         BookNoID, 
-         Content 
-       } from "../../../../types/book";
 import { Image as Imagetype } from "../../../../types/image";
-import AddBookModal from "../AddBookModal";
-import AskModal from "../../../basic/askModal";
-import { remove, update, getOne } from "../../../../services/book/books";
-import { remove as removeImage, 
-         create as createImage } from "../../../../services/image/images";
-import { getContent } from "../../../../utils/image";
-import { backgroundColor, styleMainMenu } from "../../../../constants";
+import { BookWithFileNoID, Book, Content } from "../../../../types/book";
+
+import { RootState } from '../../../../state/store';
+import { setPage } from '../../../../state/page/actions';
+import { removeBook, updateBook } from '../../../../state/book/booklist/actions';
+import { clearSelectedBook } from '../../../../state/book/selectedbook/actions';
+
+import { remove, create } from "../../../../services/image/images";
+       
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
+
+import { getContent, getImageUrl } from "../../../../utils/image";
+import { backgroundColor, styleMainMenu } from "../../../../constants";
+
+import AddBookModal from "../AddBookModal";
+import AskModal from "../../../basic/askModal";
 
 
 const BookDetailsPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<[boolean, boolean]>([false, false]);
     const [error, setError] = React.useState<string | undefined>();
-    const [{ book, imageUrl }, dispatch] = useStateValue();
+    const dispatch = useDispatch();
+
+    const mainpage = useSelector((state: RootState) => state.page.mainpage);      
+    const book  = useSelector((state: RootState) => state.book);
+    const image = useSelector((state: RootState) => state.image);  
+    const imageUrl = image.id!=='' ? getImageUrl(image) : '';
 
     const openModalChange = (): void => setModalOpen([true, false]);
     const openModalDelete = (): void => setModalOpen([false, true]);
@@ -46,7 +50,7 @@ const BookDetailsPage: React.FC = () => {
             if (values.file.name!=='foo.txt') {
                 const filedata = await getContent(values.file);
                 const longInt8View = new Uint8Array(filedata);
-                const newImage: Imagetype = await createImage(longInt8View);
+                const newImage: Imagetype = await create(longInt8View);
                 content = {
                     filename: values.file.name,
                     filetype: values.file.type,
@@ -62,7 +66,8 @@ const BookDetailsPage: React.FC = () => {
                     dataId: book.content.dataId
                 }
             }
-            const bookToUpdate: BookNoID = {
+            const bookToUpdate: Book = {
+                id: book.id,
                 title: { name: values.title.name, seqnr: values.title.seqnr },
                 author: { givenname: values.author.givenname, familyname: values.author.familyname },
                 comment: values.comment,
@@ -78,18 +83,11 @@ const BookDetailsPage: React.FC = () => {
                 tongue: values.tongue,
                 content: content
             }
-            try {
-                await update(book.id, bookToUpdate);
-                const changedBook = await getOne(book.id);
-                dispatch(updateBook(changedBook));
-            } catch (e) {
-                console.error(e.response.data);
-                setError(e.response.data.error);
-            }
+            dispatch(updateBook(bookToUpdate));
         }
         closeModal();
         dispatch(clearSelectedBook());
-        setPage('books')
+        dispatch(setPage({ mainpage, subpage: 'books' }));
     };    
 
     const handleClose = () => {
@@ -99,12 +97,11 @@ const BookDetailsPage: React.FC = () => {
 
     const  handleDelete = async () => {
         if (book) {
-            await removeImage(book.content.dataId);
-            await remove(book.id);
-          dispatch(removeBook(book.id));
+            await remove(book.content.dataId);
+            dispatch(removeBook(book.id));
         }
         dispatch(clearSelectedBook());
-        setPage('books')
+        dispatch(setPage({ mainpage, subpage: 'books' }));
     }   
         
     if (book===undefined) {

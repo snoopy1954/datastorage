@@ -1,21 +1,30 @@
 import React from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { useStateValue, addOs, setSelectedOs, clearSelectedDevice } from "../../../../state";
 import { Os, OsNoID } from "../../../../types/network";
+
+import { RootState } from '../../../../state/store';
+import { addOs } from  '../../../../state/network/oslist/actions';
+import { setSelectedOs } from  '../../../../state/network/selectedos/actions';
+import { clearSelectedDevice} from  '../../../../state/network/selecteddevice/actions';
+
+import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppMenu, Item } from "../../../basic/menu";
+
+import { backgroundColor, styleMainMenu } from "../../../../constants";
+
 import AddOsModal from "../AddOsModal";
 import OsDetailsPage from "../OsDetailsPage";
-import { create } from "../../../../services/device/oss";
-import { AppHeaderH3 } from "../../../basic/header";
-import AppMenu from "../../../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { Item } from "../../../basic/menu";
 
 
 const OsListPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
-  const [{ oss, os }, dispatch] = useStateValue();
+  const dispatch = useDispatch();
+
+  const oss = useSelector((state: RootState) => state.oss);
+  const os = useSelector((state: RootState) => state.selectedos);
 
   React.useEffect(() => {
     dispatch(clearSelectedDevice());
@@ -28,8 +37,7 @@ const OsListPage: React.FC = () => {
   };
 
   const submitNewOs = async (values: OsNoID) => {
-    const newOs = await create(values);
-    dispatch(addOs(newOs));
+    dispatch(addOs(values));
     closeModal();
   };
 
@@ -37,7 +45,7 @@ const OsListPage: React.FC = () => {
     dispatch(setSelectedOs(os))
   }
 
-  if (os) {
+  if (os.id!=='') {
     return (
       <OsDetailsPage />
     )
@@ -55,7 +63,14 @@ const OsListPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3 text='Betriebssysteme'/>
+      <AppHeaderH3Plus text='Betriebssysteme' icon='list'/>
+      <AddOsModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewOs}
+        error={error}
+        onClose={closeModal}
+      />
+      <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
       <Table celled>
         <Table.Header>
           <Table.Row>
@@ -70,13 +85,6 @@ const OsListPage: React.FC = () => {
           ))}
         </Table.Body>
       </Table>
-      <AddOsModal
-        modalOpen={modalOpen}
-        onSubmit={submitNewOs}
-        error={error}
-        onClose={closeModal}
-      />
-      <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
     </div>
   );
 }

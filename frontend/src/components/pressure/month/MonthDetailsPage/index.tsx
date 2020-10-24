@@ -4,10 +4,10 @@ import { Table } from "semantic-ui-react";
 
 import { Day } from "../../../../types/pressure";
 
-import { RootState } from '../../../../state2/store';
-import { removeMonth } from '../../../../state2/pressure/monthlist/actions';
-import { clearSelectedMonth } from '../../../../state2/pressure/selectedmonth/actions';
-import { setSelectedDay } from '../../../../state2/pressure/selectedday/actions';
+import { RootState } from '../../../../state/store';
+import { removeMonth } from '../../../../state/pressure/monthlist/actions';
+import { clearSelectedMonth } from '../../../../state/pressure/selectedmonth/actions';
+import { setSelectedDay } from '../../../../state/pressure/selectedday/actions';
 
 import { create } from "../../../../services/pressure/exchange";
 
