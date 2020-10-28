@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/camelcase */
-import { Year, Month, MonthNoID, Day, Monthnames, Daynames, NextMonth } from '../types/pressure';
+import { Year, Month, MonthNoID, Day } from '../../../backend/src/types/pressure';
+import { Monthnames, Daynames } from '../types/basic';
 
 export const sortMonthList = (monthList: Month[]) => {
     const sortedMonthList = monthList.sort(function(a,b) {
@@ -126,19 +127,19 @@ export const getNextDate = (year: Year): string => {
   return nextDate;
 }
 
-export const getYear = (currentYear: Year): NextMonth => {
-  const nextYear = currentYear.lastMonth!==12 
-    ? { 
-        year: currentYear.name,
-        month: (currentYear.lastMonth < 9 ? "0" : "") + String(currentYear.lastMonth+1)
-      } 
-    : {
-        year: String(+currentYear.name+1),
-        month: "01"
-      }
+// export const getYear = (currentYear: Year): NextMonth => {
+//   const nextYear = currentYear.lastMonth!==12 
+//     ? { 
+//         year: currentYear.name,
+//         month: (currentYear.lastMonth < 9 ? "0" : "") + String(currentYear.lastMonth+1)
+//       } 
+//     : {
+//         year: String(+currentYear.name+1),
+//         month: "01"
+//       }
 
-  return nextYear;
-}
+//   return nextYear;
+// }
 
 export const getPromptForNextMonth = (year: Year): string => {
   return (year.lastMonth===12)
@@ -151,7 +152,16 @@ export const getPromptForDeleteMonth = (month: Month): string => {
 }
 
 export const getNextMonth = (currentYear: Year): MonthNoID => {
-  const { year, month } = getYear(currentYear);
+  let year = '';
+  let month = '';
+  if ( currentYear.lastMonth!==12 ) {
+    year = currentYear.name;
+    month = (currentYear.lastMonth < 9 ? "0" : "") + String(currentYear.lastMonth+1);
+  } else {
+    year = String(+currentYear.name+1);
+    month = "01";
+  }
+//  const { year, month } = getYear(currentYear);
   const monthname = Monthnames[+month-1];
   const key = year + month;
   const numberOfDays = getNumberOfDays(key);

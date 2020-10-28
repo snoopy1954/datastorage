@@ -1,4 +1,4 @@
-import { Tongue, TongueNoID } from '../../../types/book';
+import { Tongue, TongueNoID } from '../../../../../backend/src/types/book';
 import { 
     SET_TONGUE_LIST, 
     ADD_TONGUE,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddFormatForm from './AddFormatForm';
-import { FormatNoID } from "../../../../types/book";
+import { FormatNoID } from '../../../../../../backend/src/types/book';
 
 
 interface Props {

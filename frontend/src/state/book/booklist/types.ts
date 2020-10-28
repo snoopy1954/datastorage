@@ -1,4 +1,4 @@
-import { Book } from '../../../types/book';
+import { Book } from '../../../../../backend/src/types/book';
 
 export const SET_BOOK_LIST = 'SET_BOOK_LIST';
 export const ADD_BOOK  = 'ADD_BOOK';

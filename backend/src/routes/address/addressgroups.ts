@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
-import Addressgroup from '../../models/address/addressgroupModel';
+import Addressgroup from '../../models/address/addressgroup';
 import { toNewAddressgroup } from '../../utils/address/parameters';
 
 const addressgroupsRouter = express.Router();

@@ -1,4 +1,4 @@
-import { Ownership, OwnershipNoID } from '../../../types/book';
+import { Ownership, OwnershipNoID } from '../../../../../backend/src/types/book';
 import { 
     SET_OWNERSHIP_LIST, 
     ADD_OWNERSHIP,

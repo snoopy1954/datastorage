@@ -3,7 +3,7 @@ import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
 import { TextField } from "./FormField";
-import { AddressgroupNoID } from '../../../../../../backend/src/types/addressTypes';
+import { AddressgroupNoID } from '../../../../../../backend/src/types/address';
 
 interface Props {
   onSubmit: (values: AddressgroupNoID) => void;

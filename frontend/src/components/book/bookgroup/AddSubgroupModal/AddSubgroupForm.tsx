@@ -3,7 +3,7 @@ import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
 import { TextField } from "./FormField";
-import { Subgroup } from "../../../../types/book";
+import { Subgroup } from '../../../../../../backend/src/types/book';
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 interface Props {

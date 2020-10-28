@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddOsForm from './AddOsForm';
-import { OsNoID } from "../../../../types/network";
+import { OsNoID } from '../../../../../../backend/src/types/network';
 
 interface Props {
   modalOpen: boolean;

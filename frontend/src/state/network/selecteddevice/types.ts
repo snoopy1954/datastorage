@@ -1,4 +1,4 @@
-import { Device } from '../../../types/network';
+import { Device } from '../../../../../backend/src/types/network';
 
 export const SET_SELECTED_DEVICE = 'SET_SELECTED_DEVICE';
 export const CLEAR_SELECTED_DEVICE = 'CLEAR_SELECTED_DEVICE';

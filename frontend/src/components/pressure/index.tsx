@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Year, MonthNoID } from "../../types/pressure";
+import { Year, MonthNoID } from '../../../../backend/src/types/pressure';
 
 import { RootState } from '../../state/store';
 import { setYearList } from '../../state/pressure/yearlist/actions';

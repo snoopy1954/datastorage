@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddSubgroupForm from './AddSubgroupForm';
-import { Subgroup } from "../../../../types/book";
+import { Subgroup } from '../../../../../../backend/src/types/book';
 
 interface Props {
   modalOpen: boolean;

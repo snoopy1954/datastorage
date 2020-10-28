@@ -1,4 +1,4 @@
-import { Os } from '../../../types/network';
+import { Os } from '../../../../../backend/src/types/network';
 
 export const SET_OS_LIST = 'SET_OS_LIST';
 export const ADD_OS  = 'ADD_OS';

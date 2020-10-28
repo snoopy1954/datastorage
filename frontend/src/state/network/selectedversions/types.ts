@@ -1,4 +1,4 @@
-import { SelectedVersions } from '../../../types/network';
+import { SelectedVersions } from '../../../../../backend/src/types/network';
 
 export const SET_VERSIONS = 'SET_VERSIONS';
 export const CLEAR_VERSIONS = 'CLEAR_VERSIONS';

@@ -3,15 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, Image } from "semantic-ui-react";
 
 import { Edittype } from "../../../../types/basic";
-import { Image as Imagetype } from "../../../../types/image";
-import { BookWithFileNoID, Book, Content } from "../../../../types/book";
+import { Image as Imagetype } from '../../../../../../backend/src/types/image';
+import { BookWithFileNoID, Book, Content } from '../../../../../../backend/src/types/book';
 
 import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';
 import { removeBook, updateBook } from '../../../../state/book/booklist/actions';
 import { clearSelectedBook } from '../../../../state/book/selectedbook/actions';
 
-import { remove, create } from "../../../../services/image/images";
+import { remove, create, update } from "../../../../services/image/images";
        
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
@@ -21,26 +21,29 @@ import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 import AddBookModal from "../AddBookModal";
 import AskModal from "../../../basic/askModal";
+import ShowModal from "../../../basic/showModal";
 
 
 const BookDetailsPage: React.FC = () => {
-    const [modalOpen, setModalOpen] = React.useState<[boolean, boolean]>([false, false]);
+    const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean]>([false, false, false]);
     const [error, setError] = React.useState<string | undefined>();
     const dispatch = useDispatch();
 
     const mainpage = useSelector((state: RootState) => state.page.mainpage);      
     const book  = useSelector((state: RootState) => state.book);
-    const image = useSelector((state: RootState) => state.image);  
-    const imageUrl = image.id!=='' ? getImageUrl(image) : '';
+    const image = useSelector((state: RootState) => state.image); 
+    const imageUrl = (image&&image.id!=='') ? getImageUrl(image) : '';
 
-    const openModalChange = (): void => setModalOpen([true, false]);
-    const openModalDelete = (): void => setModalOpen([false, true]);
+    const openModalChange = (): void => setModalOpen([true, false, false]);
+    const openModalDelete = (): void => setModalOpen([false, true, false]);
+    const openModalShow = (): void => setModalOpen([false, false, true]);
     enum ModalDialog {
         CHANGE = 0,
-        DELETE = 1
+        DELETE = 1,
+        SHOW = 2
     }  
     const closeModal = (): void => {
-        setModalOpen([false, false]);
+        setModalOpen([false, false, false]);
         setError(undefined);
     };
 
@@ -48,6 +51,7 @@ const BookDetailsPage: React.FC = () => {
         if (book) {
             let content: Content;
             if (values.file.name!=='foo.txt') {
+                await remove(book.content.dataId);
                 const filedata = await getContent(values.file);
                 const longInt8View = new Uint8Array(filedata);
                 const newImage: Imagetype = await create(longInt8View);
@@ -57,6 +61,7 @@ const BookDetailsPage: React.FC = () => {
                     filesize: String(values.file.size),
                     dataId: newImage.id
                 }
+                await update(newImage.id, content);
             }
             else {
                 content = {
@@ -93,7 +98,7 @@ const BookDetailsPage: React.FC = () => {
     const handleClose = () => {
         URL.revokeObjectURL(imageUrl);
         dispatch(clearSelectedBook());
-    }
+    };
 
     const  handleDelete = async () => {
         if (book) {
@@ -102,8 +107,8 @@ const BookDetailsPage: React.FC = () => {
         }
         dispatch(clearSelectedBook());
         dispatch(setPage({ mainpage, subpage: 'books' }));
-    }   
-        
+    };
+
     if (book===undefined) {
         return (
           <div>
@@ -151,6 +156,12 @@ const BookDetailsPage: React.FC = () => {
                 onSubmit={handleDelete}
                 onClose={closeModal}
             />
+            <ShowModal
+                title={book.title.name}
+                imageUrl={imageUrl}
+                modalOpen={modalOpen[ModalDialog.SHOW]}
+                onClose={closeModal}
+            />
             <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
             <Table celled style={{ backgroundColor }}>
                 <Table.Header>
@@ -166,7 +177,7 @@ const BookDetailsPage: React.FC = () => {
                     </Table.Row>
                     <Table.Row>
                         <Table.Cell>Cover</Table.Cell>
-                        <Table.Cell><Image className="ui tiny image" src={imageUrl}/></Table.Cell>
+                        <Table.Cell><Image className="ui tiny image" src={imageUrl} onClick={() => openModalShow()}/></Table.Cell>
                     </Table.Row>
                     <Table.Row>
                         <Table.Cell>Autor</Table.Cell>

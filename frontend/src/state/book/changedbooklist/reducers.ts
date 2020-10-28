@@ -1,4 +1,4 @@
-import { Book } from '../../../types/book';
+import { Book } from '../../../../../backend/src/types/book';
 import { ADD_CHANGED_BOOK, CLEAR_CHANGED_BOOK, ActionTypes } from './types';
 
 const initialState: Book[] = [];

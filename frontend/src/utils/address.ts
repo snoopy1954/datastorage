@@ -1,8 +1,26 @@
-import { Address, AddressNoID, Addressgroup, AddressgroupNoID, Person } from '../../../backend/src/types/addressTypes';
+import { Address, AddressNoID, Addressgroup, AddressgroupNoID, Person } from '../../../backend/src/types/address';
 
-const sortAddresss = (a: Address, b: Address) => {
-    const nameA = a.name;
-    const nameB = b.name;
+const sortAddresssgroup = (a: Addressgroup, b: Addressgroup) => {
+    const nameA = a.groupname.seqnr;
+    const nameB = b.groupname.seqnr;
+    if (nameA < nameB) {
+        return -1;
+    }
+    if (nameA > nameB) {
+        return 1;
+    }
+    return 0;
+};
+
+export const sortAddressgroupList = (addressgroups: Addressgroup[]) => {
+    const addressgroupListSorted = addressgroups.sort(sortAddresssgroup);
+        
+    return addressgroupListSorted;
+};
+
+const sortAddresses = (a: Address, b: Address) => {
+    const nameA = a.name.seqnr;
+    const nameB = b.name.seqnr;
     if (nameA < nameB) {
         return -1;
     }
@@ -19,7 +37,7 @@ export const sortAddressList = (addresss: Address[], addressgroups: Addressgroup
     addressgroups.forEach(addressgroup => {
         sortedAddressgroup = [];
             sortedAddressgroup = addresss.filter(address => address.group===addressgroup.groupname.name);
-            addressListSorted = addressListSorted.concat(sortedAddressgroup.sort(sortAddresss));
+            addressListSorted = addressListSorted.concat(sortedAddressgroup.sort(sortAddresses));
     });
         
     return addressListSorted;

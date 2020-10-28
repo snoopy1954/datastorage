@@ -1,4 +1,4 @@
-import { Month } from '../../../types/pressure';
+import { Month } from '../../../../../backend/src/types/pressure';
 
 export const SET_MONTH_LIST = 'SET_MONTH_LIST';
 export const ADD_MONTH  = 'ADD_MONTH';

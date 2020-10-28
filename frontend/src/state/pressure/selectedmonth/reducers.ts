@@ -1,4 +1,4 @@
-import { Month } from '../../../types/pressure';
+import { Month } from '../../../../../backend/src/types/pressure';
 import { SET_SELECTED_MONTH, CLEAR_SELECTED_MONTH, SelectedMonthActionTypes } from './types';
 
 const initialState: Month = {

@@ -1,4 +1,4 @@
-import { Book } from '../../../types/book';
+import { Book } from '../../../../../backend/src/types/book';
 import { SET_SELECTED_BOOK, CLEAR_SELECTED_BOOK, ActionTypes } from './types';
 import { newBook } from '../../../utils/book';
 

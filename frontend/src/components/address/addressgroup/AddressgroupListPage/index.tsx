@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Addressgroup, AddressgroupNoID } from "../../../../../../backend/src/types/addressTypes";
+import { Addressgroup, AddressgroupNoID } from "../../../../../../backend/src/types/address";
 
 import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';

@@ -4,7 +4,7 @@ import { Field, Formik, Form } from "formik";
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 import { TextField } from "./FormField";
-import { DevicetypeNoID } from "../../../../types/network";
+import { DevicetypeNoID } from '../../../../../../backend/src/types/network';
 
 interface Props {
   onSubmit: (values: DevicetypeNoID) => void;

@@ -1,4 +1,4 @@
-import { Book, BookNoID } from '../../../types/book';
+import { Book, BookNoID } from '../../../../../backend/src/types/book';
 import { 
     SET_BOOK_LIST, 
     ADD_BOOK,
@@ -62,5 +62,5 @@ export const exchangeBooks = (books: Book[]) => {
     }
         
     return action;  
-}
+};
 

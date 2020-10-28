@@ -1,4 +1,4 @@
-import { Bookgroup, BookgroupNoID } from '../../../types/book';
+import { Bookgroup, BookgroupNoID } from '../../../../../backend/src/types/book';
 import { 
     SET_BOOKGROUP_LIST, 
     ADD_BOOKGROUP,

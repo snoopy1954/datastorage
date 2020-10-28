@@ -1,4 +1,4 @@
-import { Ownership } from '../../../types/book';
+import { Ownership } from '../../../../../backend/src/types/book';
 import { SET_SELECTED_OWNERSHIP, CLEAR_SELECTED_OWNERSHIP, ActionTypes } from './types';
 
 export const setSelectedOwnership = (ownership: Ownership) => {

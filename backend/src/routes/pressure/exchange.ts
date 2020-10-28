@@ -3,9 +3,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import express from 'express';
 
-import { importPG, exportMG } from '../../utils/migrate';
+import { importPG, exportMG } from '../../utils/pressure/migrate';
 import { exchangeFolder, dumpPGFilename, dumpMGBasename, dumpMGExtension } from '../../constants';
-import { Month } from '../../types/blutdruckTypes';
+import { Month } from '../../types/pressure';
 
 const exchangeRouter = express.Router();
 

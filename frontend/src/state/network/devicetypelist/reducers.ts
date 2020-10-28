@@ -1,4 +1,4 @@
-import { Devicetype } from '../../../types/network';
+import { Devicetype } from '../../../../../backend/src/types/network';
 import { SET_DEVICETYPE_LIST, ADD_DEVICETYPE, UPDATE_DEVICETYPE, REMOVE_DEVICETYPE, DevicetypeActionTypes } from './types';
 
 const initialState: Devicetype[] = [];

@@ -1,4 +1,4 @@
-import { Tongue } from '../../../types/book';
+import { Tongue } from '../../../../../backend/src/types/book';
 import { SET_SELECTED_TONGUE, CLEAR_SELECTED_TONGUE, ActionTypes } from './types';
 
 const initialState: Tongue = {

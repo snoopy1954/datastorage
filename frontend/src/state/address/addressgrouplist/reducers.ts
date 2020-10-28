@@ -1,4 +1,4 @@
-import { Addressgroup } from '../../../../../backend/src/types/addressTypes';
+import { Addressgroup } from '../../../../../backend/src/types/address';
 import { SET_ADDRESSGROUP_LIST, ADD_ADDRESSGROUP, UPDATE_ADDRESSGROUP, REMOVE_ADDRESSGROUP, ActionTypes } from './types';
 
 const initialState: Addressgroup[] = [];

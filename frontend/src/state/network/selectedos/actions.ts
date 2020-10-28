@@ -1,4 +1,4 @@
-import { Os } from '../../../types/network';
+import { Os } from '../../../../../backend/src/types/network';
 import { SET_SELECTED_OS, CLEAR_SELECTED_OS, ActionTypes } from './types';
 
 export const setSelectedOs = (os: Os) => {

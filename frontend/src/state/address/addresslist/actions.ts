@@ -1,9 +1,10 @@
-import { Address, AddressNoID } from '../../../../../backend/src/types/addressTypes';
+import { Address, AddressNoID } from '../../../../../backend/src/types/address';
 import { 
     SET_ADDRESS_LIST, 
     ADD_ADDRESS,
     UPDATE_ADDRESS,
     REMOVE_ADDRESS,
+    EXCHANGE_ADDRESSES,
     DispatchSetAddressList,
     DispatchAddAddress,
     DispatchUpdateAddress,
@@ -15,10 +16,10 @@ import { create, update, remove, getAll } from '../../../services/address/addres
 
 export const initializeAddresses = () => {
   return async (dispatch: DispatchSetAddressList) => {
-    const addresss = await getAll();
+    const addresses = await getAll();
     dispatch({
       type: SET_ADDRESS_LIST,
-      payload: addresss,
+      payload: addresses,
     });
   }
 }
@@ -53,3 +54,12 @@ export const removeAddress = (id: string) => {
   }
 };
 
+export const exchangeAddresses = (addresses: Address[]) => {
+  const action = 
+    {
+      type: EXCHANGE_ADDRESSES,
+      payload: addresses,
+    }
+        
+    return action;  
+};

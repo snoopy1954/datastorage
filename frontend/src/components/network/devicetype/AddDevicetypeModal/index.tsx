@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddDevicetypeForm from './AddDevicetypeForm';
-import { DevicetypeNoID } from "../../../../types/network";
+import { DevicetypeNoID } from '../../../../../../backend/src/types/network';
 
 interface Props {
   modalOpen: boolean;

@@ -1,4 +1,4 @@
-import { Format, FormatNoID } from '../../../types/book';
+import { Format, FormatNoID } from '../../../../../backend/src/types/book';
 import { 
     SET_FORMAT_LIST, 
     ADD_FORMAT,

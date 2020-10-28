@@ -1,4 +1,4 @@
-import { Bookgroup } from '../../../types/book';
+import { Bookgroup } from '../../../../../backend/src/types/book';
 import { SET_SELECTED_BOOKGROUP, CLEAR_SELECTED_BOOKGROUP, ActionTypes } from './types';
 
 export const setSelectedBookgroup = (bookgroup: Bookgroup) => {

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Menu } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
-import { Device, Os } from "../../../../types/network";
+import { Device, Os } from '../../../../../../backend/src/types/network';
 import { Edittype } from "../../../../types/basic";
 
 import { RootState } from '../../../../state/store';

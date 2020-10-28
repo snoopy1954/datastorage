@@ -1,4 +1,4 @@
-import { Month } from '../../../types/pressure';
+import { Month } from '../../../../../backend/src/types/pressure';
 import { SET_MONTH_LIST, ADD_MONTH, UPDATE_MONTH, REMOVE_MONTH, MonthActionTypes } from './types';
 
 const initialState: Month[] = [];

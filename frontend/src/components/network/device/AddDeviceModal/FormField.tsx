@@ -1,7 +1,7 @@
 import React from "react";
 import { ErrorMessage, Field, FieldProps, FormikProps, FieldArray } from "formik";
 import { Form, Button, Menu } from "semantic-ui-react";
-import { Network, Osversion } from "../../../../types/network";
+import { Network, Osversion } from '../../../../../../backend/src/types/network';
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 export type Option = {

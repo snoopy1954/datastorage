@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiBaseUrl } from "../../constants";
-import { Month, MonthNoID } from "../../types/pressure";
+import { Month, MonthNoID } from '../../../../backend/src/types/pressure';
 
 const getAll = async () => {
     const { data: monthListFromApi } = await axios.get<MonthNoID[]>(

@@ -1,4 +1,4 @@
-import { Bookgroup } from '../../../types/book';
+import { Bookgroup } from '../../../../../backend/src/types/book';
 
 export const SET_BOOKGROUP_LIST = 'SET_BOOKGROUP_LIST';
 export const ADD_BOOKGROUP  = 'ADD_BOOKGROUP';

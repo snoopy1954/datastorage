@@ -6,7 +6,7 @@ import { Field, Formik, Form } from "formik";
 import { RootState } from '../../../../state/store';
 
 import { TextField, TextFieldCheck } from "./FormField";
-import { Day } from "../../../../types/pressure";
+import { Day } from '../../../../../../backend/src/types/pressure';
 
 interface Props {
     onSubmit: (values: Day) => void;

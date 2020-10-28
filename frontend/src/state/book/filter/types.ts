@@ -1,4 +1,4 @@
-import { Filter } from '../../../types/book';
+import { Filter } from '../../../../../backend/src/types/book';
 
 export const SET_FILTER = 'SET_FILTER';
 export const CLEAR_FILTER = 'CLEAR_FILTER';

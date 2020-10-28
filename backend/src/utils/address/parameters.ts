@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { AddressNoID, AddressgroupNoID, Person} from '../../types/addressTypes';
+import { AddressNoID, AddressgroupNoID, Person} from '../../types/address';
 import { parseString, parseNumber } from './../basicParser';
 
 export const toNewAddress = (object: any) => {

@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Os, OsNoID } from "../../../../types/network";
+import { Os, OsNoID } from '../../../../../../backend/src/types/network';
 
 import { RootState } from '../../../../state/store';
 import { addOs } from  '../../../../state/network/oslist/actions';

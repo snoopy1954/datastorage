@@ -1,8 +1,17 @@
-import { Image } from '../../types/image';
+/* eslint-disable no-undef */
+import { Image } from '../../../../backend/src/types/image';
 import { SET_IMAGE, CLEAR_IMAGE, ActionTypes } from './types';
 
-// eslint-disable-next-line no-undef
-const initialState: Image = { id: '', data: Buffer.from('')};
+const initialState: Image = { 
+    id: '', 
+    filename: '',
+    filetype: '',
+    filesize: '',
+    image: {
+        data: Buffer.from(''),
+        contentType: ''
+    }
+};
 
 export const imageReducer = (state = initialState, action: ActionTypes): Image => {
     switch (action.type) {
@@ -16,7 +25,6 @@ export const imageReducer = (state = initialState, action: ActionTypes): Image =
                 ...initialState
             }
         default: {
-            console.log('das passiert nie')
             return state
         }
     }

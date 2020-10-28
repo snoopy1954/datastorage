@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiBaseUrl } from "../../constants";
-import { Address, AddressNoID } from "../../../../backend/src/types/addressTypes";
+import { Address, AddressNoID } from "../../../../backend/src/types/address";
 
 const getAll = async () => {
     const { data: addresss } = await axios.get<Address[]>(

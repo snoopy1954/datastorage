@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiBaseUrl } from "../../constants";
-import { Tongue, TongueNoID } from "../../types/book";
+import { Tongue, TongueNoID } from '../../../../backend/src/types/book';
 
 const getAll = async () => {
     const { data: tongues } = await axios.get<Tongue[]>(

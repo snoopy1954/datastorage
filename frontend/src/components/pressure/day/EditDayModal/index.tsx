@@ -2,7 +2,7 @@ import React from 'react';
 import { Segment, Modal } from 'semantic-ui-react';
 
 import EditDayForm from './EditDayForm';
-import { Day } from '../../../../types/pressure';
+import { Day } from '../../../../../../backend/src/types/pressure';
 
 interface Props {
   dayTitle: string;

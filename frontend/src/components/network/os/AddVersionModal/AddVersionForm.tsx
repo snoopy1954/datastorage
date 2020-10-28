@@ -3,7 +3,7 @@ import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
 import { TextField } from "./FormField";
-import { Version } from "../../../../types/network";
+import { Version } from '../../../../../../backend/src/types/network';
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 export type VersionFormValues = Version;

@@ -1,4 +1,4 @@
-import { Address } from '../../../../../backend/src/types/addressTypes';
+import { Address } from '../../../../../backend/src/types/address';
 import { SET_SELECTED_ADDRESS, CLEAR_SELECTED_ADDRESS, ActionTypes } from './types';
 import { newAddress } from '../../../utils/address';
 

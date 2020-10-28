@@ -1,4 +1,4 @@
-import { Ownership } from '../../../types/book';
+import { Ownership } from '../../../../../backend/src/types/book';
 
 export const SET_SELECTED_OWNERSHIP = 'SET_SELECTED_OWNERSHIP';
 export const CLEAR_SELECTED_OWNERSHIP = 'CLEAR_SELECTED_OWNERSHIP';

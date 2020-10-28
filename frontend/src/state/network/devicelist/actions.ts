@@ -1,4 +1,4 @@
-import { Device, DeviceNoID } from '../../../types/network';
+import { Device, DeviceNoID } from '../../../../../backend/src/types/network';
 import { 
     SET_DEVICE_LIST, 
     ADD_DEVICE,
@@ -10,7 +10,7 @@ import {
     DispatchRemoveDevice
 } from './types';
 
-import { create, update, remove, getAll } from "../../../services/device/devices";
+import { create, update, remove, getAll } from "../../../services/network/devices";
 
 import { sortDeviceList } from "../../../utils/network";
 

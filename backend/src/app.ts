@@ -12,7 +12,7 @@ import ownershipsRouter from './routes/book/ownerships';
 import formatsRouter from './routes/book/formats';
 import tonguesRouter from './routes/book/tongues';
 import booksRouter from './routes/book/books';
-import imagesRouter from './routes/image/images';
+import imagesRouter from './routes/image';
 import addressgroupsRouter from './routes/address/addressgroups';
 import addressesRouter from './routes/address/addresses';
 

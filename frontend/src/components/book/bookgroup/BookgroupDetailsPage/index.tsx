@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Subgroup, BookgroupNoID } from "../../../../types/book";
+import { Subgroup, BookgroupNoID } from '../../../../../../backend/src/types/book';
 
 import { RootState } from '../../../../state/store';
 import { clearSelectedBookgroup } from '../../../../state/book/selectedbookgroup/actions';

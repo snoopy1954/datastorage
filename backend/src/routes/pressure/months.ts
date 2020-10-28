@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
-import Month from '../../models/blutdruck/monthModel';
-import { toNewMonth } from '../../utils/blutdruckParameter';
+import Month from '../../models/pressure/month';
+import { toNewMonth } from '../../utils/pressure/parameters';
 
 
 const monthsRouter = express.Router();

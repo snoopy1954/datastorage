@@ -1,4 +1,4 @@
-import { SelectedVersions } from '../../../types/network';
+import { SelectedVersions } from '../../../../../backend/src/types/network';
 import { SET_VERSIONS, CLEAR_VERSIONS, ActionTypes } from './types';
 
 const initialState: SelectedVersions[] = [];

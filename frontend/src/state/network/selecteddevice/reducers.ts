@@ -1,4 +1,4 @@
-import { Device } from '../../../types/network';
+import { Device } from '../../../../../backend/src/types/network';
 import { SET_SELECTED_DEVICE, CLEAR_SELECTED_DEVICE, ActionTypes } from './types';
 
 const initialState: Device = {

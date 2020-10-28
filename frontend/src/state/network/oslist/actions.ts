@@ -1,4 +1,4 @@
-import { Os, OsNoID } from '../../../types/network';
+import { Os, OsNoID } from '../../../../../backend/src/types/network';
 import { 
     SET_OS_LIST, 
     ADD_OS,
@@ -10,7 +10,7 @@ import {
     DispatchRemoveOs
 } from './types';
 
-import { create, update, remove, getAll } from "../../../services/device/oss";
+import { create, update, remove, getAll } from "../../../services/network/oss";
 
 import { sortOsList } from "../../../utils/network";
 

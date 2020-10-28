@@ -1,4 +1,4 @@
-import { Devicetype } from '../../../types/network';
+import { Devicetype } from '../../../../../backend/src/types/network';
 
 export const SET_DEVICETYPE_LIST = 'SET_DEVICETYPE_LIST';
 export const ADD_DEVICETYPE  = 'ADD_DEVICETYPE';

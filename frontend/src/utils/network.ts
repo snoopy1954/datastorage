@@ -1,4 +1,4 @@
-import { Device, Os } from '../types/network';
+import { Device, Os } from '../../../backend/src/types/network';
 
 export const sortDeviceList = (deviceList: Device[]) => {
     const sortedDeviceList = deviceList.sort(function(a,b) {

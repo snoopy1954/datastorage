@@ -1,4 +1,4 @@
-import { Address } from '../../../../../backend/src/types/addressTypes';
+import { Address } from '../../../../../backend/src/types/address';
 
 export const SET_SELECTED_ADDRESS = 'SET_SELECTED_ADDRESS';
 export const CLEAR_SELECTED_ADDRESS = 'CLEAR_SELECTED_ADDRESS';

@@ -1,4 +1,4 @@
-import { Tongue } from '../../../types/book';
+import { Tongue } from '../../../../../backend/src/types/book';
 import { SET_TONGUE_LIST, ADD_TONGUE, UPDATE_TONGUE, REMOVE_TONGUE, ActionTypes } from './types';
 
 const initialState: Tongue[] = [];

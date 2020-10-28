@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { apiBaseUrl } from "../../constants";
-import { Book, BookNoID } from "../../types/book";
-
+import { Book, BookNoID } from '../../../../backend/src/types/book';
 
 const getAll = async () => {
     const { data: books } = await axios.get<Book[]>(

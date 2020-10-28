@@ -1,15 +1,18 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Table } from "semantic-ui-react";
+import { Table, Button } from "semantic-ui-react";
 
-import { Address, AddressNoID, Addressgroup } from '../../../../../../backend/src/types/addressTypes';
-import { Edittype } from "../../../../types/basic";
+import { Address, AddressNoID, Addressgroup } from '../../../../../../backend/src/types/address';
+import { Edittype, Direction } from "../../../../types/basic";
 
 import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';
-import { addAddress } from '../../../../state/address/addresslist/actions';
-import { setSelectedAddress } from '../../../../state/address/selectedaddress/actions';
+import { addAddress, updateAddress, exchangeAddresses } from '../../../../state/address/addresslist/actions';
+import { setSelectedAddress, clearSelectedAddress } from '../../../../state/address/selectedaddress/actions';
+import { clearSelectedAddressgroup } from '../../../../state/address/selectedaddressgroup/actions';
 import { setAddressgroupFilter, clearAddressgroupFilter} from '../../../../state/address/addressgroupfilter/actions';
+import { addChangedAddress, clearChangedAddress } from '../../../../state/address/changedaddresslist/actions';
+import { setSortButton, clearSortButton } from '../../../../state/address/sortbutton/actions';
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
@@ -31,6 +34,8 @@ const AddressListPage: React.FC = () => {
     const addresses: Address[] = useSelector((state: RootState) => state.addresses);
     const address: Address = useSelector((state: RootState) => state.address);
     const addressgroupfilter: string = useSelector((state: RootState) => state.addressgroupfilter);
+    const changedAddresses: Address[] = useSelector((state: RootState) => state.changedaddresslist);
+    const sortbutton: boolean = useSelector((state: RootState) => state.sortbutton);
 
     const openModal = (): void => setModalOpen(true);
     const closeModal = (): void => {
@@ -38,24 +43,56 @@ const AddressListPage: React.FC = () => {
         setError(undefined);
     };
 
+    React.useEffect(() => {
+      dispatch(clearSelectedAddress());
+      dispatch(clearSelectedAddressgroup());
+      dispatch(clearAddressgroupFilter());
+    }, [dispatch]);
+
+    const saveSequence = () => {
+      Object.values(changedAddresses).forEach(changedAddress => {
+        dispatch(updateAddress(changedAddress));
+      });
+      dispatch(clearChangedAddress());
+      dispatch(clearSortButton());
+    }
+
     const handleSelection = async (address: Address) => {
         dispatch(setSelectedAddress(address));
     };
 
     const handleSelectionClick = (_filter: string, selection: string) => {
-          dispatch(setAddressgroupFilter(selection));
+        dispatch(setAddressgroupFilter(selection));
     };
 
     const handleNewAddress = async (values: AddressNoID) => {
-      console.log(values)
         dispatch(addAddress(values));
         closeModal();
     };
 
     const handleClose = () => {
-      dispatch(clearAddressgroupFilter());
-      dispatch(setPage({ mainpage, subpage: 'addresses' }));
-    }
+        dispatch(clearAddressgroupFilter());
+        dispatch(setPage({ mainpage, subpage: 'addresses' }));
+    };
+
+    const handleSort = () => {
+        dispatch(setSortButton());
+    };
+
+    const handleUpDown = (direction: string, index: number, list: Address[]) => {
+      if ((direction===Direction.UP && index===0) || (direction===Direction.DOWN && index===list.length-1)) return;
+
+      const address1: Address = list[index]; 
+      const address2: Address = direction===Direction.UP ? list[index-1] : list[index+1];
+      const seqnr1 = address1.name.seqnr;
+      const seqnr2 = address2.name.seqnr;
+      address1.name.seqnr = seqnr2;
+      address2.name.seqnr = seqnr1;
+      const addressesToChange: Address[] = [address1, address2];
+      dispatch(exchangeAddresses(addressesToChange));
+      dispatch(addChangedAddress(address1));
+      dispatch(addChangedAddress(address2));
+    };
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const handleDummy = () => {
@@ -96,6 +133,31 @@ const AddressListPage: React.FC = () => {
       },
     ];
 
+    if (addressgroupfilter) {
+      buttons[buttons.length] =     {
+        name: 'Sort',
+        title: 'Sort',
+        color: 'blue',
+        type: '0',
+        options: [],    
+        onClick: handleSort,
+        onSelection: handleDummy
+      };
+    }
+
+
+    if (Object.values(changedAddresses).length > 0) {
+      buttons[buttons.length] = {
+        name: 'Speichern',
+        title: 'Speichern',
+        color: 'blue',
+        type: '0',
+        options: [],    
+        onClick: saveSequence,
+        onSelection: handleDummy
+      };
+    }
+
     if (address.id!=='') {
       return (
         <AddressDetailsPage/>
@@ -119,17 +181,29 @@ const AddressListPage: React.FC = () => {
           <Table celled style={{ backgroundColor }}>
             <Table.Header>
               <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Gruppe</Table.HeaderCell>
-              <Table.HeaderCell>Personen</Table.HeaderCell>
+                <Table.HeaderCell>Name</Table.HeaderCell>
+                <Table.HeaderCell>Telefon</Table.HeaderCell>
+                <Table.HeaderCell>Gruppe</Table.HeaderCell>
+                <Table.HeaderCell>Personen</Table.HeaderCell>
+                {addressgroupfilter!==''&&sortbutton&&<Table.HeaderCell>Reihenfolge</Table.HeaderCell>}
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {Object.values(sortedAddresses).map((address: Address) => (
-                <Table.Row key={address.id} onClick={() => handleSelection(address)}>
-                  <Table.Cell>{address.name.name}</Table.Cell>
+              {Object.values(sortedAddresses).map((address: Address, index: number) => (
+                <Table.Row key={address.id}>
+                  <Table.Cell onClick={() => handleSelection(address)}>{address.name.name}</Table.Cell>
+                  {address.persons[0].communication.phone!==''&&<Table.Cell>{address.persons[0].communication.phone}</Table.Cell>}
+                  {address.persons[0].communication.phone===''&&<Table.Cell>{address.persons[0].communication.mobile}</Table.Cell>}
                   <Table.Cell>{address.group}</Table.Cell>
                   <Table.Cell>{address.persons.length}</Table.Cell>
+                  {addressgroupfilter!==''&&sortbutton&&<Table.Cell>
+                    <Button className="ui icon button" color='green' onClick={() => handleUpDown(Direction.UP, index, sortedAddresses) }>
+                      <i className="angle up icon"></i>
+                    </Button>
+                    <Button className="ui icon button" color='green' onClick={() => handleUpDown(Direction.DOWN, index, sortedAddresses) }>
+                      <i className="angle down icon"></i>
+                    </Button>
+                  </Table.Cell>}
                 </Table.Row>
               ))}
             </Table.Body>

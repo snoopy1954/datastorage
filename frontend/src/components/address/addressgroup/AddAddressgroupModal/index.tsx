@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddAddressgroupForm from './AddAddressgroupForm';
-import { AddressgroupNoID } from "../../../../../../backend/src/types/addressTypes";
+import { AddressgroupNoID } from "../../../../../../backend/src/types/address";
 
 
 interface Props {

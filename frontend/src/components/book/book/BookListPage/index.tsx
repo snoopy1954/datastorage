@@ -2,8 +2,8 @@ import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 
-import { Book, BookNoID, BookWithFileNoID, Bookgroup, Filter } from "../../../../types/book";
-import { Image } from "../../../../types/image";
+import { Book, BookNoID, BookWithFileNoID, Bookgroup, Filter, Content } from '../../../../../../backend/src/types/book';
+import { Image } from '../../../../../../backend/src/types/image';
 import { Edittype, Direction } from "../../../../types/basic";
 
 import { RootState } from '../../../../state/store';
@@ -11,17 +11,18 @@ import { setPage } from '../../../../state/page/actions';
 import { setFilter, clearFilter } from '../../../../state/book/filter/actions';
 import { setImage } from '../../../../state/image/actions';
 import { addBook, updateBook, exchangeBooks } from '../../../../state/book/booklist/actions';
-import { setSelectedBook } from '../../../../state/book/selectedbook/actions';
+import { setSelectedBook, clearSelectedBook } from '../../../../state/book/selectedbook/actions';
 import { addChangedBook, clearChangedBook } from '../../../../state/book/changedbooklist/actions';
+import { setSortButton, clearSortButton } from '../../../../state/address/sortbutton/actions';
 
-import { create } from "../../../../services/image/images";
+import { create, update } from "../../../../services/image/images";
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 import { getContent } from "../../../../utils/image";
-import { booklistTitle, booklistFilter } from "../../../../utils/book";
+import { booklistTitle, booklistFilter, nextSeqnr } from "../../../../utils/book";
 
 import BookDetailsPage from "../BookDetailsPage";
 import AddBookModal from "../AddBookModal";
@@ -38,8 +39,14 @@ const BookListPage: React.FC = () => {
     const books: Book[] = useSelector((state: RootState) => state.books);
     const book: Book = useSelector((state: RootState) => state.book);
     const changedBooks: Book[] = useSelector((state: RootState) => state.changedbooklist);
+    const sortbutton: boolean = useSelector((state: RootState) => state.sortbutton);
 
-
+    React.useEffect(() => {
+      dispatch(clearSelectedBook());
+      dispatch(clearSortButton());
+      dispatch(clearFilter());
+    }, [dispatch]);  
+  
     const openModal = (): void => setModalOpen(true);
     const closeModal = (): void => {
         setModalOpen(false);
@@ -69,8 +76,16 @@ const BookListPage: React.FC = () => {
         const longInt8View: Uint8Array = new Uint8Array(filedata);
         const newImage: Image = await create(longInt8View);
         const id: string = newImage.id;
+        const content: Content = {
+          filename: values.file.name,
+          filetype: values.file.type,
+          filesize: String(values.file.size),
+          dataId: id
+        }
+        await update(id, content);
+        const seqnr = values.title.seqnr===0 ? nextSeqnr(books, values.bookgroup, values.subgroup)+1 : values.title.seqnr;
         const book: BookNoID = {
-          title: { name: values.title.name, seqnr: values.title.seqnr },
+          title: { name: values.title.name, seqnr: seqnr },
           author: { givenname: values.author.givenname, familyname: values.author.familyname },
           comment: values.comment,
           link: values.link,
@@ -83,19 +98,16 @@ const BookListPage: React.FC = () => {
           ownership: values.ownership,
           format: values.format,
           tongue: values.tongue,
-          content: {
-            filename: values.file.name,
-            filetype: values.file.type,
-            filesize: String(values.file.size),
-            dataId: id
-          }
+          content: content
         };
         dispatch(addBook(book));
+
         closeModal();
     };
 
     const handleClose = () => {
       dispatch(clearFilter());
+      dispatch(clearSortButton());
       dispatch(setPage({ mainpage, subpage: 'books' }));
     }
 
@@ -120,11 +132,15 @@ const BookListPage: React.FC = () => {
 
     const saveSequence = () => {
       Object.values(changedBooks).forEach(changedBook => {
-        console.log('Save', changedBook)
         dispatch(updateBook(changedBook));
       });
       dispatch(clearChangedBook());
-    }
+      dispatch(clearSortButton());
+    };
+
+    const handleSort = () => {
+      dispatch(setSortButton());
+    };
 
     const bookgroupOptions: string[] = [];
     Object.values(bookgroups).forEach(element => {
@@ -182,6 +198,18 @@ const BookListPage: React.FC = () => {
       },
     ];
 
+    if ((filters.group!=='' && filters.subgroup!=='') || (filters.group!=='' && getBookgroup(filters.group)?.subgroups.length===0)) {
+      buttons[buttons.length] =     {
+        name: 'Sort',
+        title: 'Sort',
+        color: 'blue',
+        type: '0',
+        options: [],    
+        onClick: handleSort,
+        onSelection: handleDummy
+      };
+    }
+
     if (Object.values(changedBooks).length > 0) {
       buttons[buttons.length] = {
         name: 'Speichern',
@@ -222,7 +250,7 @@ const BookListPage: React.FC = () => {
               <Table.HeaderCell>Gruppe</Table.HeaderCell>
               <Table.HeaderCell>Untergruppe</Table.HeaderCell>
               <Table.HeaderCell>Sprache</Table.HeaderCell>
-              {filters.group!==''&&<Table.HeaderCell>Reihenfolge</Table.HeaderCell>}
+              {sortbutton&&<Table.HeaderCell>Reihenfolge</Table.HeaderCell>}
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -233,7 +261,7 @@ const BookListPage: React.FC = () => {
                   <Table.Cell>{book.bookgroup}</Table.Cell>
                   <Table.Cell>{book.subgroup}</Table.Cell>
                   <Table.Cell>{book.tongue}</Table.Cell>
-                  {filters.group!==''&&<Table.Cell>
+                  {sortbutton&&<Table.Cell>
                     <Button className="ui icon button" color='green' onClick={() => handleUpDown(Direction.UP, index, sortedBooks) }>
                       <i className="angle up icon"></i>
                     </Button>

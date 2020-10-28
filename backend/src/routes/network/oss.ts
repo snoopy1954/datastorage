@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
-import Os from '../../models/netzwerk/osModel';
-import { toNewOs } from '../../utils/netzwerkParameter';
+import Os from '../../models/network/os';
+import { toNewOs } from '../../utils/network/parameters';
 
 const ossRouter = express.Router();
 

@@ -1,4 +1,4 @@
-import { Year } from '../../../types/pressure';
+import { Year } from '../../../../../backend/src/types/pressure';
 
 export const SET_SELECTED_YEAR = 'SET_SELECTED_YEAR';
 export const CLEAR_SELECTED_YEAR = 'CLEAR_SELECTED_YEAR';

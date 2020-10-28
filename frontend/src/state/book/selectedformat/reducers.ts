@@ -1,4 +1,4 @@
-import { Format } from '../../../types/book';
+import { Format } from '../../../../../backend/src/types/book';
 import { SET_SELECTED_FORMAT, CLEAR_SELECTED_FORMAT, ActionTypes } from './types';
 
 const initialState: Format = {

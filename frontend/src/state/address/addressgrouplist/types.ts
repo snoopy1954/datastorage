@@ -1,4 +1,4 @@
-import { Addressgroup } from '../../../../../backend/src/types/addressTypes';
+import { Addressgroup } from '../../../../../backend/src/types/address';
 
 export const SET_ADDRESSGROUP_LIST = 'SET_ADDRESSGROUP_LIST';
 export const ADD_ADDRESSGROUP  = 'ADD_ADDRESSGROUP';

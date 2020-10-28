@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddTongueForm from './AddTongueForm';
-import { TongueNoID } from "../../../../types/book";
+import { TongueNoID } from '../../../../../../backend/src/types/book';
 
 interface Props {
   modalOpen: boolean;

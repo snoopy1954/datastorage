@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddAddressForm from './AddAddressForm';
 import { Edittype } from "../../../../types/basic";
-import { AddressNoID } from '../../../../../../backend/src/types/addressTypes';
+import { AddressNoID } from '../../../../../../backend/src/types/address';
 
 interface Props {
   edittype: Edittype;

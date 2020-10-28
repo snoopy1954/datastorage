@@ -3,7 +3,7 @@ import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
 import { TextField } from "./FormField";
-import { FormatNoID } from "../../../../types/book";
+import { FormatNoID } from '../../../../../../backend/src/types/book';
 
 interface Props {
   onSubmit: (values: FormatNoID) => void;

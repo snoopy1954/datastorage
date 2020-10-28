@@ -1,4 +1,4 @@
-import { Month, MonthNoID } from '../../../types/pressure';
+import { Month, MonthNoID } from '../../../../../backend/src/types/pressure';
 import { 
     SET_MONTH_LIST, 
     ADD_MONTH,

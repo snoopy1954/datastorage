@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Ownership, OwnershipNoID } from "../../../../types/book";
+import { Ownership, OwnershipNoID } from '../../../../../../backend/src/types/book';
 
 import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';

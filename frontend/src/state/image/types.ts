@@ -1,4 +1,4 @@
-import { Image } from '../../types/image';
+import { Image } from '../../../../backend/src/types/image';
 
 export const SET_IMAGE = 'SET_IMAGE';
 export const CLEAR_IMAGE = 'CLEAR_IMAGE';

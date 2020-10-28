@@ -1,4 +1,4 @@
-import { Bookgroup } from '../../../types/book';
+import { Bookgroup } from '../../../../../backend/src/types/book';
 import { SET_BOOKGROUP_LIST, ADD_BOOKGROUP, UPDATE_BOOKGROUP, REMOVE_BOOKGROUP, ActionTypes } from './types';
 
 const initialState: Bookgroup[] = [];

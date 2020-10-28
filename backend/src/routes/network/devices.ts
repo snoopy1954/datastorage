@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
-import Device from '../../models/netzwerk/deviceModel';
-import { toNewDevice } from '../../utils/netzwerkParameter';
+import Device from '../../models/network/device';
+import { toNewDevice } from '../../utils/network/parameters';
 
 const devicesRouter = express.Router();
 

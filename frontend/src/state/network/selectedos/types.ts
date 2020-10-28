@@ -1,4 +1,4 @@
-import { Os } from '../../../types/network';
+import { Os } from '../../../../../backend/src/types/network';
 
 export const SET_SELECTED_OS = 'SET_SELECTED_OS';
 export const CLEAR_SELECTED_OS = 'CLEAR_SELECTED_OS';

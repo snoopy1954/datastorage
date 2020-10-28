@@ -1,4 +1,4 @@
-import { Addressgroup } from '../../../../../backend/src/types/addressTypes';
+import { Addressgroup } from '../../../../../backend/src/types/address';
 import { SET_SELECTED_ADDRESSGROUP, CLEAR_SELECTED_ADDRESSGROUP, ActionTypes } from './types';
 
 export const setSelectedAddressgroup = (addressgroup: Addressgroup) => {

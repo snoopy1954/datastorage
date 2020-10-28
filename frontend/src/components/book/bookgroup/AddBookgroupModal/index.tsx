@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddBookgroupForm from './AddBookgroupForm';
-import { BookgroupNoID } from "../../../../types/book";
+import { BookgroupNoID } from '../../../../../../backend/src/types/book';
 
 
 interface Props {

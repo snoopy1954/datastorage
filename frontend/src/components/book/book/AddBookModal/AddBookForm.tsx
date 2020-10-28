@@ -4,7 +4,7 @@ import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
 import { Edittype } from "../../../../types/basic";
-import { Bookgroup, BookWithFileNoID } from "../../../../types/book";
+import { Bookgroup, BookWithFileNoID } from '../../../../../../backend/src/types/book';
 
 import { RootState } from '../../../../state/store';
 import { setSelectedSubgroups } from '../../../../state/book/selectedsubgroups/actions';

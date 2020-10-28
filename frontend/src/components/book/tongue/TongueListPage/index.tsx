@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Tongue, TongueNoID } from "../../../../types/book";
+import { Tongue, TongueNoID } from '../../../../../../backend/src/types/book';
 
 import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';

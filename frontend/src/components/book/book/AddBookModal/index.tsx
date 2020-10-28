@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddBookForm from './AddBookForm';
 import { Edittype } from "../../../../types/basic";
-import { BookWithFileNoID } from "../../../../types/book";
+import { BookWithFileNoID } from '../../../../../../backend/src/types/book';
 
 interface Props {
   edittype: Edittype;

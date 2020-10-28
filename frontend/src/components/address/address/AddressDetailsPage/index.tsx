@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, Icon } from "semantic-ui-react";
 
 import { Edittype } from "../../../../types/basic";
-import { AddressNoID, Address, Person } from '../../../../../../backend/src/types/addressTypes';
+import { AddressNoID, Address, Person } from '../../../../../../backend/src/types/address';
 
 
 import { RootState } from '../../../../state/store';
@@ -68,13 +68,13 @@ const AddressDetailsPage: React.FC = () => {
         return (
           <div>
             {index>0&&<br></br>}
-            <>Person #{index+1} {person.nickname}</>
-            <><br></br>Name: {person.givenname} {person.familyname}</>
-            {person.birthday!==''&&<><br></br>Geburtstag: {person.birthday}</>}
-            {person.communication.phone!==''&&<><br></br><Icon name='phone'/>{person.communication.phone}</>} 
-            {person.communication.mobile!==''&&<><br></br><Icon name='mobile'/>{person.communication.mobile}</>} 
-            {person.communication.email!==''&&<><br></br><Icon name='mail'/>{person.communication.email}</>}
-            {person.comment!==''&&<><br></br>{person.comment}</>}
+            {person.nickname!==''&&<>{person.nickname}<br></br></>}
+            {(person.givenname!==''||person.familyname)&&<>Name: {person.givenname} {person.familyname}<br></br></>}
+            {person.birthday!==''&&<>Geburtstag: {person.birthday}<br></br></>}
+            {person.communication.phone!==''&&<><Icon name='phone'/>{person.communication.phone}<br></br></>} 
+            {person.communication.mobile!==''&&<><Icon name='mobile'/>{person.communication.mobile}<br></br></>} 
+            {person.communication.email!==''&&<><Icon name='mail'/>{person.communication.email}<br></br></>}
+            {person.comment!==''&&<>{person.comment}</>}
           </div>
         );
       };    

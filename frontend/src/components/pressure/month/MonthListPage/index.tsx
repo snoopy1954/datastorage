@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 
-import { Month, MonthNoID } from "../../../../types/pressure";
+import { Month, MonthNoID } from '../../../../../../backend/src/types/pressure';
 
 import { RootState } from '../../../../state/store';
 import { addMonth } from '../../../../state/pressure/monthlist/actions';

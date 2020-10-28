@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
-import Address from '../../models/address/addressModel';
+import Address from '../../models/address/address';
 import { toNewAddress } from '../../utils/address/parameters';
 
 const addresssRouter = express.Router();

@@ -1,4 +1,4 @@
-import { Addressgroup, AddressgroupNoID } from '../../../../../backend/src/types/addressTypes';
+import { Addressgroup, AddressgroupNoID } from '../../../../../backend/src/types/address';
 import { 
     SET_ADDRESSGROUP_LIST, 
     ADD_ADDRESSGROUP,
@@ -12,10 +12,12 @@ import {
 
 import { create, update, remove, getAll } from "../../../services/address/addressgroups";
 
+import { sortAddressgroupList } from '../../../utils/address';
+
 
 export const initializeAddressgroups = () => {
   return async (dispatch: DispatchSetAddressgroupList) => {
-    const addressgroups = await getAll();
+    const addressgroups = sortAddressgroupList(await getAll());
     dispatch({
       type: SET_ADDRESSGROUP_LIST,
       payload: addressgroups,

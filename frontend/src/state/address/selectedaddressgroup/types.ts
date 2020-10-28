@@ -1,4 +1,4 @@
-import { Addressgroup } from '../../../../../backend/src/types/addressTypes';
+import { Addressgroup } from '../../../../../backend/src/types/address';
 
 export const SET_SELECTED_ADDRESSGROUP = 'SET_SELECTED_ADDRESSGROUP';
 export const CLEAR_SELECTED_ADDRESSGROUP = 'CLEAR_SELECTED_ADDRESSGROUP';

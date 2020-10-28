@@ -1,4 +1,4 @@
-import { Os } from '../../../types/network';
+import { Os } from '../../../../../backend/src/types/network';
 import { SET_OS_LIST, ADD_OS, UPDATE_OS, REMOVE_OS, ActionTypes } from './types';
 
 const initialState: Os[] = [];

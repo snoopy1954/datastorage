@@ -1,4 +1,4 @@
-import { Tongue } from '../../../types/book';
+import { Tongue } from '../../../../../backend/src/types/book';
 
 export const SET_SELECTED_TONGUE = 'SET_SELECTED_TONGUE';
 export const CLEAR_SELECTED_TONGUE = 'CLEAR_SELECTED_TONGUE';

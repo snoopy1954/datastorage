@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddOwnershipForm from './AddOwnershipForm';
-import { OwnershipNoID } from "../../../../types/book";
+import { OwnershipNoID } from '../../../../../../backend/src/types/book';
 
 interface Props {
   modalOpen: boolean;

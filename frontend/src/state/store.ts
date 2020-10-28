@@ -34,6 +34,8 @@ import { selectedaddressgroupReducer } from './address/selectedaddressgroup/redu
 import { addresslistReducer } from './address/addresslist/reducers';
 import { selectedaddressReducer } from './address/selectedaddress/reducers';
 import { addressgroupfilterReducer } from './address/addressgroupfilter/reducers';
+import { changedaddresslistReducer } from './address/changedaddresslist/reducers';
+import { sortbuttonReducer } from './address/sortbutton/reducers';
 
 const rootReducer = combineReducers({
     page: pageReducer,
@@ -68,6 +70,8 @@ const rootReducer = combineReducers({
     addresses: addresslistReducer,
     address: selectedaddressReducer,
     addressgroupfilter: addressgroupfilterReducer,
+    changedaddresslist: changedaddresslistReducer,
+    sortbutton: sortbuttonReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>; 

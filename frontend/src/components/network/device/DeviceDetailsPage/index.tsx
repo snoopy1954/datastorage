@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Network, Osversion, Device, DeviceNoID } from "../../../../types/network";
+import { Network, Osversion, Device, DeviceNoID } from '../../../../../../backend/src/types/network';
 import { Edittype } from "../../../../types/basic";
 
 import { RootState } from '../../../../state/store';

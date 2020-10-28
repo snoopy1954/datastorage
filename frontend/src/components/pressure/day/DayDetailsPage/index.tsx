@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Day } from "../../../../types/pressure";
+import { Day } from '../../../../../../backend/src/types/pressure';
 
 import { RootState } from '../../../../state/store';
 import { updateMonth } from '../../../../state/pressure/monthlist/actions';

@@ -1,4 +1,4 @@
-import { Filter } from '../../../types/book';
+import { Filter } from '../../../../../backend/src/types/book';
 import { SET_FILTER, CLEAR_FILTER, ActionTypes } from './types';
 
 const initialState: Filter = {
@@ -17,7 +17,6 @@ export const filterReducer = (state = initialState, action: ActionTypes): Filter
                 ...initialState
             }
         default: {
-            console.log('das passiert nie')
             return state
         }
     }

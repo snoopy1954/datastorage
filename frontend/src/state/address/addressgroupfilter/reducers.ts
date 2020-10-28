@@ -13,7 +13,6 @@ export const addressgroupfilterReducer = (state = initialState, action: ActionTy
                 initialState
             )
         default: {
-            console.log('das passiert nie')
             return state
         }
     }

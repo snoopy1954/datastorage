@@ -1,4 +1,4 @@
-import { Ownership } from '../../../types/book';
+import { Ownership } from '../../../../../backend/src/types/book';
 
 export const SET_OWNERSHIP_LIST = 'SET_OWNERSHIP_LIST';
 export const ADD_OWNERSHIP  = 'ADD_OWNERSHIP';

@@ -2,7 +2,7 @@ import React from "react";
 import { ErrorMessage, Field, FieldProps, FormikProps, FieldArray } from "formik";
 import { Form, Button, Menu } from "semantic-ui-react";
 
-import { Person } from '../../../../../../backend/src/types/addressTypes';
+import { Person } from '../../../../../../backend/src/types/address';
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 import { newPerson } from '../../../../utils/address';
 

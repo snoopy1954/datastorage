@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
-import Bookgroup from '../../models/book/bookgroupModel';
-import { toNewBookgroup } from '../../utils/bookParameters';
+import Bookgroup from '../../models/book/bookgroup';
+import { toNewBookgroup } from '../../utils/book/parameters';
 
 const bookgroupsRouter = express.Router();
 

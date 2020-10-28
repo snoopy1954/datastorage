@@ -1,5 +1,5 @@
-import { Address } from '../../../../../backend/src/types/addressTypes';
-import { SET_ADDRESS_LIST, ADD_ADDRESS, UPDATE_ADDRESS, REMOVE_ADDRESS, ActionTypes } from './types';
+import { Address } from '../../../../../backend/src/types/address';
+import { SET_ADDRESS_LIST, ADD_ADDRESS, UPDATE_ADDRESS, REMOVE_ADDRESS, EXCHANGE_ADDRESSES, ActionTypes } from './types';
 
 const initialState: Address[] = [];
 
@@ -26,6 +26,12 @@ export const addresslistReducer = (state = initialState, action: ActionTypes): A
         case REMOVE_ADDRESS: 
             return {
                 ...(Object.values(state)).filter((address) => (address.id !== action.payload))
+            }
+        case EXCHANGE_ADDRESSES:
+            return {
+                ...state,
+                [action.payload[0].id]: action.payload[0],
+                [action.payload[1].id]: action.payload[1],
             }
         default:
             return state

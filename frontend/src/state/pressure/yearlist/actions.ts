@@ -1,4 +1,4 @@
-import { Year } from '../../../types/pressure';
+import { Year } from '../../../../../backend/src/types/pressure';
 import { SET_YEAR_LIST, YearListActionTypes } from './types';
 
 export const setYearList = (years: Year[]) => {

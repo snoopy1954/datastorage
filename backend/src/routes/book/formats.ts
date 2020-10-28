@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
-import Format from '../../models/book/formatModel';
-import { toNewFormat } from '../../utils/bookParameters';
+import Format from '../../models/book/format';
+import { toNewFormat } from '../../utils/book/parameters';
 
 const formatsRouter = express.Router();
 

@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { apiBaseUrl } from "../../constants";
-import { Image } from "../../types/image";
+import { Image } from '../../../../backend/src/types/image';
+import { Content } from '../../../../backend/src/types/book';
 
 const getAll = async () => {
     const { data: images } = await axios.get<Image[]>(
@@ -30,10 +31,10 @@ const create = async (data: Uint8Array) => {
     return response.data
 }
 
-const update = async (id: string, data: Uint8Array) => {
+const update = async (id: string, content: Content) => {
     const response = await axios.put(
         `${apiBaseUrl}/images/${id}`, 
-        data
+        content
     );
 
     return response.data

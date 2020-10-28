@@ -17,7 +17,6 @@ export const pageReducer = (state = initialState, action: ActionTypes): Page => 
                 ...initialState
             }
         default: {
-            console.log('das passiert nie')
             return state
         }
     }

@@ -1,4 +1,4 @@
-import { Format } from '../../../types/book';
+import { Format } from '../../../../../backend/src/types/book';
 
 export const SET_SELECTED_FORMAT = 'SET_SELECTED_FORMAT';
 export const CLEAR_SELECTED_FORMAT = 'CLEAR_SELECTED_FORMAT';

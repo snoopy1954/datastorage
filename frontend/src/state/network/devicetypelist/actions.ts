@@ -1,4 +1,4 @@
-import { Devicetype, DevicetypeNoID } from '../../../types/network';
+import { Devicetype, DevicetypeNoID } from '../../../../../backend/src/types/network';
 import { 
     SET_DEVICETYPE_LIST, 
     ADD_DEVICETYPE,
@@ -10,7 +10,7 @@ import {
     DispatchRemoveDevicetype
 } from './types';
 
-import { create, update, remove, getAll } from "../../../services/device/devicetypes";
+import { create, update, remove, getAll } from "../../../services/network/devicetypes";
 
 
 export const initializeDevicetypes = () => {

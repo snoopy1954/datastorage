@@ -4,14 +4,14 @@ import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
 import { Edittype } from "../../../../types/basic";
-import { Addressgroup, Address, AddressNoID } from '../../../../../../backend/src/types/addressTypes';
+import { Addressgroup, Address, AddressNoID } from '../../../../../../backend/src/types/address';
 
 import { RootState } from '../../../../state/store';
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 import { newAddress } from '../../../../utils/address';
 
-import { TextField, SelectField, PersonFieldArray, Option } from "./FormField";
+import { TextField, SelectField, PersonFieldArray, NumberField, Option } from "./FormField";
 
 interface Props {
   edittype: Edittype;
@@ -50,6 +50,12 @@ export const AddAddressForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }
               placeholder="Name"
               name="name.name"
               component={TextField}
+            />
+            <Field
+              label="Seqnr"
+              placeholder="Seqnr"
+              name="name.seqnr"
+              component={NumberField}
             />
             <SelectField
               label="Gruppe"

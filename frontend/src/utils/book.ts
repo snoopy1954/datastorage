@@ -1,4 +1,4 @@
-import { Book, BookNoID, Bookgroup, Filter } from '../types/book';
+import { Book, BookNoID, Bookgroup, Filter } from '../../../backend/src/types/book';
 
 const sortBooks = (a: Book, b: Book) => {
     const nameA = a.title.seqnr;
@@ -80,4 +80,13 @@ export const booklistFilter = (books: Book[], filters: Filter, bookgroups: Bookg
     const sortedBooks = sortBookList(Object.values(filteredBooks), Object.values(bookgroups));
 
     return sortedBooks;
+}
+
+export const nextSeqnr = (books: Book[], group: string, subgroup: string): number => {
+    let maxNumber = 0;
+    Object.values(books).forEach(book => {
+        if (book.bookgroup===group&&book.subgroup===subgroup&&book.title.seqnr>maxNumber) maxNumber = book.title.seqnr;
+    });
+    
+    return maxNumber;
 }

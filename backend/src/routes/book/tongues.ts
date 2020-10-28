@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
-import Tongue from '../../models/book/tongueModel';
-import { toNewTongue } from '../../utils/bookParameters';
+import Tongue from '../../models/book/tongue';
+import { toNewTongue } from '../../utils/book/parameters';
 
 const tonguesRouter = express.Router();
 

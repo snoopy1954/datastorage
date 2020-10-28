@@ -1,4 +1,4 @@
-import { Year } from '../../../types/pressure';
+import { Year } from '../../../../../backend/src/types/pressure';
 import { SET_SELECTED_YEAR, CLEAR_SELECTED_YEAR, SelectedYearActionTypes } from './types';
 
 export const setSelectedYear = (year: Year) => {

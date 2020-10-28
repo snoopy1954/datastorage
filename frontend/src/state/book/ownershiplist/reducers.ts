@@ -1,4 +1,4 @@
-import { Ownership } from '../../../types/book';
+import { Ownership } from '../../../../../backend/src/types/book';
 import { SET_OWNERSHIP_LIST, ADD_OWNERSHIP, UPDATE_OWNERSHIP, REMOVE_OWNERSHIP, ActionTypes } from './types';
 
 const initialState: Ownership[] = [];
