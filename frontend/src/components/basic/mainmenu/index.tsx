@@ -19,8 +19,9 @@ export const AppMenu = ({ menuItems, style, backgroundColor }: MenuProps) => {
     return (
         <Menu compact stackable borderless style={{ background: backgroundColor }}>
             {Object.values(menuItems).map((menuItem: Item, index: number) => (
-                <Menu.Item key={menuItem.name}>
-                    <Button color={getColor(menuItems[index].color)} style={style} onClick={() => menuItem.onClick(menuItem.name) }>{menuItem.title}</Button>
+                <Menu.Item key={menuItem.name} onClick={() => menuItem.onClick(menuItem.name) }>
+                    {menuItem.title}
+                    {/* <Button color={getColor(menuItems[index].color)} style={style} onClick={() => menuItem.onClick(menuItem.name) }>{menuItem.title}</Button> */}
                 </Menu.Item>
             ))}
         </Menu>

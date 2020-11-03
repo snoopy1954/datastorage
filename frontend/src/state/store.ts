@@ -36,6 +36,17 @@ import { selectedaddressReducer } from './address/selectedaddress/reducers';
 import { addressgroupfilterReducer } from './address/addressgroupfilter/reducers';
 import { changedaddresslistReducer } from './address/changedaddresslist/reducers';
 import { sortbuttonReducer } from './address/sortbutton/reducers';
+import { movielistReducer } from './movie/movielist/reducers';
+import { selectedmovieReducer } from './movie/selectedmovie/reducers';
+import { moviegrouplistReducer } from './movie/moviegrouplist/reducers';
+import { selectedmoviegroupReducer } from './movie/selectedmoviegroup/reducers';
+import { moviesubgroupsReducer } from './movie/selectedmoviesubgroups/reducers';
+import { movieformatlistReducer } from './movie/movieformatlist/reducers';
+import { selectedmovieformatReducer } from './movie/selectedmovieformat/reducers';
+import { moviefilterReducer } from './movie/moviefilter/reducers';
+import { changedmovielistReducer } from './movie/changedmovielist/reducers';
+import { selectedfieldReducer } from './sudoku/selectedfield/reducers';
+import { numbersReducer } from './sudoku/numbers/reducers';
 
 const rootReducer = combineReducers({
     page: pageReducer,
@@ -72,6 +83,17 @@ const rootReducer = combineReducers({
     addressgroupfilter: addressgroupfilterReducer,
     changedaddresslist: changedaddresslistReducer,
     sortbutton: sortbuttonReducer,
+    movies: movielistReducer,
+    movie: selectedmovieReducer,
+    moviegroups: moviegrouplistReducer,
+    moviegroup: selectedmoviegroupReducer,
+    moviesubgroups: moviesubgroupsReducer,
+    movieformats: movieformatlistReducer,
+    movieformat: selectedmovieformatReducer,
+    moviefilter: moviefilterReducer,
+    changedmovies: changedmovielistReducer,
+    selectedfield: selectedfieldReducer,
+    numbers: numbersReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>; 

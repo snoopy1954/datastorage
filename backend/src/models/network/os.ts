@@ -4,9 +4,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import mongoose from 'mongoose';
 
-import connectNetzwerk from '../../connections/network';
+import connectNetwork from '../../connections/network';
 import osSchema from "../../schemas/network/os";
 
-const osModel: mongoose.Model<mongoose.Document, {}> = connectNetzwerk.model('Os', osSchema);
+const osModel: mongoose.Model<mongoose.Document, {}> = connectNetwork.model('Os', osSchema);
 
 export default osModel;

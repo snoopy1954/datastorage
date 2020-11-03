@@ -245,12 +245,12 @@ const BookListPage: React.FC = () => {
           <Table celled style={{ backgroundColor }}>
             <Table.Header>
               <Table.Row>
-              <Table.HeaderCell>Buchtitel</Table.HeaderCell>
-              <Table.HeaderCell>Autor</Table.HeaderCell>
-              <Table.HeaderCell>Gruppe</Table.HeaderCell>
-              <Table.HeaderCell>Untergruppe</Table.HeaderCell>
-              <Table.HeaderCell>Sprache</Table.HeaderCell>
-              {sortbutton&&<Table.HeaderCell>Reihenfolge</Table.HeaderCell>}
+                <Table.HeaderCell>Buchtitel</Table.HeaderCell>
+                <Table.HeaderCell>Autor</Table.HeaderCell>
+                <Table.HeaderCell>Gruppe</Table.HeaderCell>
+                <Table.HeaderCell>Untergruppe</Table.HeaderCell>
+                <Table.HeaderCell>Sprache</Table.HeaderCell>
+                {sortbutton&&<Table.HeaderCell>Reihenfolge</Table.HeaderCell>}
               </Table.Row>
             </Table.Header>
             <Table.Body>

@@ -20,6 +20,7 @@ import Network from "./components/network";
 import Movie from "./components/movie";
 import Book from "./components/book";
 import Address from "./components/address";
+import Sudoku from './components/sudoku';
 
 
 const App: React.FC = () => {
@@ -75,10 +76,16 @@ const App: React.FC = () => {
         color: 'blue',
         onClick: handleSelection
       },      
+      {
+        name: 'sudoku',
+        title: 'Sudoku',
+        color: 'blue',
+        onClick: handleSelection
+      },      
     ];
 
     return (
-        <div className="App">
+        <div className="Container">
             <Router>
                 <Container style={{ background: backgroundColor }}>
                     <AppHeaderH1 text='Datenbanken' icon='database'/>
@@ -90,6 +97,7 @@ const App: React.FC = () => {
                     {mainpage==='pressure'&&<Pressure/>}
                     {mainpage==='movie'&&<Movie/>}
                     {mainpage==='book'&&<Book/>}
+                    {mainpage==='sudoku'&&<Sudoku/>}
                     <Divider/>
                     <AppFooter/>
                 </Container>

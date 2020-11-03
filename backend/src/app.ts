@@ -15,6 +15,9 @@ import booksRouter from './routes/book/books';
 import imagesRouter from './routes/image';
 import addressgroupsRouter from './routes/address/addressgroups';
 import addressesRouter from './routes/address/addresses';
+import moviesRouter from './routes/movie/movies';
+import moviegroupsRouter from './routes/movie/moviegroups';
+import movieformatsRouter from './routes/movie/movieformats';
 
 const app = express();
 app.use(express.static('build'));
@@ -33,6 +36,9 @@ app.use('/api/books', booksRouter);
 app.use('/api/images', imagesRouter);
 app.use('/api/addressgroups', addressgroupsRouter);
 app.use('/api/addresses', addressesRouter);
+app.use('/api/movies', moviesRouter);
+app.use('/api/moviegroups', moviegroupsRouter);
+app.use('/api/movieformats', movieformatsRouter);
 app.get('/api/ping', (_req, res) => {
     console.log('someone pinged here');
     res.json('pong');

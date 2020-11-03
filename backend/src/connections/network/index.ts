@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
 
-import { MONGODB_URI_NETZWERK } from '../../utils/config';
+import { MONGODB_URI_NETWORK } from '../../utils/config';
 import { logInfo, logError } from '../../utils/logger';
 
-const url: string = MONGODB_URI_NETZWERK ? MONGODB_URI_NETZWERK : "";
+const url: string = MONGODB_URI_NETWORK ? MONGODB_URI_NETWORK : "";
 
-const connNetzwerk: mongoose.Connection = mongoose.createConnection(url, {
+const connNetwork: mongoose.Connection = mongoose.createConnection(url, {
     useNewUrlParser: true, 
     useUnifiedTopology: true, 
     useFindAndModify: false 
 });
-connNetzwerk.on('error', function () { logError(`error connecting to MongoDB netzwerk\n`); });
-connNetzwerk.once('open', function () { logInfo('connected to MongoDB netzwerk'); });
+connNetwork.on('error', function () { logError(`error connecting to MongoDB network\n`); });
+connNetwork.once('open', function () { logInfo('connected to MongoDB network'); });
 
-export default connNetzwerk;
+export default connNetwork;

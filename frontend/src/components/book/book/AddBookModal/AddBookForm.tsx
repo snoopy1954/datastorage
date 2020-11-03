@@ -29,6 +29,12 @@ export const AddBookForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
   const bookgroups = useSelector((state: RootState) => state.bookgroups);
   const subgroups = useSelector((state: RootState) => state.subgroups);
 
+  React.useEffect(() => {
+    const selectedGroup: Bookgroup[] = Object.values(bookgroups).filter((bookgroup => bookgroup.groupname.name=== book.bookgroup));
+    const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
+    dispatch(setSelectedSubgroups(selectedSubgroups));
+  }, [dispatch, bookgroups, book]);  
+
   const handleGroupSelection = (selection: string) => {
     const selectedGroup: Bookgroup[] = Object.values(bookgroups).filter((bookgroup => bookgroup.groupname.name=== selection));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
@@ -69,7 +75,6 @@ export const AddBookForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
 
   const subgroupOptions: Option[] = [];
   Object.values(subgroups).forEach(element => {
-    console.log(element)
     subgroupOptions.push({
       value: element,
       label: element
