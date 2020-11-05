@@ -1,20 +1,23 @@
+import { FieldValue } from '../../../types/sudoku';
+
 import { INITIALIZE_NUMBERS, SET_NUMBER, CLEAR_NUMBER, ActionTypes } from './types';
 
-const initialState: number[] = [];
+import { initializeValues } from '../../../utils/sudoku';
 
-export const numbersReducer = (state = initialState, action: ActionTypes): number[] => {
+const initialState: FieldValue[] = initializeValues();
+
+export const numbersReducer = (state = initialState, action: ActionTypes): FieldValue[] => {
     switch (action.type) {
         case INITIALIZE_NUMBERS:
             return initialState;
         case SET_NUMBER:
             return {
                 ...state,
-                [action.payload.index]: action.payload.value
+                [action.payload.fieldnr]: action.payload
             }
         case CLEAR_NUMBER:
             return {
-                ...state,
-                [action.payload]: 0
+                ...(Object.values(state)).filter((fieldvalue) => (fieldvalue.fieldnr !== action.payload))
             }
         default:
             return state

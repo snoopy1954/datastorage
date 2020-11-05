@@ -1,3 +1,5 @@
+import { FieldValue } from '../../../types/sudoku';
+
 import { INITIALIZE_NUMBERS, SET_NUMBER, CLEAR_NUMBER, ActionTypes } from './types';
 
 export const initializeNumbers = () => {
@@ -8,13 +10,10 @@ export const initializeNumbers = () => {
     return action;  
 }
 
-export const setNumber = (index: number, value: number) => {
+export const setNumber = (fieldvalue: FieldValue) => {
     const action: ActionTypes = {
         type: SET_NUMBER,
-        payload: {
-            index: index,
-            value: value
-        }
+        payload: fieldvalue
     };
     
     return action;  

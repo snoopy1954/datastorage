@@ -18,6 +18,7 @@ import addressesRouter from './routes/address/addresses';
 import moviesRouter from './routes/movie/movies';
 import moviegroupsRouter from './routes/movie/moviegroups';
 import movieformatsRouter from './routes/movie/movieformats';
+import sudokusRouter from './routes/sudoku/sudoku';
 
 const app = express();
 app.use(express.static('build'));
@@ -39,6 +40,7 @@ app.use('/api/addresses', addressesRouter);
 app.use('/api/movies', moviesRouter);
 app.use('/api/moviegroups', moviegroupsRouter);
 app.use('/api/movieformats', movieformatsRouter);
+app.use('/api/sudokus', sudokusRouter);
 app.get('/api/ping', (_req, res) => {
     console.log('someone pinged here');
     res.json('pong');

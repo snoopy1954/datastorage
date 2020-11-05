@@ -1,3 +1,5 @@
+import { FieldValue } from '../../../types/sudoku';
+
 export const INITIALIZE_NUMBERS = 'INITIALIZE_NUMBERS';
 export const SET_NUMBER = 'SET_NUMBER';
 export const CLEAR_NUMBER= 'CLEAR_NUMBER';
@@ -8,10 +10,7 @@ interface InitializeNumbersAction {
 
 interface SetNumberAction {
     type: typeof SET_NUMBER;
-    payload: {
-        index: number;
-        value: number;
-    };
+    payload: FieldValue;
 }
 
 interface ClearNumberAction {

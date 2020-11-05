@@ -47,6 +47,10 @@ import { moviefilterReducer } from './movie/moviefilter/reducers';
 import { changedmovielistReducer } from './movie/changedmovielist/reducers';
 import { selectedfieldReducer } from './sudoku/selectedfield/reducers';
 import { numbersReducer } from './sudoku/numbers/reducers';
+import { sudokulistReducer } from './sudoku/sudokulist/reducers';
+import { flagsReducer } from './sudoku/flags/reducers';
+import { solutionnumbersReducer }  from './sudoku/solutionnumbers/reducers';
+
 
 const rootReducer = combineReducers({
     page: pageReducer,
@@ -94,6 +98,9 @@ const rootReducer = combineReducers({
     changedmovies: changedmovielistReducer,
     selectedfield: selectedfieldReducer,
     numbers: numbersReducer,
+    sudokus: sudokulistReducer,
+    flags: flagsReducer,
+    solutionnumbers: solutionnumbersReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>; 

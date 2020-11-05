@@ -30,9 +30,7 @@ imagesRouter.get('/:id', async (request, response) => {
 
 imagesRouter.post('/', async (request, response) => {
     try {
-        console.log (toNewImage(request.body));
         const newImage = new Image(toNewImage(request.body)); 
-//        const newImage = new Image( { image: { 'data': request.body, 'contentType': "application/octet-stream" }});
         void await newImage.save(); 
         response.send(newImage);
     } catch (e) {
