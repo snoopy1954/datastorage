@@ -66,14 +66,87 @@ const SudokuResolver: React.FC = () => {
   
     const handleCandidates = () => {
         if (!flags[Flagtype.CANDIDATES]) {
-            const newCandidates = findCandidates(numbers);
+            const newCandidates = findCandidates(numbers, false, false, false);
             dispatch(setCandidates(newCandidates));
+            dispatch(clearFlag(Flagtype.SINGLES));
+            dispatch(clearFlag(Flagtype.HIDDENSINGLES));
+            dispatch(clearFlag(Flagtype.NAKEDPAIRS));
             dispatch(showNotification('Kandidaten anzeigen', 5));
         }
         else {
             dispatch(showNotification('Kandidaten nicht anzeigen', 5));
+            dispatch(clearFlag(Flagtype.SINGLES));
+            dispatch(clearFlag(Flagtype.HIDDENSINGLES));
+            dispatch(clearFlag(Flagtype.NAKEDPAIRS));
         }
         dispatch(toggleFlag(Flagtype.CANDIDATES));
+    };
+
+    const handleSingles = () => {
+        if (!flags[Flagtype.SINGLES]) {
+            const newCandidates = findCandidates(numbers, true, flags[Flagtype.HIDDENSINGLES], flags[Flagtype.NAKEDPAIRS]); 
+            dispatch(setCandidates(newCandidates));
+            dispatch(showNotification('Singles filtern', 5));
+        }
+        else {
+            dispatch(showNotification('Singles nicht filtern', 5));
+        }
+        dispatch(toggleFlag(Flagtype.SINGLES));
+    };
+
+    const handleHiddensingles = () => {
+        if (!flags[Flagtype.HIDDENSINGLES]) {
+           const newCandidates = findCandidates(numbers, flags[Flagtype.SINGLES], true, flags[Flagtype.NAKEDPAIRS]); 
+            dispatch(setCandidates(newCandidates));
+            dispatch(showNotification('Hidden Singles filtern', 5));
+        }
+        else {
+            dispatch(showNotification('Hidden Singles nicht filtern', 5));
+        }
+        dispatch(toggleFlag(Flagtype.HIDDENSINGLES));
+    };
+
+    const handleNakedpairs = () => {
+        if (!flags[Flagtype.NAKEDPAIRS]) {
+            const newCandidates = findCandidates(numbers, flags[Flagtype.SINGLES], flags[Flagtype.HIDDENSINGLES], true); 
+            dispatch(setCandidates(newCandidates));
+            dispatch(showNotification('Naked Pairs filtern', 5));
+        }
+        else {
+            dispatch(showNotification('Naked Pairs nicht filtern', 5));
+        }
+        dispatch(toggleFlag(Flagtype.NAKEDPAIRS));
+    };
+
+    const handleCheck = () => {
+        if (!flags[Flagtype.CHECK]) {
+            dispatch(showNotification('Prüfung durchführen', 5));
+        }
+        else {
+            dispatch(showNotification('Prüfung nicht durchführen', 5));
+        }
+        dispatch(toggleFlag(Flagtype.CHECK));
+    };
+
+    const handleFlag = (flag: Flagtype) => {
+        switch (flag) {
+            case Flagtype.CHECK:
+                handleCheck();
+                break;
+            case Flagtype.CANDIDATES:
+                handleCandidates();
+                break;
+            case Flagtype.SINGLES:
+                handleSingles();
+                break;
+            case Flagtype.HIDDENSINGLES:
+                handleHiddensingles();
+                break;
+            case Flagtype.NAKEDPAIRS:
+                handleNakedpairs();
+                break;
+            default:
+        }
     };
 
     const handleValue = (value: number) => {
@@ -98,7 +171,7 @@ const SudokuResolver: React.FC = () => {
             dispatch(pushSequence(selectedfield));
             numbers[selectedfield] = newNumber;
             if (flags[Flagtype.CANDIDATES]) {
-                const newCandidates = findCandidates(numbers);
+                const newCandidates = findCandidates(numbers, flags[Flagtype.SINGLES], flags[Flagtype.HIDDENSINGLES], flags[Flagtype.NAKEDPAIRS]);
                 dispatch(setCandidates(newCandidates));
             }
             if (checkComplete(numbers, solutionnumbers)) {
@@ -189,16 +262,6 @@ const SudokuResolver: React.FC = () => {
         dispatch(showNotification('Neues Spiel eingeben', 5));
     };
 
-    const handleCheck = () => {
-        if (!flags[Flagtype.CHECK]) {
-            dispatch(showNotification('Prüfung durchführen', 5));
-        }
-        else {
-            dispatch(showNotification('Prüfung nicht durchführen', 5));
-        }
-        dispatch(toggleFlag(Flagtype.CHECK));
-    };
-
     const handleUndo = () => {
         const lastField = sequence[sequence.length-1];
         const newNumber: FieldValue = {
@@ -238,18 +301,6 @@ const SudokuResolver: React.FC = () => {
         onClick: handleUndo
       },
       {
-        name: 'Prüfen',
-        title: 'Prüfen',
-        color: 'blue',
-        onClick: handleCheck
-      },
-      {
-        name: 'Kandidaten',
-        title: 'Kandidaten',
-        color: 'blue',
-        onClick: handleCandidates
-      },
-      {
         name: 'Lösung',
         title: 'Lösung',
         color: 'blue',
@@ -263,6 +314,9 @@ const SudokuResolver: React.FC = () => {
     const colors: Setcolor[] = getColors(numbers);
     const checkMessage = 'Prüfen: ' + (flags[Flagtype.CHECK] ? 'ein' : 'aus');
     const checkCandidates = 'Kandidaten: ' + (flags[Flagtype.CANDIDATES] ? 'ein' : 'aus');
+    const checkSingles = '  -  Singles: ' + (flags[Flagtype.SINGLES] ? 'ein' : 'aus');
+    const checkHiddensingles = '  -  Hidden Singles: ' + (flags[Flagtype.HIDDENSINGLES] ? 'ein' : 'aus');
+    const checkNakedpairs = '  -  Naked Pairs: ' + (flags[Flagtype.NAKEDPAIRS] ? 'ein' : 'aus');
 
     return (
         <div className="App">
@@ -278,8 +332,11 @@ const SudokuResolver: React.FC = () => {
                 </defs>
 
                 <text x={numbermatrix[0][0]} y={numbermatrix[8][1]+2} fontSize="0.25">{notification}</text>
-                <text x={numbermatrix[0][0]} y={numbermatrix[8][1]+2.4} fontSize="0.25">{checkMessage}</text>
-                <text x={numbermatrix[0][0]} y={numbermatrix[8][1]+2.8} fontSize="0.25">{checkCandidates}</text>
+                <text x={numbermatrix[0][0]} y={numbermatrix[8][1]+2.4} fontSize="0.25" onClick={() => handleFlag(Flagtype.CHECK)}>{checkMessage}</text>
+                <text x={numbermatrix[0][0]} y={numbermatrix[8][1]+2.8} fontSize="0.25" onClick={() => handleFlag(Flagtype.CANDIDATES)}>{checkCandidates}</text>
+                {flags[Flagtype.CANDIDATES]&&<text x={numbermatrix[0][0]} y={numbermatrix[8][1]+3.2} fontSize="0.25" onClick={() => handleFlag(Flagtype.SINGLES)}>{checkSingles}</text>}
+                {flags[Flagtype.CANDIDATES]&&<text x={numbermatrix[0][0]} y={numbermatrix[8][1]+3.6} fontSize="0.25" onClick={() => handleFlag(Flagtype.HIDDENSINGLES)}>{checkHiddensingles}</text>}
+                {flags[Flagtype.CANDIDATES]&&<text x={numbermatrix[0][0]} y={numbermatrix[8][1]+4} fontSize="0.25" onClick={() => handleFlag(Flagtype.NAKEDPAIRS)}>{checkNakedpairs}</text>}
 
                 <use href={q} transform={"translate("+numbermatrix[0][0]+","+numbermatrix[0][1]+")"} onClick={() => handleValue(1)} fill="lightblue"/>
                 <use href={q} transform={"translate("+numbermatrix[1][0]+","+numbermatrix[1][1]+")"} onClick={() => handleValue(2)} fill="lightblue"/>

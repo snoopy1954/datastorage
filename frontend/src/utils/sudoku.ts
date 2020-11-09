@@ -1,6 +1,8 @@
 import { FieldValue, Settype, Setcolor } from '../types/sudoku';
 
-const deepCopy = (fieldvalues: FieldValue[]) => {
+import { getMD5 } from '../utils/basic';
+
+const deepCopyFieldValues = (fieldvalues: FieldValue[]) => {
     const copiedfieldvalues: FieldValue[] = [];
 
     Object.values(fieldvalues).forEach(element => {
@@ -142,6 +144,16 @@ export const string2fieldvalues = (fieldvaluesAsString: string): FieldValue[] =>
     return fieldvalues;
 };
 
+const candidates2string = (candidates: boolean[]): string => {
+    let candidatesAsString = '';
+       
+    candidates.forEach(candidate => {
+        candidatesAsString += candidate ? 'T' : 'F';
+    });
+
+    return candidatesAsString;
+};
+
 const index2tupel = (index: number): number[] => {
     const i = Math.floor((index/27));
     const j = Math.floor((index-(i*27))/9);
@@ -153,6 +165,14 @@ const index2tupel = (index: number): number[] => {
 
 const tupel2index = (i: number, j: number, k: number, l: number) => {
     return i*27+j*9+k*3+l;
+};
+
+export const checkComplete = (numbers: FieldValue[], solutionnumbers: FieldValue[]): boolean => {
+    let complete = true;
+    for (let index=0; index<81; index++) {
+        if (numbers[index].number!==solutionnumbers[index].number) complete = false;
+    }
+    return complete;
 };
 
 const isSetBox = (numbers: FieldValue[], value: number, index: number): boolean => {
@@ -210,8 +230,31 @@ export const isCandidate = (numbers: FieldValue[], value: number, index: number)
     return (!isSetBox(numbers, value, index))&&(!isSetRow(numbers, value, index))&&(!isSetCol(numbers, value, index));
 };
 
+const getNumberOfCandidatesAt = (candidates: boolean[], position: number): number => {
+    let numberOfCandidatesAt = 0;
+
+    for (let index=0;index<9; index++) {
+        if (candidates[position*9+index]) numberOfCandidatesAt = numberOfCandidatesAt+1;
+    }
+
+    return numberOfCandidatesAt;
+};
+
+const getCandidatesAt = (candidates: boolean[], position: number): number[] => {
+    const candidatesAt: number[] = [];
+    for (let index=0;index<9; index++) {
+        if (candidates[position*9+index]) candidatesAt.push(index+1);
+    }
+
+    return candidatesAt;
+};
+
+const isCandidateAt = (candidates: boolean[], position: number, candidate: number): boolean => {
+    return candidates[position*9+candidate-1];
+};
+
 export const solveBacktrack = (fieldvalues: FieldValue[], index: number): [boolean, FieldValue[]] => {	
-    const solution: FieldValue[] = deepCopy(fieldvalues);
+    const solution: FieldValue[] = deepCopyFieldValues(fieldvalues);
       
     if (index===81) {
         return [true, solution];
@@ -278,8 +321,9 @@ export const initializeCandidates = (): boolean[] => {
     return candidates;
 };
 
-export const findCandidates = (numbers: FieldValue[]): boolean[] => {
-    const candidates: boolean[] = initializeCandidates();
+const findGameCandidates = (numbers: FieldValue[], oldCandidates: boolean[]): boolean[] => {
+    const candidates: boolean[] = oldCandidates.slice();
+
     for (let index=0; index<81; index++) {
         for (let value=1; value<10; value++) {
             const position: number = index*9+value-1;
@@ -292,10 +336,333 @@ export const findCandidates = (numbers: FieldValue[]): boolean[] => {
     return candidates;
 };
 
-export const checkComplete = (numbers: FieldValue[], solutionnumbers: FieldValue[]): boolean => {
-    let complete = true;
-    for (let index=0; index<81; index++) {
-        if (numbers[index].number!==solutionnumbers[index].number) complete = false;
+const filterSinglesInBox = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+    const candidates: boolean[] = oldCandidates.slice();
+    const i = Math.floor((index/3));
+    const j = Math.floor((index-(i*3)));
+
+    const singlepositions: number[] = [];
+    for (let k=0; k<3; k++) {
+        for (let l=0; l<3; l++) {
+            const position = tupel2index(i, j, k, l);
+            if (getNumberOfCandidatesAt(candidates, position)===1) singlepositions.push(position);
+        }
     }
-    return complete;
+    singlepositions.forEach(singleposition => {
+        const testcandidates: number[] = getCandidatesAt(candidates, singleposition);
+        if (testcandidates.length===1) {
+            for (let k=0; k<3; k++) {
+                for (let l=0; l<3; l++) {
+                    const position = tupel2index(i, j, k, l);
+                    if (position!==singleposition) candidates[position*9+testcandidates[0]-1] = false;
+                }
+            }                
+        }
+    })
+
+    return candidates;
 };
+
+const filterSinglesInRow = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+    const candidates: boolean[] = oldCandidates.slice();
+    const i = Math.floor((index/3));
+    const k = Math.floor((index-(i*3)));
+
+    const singlepositions: number[] = [];
+    for (let j=0; j<3; j++) {
+        for (let l=0; l<3; l++) {
+            const position = tupel2index(i, j, k, l);
+            if (getNumberOfCandidatesAt(candidates, position)===1) singlepositions.push(position);
+        }
+    }
+    singlepositions.forEach(singleposition => {
+        const testcandidates: number[] = getCandidatesAt(candidates, singleposition);
+        if (testcandidates.length===1) {
+            for (let j=0; j<3; j++) {
+                for (let l=0; l<3; l++) {
+                    const position = tupel2index(i, j, k, l);
+                    if (position!==singleposition) candidates[position*9+testcandidates[0]-1] = false;
+                }
+            }                
+        }
+    })
+
+    return candidates;
+};
+
+const filterSinglesInCol = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+    const candidates: boolean[] = oldCandidates.slice();
+    const j = Math.floor((index/3));
+    const l = Math.floor((index-(j*3)));
+    const singlepositions: number[] = [];
+    
+    for (let i=0; i<3; i++) {
+        for (let k=0; k<3; k++) {
+            const position = tupel2index(i, j, k, l);
+            if (getNumberOfCandidatesAt(candidates, position)===1) singlepositions.push(position);
+        }
+    }
+    singlepositions.forEach(singleposition => {
+        const testcandidates: number[] = getCandidatesAt(candidates, singleposition);
+        if (testcandidates.length===1) {
+            for (let i=0; i<3; i++) {
+                for (let k=0; k<3; k++) {
+                    const position = tupel2index(i, j, k, l);
+                    if (position!==singleposition) candidates[position*9+testcandidates[0]-1] = false;
+                }
+            }                
+        }
+    })
+
+    return candidates;
+};
+
+const filterHiddensinglesInBox = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+    const candidates: boolean[] = oldCandidates.slice();
+    const i = Math.floor((index/3));
+    const j = Math.floor((index-(i*3)));
+
+    for (let value=1; value<10; value++) {
+
+        const singlepositions: number[] = [];
+        for (let k=0; k<3; k++) {
+            for (let l=0; l<3; l++) {
+                const position = tupel2index(i, j, k, l);
+                if (isCandidateAt(candidates, position, value)) singlepositions.push(position);
+            }
+        }
+        if (singlepositions.length===1) {
+            for (let k=0; k<3; k++) {
+                for (let l=0; l<3; l++) {
+                    const position = tupel2index(i, j, k, l);
+                    if (position!==singlepositions[0]) candidates[position*9+value-1] = false;
+                }
+            }                
+        }
+    }
+
+    return candidates;
+};
+
+const filterHiddensinglesInRow = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+    const candidates: boolean[] = oldCandidates.slice();
+    const i = Math.floor((index/3));
+    const k = Math.floor((index-(i*3)));
+
+    for (let value=1; value<10; value++) {
+
+        const singlepositions: number[] = [];
+        for (let j=0; j<3; j++) {
+            for (let l=0; l<3; l++) {
+                const position = tupel2index(i, j, k, l);
+                if (isCandidateAt(candidates, position, value)) singlepositions.push(position);
+            }
+        }
+        if (singlepositions.length===1) {
+            for (let j=0; j<3; j++) {
+                for (let l=0; l<3; l++) {
+                    const position = tupel2index(i, j, k, l);
+                    if (position!==singlepositions[0]) candidates[position*9+value-1] = false;
+                }
+            }                
+        }
+    }
+
+    return candidates;
+};
+
+const filterHiddensinglesInCol = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+    const candidates: boolean[] = oldCandidates.slice();
+    const j = Math.floor((index/3));
+    const l = Math.floor((index-(j*3)));
+
+    for (let value=1; value<10; value++) {
+
+        const singlepositions: number[] = [];
+        for (let i=0; i<3; i++) {
+            for (let k=0; k<3; k++) {
+                const position = tupel2index(i, j, k, l);
+                if (isCandidateAt(candidates, position, value)) singlepositions.push(position);
+            }
+        }
+        if (singlepositions.length===1) {
+            for (let i=0; i<3; i++) {
+                for (let k=0; k<3; k++) {
+                    const position = tupel2index(i, j, k, l);
+                    if (position!==singlepositions[0]) candidates[position*9+value-1] = false;
+                }
+            }                
+        }
+    }
+
+    return candidates;
+};
+
+const filterNakedpairsInBox = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+    const candidates: boolean[] = oldCandidates.slice();
+    const i = Math.floor((index/3));
+    const j = Math.floor((index-(i*3)));
+
+    const doublepositions: number[] = [];
+    for (let k=0; k<3; k++) {
+        for (let l=0; l<3; l++) {
+            const position = tupel2index(i, j, k, l);
+            if (getNumberOfCandidatesAt(candidates, position)===2) doublepositions.push(position);
+        }
+    }
+    if (doublepositions.length>1) {
+        for (let m=1; m<doublepositions.length; m++) {
+            for (let n=0; n<doublepositions.length-1; n++) {
+                if (n!==m) {
+                    const pair1 = getCandidatesAt(candidates, doublepositions[m]);
+                    const pair2 = getCandidatesAt(candidates, doublepositions[n]);
+                    if (pair1.length===2&&pair2.length===2&&pair1[0]===pair2[0]&&pair1[1]===pair2[1]) {
+                        for (let k=0; k<3; k++) {
+                            for (let l=0; l<3; l++) {
+                                const position = tupel2index(i, j, k, l);
+                                if (position!==doublepositions[m]&&position!==doublepositions[n]) {
+                                    candidates[position*9+pair1[0]-1] = false;
+                                    candidates[position*9+pair1[1]-1] = false;
+                                }
+                            }
+                        }                    
+                    }
+                }
+            }
+        }    
+    }
+
+    return candidates;
+};
+
+const filterNakedpairsInRow = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+    const candidates: boolean[] = oldCandidates.slice();
+    const i = Math.floor((index/3));
+    const k = Math.floor((index-(i*3)));
+
+    const doublepositions: number[] = [];
+    for (let j=0; j<3; j++) {
+        for (let l=0; l<3; l++) {
+            const position = tupel2index(i, j, k, l);
+            if (getNumberOfCandidatesAt(candidates, position)===2) doublepositions.push(position);
+        }
+    }
+    if (doublepositions.length>1) {
+        for (let m=1; m<doublepositions.length; m++) {
+            for (let n=0; n<doublepositions.length-1; n++) {
+                if (n!==m) {
+                    const pair1 = getCandidatesAt(candidates, doublepositions[m]);
+                    const pair2 = getCandidatesAt(candidates, doublepositions[n]);
+                    if (pair1.length===2&&pair2.length===2&&pair1[0]===pair2[0]&&pair1[1]===pair2[1]) {
+                        for (let j=0; j<3; j++) {
+                            for (let l=0; l<3; l++) {
+                                const position = tupel2index(i, j, k, l);
+                                if (position!==doublepositions[m]&&position!==doublepositions[n]) {
+                                    candidates[position*9+pair1[0]-1] = false;
+                                    candidates[position*9+pair1[1]-1] = false;
+                                }
+                            }
+                        }                    
+                    }
+                }
+            }
+        }    
+    }
+
+    return candidates;
+};
+
+const filterNakedpairsInCol = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+    const candidates: boolean[] = oldCandidates.slice();
+    const j = Math.floor((index/3));
+    const l = Math.floor((index-(j*3)));
+
+    const doublepositions: number[] = [];
+    for (let i=0; i<3; i++) {
+        for (let k=0; k<3; k++) {
+            const position = tupel2index(i, j, k, l);
+            if (getNumberOfCandidatesAt(candidates, position)===2) doublepositions.push(position);
+        }
+    }
+    if (doublepositions.length>1) {
+        for (let m=1; m<doublepositions.length; m++) {
+            for (let n=0; n<doublepositions.length-1; n++) {
+                if (n!==m) {
+                    const pair1 = getCandidatesAt(candidates, doublepositions[m]);
+                    const pair2 = getCandidatesAt(candidates, doublepositions[n]);
+                    if (pair1.length===2&&pair2.length===2&&pair1[0]===pair2[0]&&pair1[1]===pair2[1]) {
+                        for (let i=0; i<3; i++) {
+                            for (let k=0; k<3; k++) {
+                                const position = tupel2index(i, j, k, l);
+                                if (position!==doublepositions[m]&&position!==doublepositions[n]) {
+                                    candidates[position*9+pair1[0]-1] = false;
+                                    candidates[position*9+pair1[1]-1] = false;
+                                }
+                            }
+                        }                    
+                    }
+                }
+            }
+        }    
+    }
+
+    return candidates;
+};
+
+const filterSingles = (numbers: FieldValue[], oldCandidates: boolean[]): boolean[] => {
+    let candidates: boolean[] = oldCandidates.slice();
+
+    for (let index=0; index<9; index++) {
+        candidates = filterSinglesInBox(numbers, candidates, index);
+        candidates = filterSinglesInRow(numbers, candidates, index);
+        candidates = filterSinglesInCol(numbers, candidates, index);
+     }
+
+    return candidates;
+};
+
+const filterHiddensingles = (numbers: FieldValue[], oldCandidates: boolean[]): boolean[] => {
+    let candidates: boolean[] = oldCandidates.slice();
+
+    for (let index=0; index<9; index++) {
+        candidates = filterHiddensinglesInBox(numbers, candidates, index);
+        candidates = filterHiddensinglesInRow(numbers, candidates, index);
+        candidates = filterHiddensinglesInCol(numbers, candidates, index);
+     }
+
+    return candidates;
+};
+
+const filterNakedpairs = (numbers: FieldValue[], oldCandidates: boolean[]): boolean[] => {
+    let candidates: boolean[] = oldCandidates.slice();
+
+    for (let index=0; index<9; index++) {
+        candidates = filterNakedpairsInBox(numbers, candidates, index);
+        candidates = filterNakedpairsInRow(numbers, candidates, index);
+        candidates = filterNakedpairsInCol(numbers, candidates, index);
+     }
+
+    return candidates;
+};
+
+export const findCandidates = (numbers: FieldValue[], flagSingles: boolean, flagHiddensingles: boolean, flagNakedpairs: boolean): boolean[] => {
+    let candidates: boolean[] = initializeCandidates();
+
+    candidates = findGameCandidates(numbers, candidates);
+
+    let hash1 = '';
+    let hash2: string = getMD5(candidates2string(candidates));
+
+    do {
+        if (flagSingles) candidates = filterSingles(numbers, candidates);
+        if (flagHiddensingles) candidates = filterHiddensingles(numbers, candidates);
+        if (flagNakedpairs) candidates = filterNakedpairs(numbers, candidates);
+        hash1 = hash2;
+        candidates = findGameCandidates(numbers, candidates);
+        hash2 = getMD5(candidates2string(candidates));
+    }
+    while (hash1!== hash2);
+
+    return candidates;
+};
+

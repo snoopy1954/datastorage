@@ -1,5 +1,3 @@
-import { MD5 } from 'crypto-js';
-
 import { Movie, MovieNoID, Moviegroup, Filter } from '../../../backend/src/types/movie';
 
 const sortMovies = (a: Movie, b: Movie) => {
@@ -80,8 +78,5 @@ export const nextSeqnr = (movies: Movie[], group: string, subgroup: string): num
     return maxNumber;
 }
 
-export const getMD5 = (text: string): string => {
-    return MD5(text).toString();
-}
 
 

@@ -2,7 +2,7 @@ import React from "react";
 import { ErrorMessage, Field, FieldProps, FormikProps } from "formik";
 import { Form } from "semantic-ui-react";
 
-import { getMD5 } from '../../../../utils/movie';
+import { getMD5 } from '../../../../utils/basic';
 
 export type Option = {
   value: string;
