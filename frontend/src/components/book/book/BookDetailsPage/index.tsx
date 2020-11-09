@@ -223,14 +223,6 @@ const BookDetailsPage: React.FC = () => {
                         <Table.Cell>Reihenfolge</Table.Cell>
                         <Table.Cell>{book.title.seqnr}</Table.Cell>
                     </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>angelegt</Table.Cell>
-                        <Table.Cell>{book.createdAt}</Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>geändert</Table.Cell>
-                        <Table.Cell>{book.modifiedAt}</Table.Cell>
-                    </Table.Row>
                 </Table.Body>
             </Table>
         </div>

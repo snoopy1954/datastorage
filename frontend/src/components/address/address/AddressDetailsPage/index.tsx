@@ -155,6 +155,10 @@ const AddressDetailsPage: React.FC = () => {
                             )}
                         </Table.Cell>
                     </Table.Row>
+                    <Table.Row>
+                        <Table.Cell>Reihenfolge</Table.Cell>
+                        <Table.Cell>{address.name.seqnr}</Table.Cell>
+                    </Table.Row>
                 </Table.Body>
             </Table>
         </div>

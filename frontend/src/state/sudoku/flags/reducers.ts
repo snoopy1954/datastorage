@@ -1,4 +1,4 @@
-import { INITIALIZE_FLAGS, SET_FLAG, CLEAR_FLAG, ActionTypes } from './types';
+import { INITIALIZE_FLAGS, SET_FLAG, CLEAR_FLAG, TOGGLE_FLAG, ActionTypes } from './types';
 
 const initialState: boolean[] = [false, false, false, false, false, false];
 
@@ -15,6 +15,11 @@ export const flagsReducer = (state = initialState, action: ActionTypes): boolean
             return {
                 ...state,
                 [action.payload]: false
+            }
+        case TOGGLE_FLAG:
+            return {
+                ...state,
+                [action.payload]: !state[action.payload]
             }
         default:
             return state

@@ -165,14 +165,6 @@ const DeviceDetailsPage: React.FC = () => {
               )}
             </Table.Cell>
           </Table.Row>
-          <Table.Row>
-            <Table.Cell>angelegt</Table.Cell>
-            <Table.Cell>{device.createdAt}</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>geändert</Table.Cell>
-            <Table.Cell>{device.modifiedAt}</Table.Cell>
-          </Table.Row>
         </Table.Body>
       </Table>
      </div>

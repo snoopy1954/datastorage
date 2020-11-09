@@ -49,8 +49,11 @@ import { selectedfieldReducer } from './sudoku/selectedfield/reducers';
 import { numbersReducer } from './sudoku/numbers/reducers';
 import { sudokulistReducer } from './sudoku/sudokulist/reducers';
 import { flagsReducer } from './sudoku/flags/reducers';
-import { solutionnumbersReducer }  from './sudoku/solutionnumbers/reducers';
-
+import { solutionnumbersReducer } from './sudoku/solutionnumbers/reducers';
+import { sequenceReducer } from './sudoku/sequence/reducers';
+import { candidatesReducer } from './sudoku/candidates/reducers';
+import { positionsReducer } from './sudoku/positions/reducers';
+import { notificationReducer } from './sudoku/notification/reducers';
 
 const rootReducer = combineReducers({
     page: pageReducer,
@@ -101,6 +104,10 @@ const rootReducer = combineReducers({
     sudokus: sudokulistReducer,
     flags: flagsReducer,
     solutionnumbers: solutionnumbersReducer,
+    sequence: sequenceReducer,
+    candidates: candidatesReducer, 
+    positions: positionsReducer,
+    notification: notificationReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>; 

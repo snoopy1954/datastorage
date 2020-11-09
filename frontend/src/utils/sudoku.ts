@@ -14,9 +14,60 @@ const deepCopy = (fieldvalues: FieldValue[]) => {
     });
     
     return copiedfieldvalues;
-  };
+};
 
-  export const initializeValues = (): FieldValue[] => {
+export const setMatrix = (): number[][] => {
+    const translation: number[][] = [];
+    for (let i=0; i<3; i++) {
+        for (let j=0; j<3; j++) {
+            for (let k=0; k<3; k++) {
+                for (let l=0; l<3; l++) {
+                    const a = j*3+l+1;
+                    const b = i*3+k+1;
+                    translation.push([a,b]);
+                }
+            }
+        }
+    }
+
+    return translation;
+};
+
+export const setNumbermatrix = (): number[][] => {
+    const translation: number[][] = [];
+    for (let i=0; i<3; i++) {
+        for (let j=0; j<3; j++) {
+            const a = j+12;
+            const b = i+1;
+            translation.push([a,b]);
+        }
+    }
+    
+    return translation;
+};
+
+export const setCandidatematrix = (): number[][] => {
+    const translation: number[][] = [];
+    for (let i=0; i<3; i++) {
+        for (let j=0; j<3; j++) {
+            for (let k=0; k<3; k++) {
+                for (let l=0; l<3; l++) {
+                    for (let m=0; m<3; m++) {
+                        for (let n=0; n<3; n++) {
+                            const a = j*3+l+1+n*0.3+0.2;
+                            const b = i*3+k+1+m*0.3+0.3;
+                            translation.push([a,b]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return translation;
+};
+
+export const initializeValues = (): FieldValue[] => {
     const fieldvalues: FieldValue[] = [];
 
     for (let index=0; index<81; index++) {
@@ -104,14 +155,14 @@ const tupel2index = (i: number, j: number, k: number, l: number) => {
     return i*27+j*9+k*3+l;
 };
 
-const isSetBox = (solution: FieldValue[], value: number, index: number): boolean => {
+const isSetBox = (numbers: FieldValue[], value: number, index: number): boolean => {
     let check = false;
     const [i,j,,] = index2tupel(index);
              
     for (let k=0; k<3; k++) {
         for (let l=0; l<3; l++) {
             const testindex = tupel2index(i, j, k, l);
-            const fieldvalue = solution[testindex];
+            const fieldvalue = numbers[testindex];
             if (value===fieldvalue.number) {
                 check = true;
             }
@@ -121,14 +172,14 @@ const isSetBox = (solution: FieldValue[], value: number, index: number): boolean
     return check;
 };
 
-const isSetRow = (solution: FieldValue[], value: number, index: number): boolean => {
+const isSetRow = (numbers: FieldValue[], value: number, index: number): boolean => {
     let check = false;
     const [i,,k,] = index2tupel(index);
              
     for (let j=0; j<3; j++) {
         for (let l=0; l<3; l++) {
             const testindex = tupel2index(i, j, k, l);
-            const fieldvalue = solution[testindex];
+            const fieldvalue = numbers[testindex];
             if (value===fieldvalue.number) {
                 check = true;
             }
@@ -138,14 +189,14 @@ const isSetRow = (solution: FieldValue[], value: number, index: number): boolean
     return check;
 };
 
-const isSetCol = (solution: FieldValue[], value: number, index: number): boolean => {
+const isSetCol = (numbers: FieldValue[], value: number, index: number): boolean => {
     let check = false;
     const [,j,,l] = index2tupel(index);
              
     for (let i=0; i<3; i++) {
         for (let k=0; k<3; k++) {
             const testindex = tupel2index(i, j, k, l);
-            const fieldvalue = solution[testindex];
+            const fieldvalue = numbers[testindex];
             if (value===fieldvalue.number) {
                 check = true;
             }
@@ -155,46 +206,8 @@ const isSetCol = (solution: FieldValue[], value: number, index: number): boolean
     return check;
 };
 
-const isCandidate = (solution: FieldValue[], value: number, index: number): boolean => {
-    return (!isSetBox(solution, value, index))&&(!isSetRow(solution, value, index))&&(!isSetCol(solution, value, index));
-};
-
-export const solveBacktrack2 = (fieldvalues: FieldValue[], index: number): [boolean, number[]] => {	
-    const solution: FieldValue[] = fieldvalues;
-      
-    if (index===81) {
-        const gamevalues: number[] = [];
-        for (let index=0; index<81; index++) {
-            gamevalues.push(solution[index].number);
-        }
-        return [true, gamevalues];
-    }
-
-    const fieldvalue: FieldValue = solution[index];
-    if (fieldvalue.number>0) return solveBacktrack2(solution, index+1);   			
- 
-    for (let testnumber=1; testnumber<10; testnumber++) {     
-        if (isCandidate(solution, testnumber, index)) {
-            solution[index] = {
-                number: testnumber,
-                fieldnr: index,
-                seqnr: 0,
-                settype: Settype.TRY   
-            };
-            let result = false;
-            let values = [];
-            [result, values] = solveBacktrack2(solution, index+1);    
-            if (result) return [true, values];
-            solution[index] = {
-                number: 0,
-                fieldnr: index,
-                seqnr: 0,
-                settype: Settype.NONE   
-            }
-        }
-    }
-         
-    return [false, []];
+export const isCandidate = (numbers: FieldValue[], value: number, index: number): boolean => {
+    return (!isSetBox(numbers, value, index))&&(!isSetRow(numbers, value, index))&&(!isSetCol(numbers, value, index));
 };
 
 export const solveBacktrack = (fieldvalues: FieldValue[], index: number): [boolean, FieldValue[]] => {	
@@ -255,3 +268,34 @@ export const checkFieldvalue = (solutionnumbers: FieldValue[], field: number, va
     return solutionnumbers[field].number===value ? true : false;
 };
 
+export const initializeCandidates = (): boolean[] => {
+    const candidates: boolean[] = [];
+
+    for (let index=0; index<81*9; index++) {
+        candidates.push(true);
+    }
+  
+    return candidates;
+};
+
+export const findCandidates = (numbers: FieldValue[]): boolean[] => {
+    const candidates: boolean[] = initializeCandidates();
+    for (let index=0; index<81; index++) {
+        for (let value=1; value<10; value++) {
+            const position: number = index*9+value-1;
+            if ( numbers[index].number>0 || (!isCandidate(numbers, value, index))) {
+                candidates[position] = false;
+            }
+        }
+    }
+
+    return candidates;
+};
+
+export const checkComplete = (numbers: FieldValue[], solutionnumbers: FieldValue[]): boolean => {
+    let complete = true;
+    for (let index=0; index<81; index++) {
+        if (numbers[index].number!==solutionnumbers[index].number) complete = false;
+    }
+    return complete;
+};

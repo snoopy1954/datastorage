@@ -9,7 +9,7 @@ const initialState: FieldValue[] = initializeValues();
 export const numbersReducer = (state = initialState, action: ActionTypes): FieldValue[] => {
     switch (action.type) {
         case INITIALIZE_NUMBERS:
-            return initialState;
+            return initializeValues();
         case SET_NUMBER:
             return {
                 ...state,

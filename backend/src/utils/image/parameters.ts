@@ -8,18 +8,7 @@ import { ImageNoID } from '../../types/image';
 
 export const toNewImage = (object: any) => {
     // console.log(object);
-    // const filename = parseString(object.filename);
-    // console.log(`filename='${filename}'`);
-    // const filetype = parseString(object.filetype);
-    // console.log(`filetype='${filetype}'`);
-    // const filesize = parseString(object.filesize);
-    // console.log(`filesize='${filesize}'`);
-    // const data = parseBuffer(object.data);
-    // console.log('dataId', dataId);
-
     const data = parseBuffer(object);
-
-    console.log(data);
 
     const newImage: ImageNoID = {
         filename: "",
