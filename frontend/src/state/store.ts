@@ -46,14 +46,22 @@ import { selectedmovieformatReducer } from './movie/selectedmovieformat/reducers
 import { moviefilterReducer } from './movie/moviefilter/reducers';
 import { changedmovielistReducer } from './movie/changedmovielist/reducers';
 import { selectedfieldReducer } from './sudoku/selectedfield/reducers';
-import { numbersReducer } from './sudoku/numbers/reducers';
+import { gamefieldsReducer } from './sudoku/gamefields/reducers';
 import { sudokulistReducer } from './sudoku/sudokulist/reducers';
 import { flagsReducer } from './sudoku/flags/reducers';
-import { solutionnumbersReducer } from './sudoku/solutionnumbers/reducers';
+import { solutionfieldsReducer } from './sudoku/solutionfields/reducers';
 import { sequenceReducer } from './sudoku/sequence/reducers';
 import { candidatesReducer } from './sudoku/candidates/reducers';
 import { positionsReducer } from './sudoku/positions/reducers';
 import { notificationReducer } from './sudoku/notification/reducers';
+import { invoicingpartylistReducer } from './axa/invoicingpartylist/reducers';
+import { selectedinvoicingpartyReducer } from './axa/selectedinvoicingparty/reducers';
+import { accountlistReducer } from './axa/accountlist/reducers';
+import { selectedaccountReducer } from './axa/selectedaccount/reducers';
+import { openaccountReducer } from './axa/openaccount/reducers';
+import { billlistReducer } from './axa/billlist/reducers';
+import { selectedbillReducer } from './axa/selectedbill/reducers';
+
 
 const rootReducer = combineReducers({
     page: pageReducer,
@@ -100,14 +108,21 @@ const rootReducer = combineReducers({
     moviefilter: moviefilterReducer,
     changedmovies: changedmovielistReducer,
     selectedfield: selectedfieldReducer,
-    numbers: numbersReducer,
+    gamefields: gamefieldsReducer,
     sudokus: sudokulistReducer,
     flags: flagsReducer,
-    solutionnumbers: solutionnumbersReducer,
+    solutionfields: solutionfieldsReducer,
     sequence: sequenceReducer,
     candidates: candidatesReducer, 
     positions: positionsReducer,
     notification: notificationReducer,
+    invoicingparties: invoicingpartylistReducer,
+    invoicingparty: selectedinvoicingpartyReducer,
+    accounts: accountlistReducer,
+    account: selectedaccountReducer,
+    openaccount: openaccountReducer,
+    bills: billlistReducer,
+    bill: selectedbillReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>; 

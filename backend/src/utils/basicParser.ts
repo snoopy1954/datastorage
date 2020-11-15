@@ -25,9 +25,19 @@ const isString = (text: any): text is string => {
 
 export const parseImage = (text: any): ArrayBuffer => {
     return text;
-} ;
+};
 
 export const parseStringArray = (text: any): [string] => {
 
     return text;
 };
+
+export const parseDate = (text: any): Date => {
+    if (!text) {
+      throw new Error(`Incorrect or missing parameter: ${text}`);
+    }
+  
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return text;
+};
+

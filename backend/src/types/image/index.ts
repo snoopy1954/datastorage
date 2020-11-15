@@ -10,3 +10,10 @@ export interface Image {
 }
 
 export type ImageNoID = Omit<Image, 'id'>;
+
+export interface Content {
+    filename: string;
+    filetype: string;
+    filesize: string;
+    dataId: string;
+}

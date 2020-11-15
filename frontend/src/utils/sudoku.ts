@@ -1,12 +1,12 @@
-import { FieldValue, Settype, Setcolor } from '../types/sudoku';
+import { Field, Settype, Setcolor } from '../types/sudoku';
 
 import { getMD5 } from '../utils/basic';
 
-const deepCopyFieldValues = (fieldvalues: FieldValue[]) => {
-    const copiedfieldvalues: FieldValue[] = [];
+const deepCopyFields = (fieldvalues: Field[]) => {
+    const copiedfieldvalues: Field[] = [];
 
     Object.values(fieldvalues).forEach(element => {
-        const copiedfieldvalue: FieldValue = {
+        const copiedfieldvalue: Field = {
             number: element.number,
             fieldnr: element.fieldnr,
             settype: element.settype,
@@ -69,11 +69,11 @@ export const setCandidatematrix = (): number[][] => {
     return translation;
 };
 
-export const initializeValues = (): FieldValue[] => {
-    const fieldvalues: FieldValue[] = [];
+export const initializeValues = (): Field[] => {
+    const fieldvalues: Field[] = [];
 
     for (let index=0; index<81; index++) {
-        const fieldvalue: FieldValue = {
+        const fieldvalue: Field = {
             number: 0,
             fieldnr: index,
             seqnr: 0,
@@ -85,7 +85,7 @@ export const initializeValues = (): FieldValue[] => {
     return fieldvalues;
 };
 
-export const fieldvalues2string = (fieldvalues: FieldValue[]): string => {
+export const game2string = (fieldvalues: Field[]): string => {
     let fieldvaluesAsString = '';
        
     Object.values(fieldvalues).forEach(fieldvalue => {
@@ -102,7 +102,7 @@ export const fieldvalues2string = (fieldvalues: FieldValue[]): string => {
     return fieldvaluesAsString;
 };
 
-export const solution2string = (fieldvalues: FieldValue[]): string => {
+export const solution2string = (fieldvalues: Field[]): string => {
     let fieldvaluesAsString = '';
        
     Object.values(fieldvalues).forEach(fieldvalue => {
@@ -112,11 +112,11 @@ export const solution2string = (fieldvalues: FieldValue[]): string => {
     return fieldvaluesAsString;
 };
 
-export const string2solution = (fieldvaluesAsString: string): FieldValue[] => {
-    const fieldvalues: FieldValue[] = [];
+export const string2solution = (fieldvaluesAsString: string): Field[] => {
+    const fieldvalues: Field[] = [];
 
     for (let index=0; index< 81; index++) {
-        const fieldvalue: FieldValue = {
+        const fieldvalue: Field = {
             number: +fieldvaluesAsString.substring(index, index+1),
             fieldnr: index,
             settype: Settype.SOLVED,
@@ -128,11 +128,11 @@ export const string2solution = (fieldvaluesAsString: string): FieldValue[] => {
     return fieldvalues;
 };
 
-export const string2fieldvalues = (fieldvaluesAsString: string): FieldValue[] => {
-    const fieldvalues: FieldValue[] = [];
+export const string2game = (fieldvaluesAsString: string): Field[] => {
+    const fieldvalues: Field[] = [];
 
     for (let index=0; index< 81; index++) {
-        const fieldvalue: FieldValue = {
+        const fieldvalue: Field = {
             number: +fieldvaluesAsString.substring(index*4, index*4+1),
             fieldnr: index,
             settype: +fieldvaluesAsString.substring(index*4+1, index*4+2),
@@ -167,7 +167,7 @@ const tupel2index = (i: number, j: number, k: number, l: number) => {
     return i*27+j*9+k*3+l;
 };
 
-export const checkComplete = (numbers: FieldValue[], solutionnumbers: FieldValue[]): boolean => {
+export const checkComplete = (numbers: Field[], solutionnumbers: Field[]): boolean => {
     let complete = true;
     for (let index=0; index<81; index++) {
         if (numbers[index].number!==solutionnumbers[index].number) complete = false;
@@ -175,7 +175,7 @@ export const checkComplete = (numbers: FieldValue[], solutionnumbers: FieldValue
     return complete;
 };
 
-const isSetBox = (numbers: FieldValue[], value: number, index: number): boolean => {
+const isSetBox = (numbers: Field[], value: number, index: number): boolean => {
     let check = false;
     const [i,j,,] = index2tupel(index);
              
@@ -192,7 +192,7 @@ const isSetBox = (numbers: FieldValue[], value: number, index: number): boolean 
     return check;
 };
 
-const isSetRow = (numbers: FieldValue[], value: number, index: number): boolean => {
+const isSetRow = (numbers: Field[], value: number, index: number): boolean => {
     let check = false;
     const [i,,k,] = index2tupel(index);
              
@@ -209,7 +209,7 @@ const isSetRow = (numbers: FieldValue[], value: number, index: number): boolean 
     return check;
 };
 
-const isSetCol = (numbers: FieldValue[], value: number, index: number): boolean => {
+const isSetCol = (numbers: Field[], value: number, index: number): boolean => {
     let check = false;
     const [,j,,l] = index2tupel(index);
              
@@ -226,7 +226,7 @@ const isSetCol = (numbers: FieldValue[], value: number, index: number): boolean 
     return check;
 };
 
-export const isCandidate = (numbers: FieldValue[], value: number, index: number): boolean => {
+export const isCandidate = (numbers: Field[], value: number, index: number): boolean => {
     return (!isSetBox(numbers, value, index))&&(!isSetRow(numbers, value, index))&&(!isSetCol(numbers, value, index));
 };
 
@@ -253,14 +253,14 @@ const isCandidateAt = (candidates: boolean[], position: number, candidate: numbe
     return candidates[position*9+candidate-1];
 };
 
-export const solveBacktrack = (fieldvalues: FieldValue[], index: number): [boolean, FieldValue[]] => {	
-    const solution: FieldValue[] = deepCopyFieldValues(fieldvalues);
+export const solveBacktrack = (fieldvalues: Field[], index: number): [boolean, Field[]] => {	
+    const solution: Field[] = deepCopyFields(fieldvalues);
       
     if (index===81) {
         return [true, solution];
     }
 
-    const fieldvalue: FieldValue = solution[index];
+    const fieldvalue: Field = solution[index];
     if (fieldvalue.number>0) return solveBacktrack(solution, index+1);   			
  
     for (let testnumber=1; testnumber<10; testnumber++) {     
@@ -287,7 +287,7 @@ export const solveBacktrack = (fieldvalues: FieldValue[], index: number): [boole
     return [false, []];
 };
 
-export const getColors = (fieldvalues: FieldValue[]): Setcolor[] => {
+export const getColors = (fieldvalues: Field[]): Setcolor[] => {
     const colors: Setcolor[] = [];
     Object.values(fieldvalues).forEach(value => {
         switch (value.settype) {
@@ -307,7 +307,7 @@ export const getColors = (fieldvalues: FieldValue[]): Setcolor[] => {
     return colors;
 };
 
-export const checkFieldvalue = (solutionnumbers: FieldValue[], field: number, value: number): boolean => {
+export const checkField = (solutionnumbers: Field[], field: number, value: number): boolean => {
     return solutionnumbers[field].number===value ? true : false;
 };
 
@@ -321,7 +321,7 @@ export const initializeCandidates = (): boolean[] => {
     return candidates;
 };
 
-const findGameCandidates = (numbers: FieldValue[], oldCandidates: boolean[]): boolean[] => {
+const findGameCandidates = (numbers: Field[], oldCandidates: boolean[]): boolean[] => {
     const candidates: boolean[] = oldCandidates.slice();
 
     for (let index=0; index<81; index++) {
@@ -336,7 +336,7 @@ const findGameCandidates = (numbers: FieldValue[], oldCandidates: boolean[]): bo
     return candidates;
 };
 
-const filterSinglesInBox = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+const filterSinglesInBox = (numbers: Field[], oldCandidates: boolean[], index: number): boolean[] => {
     const candidates: boolean[] = oldCandidates.slice();
     const i = Math.floor((index/3));
     const j = Math.floor((index-(i*3)));
@@ -363,7 +363,7 @@ const filterSinglesInBox = (numbers: FieldValue[], oldCandidates: boolean[], ind
     return candidates;
 };
 
-const filterSinglesInRow = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+const filterSinglesInRow = (numbers: Field[], oldCandidates: boolean[], index: number): boolean[] => {
     const candidates: boolean[] = oldCandidates.slice();
     const i = Math.floor((index/3));
     const k = Math.floor((index-(i*3)));
@@ -390,7 +390,7 @@ const filterSinglesInRow = (numbers: FieldValue[], oldCandidates: boolean[], ind
     return candidates;
 };
 
-const filterSinglesInCol = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+const filterSinglesInCol = (numbers: Field[], oldCandidates: boolean[], index: number): boolean[] => {
     const candidates: boolean[] = oldCandidates.slice();
     const j = Math.floor((index/3));
     const l = Math.floor((index-(j*3)));
@@ -417,7 +417,7 @@ const filterSinglesInCol = (numbers: FieldValue[], oldCandidates: boolean[], ind
     return candidates;
 };
 
-const filterHiddensinglesInBox = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+const filterHiddensinglesInBox = (numbers: Field[], oldCandidates: boolean[], index: number): boolean[] => {
     const candidates: boolean[] = oldCandidates.slice();
     const i = Math.floor((index/3));
     const j = Math.floor((index-(i*3)));
@@ -444,7 +444,7 @@ const filterHiddensinglesInBox = (numbers: FieldValue[], oldCandidates: boolean[
     return candidates;
 };
 
-const filterHiddensinglesInRow = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+const filterHiddensinglesInRow = (numbers: Field[], oldCandidates: boolean[], index: number): boolean[] => {
     const candidates: boolean[] = oldCandidates.slice();
     const i = Math.floor((index/3));
     const k = Math.floor((index-(i*3)));
@@ -471,7 +471,7 @@ const filterHiddensinglesInRow = (numbers: FieldValue[], oldCandidates: boolean[
     return candidates;
 };
 
-const filterHiddensinglesInCol = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+const filterHiddensinglesInCol = (numbers: Field[], oldCandidates: boolean[], index: number): boolean[] => {
     const candidates: boolean[] = oldCandidates.slice();
     const j = Math.floor((index/3));
     const l = Math.floor((index-(j*3)));
@@ -498,7 +498,7 @@ const filterHiddensinglesInCol = (numbers: FieldValue[], oldCandidates: boolean[
     return candidates;
 };
 
-const filterNakedpairsInBox = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+const filterNakedpairsInBox = (numbers: Field[], oldCandidates: boolean[], index: number): boolean[] => {
     const candidates: boolean[] = oldCandidates.slice();
     const i = Math.floor((index/3));
     const j = Math.floor((index-(i*3)));
@@ -535,7 +535,7 @@ const filterNakedpairsInBox = (numbers: FieldValue[], oldCandidates: boolean[], 
     return candidates;
 };
 
-const filterNakedpairsInRow = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+const filterNakedpairsInRow = (numbers: Field[], oldCandidates: boolean[], index: number): boolean[] => {
     const candidates: boolean[] = oldCandidates.slice();
     const i = Math.floor((index/3));
     const k = Math.floor((index-(i*3)));
@@ -572,7 +572,7 @@ const filterNakedpairsInRow = (numbers: FieldValue[], oldCandidates: boolean[], 
     return candidates;
 };
 
-const filterNakedpairsInCol = (numbers: FieldValue[], oldCandidates: boolean[], index: number): boolean[] => {
+const filterNakedpairsInCol = (numbers: Field[], oldCandidates: boolean[], index: number): boolean[] => {
     const candidates: boolean[] = oldCandidates.slice();
     const j = Math.floor((index/3));
     const l = Math.floor((index-(j*3)));
@@ -609,7 +609,7 @@ const filterNakedpairsInCol = (numbers: FieldValue[], oldCandidates: boolean[], 
     return candidates;
 };
 
-const filterSingles = (numbers: FieldValue[], oldCandidates: boolean[]): boolean[] => {
+const filterSingles = (numbers: Field[], oldCandidates: boolean[]): boolean[] => {
     let candidates: boolean[] = oldCandidates.slice();
 
     for (let index=0; index<9; index++) {
@@ -621,7 +621,7 @@ const filterSingles = (numbers: FieldValue[], oldCandidates: boolean[]): boolean
     return candidates;
 };
 
-const filterHiddensingles = (numbers: FieldValue[], oldCandidates: boolean[]): boolean[] => {
+const filterHiddensingles = (numbers: Field[], oldCandidates: boolean[]): boolean[] => {
     let candidates: boolean[] = oldCandidates.slice();
 
     for (let index=0; index<9; index++) {
@@ -633,7 +633,7 @@ const filterHiddensingles = (numbers: FieldValue[], oldCandidates: boolean[]): b
     return candidates;
 };
 
-const filterNakedpairs = (numbers: FieldValue[], oldCandidates: boolean[]): boolean[] => {
+const filterNakedpairs = (numbers: Field[], oldCandidates: boolean[]): boolean[] => {
     let candidates: boolean[] = oldCandidates.slice();
 
     for (let index=0; index<9; index++) {
@@ -645,7 +645,7 @@ const filterNakedpairs = (numbers: FieldValue[], oldCandidates: boolean[]): bool
     return candidates;
 };
 
-export const findCandidates = (numbers: FieldValue[], flagSingles: boolean, flagHiddensingles: boolean, flagNakedpairs: boolean): boolean[] => {
+export const findCandidates = (numbers: Field[], flagSingles: boolean, flagHiddensingles: boolean, flagNakedpairs: boolean): boolean[] => {
     let candidates: boolean[] = initializeCandidates();
 
     candidates = findGameCandidates(numbers, candidates);
@@ -665,4 +665,3 @@ export const findCandidates = (numbers: FieldValue[], flagSingles: boolean, flag
 
     return candidates;
 };
-

@@ -8,6 +8,8 @@ interface Props {
   onClose: () => void;
 }
 
+// https://stackoverflow.com/questions/45596329/display-pdf-in-reactjs
+
 export const ShowModal = ({ title, imageUrl, modalOpen, onClose }: Props) => {
   return (
     <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>

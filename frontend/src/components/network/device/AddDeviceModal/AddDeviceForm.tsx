@@ -56,13 +56,10 @@ const AddDeviceForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
     })
   });
 
-  console.log(selectedversions)
   const versionoptions: Option[][] = [];
   Object.values(selectedversions).forEach(element => {
     const versionoptionsOs: Option[] = [];
-    console.log(element, element.id, element.versions)
     element.versions.forEach((item) => {
-      console.log(item)
        versionoptionsOs.push({
          value: item,
          label: item
@@ -71,7 +68,6 @@ const AddDeviceForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
     versionoptions.push(versionoptionsOs); 
   });
   if (versionoptions.length===0) {
-    console.log('is leer')
     versionoptions.push([])
   }
 

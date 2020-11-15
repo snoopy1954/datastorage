@@ -17,3 +17,9 @@ export enum Daynames {
     "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"
 }
 
+export type Option = {
+    value: string;
+    label: string;
+};
+  
+

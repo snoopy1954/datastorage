@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export const PORT = process.env.PORT;
+export const MONGODB_URI_AXA = process.env.MONGODB_URI_AXA;
 export const MONGODB_URI_NETWORK = process.env.MONGODB_URI_NETWORK;
 export const MONGODB_URI_BLUTDRUCK = process.env.MONGODB_URI_BLUTDRUCK;
 export const MONGODB_URI_BUCH = process.env.MONGODB_URI_BUCH;

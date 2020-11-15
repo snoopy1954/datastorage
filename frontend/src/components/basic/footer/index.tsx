@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container } from "semantic-ui-react";
 
-const AppFooter = () => {
+export const AppFooter = () => {
     const footerStyle = {
       color: 'green',
       fontStyle: 'italic',
@@ -13,6 +13,6 @@ const AppFooter = () => {
         Datenbanken app by Snoopy 2020
       </Container>
     )
-  }
+}
 
-  export default AppFooter
+export default AppFooter

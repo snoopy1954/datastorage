@@ -14,7 +14,7 @@ export enum Setcolor {
     SOLVED = 'green'
 }
 
-export interface FieldValue {
+export interface Field {
     number: number;
     fieldnr: number;
     seqnr: number;

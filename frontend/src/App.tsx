@@ -11,11 +11,12 @@ import { checkService } from "./services/ping";
 
 import { AppHeaderH1 } from "./components/basic/header";
 import { AppMenu, Item } from "./components/basic/menu";
-import AppFooter from "./components/basic/footer";
+import { AppFooter } from "./components/basic/footer";
 import { backgroundColor, styleMainMenu } from "./constants";
 
 import Home from "./components/home";
 import Pressure from "./components/pressure";
+import Axa from './components/axa';
 import Network from "./components/network";
 import Movie from "./components/movie";
 import Book from "./components/book";
@@ -65,6 +66,12 @@ const App: React.FC = () => {
         onClick: handleSelection
       },
       {
+        name: 'axa',
+        title: 'AXA',
+        color: 'blue',
+        onClick: handleSelection
+      },
+      {
         name: 'movie',
         title: 'Film',
         color: 'blue',
@@ -95,6 +102,7 @@ const App: React.FC = () => {
                     {mainpage==='address'&&<Address/>}
                     {mainpage==='network'&&<Network/>}
                     {mainpage==='pressure'&&<Pressure/>}
+                    {mainpage==='axa'&&<Axa/>}
                     {mainpage==='movie'&&<Movie/>}
                     {mainpage==='book'&&<Book/>}
                     {mainpage==='sudoku'&&<Sudoku/>}

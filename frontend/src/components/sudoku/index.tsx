@@ -2,12 +2,12 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Sudoku, SudokuNoID } from '../../../../backend/src/types/sudoku';
-import { FieldValue, Settype, Setcolor, Flagtype } from '../../types/sudoku';
+import { Field, Settype, Setcolor, Flagtype } from '../../types/sudoku';
 
 import { RootState } from '../../state/store';
 import { setSelectedField } from '../../state/sudoku/selectedfield/actions';
-import { initializeNumbers, setNumber } from '../../state/sudoku/numbers/actions';
-import { initializeSolutionnumbers, setSolutionnumber } from '../../state/sudoku/solutionnumbers/actions';
+import { initializeGamefields, setGamefield } from '../../state/sudoku/gamefields/actions';
+import { initializeSolutionfields, setSolutionfield } from '../../state/sudoku/solutionfields/actions';
 import { initializeSudokus, addSudoku } from '../../state/sudoku/sudokulist/actions';
 import { initializeFlags, setFlag, toggleFlag, clearFlag } from '../../state/sudoku/flags/actions';
 import { initializeCandidates, setCandidates } from '../../state/sudoku/candidates/actions';
@@ -20,13 +20,13 @@ import { AppMenu, Item } from "../basic/menu";
 import { backgroundColor, styleMainMenu } from "../../constants";
 
 import { 
-    fieldvalues2string, 
-    string2fieldvalues, 
+    game2string, 
+    string2game, 
     solveBacktrack, 
     solution2string, 
     string2solution, 
     getColors, 
-    checkFieldvalue, 
+    checkField, 
     findCandidates,
     checkComplete,
     isCandidate 
@@ -37,8 +37,8 @@ const SudokuResolver: React.FC = () => {
     const dispatch = useDispatch();
   
     const selectedfield: number = useSelector((state: RootState) => state.selectedfield);
-    const numbers: FieldValue[] = useSelector((state: RootState) => state.numbers);
-    const solutionnumbers: FieldValue[] = useSelector((state: RootState) => state.solutionnumbers);
+    const gamefields: Field[] = useSelector((state: RootState) => state.gamefields);
+    const solutionfields: Field[] = useSelector((state: RootState) => state.solutionfields);
     const candidates: boolean[] = useSelector((state: RootState) => state.candidates);
     const sudokus: Sudoku[] = useSelector((state: RootState) => state.sudokus);
     const flags: boolean[] = useSelector((state: RootState) => state.flags);
@@ -56,8 +56,8 @@ const SudokuResolver: React.FC = () => {
     React.useEffect(() => {
         dispatch(initializePositions());
         dispatch(initializeSequence());
-        dispatch(initializeNumbers());
-        dispatch(initializeSolutionnumbers());
+        dispatch(initializeGamefields());
+        dispatch(initializeSolutionfields());
         dispatch(initializeCandidates());
         dispatch(initializeFlags());
         dispatch(setFlag(Flagtype.SET));
@@ -66,7 +66,7 @@ const SudokuResolver: React.FC = () => {
   
     const handleCandidates = () => {
         if (!flags[Flagtype.CANDIDATES]) {
-            const newCandidates = findCandidates(numbers, false, false, false);
+            const newCandidates = findCandidates(gamefields, false, false, false);
             dispatch(setCandidates(newCandidates));
             dispatch(clearFlag(Flagtype.SINGLES));
             dispatch(clearFlag(Flagtype.HIDDENSINGLES));
@@ -84,7 +84,7 @@ const SudokuResolver: React.FC = () => {
 
     const handleSingles = () => {
         if (!flags[Flagtype.SINGLES]) {
-            const newCandidates = findCandidates(numbers, true, flags[Flagtype.HIDDENSINGLES], flags[Flagtype.NAKEDPAIRS]); 
+            const newCandidates = findCandidates(gamefields, true, flags[Flagtype.HIDDENSINGLES], flags[Flagtype.NAKEDPAIRS]); 
             dispatch(setCandidates(newCandidates));
             dispatch(showNotification('Singles filtern', 5));
         }
@@ -96,7 +96,7 @@ const SudokuResolver: React.FC = () => {
 
     const handleHiddensingles = () => {
         if (!flags[Flagtype.HIDDENSINGLES]) {
-           const newCandidates = findCandidates(numbers, flags[Flagtype.SINGLES], true, flags[Flagtype.NAKEDPAIRS]); 
+           const newCandidates = findCandidates(gamefields, flags[Flagtype.SINGLES], true, flags[Flagtype.NAKEDPAIRS]); 
             dispatch(setCandidates(newCandidates));
             dispatch(showNotification('Hidden Singles filtern', 5));
         }
@@ -108,7 +108,7 @@ const SudokuResolver: React.FC = () => {
 
     const handleNakedpairs = () => {
         if (!flags[Flagtype.NAKEDPAIRS]) {
-            const newCandidates = findCandidates(numbers, flags[Flagtype.SINGLES], flags[Flagtype.HIDDENSINGLES], true); 
+            const newCandidates = findCandidates(gamefields, flags[Flagtype.SINGLES], flags[Flagtype.HIDDENSINGLES], true); 
             dispatch(setCandidates(newCandidates));
             dispatch(showNotification('Naked Pairs filtern', 5));
         }
@@ -152,34 +152,34 @@ const SudokuResolver: React.FC = () => {
     const handleValue = (value: number) => {
         let isOK = false;
 
-        isOK = flags[Flagtype.SET] ? isCandidate(numbers, value, selectedfield) : true;
+        isOK = flags[Flagtype.SET] ? isCandidate(gamefields, value, selectedfield) : true;
         if (!isOK) {
             dispatch(showNotification('Eingegebene Zahl ist falsch', 5));
             return;
         }
 
-        isOK = flags[Flagtype.CHECK] ? checkFieldvalue(solutionnumbers, selectedfield, value) : true;
+        isOK = flags[Flagtype.CHECK] ? checkField(solutionfields, selectedfield, value) : true;
         if (isOK) {
             const seqnr = sequence.length;
-            const newNumber: FieldValue = {
+            const gamefield: Field = {
                 number: value,
                 fieldnr: selectedfield,
                 seqnr: seqnr,
                 settype: flags[Flagtype.SET] ? Settype.SET : Settype.GAME
             };
-            dispatch(setNumber(newNumber));
+            dispatch(setGamefield(gamefield));
             dispatch(pushSequence(selectedfield));
-            numbers[selectedfield] = newNumber;
+            gamefields[selectedfield] = gamefield;
             if (flags[Flagtype.CANDIDATES]) {
-                const newCandidates = findCandidates(numbers, flags[Flagtype.SINGLES], flags[Flagtype.HIDDENSINGLES], flags[Flagtype.NAKEDPAIRS]);
+                const newCandidates = findCandidates(gamefields, flags[Flagtype.SINGLES], flags[Flagtype.HIDDENSINGLES], flags[Flagtype.NAKEDPAIRS]);
                 dispatch(setCandidates(newCandidates));
             }
-            if (checkComplete(numbers, solutionnumbers)) {
+            if (checkComplete(gamefields, solutionfields)) {
                 for (let index=0; index<81; index++) {
-                    if (numbers[index].settype!==Settype.SET) {
-                        const fieldvalue = numbers[index];
-                        fieldvalue.settype = Settype.SOLVED;
-                        dispatch(setNumber(fieldvalue));
+                    if (gamefields[index].settype!==Settype.SET) {
+                        const gamefield = gamefields[index];
+                        gamefield.settype = Settype.SOLVED;
+                        dispatch(setGamefield(gamefield));
                     }
                 }
                 dispatch(showNotification('Spiel gelöst', 5));        
@@ -195,57 +195,57 @@ const SudokuResolver: React.FC = () => {
     };
 
     const handleStart = () => {
-        const [, solutionnumbers] = solveBacktrack(numbers, 0);
+        const [, solutionfields] = solveBacktrack(gamefields, 0);
         for (let index=0; index<81; index++) {
-            dispatch(setSolutionnumber(solutionnumbers[index]));
+            dispatch(setSolutionfield(solutionfields[index]));
         }
-        const fieldvaluesAsString: string = fieldvalues2string(numbers);
-        const solutionAsString: string = solution2string(solutionnumbers);
-        const newSudoku: SudokuNoID = {
-            game: fieldvaluesAsString,
+        const gameAsString: string = game2string(gamefields);
+        const solutionAsString: string = solution2string(solutionfields);
+        const sudoku: SudokuNoID = {
+            game: gameAsString,
             solution: solutionAsString
         }
-        dispatch(addSudoku(newSudoku));
+        dispatch(addSudoku(sudoku));
         dispatch(clearFlag(Flagtype.SET));
         dispatch(showNotification('Spiel starten', 5));
     };
 
     const handleRead = () => {
         dispatch(initializeSequence());
-        dispatch(initializeNumbers());
-        dispatch(initializeSolutionnumbers());
+        dispatch(initializeGamefields());
+        dispatch(initializeSolutionfields());
         dispatch(initializeCandidates());
         dispatch(initializeFlags());
         dispatch(setSelectedField(0));
         const gameAsString: string = Object.values(sudokus)[Object.values(sudokus).length-1].game;
-        const gamefieldvalues = string2fieldvalues(gameAsString);
+        const gamefieldvalues = string2game(gameAsString);
         for (let index=0; index<81; index++) {
             if (gamefieldvalues[index].settype===Settype.SET) {
-                dispatch(setNumber(gamefieldvalues[index]));
+                dispatch(setGamefield(gamefieldvalues[index]));
             }
             else {
-                const emptyField: FieldValue = {
+                const gamefield: Field = {
                     number: 0,
                     fieldnr: index,
                     seqnr: 0,
                     settype: Settype.NONE
                 };
-                dispatch(setNumber(emptyField));
+                dispatch(setGamefield(gamefield));
             }
         }
         dispatch(clearFlag(Flagtype.SET));
         const solutionAsString: string = Object.values(sudokus)[Object.values(sudokus).length-1].solution;
-        const solutionfieldvalues: FieldValue[] = string2solution(solutionAsString);
+        const solutionfieldvalues: Field[] = string2solution(solutionAsString);
         for (let index=0; index<81; index++) {
-            dispatch(setSolutionnumber(solutionfieldvalues[index]));
+            dispatch(setSolutionfield(solutionfieldvalues[index]));
         }
         dispatch(showNotification('Spiel einlesen', 5));
     };
 
     const handleSolution = () => {
         for (let index=0; index<81; index++) {
-            if (numbers[index].settype!==Settype.SET&&numbers[index].number!==solutionnumbers[index].number) {
-                dispatch(setNumber(solutionnumbers[index]));
+            if (gamefields[index].settype!==Settype.SET&&gamefields[index].number!==solutionfields[index].number) {
+                dispatch(setGamefield(solutionfields[index]));
             }
         }
         dispatch(showNotification('Lösung anzeigen', 5));
@@ -253,8 +253,8 @@ const SudokuResolver: React.FC = () => {
 
     const handleNew = () => {
         dispatch(initializeSequence());
-        dispatch(initializeNumbers());
-        dispatch(initializeSolutionnumbers());
+        dispatch(initializeGamefields());
+        dispatch(initializeSolutionfields());
         dispatch(initializeCandidates());
         dispatch(initializeFlags());
         dispatch(setFlag(Flagtype.SET));
@@ -264,13 +264,13 @@ const SudokuResolver: React.FC = () => {
 
     const handleUndo = () => {
         const lastField = sequence[sequence.length-1];
-        const newNumber: FieldValue = {
+        const gamefield: Field = {
             number: 0,
             fieldnr: lastField,
             seqnr: 0,
             settype: Settype.NONE
         };
-        dispatch(setNumber(newNumber));
+        dispatch(setGamefield(gamefield));
         dispatch(popSequence());
     };
 
@@ -308,10 +308,9 @@ const SudokuResolver: React.FC = () => {
       },
     ];  
 
-    const q = '#quadrat';
     const markerposition: number[] = [matrix[selectedfield][0], matrix[selectedfield][1]];
     const numberfield = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    const colors: Setcolor[] = getColors(numbers);
+    const colors: Setcolor[] = getColors(gamefields);
     const checkMessage = 'Prüfen: ' + (flags[Flagtype.CHECK] ? 'ein' : 'aus');
     const checkCandidates = 'Kandidaten: ' + (flags[Flagtype.CANDIDATES] ? 'ein' : 'aus');
     const checkSingles = '  -  Singles: ' + (flags[Flagtype.SINGLES] ? 'ein' : 'aus');
@@ -338,15 +337,15 @@ const SudokuResolver: React.FC = () => {
                 {flags[Flagtype.CANDIDATES]&&<text x={numbermatrix[0][0]} y={numbermatrix[8][1]+3.6} fontSize="0.25" onClick={() => handleFlag(Flagtype.HIDDENSINGLES)}>{checkHiddensingles}</text>}
                 {flags[Flagtype.CANDIDATES]&&<text x={numbermatrix[0][0]} y={numbermatrix[8][1]+4} fontSize="0.25" onClick={() => handleFlag(Flagtype.NAKEDPAIRS)}>{checkNakedpairs}</text>}
 
-                <use href={q} transform={"translate("+numbermatrix[0][0]+","+numbermatrix[0][1]+")"} onClick={() => handleValue(1)} fill="lightblue"/>
-                <use href={q} transform={"translate("+numbermatrix[1][0]+","+numbermatrix[1][1]+")"} onClick={() => handleValue(2)} fill="lightblue"/>
-                <use href={q} transform={"translate("+numbermatrix[2][0]+","+numbermatrix[2][1]+")"} onClick={() => handleValue(3)} fill="lightblue"/>
-                <use href={q} transform={"translate("+numbermatrix[3][0]+","+numbermatrix[3][1]+")"} onClick={() => handleValue(4)} fill="lightblue"/>
-                <use href={q} transform={"translate("+numbermatrix[4][0]+","+numbermatrix[4][1]+")"} onClick={() => handleValue(5)} fill="lightblue"/>
-                <use href={q} transform={"translate("+numbermatrix[5][0]+","+numbermatrix[5][1]+")"} onClick={() => handleValue(6)} fill="lightblue"/>
-                <use href={q} transform={"translate("+numbermatrix[6][0]+","+numbermatrix[6][1]+")"} onClick={() => handleValue(7)} fill="lightblue"/>
-                <use href={q} transform={"translate("+numbermatrix[7][0]+","+numbermatrix[7][1]+")"} onClick={() => handleValue(8)} fill="lightblue"/>
-                <use href={q} transform={"translate("+numbermatrix[8][0]+","+numbermatrix[8][1]+")"} onClick={() => handleValue(9)} fill="lightblue"/>
+                <use href="#quadrat" transform={"translate("+numbermatrix[0][0]+","+numbermatrix[0][1]+")"} onClick={() => handleValue(1)} fill="lightblue"/>
+                <use href="#quadrat" transform={"translate("+numbermatrix[1][0]+","+numbermatrix[1][1]+")"} onClick={() => handleValue(2)} fill="lightblue"/>
+                <use href="#quadrat" transform={"translate("+numbermatrix[2][0]+","+numbermatrix[2][1]+")"} onClick={() => handleValue(3)} fill="lightblue"/>
+                <use href="#quadrat" transform={"translate("+numbermatrix[3][0]+","+numbermatrix[3][1]+")"} onClick={() => handleValue(4)} fill="lightblue"/>
+                <use href="#quadrat" transform={"translate("+numbermatrix[4][0]+","+numbermatrix[4][1]+")"} onClick={() => handleValue(5)} fill="lightblue"/>
+                <use href="#quadrat" transform={"translate("+numbermatrix[5][0]+","+numbermatrix[5][1]+")"} onClick={() => handleValue(6)} fill="lightblue"/>
+                <use href="#quadrat" transform={"translate("+numbermatrix[6][0]+","+numbermatrix[6][1]+")"} onClick={() => handleValue(7)} fill="lightblue"/>
+                <use href="#quadrat" transform={"translate("+numbermatrix[7][0]+","+numbermatrix[7][1]+")"} onClick={() => handleValue(8)} fill="lightblue"/>
+                <use href="#quadrat" transform={"translate("+numbermatrix[8][0]+","+numbermatrix[8][1]+")"} onClick={() => handleValue(9)} fill="lightblue"/>
 
                 <text x={numbermatrix[0][0]+0.3} y={numbermatrix[0][1]+0.8} fontSize="0.7" onClick={() => handleValue(1)}>{numberfield[0]}</text>
                 <text x={numbermatrix[1][0]+0.3} y={numbermatrix[1][1]+0.8} fontSize="0.7" onClick={() => handleValue(2)}>{numberfield[1]}</text>
@@ -358,87 +357,87 @@ const SudokuResolver: React.FC = () => {
                 <text x={numbermatrix[7][0]+0.3} y={numbermatrix[7][1]+0.8} fontSize="0.7" onClick={() => handleValue(8)}>{numberfield[7]}</text>
                 <text x={numbermatrix[8][0]+0.3} y={numbermatrix[8][1]+0.8} fontSize="0.7" onClick={() => handleValue(9)}>{numberfield[8]}</text>
  
-                <use href={q} transform={"translate("+matrix[0][0]+","+matrix[0][1]+")"} onClick={() => handlePosition(0)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[1][0]+","+matrix[1][1]+")"} onClick={() => handlePosition(1)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[2][0]+","+matrix[2][1]+")"} onClick={() => handlePosition(2)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[3][0]+","+matrix[3][1]+")"} onClick={() => handlePosition(3)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[4][0]+","+matrix[4][1]+")"} onClick={() => handlePosition(4)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[5][0]+","+matrix[5][1]+")"} onClick={() => handlePosition(5)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[6][0]+","+matrix[6][1]+")"} onClick={() => handlePosition(6)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[7][0]+","+matrix[7][1]+")"} onClick={() => handlePosition(7)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[8][0]+","+matrix[8][1]+")"} onClick={() => handlePosition(8)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[9][0]+","+matrix[9][1]+")"} onClick={() => handlePosition(9)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[10][0]+","+matrix[10][1]+")"} onClick={() => handlePosition(10)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[11][0]+","+matrix[11][1]+")"} onClick={() => handlePosition(11)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[12][0]+","+matrix[12][1]+")"} onClick={() => handlePosition(12)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[13][0]+","+matrix[13][1]+")"} onClick={() => handlePosition(13)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[14][0]+","+matrix[14][1]+")"} onClick={() => handlePosition(14)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[15][0]+","+matrix[15][1]+")"} onClick={() => handlePosition(15)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[16][0]+","+matrix[16][1]+")"} onClick={() => handlePosition(16)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[17][0]+","+matrix[17][1]+")"} onClick={() => handlePosition(17)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[18][0]+","+matrix[18][1]+")"} onClick={() => handlePosition(18)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[19][0]+","+matrix[19][1]+")"} onClick={() => handlePosition(19)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[20][0]+","+matrix[20][1]+")"} onClick={() => handlePosition(20)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[21][0]+","+matrix[21][1]+")"} onClick={() => handlePosition(21)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[22][0]+","+matrix[22][1]+")"} onClick={() => handlePosition(22)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[23][0]+","+matrix[23][1]+")"} onClick={() => handlePosition(23)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[24][0]+","+matrix[24][1]+")"} onClick={() => handlePosition(24)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[25][0]+","+matrix[25][1]+")"} onClick={() => handlePosition(25)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[26][0]+","+matrix[26][1]+")"} onClick={() => handlePosition(26)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[27][0]+","+matrix[27][1]+")"} onClick={() => handlePosition(27)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[28][0]+","+matrix[28][1]+")"} onClick={() => handlePosition(28)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[29][0]+","+matrix[29][1]+")"} onClick={() => handlePosition(29)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[30][0]+","+matrix[30][1]+")"} onClick={() => handlePosition(30)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[31][0]+","+matrix[31][1]+")"} onClick={() => handlePosition(31)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[32][0]+","+matrix[32][1]+")"} onClick={() => handlePosition(32)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[33][0]+","+matrix[33][1]+")"} onClick={() => handlePosition(33)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[34][0]+","+matrix[34][1]+")"} onClick={() => handlePosition(34)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[35][0]+","+matrix[35][1]+")"} onClick={() => handlePosition(35)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[36][0]+","+matrix[36][1]+")"} onClick={() => handlePosition(36)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[37][0]+","+matrix[37][1]+")"} onClick={() => handlePosition(37)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[38][0]+","+matrix[38][1]+")"} onClick={() => handlePosition(38)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[39][0]+","+matrix[39][1]+")"} onClick={() => handlePosition(39)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[40][0]+","+matrix[40][1]+")"} onClick={() => handlePosition(40)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[41][0]+","+matrix[41][1]+")"} onClick={() => handlePosition(41)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[42][0]+","+matrix[42][1]+")"} onClick={() => handlePosition(42)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[43][0]+","+matrix[43][1]+")"} onClick={() => handlePosition(43)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[44][0]+","+matrix[44][1]+")"} onClick={() => handlePosition(44)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[45][0]+","+matrix[45][1]+")"} onClick={() => handlePosition(45)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[46][0]+","+matrix[46][1]+")"} onClick={() => handlePosition(46)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[47][0]+","+matrix[47][1]+")"} onClick={() => handlePosition(47)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[48][0]+","+matrix[48][1]+")"} onClick={() => handlePosition(48)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[49][0]+","+matrix[49][1]+")"} onClick={() => handlePosition(49)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[50][0]+","+matrix[50][1]+")"} onClick={() => handlePosition(50)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[51][0]+","+matrix[51][1]+")"} onClick={() => handlePosition(51)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[52][0]+","+matrix[52][1]+")"} onClick={() => handlePosition(52)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[53][0]+","+matrix[53][1]+")"} onClick={() => handlePosition(53)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[54][0]+","+matrix[54][1]+")"} onClick={() => handlePosition(54)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[55][0]+","+matrix[55][1]+")"} onClick={() => handlePosition(55)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[56][0]+","+matrix[56][1]+")"} onClick={() => handlePosition(56)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[57][0]+","+matrix[57][1]+")"} onClick={() => handlePosition(57)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[58][0]+","+matrix[58][1]+")"} onClick={() => handlePosition(58)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[59][0]+","+matrix[59][1]+")"} onClick={() => handlePosition(59)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[60][0]+","+matrix[60][1]+")"} onClick={() => handlePosition(60)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[61][0]+","+matrix[61][1]+")"} onClick={() => handlePosition(61)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[62][0]+","+matrix[62][1]+")"} onClick={() => handlePosition(62)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[63][0]+","+matrix[63][1]+")"} onClick={() => handlePosition(63)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[64][0]+","+matrix[64][1]+")"} onClick={() => handlePosition(64)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[65][0]+","+matrix[65][1]+")"} onClick={() => handlePosition(65)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[66][0]+","+matrix[66][1]+")"} onClick={() => handlePosition(66)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[67][0]+","+matrix[67][1]+")"} onClick={() => handlePosition(67)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[68][0]+","+matrix[68][1]+")"} onClick={() => handlePosition(68)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[69][0]+","+matrix[69][1]+")"} onClick={() => handlePosition(69)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[70][0]+","+matrix[70][1]+")"} onClick={() => handlePosition(70)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[71][0]+","+matrix[71][1]+")"} onClick={() => handlePosition(71)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[72][0]+","+matrix[72][1]+")"} onClick={() => handlePosition(72)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[73][0]+","+matrix[73][1]+")"} onClick={() => handlePosition(73)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[74][0]+","+matrix[74][1]+")"} onClick={() => handlePosition(74)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[75][0]+","+matrix[75][1]+")"} onClick={() => handlePosition(75)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[76][0]+","+matrix[76][1]+")"} onClick={() => handlePosition(76)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[77][0]+","+matrix[77][1]+")"} onClick={() => handlePosition(77)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[78][0]+","+matrix[78][1]+")"} onClick={() => handlePosition(78)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[79][0]+","+matrix[79][1]+")"} onClick={() => handlePosition(79)} fill="white"/>
-                <use href={q} transform={"translate("+matrix[80][0]+","+matrix[80][1]+")"} onClick={() => handlePosition(80)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[0][0]+","+matrix[0][1]+")"} onClick={() => handlePosition(0)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[1][0]+","+matrix[1][1]+")"} onClick={() => handlePosition(1)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[2][0]+","+matrix[2][1]+")"} onClick={() => handlePosition(2)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[3][0]+","+matrix[3][1]+")"} onClick={() => handlePosition(3)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[4][0]+","+matrix[4][1]+")"} onClick={() => handlePosition(4)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[5][0]+","+matrix[5][1]+")"} onClick={() => handlePosition(5)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[6][0]+","+matrix[6][1]+")"} onClick={() => handlePosition(6)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[7][0]+","+matrix[7][1]+")"} onClick={() => handlePosition(7)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[8][0]+","+matrix[8][1]+")"} onClick={() => handlePosition(8)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[9][0]+","+matrix[9][1]+")"} onClick={() => handlePosition(9)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[10][0]+","+matrix[10][1]+")"} onClick={() => handlePosition(10)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[11][0]+","+matrix[11][1]+")"} onClick={() => handlePosition(11)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[12][0]+","+matrix[12][1]+")"} onClick={() => handlePosition(12)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[13][0]+","+matrix[13][1]+")"} onClick={() => handlePosition(13)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[14][0]+","+matrix[14][1]+")"} onClick={() => handlePosition(14)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[15][0]+","+matrix[15][1]+")"} onClick={() => handlePosition(15)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[16][0]+","+matrix[16][1]+")"} onClick={() => handlePosition(16)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[17][0]+","+matrix[17][1]+")"} onClick={() => handlePosition(17)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[18][0]+","+matrix[18][1]+")"} onClick={() => handlePosition(18)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[19][0]+","+matrix[19][1]+")"} onClick={() => handlePosition(19)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[20][0]+","+matrix[20][1]+")"} onClick={() => handlePosition(20)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[21][0]+","+matrix[21][1]+")"} onClick={() => handlePosition(21)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[22][0]+","+matrix[22][1]+")"} onClick={() => handlePosition(22)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[23][0]+","+matrix[23][1]+")"} onClick={() => handlePosition(23)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[24][0]+","+matrix[24][1]+")"} onClick={() => handlePosition(24)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[25][0]+","+matrix[25][1]+")"} onClick={() => handlePosition(25)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[26][0]+","+matrix[26][1]+")"} onClick={() => handlePosition(26)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[27][0]+","+matrix[27][1]+")"} onClick={() => handlePosition(27)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[28][0]+","+matrix[28][1]+")"} onClick={() => handlePosition(28)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[29][0]+","+matrix[29][1]+")"} onClick={() => handlePosition(29)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[30][0]+","+matrix[30][1]+")"} onClick={() => handlePosition(30)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[31][0]+","+matrix[31][1]+")"} onClick={() => handlePosition(31)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[32][0]+","+matrix[32][1]+")"} onClick={() => handlePosition(32)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[33][0]+","+matrix[33][1]+")"} onClick={() => handlePosition(33)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[34][0]+","+matrix[34][1]+")"} onClick={() => handlePosition(34)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[35][0]+","+matrix[35][1]+")"} onClick={() => handlePosition(35)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[36][0]+","+matrix[36][1]+")"} onClick={() => handlePosition(36)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[37][0]+","+matrix[37][1]+")"} onClick={() => handlePosition(37)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[38][0]+","+matrix[38][1]+")"} onClick={() => handlePosition(38)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[39][0]+","+matrix[39][1]+")"} onClick={() => handlePosition(39)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[40][0]+","+matrix[40][1]+")"} onClick={() => handlePosition(40)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[41][0]+","+matrix[41][1]+")"} onClick={() => handlePosition(41)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[42][0]+","+matrix[42][1]+")"} onClick={() => handlePosition(42)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[43][0]+","+matrix[43][1]+")"} onClick={() => handlePosition(43)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[44][0]+","+matrix[44][1]+")"} onClick={() => handlePosition(44)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[45][0]+","+matrix[45][1]+")"} onClick={() => handlePosition(45)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[46][0]+","+matrix[46][1]+")"} onClick={() => handlePosition(46)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[47][0]+","+matrix[47][1]+")"} onClick={() => handlePosition(47)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[48][0]+","+matrix[48][1]+")"} onClick={() => handlePosition(48)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[49][0]+","+matrix[49][1]+")"} onClick={() => handlePosition(49)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[50][0]+","+matrix[50][1]+")"} onClick={() => handlePosition(50)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[51][0]+","+matrix[51][1]+")"} onClick={() => handlePosition(51)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[52][0]+","+matrix[52][1]+")"} onClick={() => handlePosition(52)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[53][0]+","+matrix[53][1]+")"} onClick={() => handlePosition(53)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[54][0]+","+matrix[54][1]+")"} onClick={() => handlePosition(54)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[55][0]+","+matrix[55][1]+")"} onClick={() => handlePosition(55)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[56][0]+","+matrix[56][1]+")"} onClick={() => handlePosition(56)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[57][0]+","+matrix[57][1]+")"} onClick={() => handlePosition(57)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[58][0]+","+matrix[58][1]+")"} onClick={() => handlePosition(58)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[59][0]+","+matrix[59][1]+")"} onClick={() => handlePosition(59)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[60][0]+","+matrix[60][1]+")"} onClick={() => handlePosition(60)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[61][0]+","+matrix[61][1]+")"} onClick={() => handlePosition(61)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[62][0]+","+matrix[62][1]+")"} onClick={() => handlePosition(62)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[63][0]+","+matrix[63][1]+")"} onClick={() => handlePosition(63)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[64][0]+","+matrix[64][1]+")"} onClick={() => handlePosition(64)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[65][0]+","+matrix[65][1]+")"} onClick={() => handlePosition(65)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[66][0]+","+matrix[66][1]+")"} onClick={() => handlePosition(66)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[67][0]+","+matrix[67][1]+")"} onClick={() => handlePosition(67)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[68][0]+","+matrix[68][1]+")"} onClick={() => handlePosition(68)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[69][0]+","+matrix[69][1]+")"} onClick={() => handlePosition(69)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[70][0]+","+matrix[70][1]+")"} onClick={() => handlePosition(70)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[71][0]+","+matrix[71][1]+")"} onClick={() => handlePosition(71)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[72][0]+","+matrix[72][1]+")"} onClick={() => handlePosition(72)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[73][0]+","+matrix[73][1]+")"} onClick={() => handlePosition(73)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[74][0]+","+matrix[74][1]+")"} onClick={() => handlePosition(74)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[75][0]+","+matrix[75][1]+")"} onClick={() => handlePosition(75)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[76][0]+","+matrix[76][1]+")"} onClick={() => handlePosition(76)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[77][0]+","+matrix[77][1]+")"} onClick={() => handlePosition(77)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[78][0]+","+matrix[78][1]+")"} onClick={() => handlePosition(78)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[79][0]+","+matrix[79][1]+")"} onClick={() => handlePosition(79)} fill="white"/>
+                <use href="#quadrat" transform={"translate("+matrix[80][0]+","+matrix[80][1]+")"} onClick={() => handlePosition(80)} fill="white"/>
 
                 <use href="#horizontal" transform="translate(1,1)"/>
                 <use href="#horizontal" transform="translate(1,4)"/>
@@ -450,87 +449,87 @@ const SudokuResolver: React.FC = () => {
                 <use href="#vertical" transform="translate(10,1)"/>
                 <use href="#marker" transform={"translate("+(markerposition[0]+0.5)+","+(markerposition[1]+0.5)+")"}/>
                 
-                {numbers[0].number>0&&<text fill={colors[0]} x={matrix[0][0]+0.3} y={matrix[0][1]+0.8} fontSize="0.7" onClick={() => handlePosition(0)}>{String(numbers[0].number)}</text>}
-                {numbers[1].number>0&&<text fill={colors[1]} x={matrix[1][0]+0.3} y={matrix[1][1]+0.8} fontSize="0.7" onClick={() => handlePosition(1)}>{String(numbers[1].number)}</text>}
-                {numbers[2].number>0&&<text fill={colors[2]} x={matrix[2][0]+0.3} y={matrix[2][1]+0.8} fontSize="0.7" onClick={() => handlePosition(2)}>{String(numbers[2].number)}</text>}
-                {numbers[3].number>0&&<text fill={colors[3]} x={matrix[3][0]+0.3} y={matrix[3][1]+0.8} fontSize="0.7" onClick={() => handlePosition(3)}>{String(numbers[3].number)}</text>}
-                {numbers[4].number>0&&<text fill={colors[4]} x={matrix[4][0]+0.3} y={matrix[4][1]+0.8} fontSize="0.7" onClick={() => handlePosition(4)}>{String(numbers[4].number)}</text>}
-                {numbers[5].number>0&&<text fill={colors[5]} x={matrix[5][0]+0.3} y={matrix[5][1]+0.8} fontSize="0.7" onClick={() => handlePosition(5)}>{String(numbers[5].number)}</text>}
-                {numbers[6].number>0&&<text fill={colors[6]} x={matrix[6][0]+0.3} y={matrix[6][1]+0.8} fontSize="0.7" onClick={() => handlePosition(6)}>{String(numbers[6].number)}</text>}
-                {numbers[7].number>0&&<text fill={colors[7]} x={matrix[7][0]+0.3} y={matrix[7][1]+0.8} fontSize="0.7" onClick={() => handlePosition(7)}>{String(numbers[7].number)}</text>}
-                {numbers[8].number>0&&<text fill={colors[8]} x={matrix[8][0]+0.3} y={matrix[8][1]+0.8} fontSize="0.7" onClick={() => handlePosition(8)}>{String(numbers[8].number)}</text>}
-                {numbers[9].number>0&&<text fill={colors[9]} x={matrix[9][0]+0.3} y={matrix[9][1]+0.8} fontSize="0.7" onClick={() => handlePosition(9)}>{String(numbers[9].number)}</text>}
-                {numbers[10].number>0&&<text fill={colors[10]} x={matrix[10][0]+0.3} y={matrix[10][1]+0.8} fontSize="0.7" onClick={() => handlePosition(10)}>{String(numbers[10].number)}</text>}
-                {numbers[11].number>0&&<text fill={colors[11]} x={matrix[11][0]+0.3} y={matrix[11][1]+0.8} fontSize="0.7" onClick={() => handlePosition(11)}>{String(numbers[11].number)}</text>}
-                {numbers[12].number>0&&<text fill={colors[12]} x={matrix[12][0]+0.3} y={matrix[12][1]+0.8} fontSize="0.7" onClick={() => handlePosition(12)}>{String(numbers[12].number)}</text>}
-                {numbers[13].number>0&&<text fill={colors[13]} x={matrix[13][0]+0.3} y={matrix[13][1]+0.8} fontSize="0.7" onClick={() => handlePosition(13)}>{String(numbers[13].number)}</text>}
-                {numbers[14].number>0&&<text fill={colors[14]} x={matrix[14][0]+0.3} y={matrix[14][1]+0.8} fontSize="0.7" onClick={() => handlePosition(14)}>{String(numbers[14].number)}</text>}
-                {numbers[15].number>0&&<text fill={colors[15]} x={matrix[15][0]+0.3} y={matrix[15][1]+0.8} fontSize="0.7" onClick={() => handlePosition(15)}>{String(numbers[15].number)}</text>}
-                {numbers[16].number>0&&<text fill={colors[16]} x={matrix[16][0]+0.3} y={matrix[16][1]+0.8} fontSize="0.7" onClick={() => handlePosition(16)}>{String(numbers[16].number)}</text>}
-                {numbers[17].number>0&&<text fill={colors[17]} x={matrix[17][0]+0.3} y={matrix[17][1]+0.8} fontSize="0.7" onClick={() => handlePosition(17)}>{String(numbers[17].number)}</text>}
-                {numbers[18].number>0&&<text fill={colors[18]} x={matrix[18][0]+0.3} y={matrix[18][1]+0.8} fontSize="0.7" onClick={() => handlePosition(18)}>{String(numbers[18].number)}</text>}
-                {numbers[19].number>0&&<text fill={colors[19]} x={matrix[19][0]+0.3} y={matrix[19][1]+0.8} fontSize="0.7" onClick={() => handlePosition(19)}>{String(numbers[19].number)}</text>}
-                {numbers[20].number>0&&<text fill={colors[20]} x={matrix[20][0]+0.3} y={matrix[20][1]+0.8} fontSize="0.7" onClick={() => handlePosition(20)}>{String(numbers[20].number)}</text>}
-                {numbers[21].number>0&&<text fill={colors[21]} x={matrix[21][0]+0.3} y={matrix[21][1]+0.8} fontSize="0.7" onClick={() => handlePosition(21)}>{String(numbers[21].number)}</text>}
-                {numbers[22].number>0&&<text fill={colors[22]} x={matrix[22][0]+0.3} y={matrix[22][1]+0.8} fontSize="0.7" onClick={() => handlePosition(22)}>{String(numbers[22].number)}</text>}
-                {numbers[23].number>0&&<text fill={colors[23]} x={matrix[23][0]+0.3} y={matrix[23][1]+0.8} fontSize="0.7" onClick={() => handlePosition(23)}>{String(numbers[23].number)}</text>}
-                {numbers[24].number>0&&<text fill={colors[24]} x={matrix[24][0]+0.3} y={matrix[24][1]+0.8} fontSize="0.7" onClick={() => handlePosition(24)}>{String(numbers[24].number)}</text>}
-                {numbers[25].number>0&&<text fill={colors[25]} x={matrix[25][0]+0.3} y={matrix[25][1]+0.8} fontSize="0.7" onClick={() => handlePosition(25)}>{String(numbers[25].number)}</text>}
-                {numbers[26].number>0&&<text fill={colors[26]} x={matrix[26][0]+0.3} y={matrix[26][1]+0.8} fontSize="0.7" onClick={() => handlePosition(26)}>{String(numbers[26].number)}</text>}
-                {numbers[27].number>0&&<text fill={colors[27]} x={matrix[27][0]+0.3} y={matrix[27][1]+0.8} fontSize="0.7" onClick={() => handlePosition(27)}>{String(numbers[27].number)}</text>}
-                {numbers[28].number>0&&<text fill={colors[28]} x={matrix[28][0]+0.3} y={matrix[28][1]+0.8} fontSize="0.7" onClick={() => handlePosition(28)}>{String(numbers[28].number)}</text>}
-                {numbers[29].number>0&&<text fill={colors[29]} x={matrix[29][0]+0.3} y={matrix[29][1]+0.8} fontSize="0.7" onClick={() => handlePosition(29)}>{String(numbers[29].number)}</text>}
-                {numbers[30].number>0&&<text fill={colors[30]} x={matrix[30][0]+0.3} y={matrix[30][1]+0.8} fontSize="0.7" onClick={() => handlePosition(30)}>{String(numbers[30].number)}</text>}
-                {numbers[31].number>0&&<text fill={colors[31]} x={matrix[31][0]+0.3} y={matrix[31][1]+0.8} fontSize="0.7" onClick={() => handlePosition(31)}>{String(numbers[31].number)}</text>}
-                {numbers[32].number>0&&<text fill={colors[32]} x={matrix[32][0]+0.3} y={matrix[32][1]+0.8} fontSize="0.7" onClick={() => handlePosition(32)}>{String(numbers[32].number)}</text>}
-                {numbers[33].number>0&&<text fill={colors[33]} x={matrix[33][0]+0.3} y={matrix[33][1]+0.8} fontSize="0.7" onClick={() => handlePosition(33)}>{String(numbers[33].number)}</text>}
-                {numbers[34].number>0&&<text fill={colors[34]} x={matrix[34][0]+0.3} y={matrix[34][1]+0.8} fontSize="0.7" onClick={() => handlePosition(34)}>{String(numbers[34].number)}</text>}
-                {numbers[35].number>0&&<text fill={colors[35]} x={matrix[35][0]+0.3} y={matrix[35][1]+0.8} fontSize="0.7" onClick={() => handlePosition(35)}>{String(numbers[35].number)}</text>}
-                {numbers[36].number>0&&<text fill={colors[36]} x={matrix[36][0]+0.3} y={matrix[36][1]+0.8} fontSize="0.7" onClick={() => handlePosition(36)}>{String(numbers[36].number)}</text>}
-                {numbers[37].number>0&&<text fill={colors[37]} x={matrix[37][0]+0.3} y={matrix[37][1]+0.8} fontSize="0.7" onClick={() => handlePosition(37)}>{String(numbers[37].number)}</text>}
-                {numbers[38].number>0&&<text fill={colors[38]} x={matrix[38][0]+0.3} y={matrix[38][1]+0.8} fontSize="0.7" onClick={() => handlePosition(38)}>{String(numbers[38].number)}</text>}
-                {numbers[39].number>0&&<text fill={colors[39]} x={matrix[39][0]+0.3} y={matrix[39][1]+0.8} fontSize="0.7" onClick={() => handlePosition(39)}>{String(numbers[39].number)}</text>}
-                {numbers[40].number>0&&<text fill={colors[40]} x={matrix[40][0]+0.3} y={matrix[40][1]+0.8} fontSize="0.7" onClick={() => handlePosition(40)}>{String(numbers[40].number)}</text>}
-                {numbers[41].number>0&&<text fill={colors[41]} x={matrix[41][0]+0.3} y={matrix[41][1]+0.8} fontSize="0.7" onClick={() => handlePosition(41)}>{String(numbers[41].number)}</text>}
-                {numbers[42].number>0&&<text fill={colors[42]} x={matrix[42][0]+0.3} y={matrix[42][1]+0.8} fontSize="0.7" onClick={() => handlePosition(42)}>{String(numbers[42].number)}</text>}
-                {numbers[43].number>0&&<text fill={colors[43]} x={matrix[43][0]+0.3} y={matrix[43][1]+0.8} fontSize="0.7" onClick={() => handlePosition(43)}>{String(numbers[43].number)}</text>}
-                {numbers[44].number>0&&<text fill={colors[44]} x={matrix[44][0]+0.3} y={matrix[44][1]+0.8} fontSize="0.7" onClick={() => handlePosition(44)}>{String(numbers[44].number)}</text>}
-                {numbers[45].number>0&&<text fill={colors[45]} x={matrix[45][0]+0.3} y={matrix[45][1]+0.8} fontSize="0.7" onClick={() => handlePosition(45)}>{String(numbers[45].number)}</text>}
-                {numbers[46].number>0&&<text fill={colors[46]} x={matrix[46][0]+0.3} y={matrix[46][1]+0.8} fontSize="0.7" onClick={() => handlePosition(46)}>{String(numbers[46].number)}</text>}
-                {numbers[47].number>0&&<text fill={colors[47]} x={matrix[47][0]+0.3} y={matrix[47][1]+0.8} fontSize="0.7" onClick={() => handlePosition(47)}>{String(numbers[47].number)}</text>}
-                {numbers[48].number>0&&<text fill={colors[48]} x={matrix[48][0]+0.3} y={matrix[48][1]+0.8} fontSize="0.7" onClick={() => handlePosition(48)}>{String(numbers[48].number)}</text>}
-                {numbers[49].number>0&&<text fill={colors[49]} x={matrix[49][0]+0.3} y={matrix[49][1]+0.8} fontSize="0.7" onClick={() => handlePosition(49)}>{String(numbers[49].number)}</text>}
-                {numbers[50].number>0&&<text fill={colors[50]} x={matrix[50][0]+0.3} y={matrix[50][1]+0.8} fontSize="0.7" onClick={() => handlePosition(50)}>{String(numbers[50].number)}</text>}
-                {numbers[51].number>0&&<text fill={colors[51]} x={matrix[51][0]+0.3} y={matrix[51][1]+0.8} fontSize="0.7" onClick={() => handlePosition(51)}>{String(numbers[51].number)}</text>}
-                {numbers[52].number>0&&<text fill={colors[52]} x={matrix[52][0]+0.3} y={matrix[52][1]+0.8} fontSize="0.7" onClick={() => handlePosition(52)}>{String(numbers[52].number)}</text>}
-                {numbers[53].number>0&&<text fill={colors[53]} x={matrix[53][0]+0.3} y={matrix[53][1]+0.8} fontSize="0.7" onClick={() => handlePosition(53)}>{String(numbers[53].number)}</text>}
-                {numbers[54].number>0&&<text fill={colors[54]} x={matrix[54][0]+0.3} y={matrix[54][1]+0.8} fontSize="0.7" onClick={() => handlePosition(54)}>{String(numbers[54].number)}</text>}
-                {numbers[55].number>0&&<text fill={colors[55]} x={matrix[55][0]+0.3} y={matrix[55][1]+0.8} fontSize="0.7" onClick={() => handlePosition(55)}>{String(numbers[55].number)}</text>}
-                {numbers[56].number>0&&<text fill={colors[56]} x={matrix[56][0]+0.3} y={matrix[56][1]+0.8} fontSize="0.7" onClick={() => handlePosition(56)}>{String(numbers[56].number)}</text>}
-                {numbers[57].number>0&&<text fill={colors[57]} x={matrix[57][0]+0.3} y={matrix[57][1]+0.8} fontSize="0.7" onClick={() => handlePosition(57)}>{String(numbers[57].number)}</text>}
-                {numbers[58].number>0&&<text fill={colors[58]} x={matrix[58][0]+0.3} y={matrix[58][1]+0.8} fontSize="0.7" onClick={() => handlePosition(58)}>{String(numbers[58].number)}</text>}
-                {numbers[59].number>0&&<text fill={colors[59]} x={matrix[59][0]+0.3} y={matrix[59][1]+0.8} fontSize="0.7" onClick={() => handlePosition(59)}>{String(numbers[59].number)}</text>}
-                {numbers[60].number>0&&<text fill={colors[60]} x={matrix[60][0]+0.3} y={matrix[60][1]+0.8} fontSize="0.7" onClick={() => handlePosition(60)}>{String(numbers[60].number)}</text>}
-                {numbers[61].number>0&&<text fill={colors[61]} x={matrix[61][0]+0.3} y={matrix[61][1]+0.8} fontSize="0.7" onClick={() => handlePosition(61)}>{String(numbers[61].number)}</text>}
-                {numbers[62].number>0&&<text fill={colors[62]} x={matrix[62][0]+0.3} y={matrix[62][1]+0.8} fontSize="0.7" onClick={() => handlePosition(62)}>{String(numbers[62].number)}</text>}
-                {numbers[63].number>0&&<text fill={colors[63]} x={matrix[63][0]+0.3} y={matrix[63][1]+0.8} fontSize="0.7" onClick={() => handlePosition(63)}>{String(numbers[63].number)}</text>}
-                {numbers[64].number>0&&<text fill={colors[64]} x={matrix[64][0]+0.3} y={matrix[64][1]+0.8} fontSize="0.7" onClick={() => handlePosition(64)}>{String(numbers[64].number)}</text>}
-                {numbers[65].number>0&&<text fill={colors[65]} x={matrix[65][0]+0.3} y={matrix[65][1]+0.8} fontSize="0.7" onClick={() => handlePosition(65)}>{String(numbers[65].number)}</text>}
-                {numbers[66].number>0&&<text fill={colors[66]} x={matrix[66][0]+0.3} y={matrix[66][1]+0.8} fontSize="0.7" onClick={() => handlePosition(66)}>{String(numbers[66].number)}</text>}
-                {numbers[67].number>0&&<text fill={colors[67]} x={matrix[67][0]+0.3} y={matrix[67][1]+0.8} fontSize="0.7" onClick={() => handlePosition(67)}>{String(numbers[67].number)}</text>}
-                {numbers[68].number>0&&<text fill={colors[68]} x={matrix[68][0]+0.3} y={matrix[68][1]+0.8} fontSize="0.7" onClick={() => handlePosition(68)}>{String(numbers[68].number)}</text>}
-                {numbers[69].number>0&&<text fill={colors[69]} x={matrix[69][0]+0.3} y={matrix[69][1]+0.8} fontSize="0.7" onClick={() => handlePosition(69)}>{String(numbers[69].number)}</text>}
-                {numbers[70].number>0&&<text fill={colors[70]} x={matrix[70][0]+0.3} y={matrix[70][1]+0.8} fontSize="0.7" onClick={() => handlePosition(70)}>{String(numbers[70].number)}</text>}
-                {numbers[71].number>0&&<text fill={colors[71]} x={matrix[71][0]+0.3} y={matrix[71][1]+0.8} fontSize="0.7" onClick={() => handlePosition(71)}>{String(numbers[71].number)}</text>}
-                {numbers[72].number>0&&<text fill={colors[72]} x={matrix[72][0]+0.3} y={matrix[72][1]+0.8} fontSize="0.7" onClick={() => handlePosition(72)}>{String(numbers[72].number)}</text>}
-                {numbers[73].number>0&&<text fill={colors[73]} x={matrix[73][0]+0.3} y={matrix[73][1]+0.8} fontSize="0.7" onClick={() => handlePosition(73)}>{String(numbers[73].number)}</text>}
-                {numbers[74].number>0&&<text fill={colors[74]} x={matrix[74][0]+0.3} y={matrix[74][1]+0.8} fontSize="0.7" onClick={() => handlePosition(74)}>{String(numbers[74].number)}</text>}
-                {numbers[75].number>0&&<text fill={colors[75]} x={matrix[75][0]+0.3} y={matrix[75][1]+0.8} fontSize="0.7" onClick={() => handlePosition(75)}>{String(numbers[75].number)}</text>}
-                {numbers[76].number>0&&<text fill={colors[76]} x={matrix[76][0]+0.3} y={matrix[76][1]+0.8} fontSize="0.7" onClick={() => handlePosition(76)}>{String(numbers[76].number)}</text>}
-                {numbers[77].number>0&&<text fill={colors[77]} x={matrix[77][0]+0.3} y={matrix[77][1]+0.8} fontSize="0.7" onClick={() => handlePosition(77)}>{String(numbers[77].number)}</text>}
-                {numbers[78].number>0&&<text fill={colors[78]} x={matrix[78][0]+0.3} y={matrix[78][1]+0.8} fontSize="0.7" onClick={() => handlePosition(78)}>{String(numbers[78].number)}</text>}
-                {numbers[79].number>0&&<text fill={colors[79]} x={matrix[79][0]+0.3} y={matrix[79][1]+0.8} fontSize="0.7" onClick={() => handlePosition(79)}>{String(numbers[79].number)}</text>}
-                {numbers[80].number>0&&<text fill={colors[80]} x={matrix[80][0]+0.3} y={matrix[80][1]+0.8} fontSize="0.7" onClick={() => handlePosition(80)}>{String(numbers[80].number)}</text>}
+                {gamefields[0].number>0&&<text fill={colors[0]} x={matrix[0][0]+0.3} y={matrix[0][1]+0.8} fontSize="0.7" onClick={() => handlePosition(0)}>{String(gamefields[0].number)}</text>}
+                {gamefields[1].number>0&&<text fill={colors[1]} x={matrix[1][0]+0.3} y={matrix[1][1]+0.8} fontSize="0.7" onClick={() => handlePosition(1)}>{String(gamefields[1].number)}</text>}
+                {gamefields[2].number>0&&<text fill={colors[2]} x={matrix[2][0]+0.3} y={matrix[2][1]+0.8} fontSize="0.7" onClick={() => handlePosition(2)}>{String(gamefields[2].number)}</text>}
+                {gamefields[3].number>0&&<text fill={colors[3]} x={matrix[3][0]+0.3} y={matrix[3][1]+0.8} fontSize="0.7" onClick={() => handlePosition(3)}>{String(gamefields[3].number)}</text>}
+                {gamefields[4].number>0&&<text fill={colors[4]} x={matrix[4][0]+0.3} y={matrix[4][1]+0.8} fontSize="0.7" onClick={() => handlePosition(4)}>{String(gamefields[4].number)}</text>}
+                {gamefields[5].number>0&&<text fill={colors[5]} x={matrix[5][0]+0.3} y={matrix[5][1]+0.8} fontSize="0.7" onClick={() => handlePosition(5)}>{String(gamefields[5].number)}</text>}
+                {gamefields[6].number>0&&<text fill={colors[6]} x={matrix[6][0]+0.3} y={matrix[6][1]+0.8} fontSize="0.7" onClick={() => handlePosition(6)}>{String(gamefields[6].number)}</text>}
+                {gamefields[7].number>0&&<text fill={colors[7]} x={matrix[7][0]+0.3} y={matrix[7][1]+0.8} fontSize="0.7" onClick={() => handlePosition(7)}>{String(gamefields[7].number)}</text>}
+                {gamefields[8].number>0&&<text fill={colors[8]} x={matrix[8][0]+0.3} y={matrix[8][1]+0.8} fontSize="0.7" onClick={() => handlePosition(8)}>{String(gamefields[8].number)}</text>}
+                {gamefields[9].number>0&&<text fill={colors[9]} x={matrix[9][0]+0.3} y={matrix[9][1]+0.8} fontSize="0.7" onClick={() => handlePosition(9)}>{String(gamefields[9].number)}</text>}
+                {gamefields[10].number>0&&<text fill={colors[10]} x={matrix[10][0]+0.3} y={matrix[10][1]+0.8} fontSize="0.7" onClick={() => handlePosition(10)}>{String(gamefields[10].number)}</text>}
+                {gamefields[11].number>0&&<text fill={colors[11]} x={matrix[11][0]+0.3} y={matrix[11][1]+0.8} fontSize="0.7" onClick={() => handlePosition(11)}>{String(gamefields[11].number)}</text>}
+                {gamefields[12].number>0&&<text fill={colors[12]} x={matrix[12][0]+0.3} y={matrix[12][1]+0.8} fontSize="0.7" onClick={() => handlePosition(12)}>{String(gamefields[12].number)}</text>}
+                {gamefields[13].number>0&&<text fill={colors[13]} x={matrix[13][0]+0.3} y={matrix[13][1]+0.8} fontSize="0.7" onClick={() => handlePosition(13)}>{String(gamefields[13].number)}</text>}
+                {gamefields[14].number>0&&<text fill={colors[14]} x={matrix[14][0]+0.3} y={matrix[14][1]+0.8} fontSize="0.7" onClick={() => handlePosition(14)}>{String(gamefields[14].number)}</text>}
+                {gamefields[15].number>0&&<text fill={colors[15]} x={matrix[15][0]+0.3} y={matrix[15][1]+0.8} fontSize="0.7" onClick={() => handlePosition(15)}>{String(gamefields[15].number)}</text>}
+                {gamefields[16].number>0&&<text fill={colors[16]} x={matrix[16][0]+0.3} y={matrix[16][1]+0.8} fontSize="0.7" onClick={() => handlePosition(16)}>{String(gamefields[16].number)}</text>}
+                {gamefields[17].number>0&&<text fill={colors[17]} x={matrix[17][0]+0.3} y={matrix[17][1]+0.8} fontSize="0.7" onClick={() => handlePosition(17)}>{String(gamefields[17].number)}</text>}
+                {gamefields[18].number>0&&<text fill={colors[18]} x={matrix[18][0]+0.3} y={matrix[18][1]+0.8} fontSize="0.7" onClick={() => handlePosition(18)}>{String(gamefields[18].number)}</text>}
+                {gamefields[19].number>0&&<text fill={colors[19]} x={matrix[19][0]+0.3} y={matrix[19][1]+0.8} fontSize="0.7" onClick={() => handlePosition(19)}>{String(gamefields[19].number)}</text>}
+                {gamefields[20].number>0&&<text fill={colors[20]} x={matrix[20][0]+0.3} y={matrix[20][1]+0.8} fontSize="0.7" onClick={() => handlePosition(20)}>{String(gamefields[20].number)}</text>}
+                {gamefields[21].number>0&&<text fill={colors[21]} x={matrix[21][0]+0.3} y={matrix[21][1]+0.8} fontSize="0.7" onClick={() => handlePosition(21)}>{String(gamefields[21].number)}</text>}
+                {gamefields[22].number>0&&<text fill={colors[22]} x={matrix[22][0]+0.3} y={matrix[22][1]+0.8} fontSize="0.7" onClick={() => handlePosition(22)}>{String(gamefields[22].number)}</text>}
+                {gamefields[23].number>0&&<text fill={colors[23]} x={matrix[23][0]+0.3} y={matrix[23][1]+0.8} fontSize="0.7" onClick={() => handlePosition(23)}>{String(gamefields[23].number)}</text>}
+                {gamefields[24].number>0&&<text fill={colors[24]} x={matrix[24][0]+0.3} y={matrix[24][1]+0.8} fontSize="0.7" onClick={() => handlePosition(24)}>{String(gamefields[24].number)}</text>}
+                {gamefields[25].number>0&&<text fill={colors[25]} x={matrix[25][0]+0.3} y={matrix[25][1]+0.8} fontSize="0.7" onClick={() => handlePosition(25)}>{String(gamefields[25].number)}</text>}
+                {gamefields[26].number>0&&<text fill={colors[26]} x={matrix[26][0]+0.3} y={matrix[26][1]+0.8} fontSize="0.7" onClick={() => handlePosition(26)}>{String(gamefields[26].number)}</text>}
+                {gamefields[27].number>0&&<text fill={colors[27]} x={matrix[27][0]+0.3} y={matrix[27][1]+0.8} fontSize="0.7" onClick={() => handlePosition(27)}>{String(gamefields[27].number)}</text>}
+                {gamefields[28].number>0&&<text fill={colors[28]} x={matrix[28][0]+0.3} y={matrix[28][1]+0.8} fontSize="0.7" onClick={() => handlePosition(28)}>{String(gamefields[28].number)}</text>}
+                {gamefields[29].number>0&&<text fill={colors[29]} x={matrix[29][0]+0.3} y={matrix[29][1]+0.8} fontSize="0.7" onClick={() => handlePosition(29)}>{String(gamefields[29].number)}</text>}
+                {gamefields[30].number>0&&<text fill={colors[30]} x={matrix[30][0]+0.3} y={matrix[30][1]+0.8} fontSize="0.7" onClick={() => handlePosition(30)}>{String(gamefields[30].number)}</text>}
+                {gamefields[31].number>0&&<text fill={colors[31]} x={matrix[31][0]+0.3} y={matrix[31][1]+0.8} fontSize="0.7" onClick={() => handlePosition(31)}>{String(gamefields[31].number)}</text>}
+                {gamefields[32].number>0&&<text fill={colors[32]} x={matrix[32][0]+0.3} y={matrix[32][1]+0.8} fontSize="0.7" onClick={() => handlePosition(32)}>{String(gamefields[32].number)}</text>}
+                {gamefields[33].number>0&&<text fill={colors[33]} x={matrix[33][0]+0.3} y={matrix[33][1]+0.8} fontSize="0.7" onClick={() => handlePosition(33)}>{String(gamefields[33].number)}</text>}
+                {gamefields[34].number>0&&<text fill={colors[34]} x={matrix[34][0]+0.3} y={matrix[34][1]+0.8} fontSize="0.7" onClick={() => handlePosition(34)}>{String(gamefields[34].number)}</text>}
+                {gamefields[35].number>0&&<text fill={colors[35]} x={matrix[35][0]+0.3} y={matrix[35][1]+0.8} fontSize="0.7" onClick={() => handlePosition(35)}>{String(gamefields[35].number)}</text>}
+                {gamefields[36].number>0&&<text fill={colors[36]} x={matrix[36][0]+0.3} y={matrix[36][1]+0.8} fontSize="0.7" onClick={() => handlePosition(36)}>{String(gamefields[36].number)}</text>}
+                {gamefields[37].number>0&&<text fill={colors[37]} x={matrix[37][0]+0.3} y={matrix[37][1]+0.8} fontSize="0.7" onClick={() => handlePosition(37)}>{String(gamefields[37].number)}</text>}
+                {gamefields[38].number>0&&<text fill={colors[38]} x={matrix[38][0]+0.3} y={matrix[38][1]+0.8} fontSize="0.7" onClick={() => handlePosition(38)}>{String(gamefields[38].number)}</text>}
+                {gamefields[39].number>0&&<text fill={colors[39]} x={matrix[39][0]+0.3} y={matrix[39][1]+0.8} fontSize="0.7" onClick={() => handlePosition(39)}>{String(gamefields[39].number)}</text>}
+                {gamefields[40].number>0&&<text fill={colors[40]} x={matrix[40][0]+0.3} y={matrix[40][1]+0.8} fontSize="0.7" onClick={() => handlePosition(40)}>{String(gamefields[40].number)}</text>}
+                {gamefields[41].number>0&&<text fill={colors[41]} x={matrix[41][0]+0.3} y={matrix[41][1]+0.8} fontSize="0.7" onClick={() => handlePosition(41)}>{String(gamefields[41].number)}</text>}
+                {gamefields[42].number>0&&<text fill={colors[42]} x={matrix[42][0]+0.3} y={matrix[42][1]+0.8} fontSize="0.7" onClick={() => handlePosition(42)}>{String(gamefields[42].number)}</text>}
+                {gamefields[43].number>0&&<text fill={colors[43]} x={matrix[43][0]+0.3} y={matrix[43][1]+0.8} fontSize="0.7" onClick={() => handlePosition(43)}>{String(gamefields[43].number)}</text>}
+                {gamefields[44].number>0&&<text fill={colors[44]} x={matrix[44][0]+0.3} y={matrix[44][1]+0.8} fontSize="0.7" onClick={() => handlePosition(44)}>{String(gamefields[44].number)}</text>}
+                {gamefields[45].number>0&&<text fill={colors[45]} x={matrix[45][0]+0.3} y={matrix[45][1]+0.8} fontSize="0.7" onClick={() => handlePosition(45)}>{String(gamefields[45].number)}</text>}
+                {gamefields[46].number>0&&<text fill={colors[46]} x={matrix[46][0]+0.3} y={matrix[46][1]+0.8} fontSize="0.7" onClick={() => handlePosition(46)}>{String(gamefields[46].number)}</text>}
+                {gamefields[47].number>0&&<text fill={colors[47]} x={matrix[47][0]+0.3} y={matrix[47][1]+0.8} fontSize="0.7" onClick={() => handlePosition(47)}>{String(gamefields[47].number)}</text>}
+                {gamefields[48].number>0&&<text fill={colors[48]} x={matrix[48][0]+0.3} y={matrix[48][1]+0.8} fontSize="0.7" onClick={() => handlePosition(48)}>{String(gamefields[48].number)}</text>}
+                {gamefields[49].number>0&&<text fill={colors[49]} x={matrix[49][0]+0.3} y={matrix[49][1]+0.8} fontSize="0.7" onClick={() => handlePosition(49)}>{String(gamefields[49].number)}</text>}
+                {gamefields[50].number>0&&<text fill={colors[50]} x={matrix[50][0]+0.3} y={matrix[50][1]+0.8} fontSize="0.7" onClick={() => handlePosition(50)}>{String(gamefields[50].number)}</text>}
+                {gamefields[51].number>0&&<text fill={colors[51]} x={matrix[51][0]+0.3} y={matrix[51][1]+0.8} fontSize="0.7" onClick={() => handlePosition(51)}>{String(gamefields[51].number)}</text>}
+                {gamefields[52].number>0&&<text fill={colors[52]} x={matrix[52][0]+0.3} y={matrix[52][1]+0.8} fontSize="0.7" onClick={() => handlePosition(52)}>{String(gamefields[52].number)}</text>}
+                {gamefields[53].number>0&&<text fill={colors[53]} x={matrix[53][0]+0.3} y={matrix[53][1]+0.8} fontSize="0.7" onClick={() => handlePosition(53)}>{String(gamefields[53].number)}</text>}
+                {gamefields[54].number>0&&<text fill={colors[54]} x={matrix[54][0]+0.3} y={matrix[54][1]+0.8} fontSize="0.7" onClick={() => handlePosition(54)}>{String(gamefields[54].number)}</text>}
+                {gamefields[55].number>0&&<text fill={colors[55]} x={matrix[55][0]+0.3} y={matrix[55][1]+0.8} fontSize="0.7" onClick={() => handlePosition(55)}>{String(gamefields[55].number)}</text>}
+                {gamefields[56].number>0&&<text fill={colors[56]} x={matrix[56][0]+0.3} y={matrix[56][1]+0.8} fontSize="0.7" onClick={() => handlePosition(56)}>{String(gamefields[56].number)}</text>}
+                {gamefields[57].number>0&&<text fill={colors[57]} x={matrix[57][0]+0.3} y={matrix[57][1]+0.8} fontSize="0.7" onClick={() => handlePosition(57)}>{String(gamefields[57].number)}</text>}
+                {gamefields[58].number>0&&<text fill={colors[58]} x={matrix[58][0]+0.3} y={matrix[58][1]+0.8} fontSize="0.7" onClick={() => handlePosition(58)}>{String(gamefields[58].number)}</text>}
+                {gamefields[59].number>0&&<text fill={colors[59]} x={matrix[59][0]+0.3} y={matrix[59][1]+0.8} fontSize="0.7" onClick={() => handlePosition(59)}>{String(gamefields[59].number)}</text>}
+                {gamefields[60].number>0&&<text fill={colors[60]} x={matrix[60][0]+0.3} y={matrix[60][1]+0.8} fontSize="0.7" onClick={() => handlePosition(60)}>{String(gamefields[60].number)}</text>}
+                {gamefields[61].number>0&&<text fill={colors[61]} x={matrix[61][0]+0.3} y={matrix[61][1]+0.8} fontSize="0.7" onClick={() => handlePosition(61)}>{String(gamefields[61].number)}</text>}
+                {gamefields[62].number>0&&<text fill={colors[62]} x={matrix[62][0]+0.3} y={matrix[62][1]+0.8} fontSize="0.7" onClick={() => handlePosition(62)}>{String(gamefields[62].number)}</text>}
+                {gamefields[63].number>0&&<text fill={colors[63]} x={matrix[63][0]+0.3} y={matrix[63][1]+0.8} fontSize="0.7" onClick={() => handlePosition(63)}>{String(gamefields[63].number)}</text>}
+                {gamefields[64].number>0&&<text fill={colors[64]} x={matrix[64][0]+0.3} y={matrix[64][1]+0.8} fontSize="0.7" onClick={() => handlePosition(64)}>{String(gamefields[64].number)}</text>}
+                {gamefields[65].number>0&&<text fill={colors[65]} x={matrix[65][0]+0.3} y={matrix[65][1]+0.8} fontSize="0.7" onClick={() => handlePosition(65)}>{String(gamefields[65].number)}</text>}
+                {gamefields[66].number>0&&<text fill={colors[66]} x={matrix[66][0]+0.3} y={matrix[66][1]+0.8} fontSize="0.7" onClick={() => handlePosition(66)}>{String(gamefields[66].number)}</text>}
+                {gamefields[67].number>0&&<text fill={colors[67]} x={matrix[67][0]+0.3} y={matrix[67][1]+0.8} fontSize="0.7" onClick={() => handlePosition(67)}>{String(gamefields[67].number)}</text>}
+                {gamefields[68].number>0&&<text fill={colors[68]} x={matrix[68][0]+0.3} y={matrix[68][1]+0.8} fontSize="0.7" onClick={() => handlePosition(68)}>{String(gamefields[68].number)}</text>}
+                {gamefields[69].number>0&&<text fill={colors[69]} x={matrix[69][0]+0.3} y={matrix[69][1]+0.8} fontSize="0.7" onClick={() => handlePosition(69)}>{String(gamefields[69].number)}</text>}
+                {gamefields[70].number>0&&<text fill={colors[70]} x={matrix[70][0]+0.3} y={matrix[70][1]+0.8} fontSize="0.7" onClick={() => handlePosition(70)}>{String(gamefields[70].number)}</text>}
+                {gamefields[71].number>0&&<text fill={colors[71]} x={matrix[71][0]+0.3} y={matrix[71][1]+0.8} fontSize="0.7" onClick={() => handlePosition(71)}>{String(gamefields[71].number)}</text>}
+                {gamefields[72].number>0&&<text fill={colors[72]} x={matrix[72][0]+0.3} y={matrix[72][1]+0.8} fontSize="0.7" onClick={() => handlePosition(72)}>{String(gamefields[72].number)}</text>}
+                {gamefields[73].number>0&&<text fill={colors[73]} x={matrix[73][0]+0.3} y={matrix[73][1]+0.8} fontSize="0.7" onClick={() => handlePosition(73)}>{String(gamefields[73].number)}</text>}
+                {gamefields[74].number>0&&<text fill={colors[74]} x={matrix[74][0]+0.3} y={matrix[74][1]+0.8} fontSize="0.7" onClick={() => handlePosition(74)}>{String(gamefields[74].number)}</text>}
+                {gamefields[75].number>0&&<text fill={colors[75]} x={matrix[75][0]+0.3} y={matrix[75][1]+0.8} fontSize="0.7" onClick={() => handlePosition(75)}>{String(gamefields[75].number)}</text>}
+                {gamefields[76].number>0&&<text fill={colors[76]} x={matrix[76][0]+0.3} y={matrix[76][1]+0.8} fontSize="0.7" onClick={() => handlePosition(76)}>{String(gamefields[76].number)}</text>}
+                {gamefields[77].number>0&&<text fill={colors[77]} x={matrix[77][0]+0.3} y={matrix[77][1]+0.8} fontSize="0.7" onClick={() => handlePosition(77)}>{String(gamefields[77].number)}</text>}
+                {gamefields[78].number>0&&<text fill={colors[78]} x={matrix[78][0]+0.3} y={matrix[78][1]+0.8} fontSize="0.7" onClick={() => handlePosition(78)}>{String(gamefields[78].number)}</text>}
+                {gamefields[79].number>0&&<text fill={colors[79]} x={matrix[79][0]+0.3} y={matrix[79][1]+0.8} fontSize="0.7" onClick={() => handlePosition(79)}>{String(gamefields[79].number)}</text>}
+                {gamefields[80].number>0&&<text fill={colors[80]} x={matrix[80][0]+0.3} y={matrix[80][1]+0.8} fontSize="0.7" onClick={() => handlePosition(80)}>{String(gamefields[80].number)}</text>}
 
                 {flags[Flagtype.CANDIDATES]&&candidates[0]&&<text fill='red' x={candidatematrix[0][0]} y={candidatematrix[0][1]} fontSize="0.2">1</text>}
                 {flags[Flagtype.CANDIDATES]&&candidates[1]&&<text fill='red' x={candidatematrix[1][0]} y={candidatematrix[1][1]} fontSize="0.2">2</text>}
