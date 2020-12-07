@@ -1,7 +1,7 @@
 import { AccountNoID, BillNoID } from '../../../backend/src/types/axa';
 
 import { AccountStatus, BillStatus, Insurancetype } from '../types/axa';
-import { Details, Document } from '../../../backend/src/types/axa';
+import { Details, Note } from '../../../backend/src/types/axa';
 
 export const newAccount = (): AccountNoID => {
     const actualDate = new Date().toISOString().substring(0, 10).replace(/-/g,"");
@@ -33,8 +33,8 @@ export const newDetails = (): Details => {
     return details;
 };
 
-export const newDocument = (): Document => {
-    const document: Document = {
+export const newNote = (): Note => {
+    const note: Note = {
         filename: '',
         filetype: '',
         filesize: '',
@@ -42,7 +42,7 @@ export const newDocument = (): Document => {
         received: ''
     }
 
-    return document;
+    return note;
 }
 
 export const newBill = (): BillNoID => {

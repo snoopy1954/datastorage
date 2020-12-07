@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { BillNoID, InvoicingPartyNoID, AccountNoID, Document, Details, AccountStatus, BillStatus } from '../../types/axa';
+import { BillNoID, InvoicingPartyNoID, AccountNoID, Note, Details, AccountStatus, BillStatus } from '../../types/axa';
 import { parseString, parseStringArray } from './../basicParser';
 
 export const toNewAccount = (object: any): AccountNoID => {
@@ -15,7 +15,7 @@ export const toNewAccount = (object: any): AccountNoID => {
     // console.log(`status='${status}'`);
     const passed: string = parseString(object.passed);
     // console.log(`passed='${passed}'`);
-    const notes: Document[] = parseDocuments(object.notes);
+    const notes: Note[] = parseNotes(object.notes);
     // console.log(`notes='${notes}'`);
     const details: Details[] = parseDetails(object.details);
     // console.log(`details='${details}'`);
@@ -44,7 +44,7 @@ export const toNewBill = (object: any): BillNoID => {
     // console.log(`status='${status}'`);
     const invoicingparty: string = parseString(object.invoicingparty);
     // console.log(`invoicingparty='${invoicingparty}'`);
-    const notes: Document[] = parseDocuments(object.notes);
+    const notes: Note[] = parseNotes(object.notes);
     // console.log(`notes='${notes}'`);
     const details: Details[] = parseDetails(object.details);
     // console.log(`details='${details}'`);
@@ -82,21 +82,13 @@ export const toNewInvoicingparty = (object: any) => {
     return invoicingparty;
 };
 
-const parseDocuments = (text: any): Document[] => {
+const parseNotes = (text: any): Note[] => {
     if (!text || !Array.isArray(text)) {
       throw new Error(`Incorrect or missing parameter: ${text}`);
     }
   
     return text;
 };
-
-// const parseDocument = (text: any): Document => {
-//     if (!text) {
-//       throw new Error(`Incorrect or missing parameter: ${text}`);
-//     }
-  
-//     return text;
-// };
 
 const parseDetails = (text: any): Details[] => {
     if (!text || !Array.isArray(text)) {

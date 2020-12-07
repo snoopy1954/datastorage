@@ -23,7 +23,7 @@ export enum Insurancetype {
     VITAL750 = 'VITAL 750'
 }
 
-export interface Document {
+export interface Note {
     filename: string;
     filetype: string;
     filesize: string;
@@ -47,7 +47,7 @@ export interface Account {
     passed: string;
     billIDs: string[];
     details: Details[];
-    notes: Document[];
+    notes: Note[];
 }
 
 export type AccountNoID = Omit<Account, 'id'>;
@@ -59,7 +59,7 @@ export interface Bill {
     invoicingparty: string;
     accountID: string;
     details: Details[];
-    notes: Document[];
+    notes: Note[];
 }
 
 export type BillNoID = Omit<Bill, 'id'>;

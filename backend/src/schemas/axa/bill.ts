@@ -5,7 +5,7 @@ import * as mongoose from 'mongoose';
 
 import { BillStatus, Insurancetype } from '../../types/axa';
 
-const documentSchema = new mongoose.Schema({
+const noteSchema = new mongoose.Schema({
   filename: { type: String, required: true },
   filetype: { type: String, required: true },
   filesize: { type: String, required: true },
@@ -28,7 +28,7 @@ const billSchema = new mongoose.Schema({
   invoicingparty: { type: String, required: true },
   accountID: { type: String, required: true },
   details: { type: [detailsSchema], required: false },
-  notes: { type: [documentSchema], required: false },
+  notes: { type: [noteSchema], required: false },
 });
 
 billSchema.set('toJSON', {

@@ -17,6 +17,7 @@ import { AskModal } from "../../../basic/askModal";
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 import AddBillModal from "../AddBillModal";
+import ShowModalPDF from "../../../basic/showModalPDF";
 
 
 const BillDetailsPage: React.FC = () => {
@@ -26,6 +27,8 @@ const BillDetailsPage: React.FC = () => {
 
   const mainpage = useSelector((state: RootState) => state.page.mainpage);      
   const bill = useSelector((state: RootState) => state.bill);
+
+  const pdfUrl = useSelector((state: RootState) => state.pdfurl);
 
   const openModalChange = (): void => setModalOpen([true, false, false]);
   const openModalDelete = (): void => setModalOpen([false, true, false]);
@@ -42,7 +45,7 @@ const BillDetailsPage: React.FC = () => {
 
   const handleClose = () => {
     dispatch(clearSelectedBill());
-  }
+  };
 
   const  handleDelete = async () => {
     if (bill.id!=='') {
@@ -51,7 +54,7 @@ const BillDetailsPage: React.FC = () => {
     }
     closeModal();
     dispatch(setPage({ mainpage, subpage: 'bills' }));
-  }
+  };
 
   const handleChangedBill = async (values: BillNoID) => {
     const billToUpdate: Bill = {
@@ -79,6 +82,12 @@ const BillDetailsPage: React.FC = () => {
       onClick: openModalChange
     },
     {
+      name: 'Anzeigen',
+      title: 'Anzeigen',
+      color: 'blue',
+      onClick: openModalShow
+    },
+    {
       name: 'Löschen',
       title: 'Löschen',
       color: 'red',
@@ -103,6 +112,12 @@ const BillDetailsPage: React.FC = () => {
           onSubmit={handleDelete}
           onClose={closeModal}
       />
+      {pdfUrl!==''&&<ShowModalPDF
+          title={bill.notes[0].filename}
+          pdfUrl={pdfUrl}
+          modalOpen={modalOpen[ModalDialog.SHOW]}
+          onClose={closeModal}
+      />}
       <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
       <Table celled compact small='true' style={{ backgroundColor }}>
         <Table.Header>
@@ -120,10 +135,10 @@ const BillDetailsPage: React.FC = () => {
             <Table.Cell>Abrechnung</Table.Cell>
             <Table.Cell>{bill.accountID}</Table.Cell>
           </Table.Row>
-          <Table.Row>
+          {pdfUrl!==''&&<Table.Row>
             <Table.Cell>Rechnung</Table.Cell>
             <Table.Cell>{bill.notes[0].filename}</Table.Cell>
-          </Table.Row>
+          </Table.Row>}
         </Table.Body>
       </Table>
    </div>

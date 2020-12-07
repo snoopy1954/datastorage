@@ -61,6 +61,7 @@ import { selectedaccountReducer } from './axa/selectedaccount/reducers';
 import { openaccountReducer } from './axa/openaccount/reducers';
 import { billlistReducer } from './axa/billlist/reducers';
 import { selectedbillReducer } from './axa/selectedbill/reducers';
+import { pdfurlReducer } from './axa/pdfUrl/reducers';
 
 
 const rootReducer = combineReducers({
@@ -123,6 +124,7 @@ const rootReducer = combineReducers({
     openaccount: openaccountReducer,
     bills: billlistReducer,
     bill: selectedbillReducer,
+    pdfurl: pdfurlReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>; 

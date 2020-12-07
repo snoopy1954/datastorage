@@ -2,19 +2,22 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Bill, BillNoID, BillWithFilesNoID, Document } from '../../../../../../backend/src/types/axa';
+import { Bill, BillNoID, BillWithFilesNoID, Note } from '../../../../../../backend/src/types/axa';
 import { Content } from '../../../../../../backend/src/types/image';
 import { Edittype } from "../../../../types/basic";
 
 import { RootState } from '../../../../state/store';
 import { addBill } from  '../../../../state/axa/billlist/actions';
 import { setSelectedBill } from "../../../../state/axa/selectedbill/actions";
+import { setPdfUrl } from "../../../../state/axa/pdfUrl/actions";
 import { create2 } from "../../../../services/image/images";
+import { getOne } from '../../../../services/image/images';
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
+import { getImageUrl } from "../../../../utils/image";
 
 import AddBillModal from "../AddBillModal";
 import BillDetailsPage from '../BillDetailsPage';
@@ -36,18 +39,26 @@ const BillListPage: React.FC = () => {
     };
 
     const handleSelection = (bill: Bill) => {
+      const id = '5fb15783164930351f3af283';
+      // const id = '5fbfc3e128b4e6125d045b73';
+      const fetchImage = async () => {
+        const newImage = await getOne(id);
+        dispatch(setPdfUrl(await getImageUrl(newImage)));
+        console.log(newImage)
+      };
+      fetchImage();
       dispatch(setSelectedBill(bill));
-    }  
+    };
 
     const submitBill = async (billdata: BillWithFilesNoID) => {
-      const newNotes: Document[] = [];
+      const newNotes: Note[] = [];
       const today = "25.01.1954";
       const files: File[] = billdata.files;
       const numberOfFiles = files.length;
       for (let index = 0; index < numberOfFiles; index++) {
         const file: File = files[index];
         const content: Content = await create2(file);
-        const newNote: Document = {
+        const newNote: Note = {
           ...content,
           received: today
         }
@@ -108,6 +119,6 @@ const BillListPage: React.FC = () => {
           </Table>
         </div>
       );
-}
+};
 
 export default BillListPage;
