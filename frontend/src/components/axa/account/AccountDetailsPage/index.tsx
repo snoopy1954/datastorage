@@ -29,7 +29,7 @@ const AccountDetailsPage: React.FC = () => {
 
   const openModalChange = (): void => setModalOpen([true, false, false]);
   const openModalDelete = (): void => setModalOpen([false, true, false]);
-  const openModalShow = (): void => setModalOpen([false, false, true]);
+//  const openModalShow = (): void => setModalOpen([false, false, true]);
   enum ModalDialog {
       CHANGE = 0,
       DELETE = 1,

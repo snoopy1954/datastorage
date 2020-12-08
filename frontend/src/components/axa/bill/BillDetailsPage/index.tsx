@@ -9,12 +9,15 @@ import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';
 import { removeBill, updateBill } from '../../../../state/axa/billlist/actions';
 import { clearSelectedBill } from '../../../../state/axa/selectedbill/actions';
+import { getOne } from '../../../../services/image/images';
+import { setPdfUrl } from "../../../../state/axa/pdfUrl/actions";
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
+import { getImageUrl } from "../../../../utils/image";
 
 import AddBillModal from "../AddBillModal";
 import ShowModalPDF from "../../../basic/showModalPDF";
@@ -27,7 +30,6 @@ const BillDetailsPage: React.FC = () => {
 
   const mainpage = useSelector((state: RootState) => state.page.mainpage);      
   const bill = useSelector((state: RootState) => state.bill);
-
   const pdfUrl = useSelector((state: RootState) => state.pdfurl);
 
   const openModalChange = (): void => setModalOpen([true, false, false]);
@@ -45,6 +47,17 @@ const BillDetailsPage: React.FC = () => {
 
   const handleClose = () => {
     dispatch(clearSelectedBill());
+  };
+
+  const handleSelection = (index: number) => {
+    console.log('selected ', index)
+    const id = bill.notes[index].dataId;
+    const fetchImage = async () => {
+      const newImage = await getOne(id);
+      dispatch(setPdfUrl(await getImageUrl(newImage)));
+    };
+    fetchImage();
+    openModalShow();
   };
 
   const  handleDelete = async () => {
@@ -80,12 +93,6 @@ const BillDetailsPage: React.FC = () => {
       title: 'Ändern',
       color: 'blue',
       onClick: openModalChange
-    },
-    {
-      name: 'Anzeigen',
-      title: 'Anzeigen',
-      color: 'blue',
-      onClick: openModalShow
     },
     {
       name: 'Löschen',
@@ -132,12 +139,24 @@ const BillDetailsPage: React.FC = () => {
             <Table.Cell>{bill.name}</Table.Cell>
           </Table.Row>
           <Table.Row>
+            <Table.Cell>Betrag</Table.Cell>
+            <Table.Cell>{bill.details[0].amount}</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Rechnungssteller</Table.Cell>
+            <Table.Cell>{bill.invoicingparty}</Table.Cell>
+          </Table.Row>
+          <Table.Row>
             <Table.Cell>Abrechnung</Table.Cell>
             <Table.Cell>{bill.accountID}</Table.Cell>
           </Table.Row>
-          {pdfUrl!==''&&<Table.Row>
+          {bill.notes.length>0&&<Table.Row onClick={() => handleSelection(0)}>
             <Table.Cell>Rechnung</Table.Cell>
             <Table.Cell>{bill.notes[0].filename}</Table.Cell>
+          </Table.Row>}
+          {bill.notes.length>1&&<Table.Row onClick={() => handleSelection(1)}>
+            <Table.Cell>Quittung</Table.Cell>
+            <Table.Cell>{bill.notes[1].filename}</Table.Cell>
           </Table.Row>}
         </Table.Body>
       </Table>

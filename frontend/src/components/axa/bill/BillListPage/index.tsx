@@ -9,15 +9,12 @@ import { Edittype } from "../../../../types/basic";
 import { RootState } from '../../../../state/store';
 import { addBill } from  '../../../../state/axa/billlist/actions';
 import { setSelectedBill } from "../../../../state/axa/selectedbill/actions";
-import { setPdfUrl } from "../../../../state/axa/pdfUrl/actions";
 import { create2 } from "../../../../services/image/images";
-import { getOne } from '../../../../services/image/images';
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { getImageUrl } from "../../../../utils/image";
 
 import AddBillModal from "../AddBillModal";
 import BillDetailsPage from '../BillDetailsPage';
@@ -39,14 +36,6 @@ const BillListPage: React.FC = () => {
     };
 
     const handleSelection = (bill: Bill) => {
-      const id = '5fb15783164930351f3af283';
-      // const id = '5fbfc3e128b4e6125d045b73';
-      const fetchImage = async () => {
-        const newImage = await getOne(id);
-        dispatch(setPdfUrl(await getImageUrl(newImage)));
-        console.log(newImage)
-      };
-      fetchImage();
       dispatch(setSelectedBill(bill));
     };
 
