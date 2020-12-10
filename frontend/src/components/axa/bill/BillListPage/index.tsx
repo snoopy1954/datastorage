@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Bill, BillNoID, BillWithFilesNoID, Note } from '../../../../../../backend/src/types/axa';
+import { Bill, BillNoID, BillWithFileDatesNoID, Note, FileDate } from '../../../../../../backend/src/types/axa';
 import { Content } from '../../../../../../backend/src/types/image';
 import { Edittype } from "../../../../types/basic";
 
@@ -15,6 +15,7 @@ import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
+import { getCurrentDate } from '../../../../utils/axa';
 
 import AddBillModal from "../AddBillModal";
 import BillDetailsPage from '../BillDetailsPage';
@@ -39,21 +40,20 @@ const BillListPage: React.FC = () => {
       dispatch(setSelectedBill(bill));
     };
 
-    const submitBill = async (billdata: BillWithFilesNoID) => {
+    const submitBill = async (billdata: BillWithFileDatesNoID) => {
       const newNotes: Note[] = [];
-      const today = "25.01.1954";
-      const files: File[] = billdata.files;
-      const numberOfFiles = files.length;
+      const filedates: FileDate[] = billdata.filedates;
+      const numberOfFiles = filedates.length;
       for (let index = 0; index < numberOfFiles; index++) {
-        const file: File = files[index];
+        const file: File = filedates[index].file;
         const content: Content = await create2(file);
         const newNote: Note = {
           ...content,
-          received: today
+          received: filedates[index].date
         }
         newNotes.push(newNote);
       }
-      delete billdata.files;
+      delete billdata.filedates;
       const billToSubmit: BillNoID = {
         ...billdata,
         notes: newNotes,
@@ -79,6 +79,8 @@ const BillListPage: React.FC = () => {
       },
     ];
 
+    console.log(getCurrentDate());
+    
     return (
         <div className="App">
           <AppHeaderH3Plus text='Rechnungen' icon='list'/>

@@ -67,3 +67,13 @@ export type BillNoID = Omit<Bill, 'id'>;
 export interface BillWithFilesNoID extends BillNoID {
     files: File[];
 }
+
+export interface FileDate {
+    file: File;
+    date: string;
+}
+
+export interface BillWithFileDatesNoID extends BillNoID {
+    filedates: FileDate[];
+}
+

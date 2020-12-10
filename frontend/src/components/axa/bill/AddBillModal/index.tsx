@@ -2,13 +2,13 @@ import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddBillForm from './AddBillForm';
 import { Edittype } from "../../../../types/basic";
-import { BillWithFilesNoID } from '../../../../../../backend/src/types/axa';
+import { BillWithFileDatesNoID } from '../../../../../../backend/src/types/axa';
 
 interface Props {
   edittype: Edittype;
   modalOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: BillWithFilesNoID) => void;
+  onSubmit: (values: BillWithFileDatesNoID) => void;
   error?: string;
 }
 

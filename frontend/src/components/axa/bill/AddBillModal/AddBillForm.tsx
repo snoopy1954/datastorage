@@ -4,20 +4,20 @@ import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
 import { Edittype } from "../../../../types/basic";
-import { Bill, BillWithFilesNoID } from '../../../../../../backend/src/types/axa';
+import { Bill, BillWithFileDatesNoID, FileDate } from '../../../../../../backend/src/types/axa';
 import { BillStatus, Insurancetype } from '../../../../types/axa';
 import { Option } from '../../../../types/basic';
 import { RootState } from '../../../../state/store';
 
-import { TextField, SelectField, BillStatusOption, InsurancetypeOption, SelectFieldInvoicingParty, FileField, DetailsFieldArray } from "./FormField";
+import { TextField, SelectField, BillStatusOption, InsurancetypeOption, SelectFieldInvoicingParty, FileDateField, DetailsFieldArray } from "./FormField";
 
-import { newBill } from '../../../../utils/axa';
+import { newBill, newFiledate } from '../../../../utils/axa';
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 
 interface Props {
   edittype: Edittype;
-  onSubmit: (values: BillWithFilesNoID) => void;
+  onSubmit: (values: BillWithFileDatesNoID) => void;
   onCancel: () => void;
 }
 
@@ -49,9 +49,13 @@ export const AddBillForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
     })
   });
 
-  const initialValues: BillWithFilesNoID = (edittype===Edittype.EDIT && bill) 
-    ? { ...bill, files: [] } 
-    : { ...newBill(), files: [] };
+  const filedates: FileDate[] = [];
+  filedates.push(newFiledate());
+  filedates.push(newFiledate());
+
+  const initialValues: BillWithFileDatesNoID = (edittype===Edittype.EDIT && bill) 
+    ? { ...bill, filedates } 
+    : { ...newBill(), filedates };
 
   return (
     <Formik
@@ -59,7 +63,7 @@ export const AddBillForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
     onSubmit={onSubmit}
       validate={values => {
         const errors: { [field: string]: string } = {};
-         return errors;
+        return errors;
       }}
     >
       {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
@@ -84,20 +88,20 @@ export const AddBillForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
               options={invoicingpartyOptions}
             />
             <Field
-              files={values.files}
+              filedates={values.filedates}
               label="Rechnung/Rezept"
               placeholder="Rechnung/Rezept"
               name="invoice"
-              component={FileField}
+              component={FileDateField}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
             />
             <Field
-              files={values.files}
+              filedates={values.filedates}
               label="Quittung"
               placeholder="Quittung"
               name="recipe"
-              component={FileField}
+              component={FileDateField}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
             />

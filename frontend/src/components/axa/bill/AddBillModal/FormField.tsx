@@ -3,7 +3,7 @@ import { ErrorMessage, Field, FieldArray, FieldProps, FormikProps } from "formik
 import { Form, Menu, Button } from "semantic-ui-react";
 
 import { BillStatus, Insurancetype } from '../../../../types/axa';
-import { Details } from '../../../../../../backend/src/types/axa';
+import { Details, FileDate } from '../../../../../../backend/src/types/axa';
 import { Option } from '../../../../types/basic';
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
@@ -128,6 +128,69 @@ export const FileField: React.FC<FileProps> = ({
       }}
     />
   </Form.Field>
+  )
+};
+
+interface FileDateProps extends FieldProps {
+  filedates: FileDate[];
+  name: string;
+  label: string;
+  setFieldValue: FormikProps<{}>["setFieldValue"];
+  setFieldTouched: FormikProps<{}>["setFieldTouched"];
+}
+
+export const FileDateField: React.FC<FileDateProps> = ({
+  filedates,
+  name,
+  label,
+  setFieldValue,
+  setFieldTouched
+}: FileDateProps) => {
+  const field="filedates";
+  const index: number = label==='Quittung' ? 1 : 0;
+  
+  return (
+    <FieldArray name="filedate">
+      {() => (
+        <div className="row">
+          <div className="col">
+            <Form.Field>
+              <label>{label}</label>
+              <input 
+                type="file" 
+                onChange={async (event) => {
+                    const target = event.currentTarget;
+                    const date = filedates[index].date;
+                    if (target.files && target.files.length > 0) {
+                        const file: File = target.files[0];
+                        const newFiledate: FileDate = { file: file, date: date }
+                        filedates[index] = newFiledate;
+                        setFieldValue(field, filedates);
+                        setFieldTouched(field);
+                    }
+                }}
+              />
+            </Form.Field>
+          </div>
+          <div className="col">
+            <Form.Field>
+              <input 
+                type="text" 
+                placeholder={filedates[index].date}
+                onChange={async (event) => {
+                    const target = event.currentTarget;
+                    const file = filedates[index].file;
+                    const newFiledate: FileDate = { file: file, date: target.value }
+                    filedates[index] = newFiledate;
+                    setFieldValue(field, filedates);
+                    setFieldTouched(field);
+                }}
+              />
+            </Form.Field>
+          </div> 
+        </div>
+      )}
+    </FieldArray>
   )
 };
 

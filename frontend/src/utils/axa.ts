@@ -1,7 +1,7 @@
 import { AccountNoID, BillNoID } from '../../../backend/src/types/axa';
 
 import { AccountStatus, BillStatus, Insurancetype } from '../types/axa';
-import { Details, Note } from '../../../backend/src/types/axa';
+import { Details, Note, FileDate } from '../../../backend/src/types/axa';
 
 export const newAccount = (): AccountNoID => {
     const actualDate = new Date().toISOString().substring(0, 10).replace(/-/g,"");
@@ -59,3 +59,19 @@ export const newBill = (): BillNoID => {
     return bill;
 };
 
+export const getCurrentDate = (): string => {
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth()+1;
+    const day = new Date().getDate();
+    
+    return (day < 10 ? "0" : "") + day + "." + (month < 10 ? "0" : "") + month + "." + year;
+};
+
+export const newFiledate = (): FileDate => {
+    const filedate: FileDate = { 
+        file: new File([""], "filename"), 
+        date: getCurrentDate() 
+    };
+    
+    return filedate;
+};

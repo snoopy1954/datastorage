@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Table } from "semantic-ui-react";
+import { Table, Button } from "semantic-ui-react";
 
 import { Edittype } from "../../../../types/basic";
 import { BillNoID, Bill } from '../../../../../../backend/src/types/axa';
@@ -146,19 +146,19 @@ const BillDetailsPage: React.FC = () => {
             <Table.Cell>Rechnungssteller</Table.Cell>
             <Table.Cell>{bill.invoicingparty}</Table.Cell>
           </Table.Row>
+         {bill.notes.length>0&&<Table.Row onClick={() => handleSelection(0)}>
+            <Table.Cell>Rechnung</Table.Cell>
+            <Table.Cell>{bill.notes[0].received} <Button color='blue' onClick={() => handleSelection(0) }>Anzeigen</Button></Table.Cell>
+          </Table.Row>}
+          {bill.notes.length>1&&<Table.Row onClick={() => handleSelection(1)}>
+            <Table.Cell>Quittung</Table.Cell>
+            <Table.Cell>{bill.notes[1].received} <Button color='blue' onClick={() => handleSelection(1) }>Anzeigen</Button></Table.Cell>
+          </Table.Row>}
           <Table.Row>
             <Table.Cell>Abrechnung</Table.Cell>
             <Table.Cell>{bill.accountID}</Table.Cell>
           </Table.Row>
-          {bill.notes.length>0&&<Table.Row onClick={() => handleSelection(0)}>
-            <Table.Cell>Rechnung</Table.Cell>
-            <Table.Cell>{bill.notes[0].filename}</Table.Cell>
-          </Table.Row>}
-          {bill.notes.length>1&&<Table.Row onClick={() => handleSelection(1)}>
-            <Table.Cell>Quittung</Table.Cell>
-            <Table.Cell>{bill.notes[1].filename}</Table.Cell>
-          </Table.Row>}
-        </Table.Body>
+         </Table.Body>
       </Table>
    </div>
   );
