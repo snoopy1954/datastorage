@@ -26,6 +26,7 @@ const AccountDetailsPage: React.FC = () => {
 
   const mainpage = useSelector((state: RootState) => state.page.mainpage);      
   const account = useSelector((state: RootState) => state.account);
+  const selectedbills = useSelector((state: RootState) => state.selectedbills);
 
   const openModalChange = (): void => setModalOpen([true, false, false]);
   const openModalDelete = (): void => setModalOpen([false, true, false]);
@@ -86,6 +87,8 @@ const AccountDetailsPage: React.FC = () => {
     },
   ];
 
+  console.log(selectedbills);
+
   return (
     <div className="App">
       <AppHeaderH3Plus text={'Abrechnung ' + account.name} icon='zoom-in'/>
@@ -97,7 +100,7 @@ const AccountDetailsPage: React.FC = () => {
           onClose={closeModal}
       />
       <AskModal
-          header='Abrechnug löschen'
+          header='Abrechnung löschen'
           prompt={'Abrechnung ' + account.name}
           modalOpen={modalOpen[ModalDialog.DELETE]}
           onSubmit={handleDelete}

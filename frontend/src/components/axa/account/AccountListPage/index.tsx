@@ -2,12 +2,15 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Account, AccountNoID } from '../../../../../../backend/src/types/axa';
+import { Bill, Account, AccountNoID } from '../../../../../../backend/src/types/axa';
 import { Edittype } from "../../../../types/basic";
+
+import { getOne } from '../../../../services/axa/bills';
 
 import { RootState } from '../../../../state/store';
 import { addAccount } from  '../../../../state/axa/accountlist/actions';
 import { setSelectedAccount } from "../../../../state/axa/selectedaccount/actions";
+import { setSelectedBills } from "../../../../state/axa/selectedbills/actions";
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
@@ -32,9 +35,17 @@ const AccountListPage: React.FC = () => {
         setError(undefined);
     };
 
-    const handleSelection = (account: Account) => {
+    const handleSelection = async (account: Account) => {
       dispatch(setSelectedAccount(account));
-    }  
+      const bills: Bill[] = [];
+      account.billIDs.forEach(async billID => {
+        if(billID!=='') {
+          const bill: Bill = await getOne(billID);
+          bills.push(bill);
+        }
+      });
+      dispatch(setSelectedBills(bills));
+    };
 
     const submitAccount = async (values: AccountNoID) => {
       const newAccount: AccountNoID = {

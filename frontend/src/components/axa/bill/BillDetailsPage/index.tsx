@@ -30,6 +30,7 @@ const BillDetailsPage: React.FC = () => {
 
   const mainpage = useSelector((state: RootState) => state.page.mainpage);      
   const bill = useSelector((state: RootState) => state.bill);
+  const account = useSelector((state: RootState) => state.account);
   const pdfUrl = useSelector((state: RootState) => state.pdfurl);
 
   const openModalChange = (): void => setModalOpen([true, false, false]);
@@ -50,7 +51,6 @@ const BillDetailsPage: React.FC = () => {
   };
 
   const handleSelection = (index: number) => {
-    console.log('selected ', index)
     const id = bill.notes[index].dataId;
     const fetchImage = async () => {
       const newImage = await getOne(id);
@@ -148,15 +148,15 @@ const BillDetailsPage: React.FC = () => {
           </Table.Row>
          {bill.notes.length>0&&<Table.Row onClick={() => handleSelection(0)}>
             <Table.Cell>Rechnung</Table.Cell>
-            <Table.Cell>{bill.notes[0].received} <Button color='blue' onClick={() => handleSelection(0) }>Anzeigen</Button></Table.Cell>
+            <Table.Cell><Button color='blue' onClick={() => handleSelection(0) }>Anzeigen</Button>{bill.notes[0].received}</Table.Cell>
           </Table.Row>}
           {bill.notes.length>1&&<Table.Row onClick={() => handleSelection(1)}>
             <Table.Cell>Quittung</Table.Cell>
-            <Table.Cell>{bill.notes[1].received} <Button color='blue' onClick={() => handleSelection(1) }>Anzeigen</Button></Table.Cell>
+            <Table.Cell><Button color='blue' onClick={() => handleSelection(1) }>Anzeigen</Button>{bill.notes[1].received}</Table.Cell>
           </Table.Row>}
           <Table.Row>
             <Table.Cell>Abrechnung</Table.Cell>
-            <Table.Cell>{bill.accountID}</Table.Cell>
+            <Table.Cell><Button color='blue' onClick={() => handleSelection(2) }>Anzeigen</Button>{account.name}</Table.Cell>
           </Table.Row>
          </Table.Body>
       </Table>

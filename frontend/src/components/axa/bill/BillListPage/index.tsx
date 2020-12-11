@@ -2,20 +2,21 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Bill, BillNoID, BillWithFileDatesNoID, Note, FileDate } from '../../../../../../backend/src/types/axa';
+import { Bill, BillNoID, BillWithFileDatesNoID, Note, FileDate, Account } from '../../../../../../backend/src/types/axa';
 import { Content } from '../../../../../../backend/src/types/image';
 import { Edittype } from "../../../../types/basic";
 
 import { RootState } from '../../../../state/store';
 import { addBill } from  '../../../../state/axa/billlist/actions';
 import { setSelectedBill } from "../../../../state/axa/selectedbill/actions";
+import { setSelectedAccount } from "../../../../state/axa/selectedaccount/actions";
 import { create2 } from "../../../../services/image/images";
+import { getOne } from '../../../../services/axa/accounts';
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { getCurrentDate } from '../../../../utils/axa';
 
 import AddBillModal from "../AddBillModal";
 import BillDetailsPage from '../BillDetailsPage';
@@ -36,8 +37,10 @@ const BillListPage: React.FC = () => {
         setError(undefined);
     };
 
-    const handleSelection = (bill: Bill) => {
+    const handleSelection = async (bill: Bill) => {
       dispatch(setSelectedBill(bill));
+      const account: Account = await getOne(bill.accountID);
+      dispatch(setSelectedAccount(account));
     };
 
     const submitBill = async (billdata: BillWithFileDatesNoID) => {
@@ -79,8 +82,6 @@ const BillListPage: React.FC = () => {
       },
     ];
 
-    console.log(getCurrentDate());
-    
     return (
         <div className="App">
           <AppHeaderH3Plus text='Rechnungen' icon='list'/>
@@ -96,14 +97,16 @@ const BillListPage: React.FC = () => {
             <Table.Header>
               <Table.Row>
               <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Abrechnung</Table.HeaderCell>
+              <Table.HeaderCell>Betrag</Table.HeaderCell>
+              <Table.HeaderCell>Rechnungssteller</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {Object.values(bills).map((bill: Bill) => (
                 <Table.Row key={bill.id}  onClick={() => handleSelection(bill)}>
                   <Table.Cell>{bill.name}</Table.Cell>
-                  <Table.Cell>{bill.accountID}</Table.Cell>
+                  <Table.Cell>{bill.details[0].amount}</Table.Cell>
+                  <Table.Cell>{bill.invoicingparty}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>

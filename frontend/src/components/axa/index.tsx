@@ -58,13 +58,13 @@ const Axa: React.FC = () => {
   [
     {
       name: 'accounts',
-      title: 'Abrchn.',
+      title: 'Abrechnung',
       color: 'blue',
       onClick: handleSelection
     },
     {
       name: 'bills',
-      title: 'Rchn.',
+      title: 'Rechnung',
       color: 'blue',
       onClick: handleSelection
     },
