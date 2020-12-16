@@ -12,7 +12,7 @@ export type AccountStatusOption = {
 interface TextProps extends FieldProps {
   label: string;
   placeholder: string;
-}
+};
 
 export const TextField: React.FC<TextProps> = ({
   field,
@@ -25,6 +25,17 @@ export const TextField: React.FC<TextProps> = ({
     <div style={{ color:'red' }}>
       <ErrorMessage name={field.name} />
     </div>
+  </Form.Field>
+);
+
+export const ShowField: React.FC<TextProps> = ({
+  field,
+  label,
+  placeholder
+}) => (
+  <Form.Field>
+    <label>{label}</label>
+    <Field value={placeholder} />
   </Form.Field>
 );
 
@@ -49,7 +60,7 @@ export const SelectField: React.FC<SelectionFieldProps> = ({
       as="select" 
       name={name} 
       className="ui dropdown"
-      // select={prompt}
+      select={prompt}
     >
       <option disabled value="">{prompt}</option>
       {options.map(option => <option key={option.value} value={option.value}>{option.label || option.value}</option>)}

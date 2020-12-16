@@ -2,20 +2,18 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Bill, Account, AccountNoID } from '../../../../../../backend/src/types/axa';
+import { Account, AccountNoID } from '../../../../../../backend/src/types/axa';
 import { Edittype } from "../../../../types/basic";
-
-import { getOne } from '../../../../services/axa/bills';
 
 import { RootState } from '../../../../state/store';
 import { addAccount } from  '../../../../state/axa/accountlist/actions';
 import { setSelectedAccount } from "../../../../state/axa/selectedaccount/actions";
-import { setSelectedBills } from "../../../../state/axa/selectedbills/actions";
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
+import { getViewname } from '../../../../utils/axa';
 
 import AddAccountModal from "../AddAccountModal";
 import AccountDetailsPage from '../AccountDetailsPage';
@@ -37,14 +35,6 @@ const AccountListPage: React.FC = () => {
 
     const handleSelection = async (account: Account) => {
       dispatch(setSelectedAccount(account));
-      const bills: Bill[] = [];
-      account.billIDs.forEach(async billID => {
-        if(billID!=='') {
-          const bill: Bill = await getOne(billID);
-          bills.push(bill);
-        }
-      });
-      dispatch(setSelectedBills(bills));
     };
 
     const submitAccount = async (values: AccountNoID) => {
@@ -77,12 +67,13 @@ const AccountListPage: React.FC = () => {
         onClick: openModal
       },
     ];
-      
+
     return (
         <div className="App">
           <AppHeaderH3Plus text='Abrechnungen' icon='list'/>
           <AddAccountModal
             edittype={Edittype.ADD}
+            title='Neu Abrechnung anlegen'
             modalOpen={modalOpen}
             onSubmit={submitAccount}
             error={error}
@@ -92,14 +83,14 @@ const AccountListPage: React.FC = () => {
           <Table celled>
             <Table.Header>
               <Table.Row>
-              <Table.HeaderCell>Verzeichnis</Table.HeaderCell>
+              <Table.HeaderCell>Name</Table.HeaderCell>
               <Table.HeaderCell>Status</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {Object.values(accounts).map((account: Account) => (
                 <Table.Row key={account.id}  onClick={() => handleSelection(account)}>
-                  <Table.Cell>{account.name}</Table.Cell>
+                  <Table.Cell>{getViewname(account.name)}</Table.Cell>
                   <Table.Cell>{account.status}</Table.Cell>
                 </Table.Row>
               ))}

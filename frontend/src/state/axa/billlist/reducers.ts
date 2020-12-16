@@ -5,7 +5,7 @@ const initialState: Bill[] = [];
 
 export const billlistReducer = (state = initialState, action: BillActionTypes): Bill[] => {
     switch (action.type) {
-        case SET_BILL_LIST:
+        case SET_BILL_LIST: {
             return {
                 ...state,
                 ...action.payload.reduce(
@@ -13,6 +13,7 @@ export const billlistReducer = (state = initialState, action: BillActionTypes): 
                     {}
                 ),
             }
+        }
         case ADD_BILL:
             return {
                 ...state,

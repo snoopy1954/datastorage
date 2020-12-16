@@ -70,7 +70,7 @@ const Axa: React.FC = () => {
     },
     {
       name: 'invoicingparties',
-      title: 'Arzt',
+      title: 'Kreditor',
       color: 'blue',
       onClick: handleSelection
     },

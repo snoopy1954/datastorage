@@ -9,11 +9,12 @@ import { AccountStatus } from '../../../../types/axa';
 
 import { RootState } from '../../../../state/store';
 
-import { TextField, SelectField, AccountStatusOption } from "./FormField";
+import { TextField, SelectField, AccountStatusOption, ShowField } from "./FormField";
+import { PickField } from '../../../basic/formfields/pickdate';
 
-import { newAccount } from '../../../../utils/axa';
+import { newAccount, getCurrentDate } from '../../../../utils/axa';
 import { backgroundColor, styleMainMenu } from "../../../../constants";
-
+import { isValidDate } from '../../../../utils/basic';
 
 interface Props {
   edittype: Edittype;
@@ -33,17 +34,29 @@ export const AddAccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }
   });
 
   const initialValues = (edittype===Edittype.EDIT && account) ? account : newAccount();
+  if (edittype===Edittype.EDIT && initialValues.passed==='') initialValues.passed = getCurrentDate();
   
   return (
     <Formik
-    initialValues={initialValues}
-    onSubmit={onSubmit}
+      initialValues={initialValues}
+      onSubmit={onSubmit}
       validate={values => {
+        console.log(values.status, values.passed)
         const errors: { [field: string]: string } = {};
+        if (edittype===Edittype.EDIT) {
+          if (values.status===AccountStatus.PASSED) {
+            if (values.passed==='' || !isValidDate(values.passed)) {
+              errors.passed = 'Datum fehlt oder ist falsch oder liegt in der Zukunft';
+            }
+            else {
+              delete errors.passed;
+            }
+          }
+        }
          return errors;
       }}
     >
-      {({ isValid, dirty }) => {
+      {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
             <Field
@@ -52,12 +65,32 @@ export const AddAccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }
               name="name"
               component={TextField}
             />
-            <SelectField
+            {edittype===Edittype.EDIT&&<SelectField
               label="Status"
-              prompt="Bitte Status auswählen"
               name="status"
+              prompt="Bitte Status auswählen"
               options={statusOptions}
-            />
+            />}
+            {edittype===Edittype.ADD&&<Field
+              label="Status"
+              name="status"
+              component={ShowField}
+              placeholder={AccountStatus.OPEN}
+            />}
+            {edittype===Edittype.EDIT&&<Field
+              label="Antragsdatum"
+              date={values.passed}
+              name="passed"
+              component={PickField}
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
+            />}
+            {edittype===Edittype.ADD&&<Field
+              label="Antragsdatum"
+              name="passed"
+              component={ShowField}
+              placeholder=''
+            />}
             <Menu compact stackable borderless style={{ background: backgroundColor }}>
               <Menu.Item>
                 <Button type="submit" style={styleMainMenu} color="blue" disabled={!isValid}>Speichern</Button>

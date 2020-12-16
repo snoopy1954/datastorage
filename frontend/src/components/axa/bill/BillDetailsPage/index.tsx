@@ -15,16 +15,18 @@ import { setPdfUrl } from "../../../../state/axa/pdfUrl/actions";
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
+import { AskAmount } from "../../../basic/askAmount";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 import { getImageUrl } from "../../../../utils/image";
+import { getViewname } from '../../../../utils/axa';
 
 import AddBillModal from "../AddBillModal";
 import ShowModalPDF from "../../../basic/showModalPDF";
 
 
 const BillDetailsPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean]>([false, false, false]);
+  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const [error, setError] = React.useState<string | undefined>();
   const dispatch = useDispatch();
 
@@ -33,16 +35,22 @@ const BillDetailsPage: React.FC = () => {
   const account = useSelector((state: RootState) => state.account);
   const pdfUrl = useSelector((state: RootState) => state.pdfurl);
 
-  const openModalChange = (): void => setModalOpen([true, false, false]);
-  const openModalDelete = (): void => setModalOpen([false, true, false]);
-  const openModalShow = (): void => setModalOpen([false, false, true]);
+  interface Amount {
+    amount: string;
+  };
+
+  const openModalChange = (): void => setModalOpen([true, false, false, false]);
+  const openModalDelete = (): void => setModalOpen([false, true, false, false]);
+  const openModalShow = (): void => setModalOpen([false, false, true, false]);
+  const openModalRefund = (): void => setModalOpen([false, false, false, true]);
   enum ModalDialog {
       CHANGE = 0,
       DELETE = 1,
-      SHOW = 2
+      SHOW = 2,
+      REFUND = 3,
   }  
   const closeModal = (): void => {
-      setModalOpen([false, false, false]);
+      setModalOpen([false, false, false, false]);
       setError(undefined);
   };
 
@@ -51,13 +59,25 @@ const BillDetailsPage: React.FC = () => {
   };
 
   const handleSelection = (index: number) => {
-    const id = bill.notes[index].dataId;
-    const fetchImage = async () => {
-      const newImage = await getOne(id);
-      dispatch(setPdfUrl(await getImageUrl(newImage)));
-    };
-    fetchImage();
-    openModalShow();
+    switch (index) {
+      case 0:
+      case 1:
+        const id = bill.notes[index].dataId;
+        const fetchImage = async () => {
+          const newImage = await getOne(id);
+          dispatch(setPdfUrl(await getImageUrl(newImage)));
+        };
+        fetchImage();
+        openModalShow();
+        break;
+      case 2:
+        dispatch(setPage({ mainpage, subpage: 'accounts' }));
+        break;
+      case 3:
+        console.log('Rechnung ändern');
+        openModalRefund();
+        break;
+      }
   };
 
   const  handleDelete = async () => {
@@ -66,6 +86,17 @@ const BillDetailsPage: React.FC = () => {
       dispatch(clearSelectedBill());
     }
     closeModal();
+    dispatch(setPage({ mainpage, subpage: 'bills' }));
+  };
+
+  const handleChangedRefund = (refund: Amount) => {
+    const billToUpdate: Bill = {
+      ...bill,
+    };
+    billToUpdate.details[0].refund = refund.amount;
+    dispatch(updateBill(billToUpdate));
+    closeModal();
+    dispatch(clearSelectedBill());
     dispatch(setPage({ mainpage, subpage: 'bills' }));
   };
 
@@ -113,10 +144,17 @@ const BillDetailsPage: React.FC = () => {
           onClose={closeModal}
       />
       <AskModal
-          header='Rechnug löschen'
+          header='Rechnung löschen'
           prompt={'Rechnung ' + bill.name}
           modalOpen={modalOpen[ModalDialog.DELETE]}
           onSubmit={handleDelete}
+          onClose={closeModal}
+      />
+      <AskAmount
+          header='Erstattung ändern'
+          prompt={'Rechnung ' + bill.name}
+          modalOpen={modalOpen[ModalDialog.REFUND]}
+          onSubmit={handleChangedRefund}
           onClose={closeModal}
       />
       {pdfUrl!==''&&<ShowModalPDF
@@ -131,32 +169,44 @@ const BillDetailsPage: React.FC = () => {
           <Table.Row>
             <Table.HeaderCell>Parametername</Table.HeaderCell>
             <Table.HeaderCell>Wert</Table.HeaderCell>
+            <Table.HeaderCell>Aktion</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           <Table.Row>
             <Table.Cell>Name</Table.Cell>
             <Table.Cell>{bill.name}</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>Betrag</Table.Cell>
-            <Table.Cell>{bill.details[0].amount}</Table.Cell>
+            <Table.Cell></Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>Rechnungssteller</Table.Cell>
             <Table.Cell>{bill.invoicingparty}</Table.Cell>
+            <Table.Cell></Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Betrag</Table.Cell>
+            <Table.Cell>{bill.details[0].amount}</Table.Cell>
+            <Table.Cell></Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Erstattung</Table.Cell>
+            <Table.Cell>{bill.details[0].refund}</Table.Cell>
+            <Table.Cell><Button color='blue' style={styleMainMenu} onClick={() => handleSelection(3) }>Ändern</Button></Table.Cell>
           </Table.Row>
          {bill.notes.length>0&&<Table.Row onClick={() => handleSelection(0)}>
             <Table.Cell>Rechnung</Table.Cell>
-            <Table.Cell><Button color='blue' onClick={() => handleSelection(0) }>Anzeigen</Button>{bill.notes[0].received}</Table.Cell>
+            <Table.Cell>{bill.notes[0].received}</Table.Cell>
+            <Table.Cell><Button color='blue' style={styleMainMenu} onClick={() => handleSelection(0) }>Anzeigen</Button></Table.Cell>
           </Table.Row>}
           {bill.notes.length>1&&<Table.Row onClick={() => handleSelection(1)}>
             <Table.Cell>Quittung</Table.Cell>
-            <Table.Cell><Button color='blue' onClick={() => handleSelection(1) }>Anzeigen</Button>{bill.notes[1].received}</Table.Cell>
+            <Table.Cell>{bill.notes[1].received}</Table.Cell>
+            <Table.Cell><Button color='blue' style={styleMainMenu} onClick={() => handleSelection(1) }>Anzeigen</Button></Table.Cell>
           </Table.Row>}
           <Table.Row>
             <Table.Cell>Abrechnung</Table.Cell>
-            <Table.Cell><Button color='blue' onClick={() => handleSelection(2) }>Anzeigen</Button>{account.name}</Table.Cell>
+            <Table.Cell>{getViewname(account.name)}</Table.Cell>
+            <Table.Cell><Button color='blue' style={styleMainMenu} onClick={() => handleSelection(2) }>Anzeigen</Button></Table.Cell>
           </Table.Row>
          </Table.Body>
       </Table>

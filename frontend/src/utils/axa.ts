@@ -9,7 +9,7 @@ export const newAccount = (): AccountNoID => {
     const account: AccountNoID = {
         name: actualDate,
         status: AccountStatus.OPEN,
-        passed: '',
+        passed: getCurrentDate(),
         notes: [],
         details: [],
         billIDs: []
@@ -75,3 +75,7 @@ export const newFiledate = (): FileDate => {
     
     return filedate;
 };
+
+export const getViewname = (name: string) => {
+    return name.substr(6,2) + '.' + name.substr(4,2) + '.' + name.substr(0,4);
+}

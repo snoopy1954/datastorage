@@ -97,7 +97,6 @@ const App: React.FC = () => {
                 <Container style={{ background: backgroundColor }}>
                     <AppHeaderH1 text='Datenbanken' icon='database'/>
                     <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
-                    <Divider/>
                     {mainpage==='home'&&<Home/>}
                     {mainpage==='address'&&<Address/>}
                     {mainpage==='network'&&<Network/>}

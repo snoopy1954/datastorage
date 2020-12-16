@@ -6,15 +6,16 @@ import { AccountNoID } from '../../../../../../backend/src/types/axa';
 
 interface Props {
   edittype: Edittype;
+  title: string;
   modalOpen: boolean;
   onClose: () => void;
   onSubmit: (values: AccountNoID) => void;
   error?: string;
 }
 
-const AddAccountModal = ({ edittype, modalOpen, onClose, onSubmit, error }: Props) => (
+const AddAccountModal = ({ edittype, title, modalOpen, onClose, onSubmit, error }: Props) => (
   <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
-    <Modal.Header>Neuen Abrechnung anlegen</Modal.Header>
+    <Modal.Header>{title}</Modal.Header>
     <Modal.Content>
       {error && <Segment inverted color="red">{`Error: ${error}`}</Segment>}
       <AddAccountForm edittype={edittype} onSubmit={onSubmit} onCancel={onClose} />
