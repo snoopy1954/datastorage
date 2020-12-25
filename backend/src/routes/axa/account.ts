@@ -28,6 +28,7 @@ accountsRouter.post('/', async (request, response) => {
         void await newAccount.save();
         response.json(newAccount);
     } catch (e) {
+        console.log(e.message);
         response.status(400).send(e.message);
     }
 });
@@ -49,6 +50,7 @@ accountsRouter.put('/:id', async (request, response) => {
         if (account) response.json(account.toJSON());
         else response.status(404).end();
     } catch (e) {
+        console.log(e.message);
         response.status(400).send(e.message);
     }
 });

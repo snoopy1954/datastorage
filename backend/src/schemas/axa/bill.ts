@@ -5,6 +5,11 @@ import * as mongoose from 'mongoose';
 
 import { BillStatus, Insurancetype } from '../../types/axa';
 
+const nameSchema = new mongoose.Schema({
+  seqnr: { type: Number, required: true },
+  name: { type: String, required: true }
+});
+
 const noteSchema = new mongoose.Schema({
   filename: { type: String, required: true },
   filetype: { type: String, required: true },
@@ -23,7 +28,7 @@ const detailsSchema = new mongoose.Schema({
 });
 
 const billSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: nameSchema,
   status: { type: BillStatus, required: true },
   invoicingparty: { type: String, required: true },
   accountID: { type: String, required: true },

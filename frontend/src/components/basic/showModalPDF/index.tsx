@@ -37,14 +37,12 @@ export const ShowModalPDF = ({ title, pdfUrl, modalOpen, onClose }: Props) => {
 
   PDFJS.getDocument(pdfUrl).promise.then(function(pdfDoc_: any) {
     pdfDoc = pdfDoc_;
-    console.log('PDF loaded');
     const { numPages } = pdfDoc;
     setmaxPage(numPages);
     renderPage(actPage);
   });
   
   const renderPage = (num: number) => {
-    console.log('render page', num)
     pdfDoc.getPage(num).then(function(page: any) {
       const viewport = page.getViewport({scale: scale});
       const canvas = document.createElement('canvas');
@@ -57,7 +55,6 @@ export const ShowModalPDF = ({ title, pdfUrl, modalOpen, onClose }: Props) => {
       };
       const renderTask = page.render(renderContext);
       renderTask.promise.then(function() {
-        console.log('fertig')
         setPageToShow(canvas.toDataURL());
       });
     });  

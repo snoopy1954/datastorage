@@ -1,5 +1,5 @@
 import { Account } from '../../../../../backend/src/types/axa';
-import { SET_ACCOUNT_LIST, ADD_ACCOUNT, UPDATE_ACCOUNT, REMOVE_ACCOUNT, AccountActionTypes } from './types';
+import { SET_ACCOUNT_LIST, ADD_ACCOUNT, UPDATE_ACCOUNT, REMOVE_ACCOUNT, REFRESH_ACCOUNT, AccountActionTypes } from './types';
 
 const initialState: Account[] = [];
 
@@ -19,6 +19,11 @@ export const accountlistReducer = (state = initialState, action: AccountActionTy
                 [action.payload.id]: action.payload
             }
         case UPDATE_ACCOUNT:
+            return {
+                ...state,
+                [action.payload.id]: action.payload
+            }
+        case REFRESH_ACCOUNT:
             return {
                 ...state,
                 [action.payload.id]: action.payload

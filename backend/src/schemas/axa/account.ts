@@ -3,7 +3,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import * as mongoose from 'mongoose';
 
-import { AccountStatus } from '../../types/axa';
+import { AccountStatus, Insurancetype } from '../../types/axa';
+
+const nameSchema = new mongoose.Schema({
+  seqnr: { type: Number, required: true },
+  name: { type: String, required: true }
+});
 
 const noteSchema = new mongoose.Schema({
   filename: { type: String, required: true },
@@ -14,16 +19,17 @@ const noteSchema = new mongoose.Schema({
 });
 
 const detailsSchema = new mongoose.Schema({
-  insurancetype: { type: Number, required: true },
-  year: { type: Number, required: true },
-  amount: { type: Number, required: true },
-  refund: { type: Number, required: true },
-  deny: { type: Number, required: true },
-  retension: { type: Number, required: true },
+  insurancetype: { type: Insurancetype, required: true },
+  year: { type: String, required: true },
+  amount: { type: String, required: false },
+  refund: { type: String, required: false },
+  deny: { type: String, required: false },
+  retension: { type: String, required: false },
+  dent20: { type: String, required: false },
 });
 
 const accountSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: nameSchema,
   status: { type: AccountStatus, required: true },
   passed: { type: String, required: false },
   billIDs: { type: [String], required: false },

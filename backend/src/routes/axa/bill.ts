@@ -25,8 +25,9 @@ billsRouter.get('/:id', async (request, response) => {
 billsRouter.post('/', async (request, response) => {
     try {
         const newBill = new Bill(toNewBill(request.body));
-        void await newBill.save();
-        response.json(newBill);
+        const bill = await newBill.save();
+        if (bill) response.json(bill.toJSON());
+        else response.status(404).end();
     } catch (e) {
         response.status(400).send(e.message);
     }

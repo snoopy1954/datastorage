@@ -1,10 +1,24 @@
-export interface InvoicingParty {
-    id: string;
+export interface Name {
+    seqnr: number;
     name: string;
+}
+
+export interface Year {
+    id: string;
+    name: Name;
+    z100s: string;
+    vital750: string;
+}
+
+export type YearNoID = Omit<Year, 'id'>;
+
+export interface Biller {
+    id: string;
+    name: Name;
     person: string;
 }
 
-export type InvoicingPartyNoID = Omit<InvoicingParty, 'id'>;
+export type BillerNoID = Omit<Biller, 'id'>;
 
 export enum AccountStatus {
     OPEN = 'offen',
@@ -38,11 +52,12 @@ export interface Details {
     refund: string;
     deny: string;
     retension: string;
+    dent20: string;
 }
 
 export interface Account {
     id: string;
-    name: string;
+    name: Name;
     status: AccountStatus;
     passed: string;
     billIDs: string[];
@@ -54,7 +69,7 @@ export type AccountNoID = Omit<Account, 'id'>;
 
 export interface Bill {
     id: string;
-    name: string;
+    name: Name;
     status: BillStatus;
     invoicingparty: string;
     accountID: string;
@@ -74,6 +89,7 @@ export interface FileDate {
 }
 
 export interface BillWithFileDatesNoID extends BillNoID {
-    filedates: FileDate[];
+    invoice: FileDate;
+    recipe: FileDate;
 }
 

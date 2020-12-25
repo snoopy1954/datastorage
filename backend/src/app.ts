@@ -20,8 +20,9 @@ import moviegroupsRouter from './routes/movie/moviegroups';
 import movieformatsRouter from './routes/movie/movieformats';
 import sudokusRouter from './routes/sudoku/sudoku';
 import billsRouter from './routes/axa/bill';
-import invoicingpartiesRouter from './routes/axa/invoicingparty';
+import billersRouter from './routes/axa/biller';
 import accountsRouter from './routes/axa/account';
+import yearsRouter from './routes/axa/year';
 
 const app = express();
 app.use(express.static('build'));
@@ -45,8 +46,9 @@ app.use('/api/moviegroups', moviegroupsRouter);
 app.use('/api/movieformats', movieformatsRouter);
 app.use('/api/sudokus', sudokusRouter);
 app.use('/api/bills', billsRouter);
-app.use('/api/invoicingparties', invoicingpartiesRouter);
+app.use('/api/billers', billersRouter);
 app.use('/api/accounts', accountsRouter);
+app.use('/api/years', yearsRouter);
 app.get('/api/ping', (_req, res) => {
     console.log('someone pinged here');
     res.json('pong');

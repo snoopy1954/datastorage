@@ -4,12 +4,24 @@ export const getMD5 = (text: string): string => {
     return MD5(text).toString();
 }
 
-const toEuro = (cent: number): string => {
-    return String(cent/100).replace('.', ',');
+export const toEuro = (cent: number): string => {
+    let euro = String(cent/100).replace('.', ',');
+    if (!euro.includes(',')) euro = euro + ',00';
+    const pos = euro.indexOf(',');
+    const len = euro.length;
+    if (len===pos+1) euro = euro + '00';
+    if (len===pos+2) euro = euro + '0';
+    return euro;
 }
 
-const toCent = (euro: string): number => {
-    return +euro.replace(',', '');
+export const toCent = (euro: string): number => {
+    if (!euro.includes(',')) euro = euro + ',00';
+    const pos = euro.indexOf(',');
+    const len = euro.length;
+    if (len===pos+1) euro = euro + '00';
+    if (len===pos+2) euro = euro + '0';
+    const cent: number = +euro.replace(',', '');
+    return cent;
 }
 
 export const getSum = (amounts: string[]): string => {

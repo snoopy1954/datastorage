@@ -2,19 +2,22 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Account, AccountNoID } from '../../../../../../backend/src/types/axa';
+import { Account, AccountNoID, Bill } from '../../../../../../backend/src/types/axa';
 import { Edittype } from "../../../../types/basic";
 
+import { getOne as getAccount } from '../../../../services/axa/accounts';
+import { getOne as getBill} from '../../../../services/axa/bills';
+
 import { RootState } from '../../../../state/store';
-import { addAccount } from  '../../../../state/axa/accountlist/actions';
-import { setSelectedAccount } from "../../../../state/axa/selectedaccount/actions";
+import { addAccount, refreshAccount } from  '../../../../state/axa/accountlist/actions';
+import { setSelectedAccount, clearSelectedAccount } from "../../../../state/axa/selectedaccount/actions";
+import { addSelectedBill, clearSelectedBills } from "../../../../state/axa/selectedbills/actions";
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { getViewname } from '../../../../utils/axa';
-
+import { getAmount } from '../../../../utils/axa/account';
 import AddAccountModal from "../AddAccountModal";
 import AccountDetailsPage from '../AccountDetailsPage';
 
@@ -24,8 +27,8 @@ const AccountListPage: React.FC = () => {
     const [error, setError] = React.useState<string | undefined>();
     const dispatch = useDispatch();
 
-    const accounts = useSelector((state: RootState) => state.accounts);
-    const account = useSelector((state: RootState) => state.account);
+    const accounts: Account[] = useSelector((state: RootState) => state.accounts);
+    const account: Account = useSelector((state: RootState) => state.account);
 
     const openModal = (): void => setModalOpen(true);
     const closeModal = (): void => {
@@ -33,8 +36,27 @@ const AccountListPage: React.FC = () => {
         setError(undefined);
     };
 
+    React.useEffect(() => {
+      dispatch(clearSelectedAccount());
+    }, [dispatch]);
+
     const handleSelection = async (account: Account) => {
-      dispatch(setSelectedAccount(account));
+      const fetchAccount = async () => {
+        const actAccount: Account = await getAccount(account.id);
+        dispatch(refreshAccount(actAccount));
+        dispatch(clearSelectedBills());
+        actAccount.billIDs.forEach(async billID => {
+          if(billID!=='') {
+            const fetchBill = async () => {
+              const newBill: Bill = await getBill(billID);
+              dispatch(addSelectedBill(newBill));
+            };
+            await fetchBill();
+          }
+        });
+        dispatch(setSelectedAccount(actAccount));    
+      };
+      fetchAccount();
     };
 
     const submitAccount = async (values: AccountNoID) => {
@@ -46,8 +68,6 @@ const AccountListPage: React.FC = () => {
         details: values.details,
         billIDs: values.billIDs
       }
-      console.log(newAccount)
-
       dispatch(addAccount(newAccount));
       closeModal();
     };
@@ -80,17 +100,27 @@ const AccountListPage: React.FC = () => {
             onClose={closeModal}
           />
           <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
-          <Table celled>
+          <Table celled compact small='true' style={{ backgroundColor }}>
             <Table.Header>
               <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
+              <Table.HeaderCell style={{ backgroundColor }}>Name</Table.HeaderCell>
+              <Table.HeaderCell className='three wide' style={{ backgroundColor }}>Betrag</Table.HeaderCell>
+              <Table.HeaderCell className='three wide' style={{ backgroundColor }}>Erstattung</Table.HeaderCell>
+              <Table.HeaderCell className='three wide' style={{ backgroundColor }}>Ablehnung</Table.HeaderCell>
+              <Table.HeaderCell className='three wide' style={{ backgroundColor }}>Selbstbehalt</Table.HeaderCell>
+              <Table.HeaderCell className='three wide' style={{ backgroundColor }}>Selbstbehalt (Zahn)</Table.HeaderCell>
+              <Table.HeaderCell className='three wide' style={{ backgroundColor }}>Status</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {Object.values(accounts).map((account: Account) => (
                 <Table.Row key={account.id}  onClick={() => handleSelection(account)}>
-                  <Table.Cell>{getViewname(account.name)}</Table.Cell>
+                  <Table.Cell>{account.name.name}</Table.Cell>
+                  <Table.Cell className='right aligned'>{getAmount(account.details[0].amount)}</Table.Cell>
+                  <Table.Cell className='right aligned'>{getAmount(account.details[0].refund)}</Table.Cell>
+                  <Table.Cell className='right aligned'>{getAmount(account.details[0].deny)}</Table.Cell>
+                  <Table.Cell className='right aligned'>{getAmount(account.details[0].retension)}</Table.Cell>
+                  <Table.Cell className='right aligned'>{getAmount(account.details[0].dent20)}</Table.Cell>
                   <Table.Cell>{account.status}</Table.Cell>
                 </Table.Row>
               ))}

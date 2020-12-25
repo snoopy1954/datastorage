@@ -4,6 +4,7 @@ export const SET_ACCOUNT_LIST = 'SET_ACCOUNT_LIST';
 export const ADD_ACCOUNT  = 'ADD_ACCOUNT';
 export const UPDATE_ACCOUNT = 'UPDATE_ACCOUNT';
 export const REMOVE_ACCOUNT = 'REMOVE_ACCOUNT';
+export const REFRESH_ACCOUNT = 'REFRESH_ACCOUNT';
 
 interface SetAccountListAction {
     type: typeof SET_ACCOUNT_LIST;
@@ -20,6 +21,11 @@ interface UpdateAccountAction {
     payload: Account;
 }
 
+interface RefreshAccountAction {
+    type: typeof REFRESH_ACCOUNT;
+    payload: Account;
+}
+
 interface RemoveAccountAction {
     type: typeof REMOVE_ACCOUNT;
     payload: string;
@@ -30,5 +36,5 @@ export type DispatchAddAccount = (arg: AddAccountAction) => (AddAccountAction);
 export type DispatchUpdateAccount = (arg: UpdateAccountAction) => (UpdateAccountAction);
 export type DispatchRemoveAccount = (arg: RemoveAccountAction) => (RemoveAccountAction);
     
-export type AccountActionTypes = SetAccountListAction | AddAccountAction | UpdateAccountAction | RemoveAccountAction;
+export type AccountActionTypes = SetAccountListAction | AddAccountAction | UpdateAccountAction | RefreshAccountAction | RemoveAccountAction;
     

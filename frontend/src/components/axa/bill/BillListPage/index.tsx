@@ -10,6 +10,7 @@ import { RootState } from '../../../../state/store';
 import { addBill } from  '../../../../state/axa/billlist/actions';
 import { setSelectedBill } from "../../../../state/axa/selectedbill/actions";
 import { setSelectedAccount } from "../../../../state/axa/selectedaccount/actions";
+
 import { create2 } from "../../../../services/image/images";
 import { getOne } from '../../../../services/axa/accounts';
 
@@ -17,6 +18,7 @@ import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
+import { getSumAmounts } from '../../../../utils/axa/bill';
 
 import AddBillModal from "../AddBillModal";
 import BillDetailsPage from '../BillDetailsPage';
@@ -44,22 +46,30 @@ const BillListPage: React.FC = () => {
     };
 
     const submitBill = async (billdata: BillWithFileDatesNoID) => {
-      const newNotes: Note[] = [];
-      const filedates: FileDate[] = billdata.filedates;
-      const numberOfFiles = filedates.length;
-      for (let index = 0; index < numberOfFiles; index++) {
-        const file: File = filedates[index].file;
+      const notes: Note[] = [];
+      const recipe: FileDate = billdata.recipe;
+      const invoice: FileDate = billdata.invoice;
+      if (invoice.file.size > 0) {
+        const file: File = invoice.file;
         const content: Content = await create2(file);
-        const newNote: Note = {
+        const note: Note = {
           ...content,
-          received: filedates[index].date
+          received: invoice.date
         }
-        newNotes.push(newNote);
+        notes.push(note);
       }
-      delete billdata.filedates;
+      if (recipe.file.size > 0) {
+        const file: File = recipe.file;
+        const content: Content = await create2(file);
+        const note: Note = {
+          ...content,
+          received: recipe.date
+        }
+        notes.push(note);
+      }
       const billToSubmit: BillNoID = {
         ...billdata,
-        notes: newNotes,
+        notes: notes,
         accountID: openaccount.id
       };
       dispatch(addBill(billToSubmit));
@@ -93,19 +103,19 @@ const BillListPage: React.FC = () => {
             onClose={closeModal}
           />
           <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
-          <Table celled>
+          <Table celled compact small='true' style={{ backgroundColor }}>
             <Table.Header>
               <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Betrag</Table.HeaderCell>
-              <Table.HeaderCell>Rechnungssteller</Table.HeaderCell>
+              <Table.HeaderCell style={{ backgroundColor }}>Name</Table.HeaderCell>
+              <Table.HeaderCell style={{ backgroundColor }}>Betrag</Table.HeaderCell>
+              <Table.HeaderCell style={{ backgroundColor }}>Rechnungssteller</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {Object.values(bills).map((bill: Bill) => (
                 <Table.Row key={bill.id}  onClick={() => handleSelection(bill)}>
-                  <Table.Cell>{bill.name}</Table.Cell>
-                  <Table.Cell>{bill.details[0].amount}</Table.Cell>
+                  <Table.Cell>{bill.name.name}</Table.Cell>
+                  <Table.Cell>{getSumAmounts(bill)}</Table.Cell>
                   <Table.Cell>{bill.invoicingparty}</Table.Cell>
                 </Table.Row>
               ))}

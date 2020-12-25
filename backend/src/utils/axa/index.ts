@@ -4,13 +4,15 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { BillNoID, InvoicingPartyNoID, AccountNoID, Note, Details, AccountStatus, BillStatus } from '../../types/axa';
-import { parseString, parseStringArray } from './../basicParser';
+import { BillNoID, AccountNoID, Note, Details, AccountStatus, BillStatus, BillerNoID, YearNoID } from '../../types/axa';
+import { parseString, parseStringArray, parseNumber } from './../basicParser';
 
 export const toNewAccount = (object: any): AccountNoID => {
     // console.log(object);
-    const name: string = parseString(object.name);
-    // console.log(`name='${name}'`);
+    const name = parseString(object.name.name);
+    // console.log(`name='${name.name}'`);
+    const seqnr = parseNumber(object.name.seqnr);
+    // console.log(`seqnr='${name.seqnr}'`);
     const status: AccountStatus = parseAccountStatus(object.status);
     // console.log(`status='${status}'`);
     const passed: string = parseString(object.passed);
@@ -23,7 +25,10 @@ export const toNewAccount = (object: any): AccountNoID => {
     // console.log(`billIDs='${billIDs}'`);
 
     const account : AccountNoID = {
-        name,
+        name: {
+            seqnr,
+            name
+        },
         status,
         passed,
         billIDs,
@@ -38,8 +43,10 @@ export const toNewAccount = (object: any): AccountNoID => {
 
 export const toNewBill = (object: any): BillNoID => {
     // console.log(object);
-    const name: string = parseString(object.name);
-    // console.log(`name='${name}'`);
+    const name = parseString(object.name.name);
+    // console.log(`name='${name.name}'`);
+    const seqnr = parseNumber(object.name.seqnr);
+    // console.log(`seqnr='${name.seqnr}'`);
     const status: BillStatus = parseBillStatus(object.status);
     // console.log(`status='${status}'`);
     const invoicingparty: string = parseString(object.invoicingparty);
@@ -52,7 +59,10 @@ export const toNewBill = (object: any): BillNoID => {
     // console.log(`accountID='${accountID}'`);
     
     const bill: BillNoID = {
-        name,
+        name: {
+            seqnr,
+            name
+        },
         status,
         invoicingparty,
         accountID,
@@ -65,21 +75,51 @@ export const toNewBill = (object: any): BillNoID => {
     return bill;
 };
 
-export const toNewInvoicingparty = (object: any) => {
+export const toNewBiller = (object: any): BillerNoID => {
     // console.log(object);
-    const name: string = parseString(object.name);
-    // console.log(`name='${name}'`);
+    const name = parseString(object.name.name);
+    // console.log(`name='${name.name}'`);
+    const seqnr = parseNumber(object.name.seqnr);
+    // console.log(`seqnr='${name.seqnr}'`);
     const person: string = parseString(object.person);
     // console.log(`person='${person}'`);
 
-    const invoicingparty: InvoicingPartyNoID = {
-        name,
+    const biller: BillerNoID = {
+        name: {
+            seqnr,
+            name
+        },
         person
     };
 
-    // console.log(invoicingparty);
+    // console.log(biller);
 
-    return invoicingparty;
+    return biller;
+};
+
+export const toNewYear = (object: any): YearNoID => {
+    // console.log(object);
+    const name = parseString(object.name.name);
+    // console.log(`name='${name.name}'`);
+    const seqnr = parseNumber(object.name.seqnr);
+    // console.log(`seqnr='${name.seqnr}'`);
+    const z100s: string = parseString(object.z100s);
+    // console.log(`z100s='${z100s}'`);
+    const vital750: string = parseString(object.vital750);
+    // console.log(`vital750='${vital750}'`);
+
+    const year: YearNoID = {
+        name: {
+            seqnr,
+            name
+        },
+        z100s,
+        vital750
+    };
+
+    // console.log(year);
+
+    return year;
 };
 
 const parseNotes = (text: any): Note[] => {

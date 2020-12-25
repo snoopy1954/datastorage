@@ -1,8 +1,8 @@
 import { Account, AccountNoID } from '../../../../../backend/src/types/axa';
 import { SET_OPEN_ACCOUNT, CLEAR_OPEN_ACCOUNT, ActionTypes } from './types';
-import { newAccount } from '../../../utils/axa';
+import { emptyAccount } from '../../../utils/axa/account';
 
-const account: AccountNoID = newAccount();
+const account: AccountNoID = emptyAccount();
 const initialState: Account = {
     id: '',
     ...account

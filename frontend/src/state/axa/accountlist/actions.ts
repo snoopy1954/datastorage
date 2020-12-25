@@ -4,18 +4,22 @@ import {
     ADD_ACCOUNT,
     UPDATE_ACCOUNT,
     REMOVE_ACCOUNT,
+    REFRESH_ACCOUNT,
     DispatchSetAccountList,
     DispatchAddAccount,
     DispatchUpdateAccount,
-    DispatchRemoveAccount
+    DispatchRemoveAccount,
+    AccountActionTypes
 } from './types';
 
 import { create, update, remove, getAll } from "../../../services/axa/accounts";
 
+import { sortAccounts } from '../../../utils/axa/account';
+
 
 export const initializeAccounts = () => {
   return async (dispatch: DispatchSetAccountList) => {
-    const accounts = await getAll();
+    const accounts = sortAccounts(await getAll());
     dispatch({
       type: SET_ACCOUNT_LIST,
       payload: accounts,
@@ -41,6 +45,15 @@ export const updateAccount = (account: Account) => {
       payload: newAccount
     });
   }
+};
+
+export const refreshAccount = (account: Account) => {
+  const action: AccountActionTypes = {
+    type: REFRESH_ACCOUNT,
+    payload: account
+  };
+
+  return action;  
 };
   
 export const removeAccount = (id: string) => {

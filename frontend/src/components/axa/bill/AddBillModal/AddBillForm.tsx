@@ -4,14 +4,18 @@ import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
 import { Edittype } from "../../../../types/basic";
-import { Bill, BillWithFileDatesNoID, FileDate } from '../../../../../../backend/src/types/axa';
+import { Bill, BillWithFileDatesNoID, FileDate, Biller } from '../../../../../../backend/src/types/axa';
 import { BillStatus, Insurancetype } from '../../../../types/axa';
 import { Option } from '../../../../types/basic';
 import { RootState } from '../../../../state/store';
 
-import { TextField, SelectField, BillStatusOption, InsurancetypeOption, SelectFieldInvoicingParty, FileDateField, DetailsFieldArray } from "./FormField";
+import { TextField, BillStatusOption, InsurancetypeOption, DetailsFieldArray } from "./FormField";
+import { SelectField } from '../../../basic/formfields/selectfield';
+import { FilePickDateField } from '../../../basic/formfields/filepickdatefield';
+import { NumberField } from '../../../basic/formfields/numberfield';
 
-import { newBill, newFiledate } from '../../../../utils/axa';
+import { newFiledate } from '../../../../utils/axa';
+import { newBill } from '../../../../utils/axa/bill';
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 
@@ -23,7 +27,8 @@ interface Props {
 
 export const AddBillForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
   const bill: Bill = useSelector((state: RootState) => state.bill);
-  const invoicingparties = useSelector((state: RootState) => state.invoicingparties);
+  const bills: Bill[] = useSelector((state: RootState) => state.bills);
+  const billers: Biller[] = useSelector((state: RootState) => state.billers);
 
   const statusOptions: BillStatusOption[] = [];
   Object.values(BillStatus).forEach(statusvalue => {
@@ -33,11 +38,11 @@ export const AddBillForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
     })
   });
 
-  const invoicingpartyOptions: Option[] = [];
-  Object.values(invoicingparties).forEach(element => {
-    invoicingpartyOptions.push({
-      value: element.name,
-      label: element.name
+  const billerOptions: Option[] = [];
+  Object.values(billers).forEach(element => {
+    billerOptions.push({
+      value: element.name.name,
+      label: element.name.name
     })
   });
 
@@ -49,13 +54,16 @@ export const AddBillForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
     })
   });
 
-  const filedates: FileDate[] = [];
-  filedates.push(newFiledate());
-  filedates.push(newFiledate());
+  // const filedates: FileDate[] = [];
+  // filedates.push(newFiledate());
+  // filedates.push(newFiledate());
+
+  const invoice: FileDate = newFiledate();
+  const recipe: FileDate = newFiledate();
 
   const initialValues: BillWithFileDatesNoID = (edittype===Edittype.EDIT && bill) 
-    ? { ...bill, filedates } 
-    : { ...newBill(), filedates };
+    ? { ...bill, invoice, recipe } 
+    : { ...newBill(bills), invoice, recipe };
 
   return (
     <Formik
@@ -72,8 +80,15 @@ export const AddBillForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
             <Field
               label="Name"
               placeholder="Name"
-              name="name"
+              name="name.name"
               component={TextField}
+            />
+            <Field
+              label="Seqnr"
+              placeholder="Seqnr"
+              name="name.seqnr"
+              component={NumberField}
+              min='0'
             />
             <SelectField
               label="Status"
@@ -81,27 +96,25 @@ export const AddBillForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
               name="status"
               options={statusOptions}
             />
-            <SelectFieldInvoicingParty
+            <SelectField
               label="Rechnungssteller"
-              prompt="Bitte Rechnungssteller auswählen"
               name="invoicingparty"
-              options={invoicingpartyOptions}
+              prompt="Bitte Rechnungssteller auswählen"
+              options={billerOptions}
             />
             <Field
-              filedates={values.filedates}
               label="Rechnung/Rezept"
-              placeholder="Rechnung/Rezept"
+              filedate={values.invoice}
               name="invoice"
-              component={FileDateField}
+              component={FilePickDateField}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
             />
             <Field
-              filedates={values.filedates}
               label="Quittung"
-              placeholder="Quittung"
+              filedate={values.recipe}
               name="recipe"
-              component={FileDateField}
+              component={FilePickDateField}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
             />

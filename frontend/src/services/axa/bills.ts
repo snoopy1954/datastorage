@@ -2,6 +2,8 @@ import axios from 'axios';
 import { apiBaseUrl } from "../../constants";
 import { Bill, BillNoID, Account } from '../../../../backend/src/types/axa';
 
+import { getSum } from '../../utils/basic';
+
 const getAll = async () => {
     const { data: bills } = await axios.get<Bill[]>(
         `${apiBaseUrl}/bills`
@@ -19,7 +21,7 @@ const getOne = async (id: string) => {
 }
 
 const create = async (bill: BillNoID) => {
-    const response = await axios.post(
+    const response = await axios.post<Bill>(
         `${apiBaseUrl}/bills`,
         bill
     );
@@ -29,6 +31,10 @@ const create = async (bill: BillNoID) => {
     );
 
     account.billIDs.push(response.data.id);
+
+    const amounts: string[] = [account.details[0].amount, bill.details[0].amount];
+    account.details[0].amount = getSum(amounts);
+    
     await axios.put(
         `${apiBaseUrl}/accounts/${account.id}`, 
         account

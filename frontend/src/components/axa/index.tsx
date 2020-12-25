@@ -6,28 +6,33 @@ import { AccountStatus } from '../../types/axa';
 
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
-import { initializeInvoicingparties } from  '../../state/axa/invoicingpartylist/actions';
 import { initializeAccounts } from  '../../state/axa/accountlist/actions';
+import { initializeBillers } from  '../../state/axa/billerlist/actions';
 import { initializeBills } from  '../../state/axa/billlist/actions';
+import { initializeYears } from  '../../state/axa/years/actions';
 import { setOpenAccount } from '../../state/axa/openaccount/actions';
 import { AppHeaderH2 } from "../basic/header";
 import { AppMenu, Item } from "../basic/menu";
 import { backgroundColor, styleMainMenu } from "../../constants";
 
-import AccountPage from "./account/AccountListPage";
-import BillPage from "./bill/BillListPage";
-import InvoicingpartyPage from "./invoicingparty/InvoicingpartyListPage";
-
+import AccountPage from './account/AccountListPage';
+import BillPage from './bill/BillListPage';
+import BillerPage from './biller/BillerListPage';
+import { YearPage } from './year/YearListPage';
 
 const Axa: React.FC = () => {
   const dispatch = useDispatch();
 
   const mainpage = useSelector((state: RootState) => state.page.mainpage);      
-  const subpage = useSelector((state: RootState) => state.page.subpage);      
+  const subpage = useSelector((state: RootState) => state.page.subpage);
   const accounts: Account[] = useSelector((state: RootState) => state.accounts);      
 
   React.useEffect(() => {
-    dispatch(initializeInvoicingparties());
+    dispatch(initializeBillers());
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    dispatch(initializeYears());
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -69,8 +74,14 @@ const Axa: React.FC = () => {
       onClick: handleSelection
     },
     {
-      name: 'invoicingparties',
+      name: 'billers',
       title: 'Kreditor',
+      color: 'blue',
+      onClick: handleSelection
+    },
+    {
+      name: 'years',
+      title: 'Jahr',
       color: 'blue',
       onClick: handleSelection
     },
@@ -82,7 +93,8 @@ const Axa: React.FC = () => {
       <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
       {subpage==='accounts'&&<AccountPage />}
       {subpage==='bills'&&<BillPage />}
-      {subpage==='invoicingparties'&&<InvoicingpartyPage />}
+      {subpage==='billers'&&<BillerPage />}
+      {subpage==='years'&&<YearPage />}
     </div>
   );
 }

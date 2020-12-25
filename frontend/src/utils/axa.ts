@@ -1,21 +1,42 @@
-import { AccountNoID, BillNoID } from '../../../backend/src/types/axa';
+import { YearNoID, Year, Biller, Name, Details, Note, FileDate } from '../../../backend/src/types/axa';
 
-import { AccountStatus, BillStatus, Insurancetype } from '../types/axa';
-import { Details, Note, FileDate } from '../../../backend/src/types/axa';
+import { z100s, vital750 } from '../constants';
+import { Insurancetype } from '../types/axa';
 
-export const newAccount = (): AccountNoID => {
-    const actualDate = new Date().toISOString().substring(0, 10).replace(/-/g,"");
+const newName = (): Name => {
+    return { name: '', seqnr: 0 };
+};
 
-    const account: AccountNoID = {
-        name: actualDate,
-        status: AccountStatus.OPEN,
-        passed: getCurrentDate(),
-        notes: [],
-        details: [],
-        billIDs: []
-    };
+const sortBillers = (a: Biller, b: Biller) => {
+    const nameA = a.name.seqnr;
+    const nameB = b.name.seqnr;
+    if (nameA < nameB) {
+        return -1;
+    }
+    if (nameA > nameB) {
+        return 1;
+    }
+    return 0;
+};
 
-    return account;
+export const sortBillerList = (billers: Biller[]) => {
+    return billers.sort(sortBillers);
+};
+
+const sortYearlist = (a: Year, b: Year) => {
+    const nameA = a.name.seqnr;
+    const nameB = b.name.seqnr;
+    if (nameA < nameB) {
+        return -1;
+    }
+    if (nameA > nameB) {
+        return 1;
+    }
+    return 0;
+};
+
+export const sortYears = (years: Year[]) => {
+    return years.sort(sortYearlist);
 };
 
 export const newDetails = (): Details => {
@@ -27,7 +48,8 @@ export const newDetails = (): Details => {
         amount: '',
         refund: '',
         deny: '',
-        retension: ''
+        retension: '',
+        dent20: ''
     };
 
     return details;
@@ -45,18 +67,41 @@ export const newNote = (): Note => {
     return note;
 }
 
-export const newBill = (): BillNoID => {
-    const bill: BillNoID = {
-        name: '',
-        status: BillStatus.RECEIVED,
-        invoicingparty: '',
-        accountID: '',
-        notes: [],
-        details: [],
-    };
-    bill.details.push(newDetails());
+export const newYear = (years: Year[]): YearNoID => {
+    let maxNumber = 0;
+    let maxName = '0';
+    Object.values(years).forEach(year => {
+        if (year.name.seqnr>maxNumber) {
+            maxNumber = year.name.seqnr;
+            maxName = year.name.name
+        }
+    });
 
-    return bill;
+    maxName = maxName==='0' ? maxName = '2020' : String(+maxName+1);
+
+    const name: Name = {
+        name: maxName,
+        seqnr: maxNumber + 1
+    };
+
+    const year: YearNoID = {
+        name: name,
+        z100s: z100s,
+        vital750: vital750
+    };
+
+    return year;
+};
+
+export const emptyYear = (): Year => {
+    const year: Year = {
+        id: '',
+        name: newName(),
+        z100s: '',
+        vital750: ''
+    };
+
+    return year;
 };
 
 export const getCurrentDate = (): string => {
@@ -78,4 +123,14 @@ export const newFiledate = (): FileDate => {
 
 export const getViewname = (name: string) => {
     return name.substr(6,2) + '.' + name.substr(4,2) + '.' + name.substr(0,4);
-}
+};
+
+export const nextSeqnr = (billers: Biller[]): number => {
+    let maxNumber = 0;
+    Object.values(billers).forEach(biller => {
+        if (biller.name.seqnr>maxNumber) maxNumber = biller.name.seqnr;
+    });
+    
+    return maxNumber;
+};
+

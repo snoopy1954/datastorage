@@ -9,8 +9,8 @@ import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';
 import { removeBill, updateBill } from '../../../../state/axa/billlist/actions';
 import { clearSelectedBill } from '../../../../state/axa/selectedbill/actions';
-import { getOne } from '../../../../services/image/images';
-import { setPdfUrl } from "../../../../state/axa/pdfUrl/actions";
+import { getOne, remove } from '../../../../services/image/images';
+import { setPdfUrl, clearPdfUrl } from "../../../../state/axa/pdfUrl/actions";
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
@@ -19,7 +19,7 @@ import { AskAmount } from "../../../basic/askAmount";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 import { getImageUrl } from "../../../../utils/image";
-import { getViewname } from '../../../../utils/axa';
+import { getSumAmounts } from '../../../../utils/axa/bill';
 
 import AddBillModal from "../AddBillModal";
 import ShowModalPDF from "../../../basic/showModalPDF";
@@ -51,10 +51,12 @@ const BillDetailsPage: React.FC = () => {
   }  
   const closeModal = (): void => {
       setModalOpen([false, false, false, false]);
+      dispatch(clearPdfUrl());
       setError(undefined);
   };
 
   const handleClose = () => {
+    dispatch(clearPdfUrl());
     dispatch(clearSelectedBill());
   };
 
@@ -84,6 +86,9 @@ const BillDetailsPage: React.FC = () => {
     if (bill.id!=='') {
       dispatch(removeBill(bill.id));
       dispatch(clearSelectedBill());
+      bill.notes.forEach(async note => {
+        await remove(note.dataId);
+      })
     }
     closeModal();
     dispatch(setPage({ mainpage, subpage: 'bills' }));
@@ -135,7 +140,7 @@ const BillDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={'Rechnung ' + bill.name} icon='zoom-in'/>
+      <AppHeaderH3Plus text={'Rechnung ' + bill.name.name} icon='zoom-in'/>
       <AddBillModal
           edittype={Edittype.EDIT}
           modalOpen={modalOpen[ModalDialog.CHANGE]}
@@ -145,14 +150,14 @@ const BillDetailsPage: React.FC = () => {
       />
       <AskModal
           header='Rechnung löschen'
-          prompt={'Rechnung ' + bill.name}
+          prompt={'Rechnung ' + bill.name.name}
           modalOpen={modalOpen[ModalDialog.DELETE]}
           onSubmit={handleDelete}
           onClose={closeModal}
       />
       <AskAmount
           header='Erstattung ändern'
-          prompt={'Rechnung ' + bill.name}
+          prompt={'Rechnung ' + bill.name.name}
           modalOpen={modalOpen[ModalDialog.REFUND]}
           onSubmit={handleChangedRefund}
           onClose={closeModal}
@@ -175,7 +180,7 @@ const BillDetailsPage: React.FC = () => {
         <Table.Body>
           <Table.Row>
             <Table.Cell>Name</Table.Cell>
-            <Table.Cell>{bill.name}</Table.Cell>
+            <Table.Cell>{bill.name.name}</Table.Cell>
             <Table.Cell></Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -185,7 +190,7 @@ const BillDetailsPage: React.FC = () => {
           </Table.Row>
           <Table.Row>
             <Table.Cell>Betrag</Table.Cell>
-            <Table.Cell>{bill.details[0].amount}</Table.Cell>
+            <Table.Cell>{getSumAmounts(bill)}</Table.Cell>
             <Table.Cell></Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -205,7 +210,7 @@ const BillDetailsPage: React.FC = () => {
           </Table.Row>}
           <Table.Row>
             <Table.Cell>Abrechnung</Table.Cell>
-            <Table.Cell>{getViewname(account.name)}</Table.Cell>
+            <Table.Cell>{account.name.name}</Table.Cell>
             <Table.Cell><Button color='blue' style={styleMainMenu} onClick={() => handleSelection(2) }>Anzeigen</Button></Table.Cell>
           </Table.Row>
          </Table.Body>

@@ -13,7 +13,7 @@ interface Props {
   error?: string;
 }
 
-const AddAccountModal = ({ edittype, title, modalOpen, onClose, onSubmit, error }: Props) => (
+export const AddAccountModal = ({ edittype, title, modalOpen, onClose, onSubmit, error }: Props) => (
   <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
     <Modal.Header>{title}</Modal.Header>
     <Modal.Content>

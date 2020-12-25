@@ -9,7 +9,7 @@ import Image from '../../models/image';
 import { toNewImage } from '../../utils/image/parameters';
 
 const imagesRouter = express.Router();
-imagesRouter.use(bodyParser.raw({type: 'application/octet-stream', limit : '2mb'}));
+imagesRouter.use(bodyParser.raw({type: 'application/octet-stream', limit : '10mb'}));
 
 
 imagesRouter.get('/', async (_request, response) => {

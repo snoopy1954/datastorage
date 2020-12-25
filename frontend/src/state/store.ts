@@ -54,14 +54,16 @@ import { sequenceReducer } from './sudoku/sequence/reducers';
 import { candidatesReducer } from './sudoku/candidates/reducers';
 import { positionsReducer } from './sudoku/positions/reducers';
 import { notificationReducer } from './sudoku/notification/reducers';
-import { invoicingpartylistReducer } from './axa/invoicingpartylist/reducers';
-import { selectedinvoicingpartyReducer } from './axa/selectedinvoicingparty/reducers';
+import { billerlistReducer } from './axa/billerlist/reducers';
+import { selectedbillerReducer } from './axa/selectedbiller/reducers';
 import { accountlistReducer } from './axa/accountlist/reducers';
 import { selectedaccountReducer } from './axa/selectedaccount/reducers';
 import { openaccountReducer } from './axa/openaccount/reducers';
 import { billlistReducer } from './axa/billlist/reducers';
 import { selectedbillReducer } from './axa/selectedbill/reducers';
 import { selectedbillsReducer } from './axa/selectedbills/reducers';
+import { axayearsReducer } from './axa/years/reducers';
+import { axayearReducer } from './axa/year/reducers';
 import { pdfurlReducer } from './axa/pdfUrl/reducers';
 
 
@@ -118,14 +120,16 @@ const rootReducer = combineReducers({
     candidates: candidatesReducer, 
     positions: positionsReducer,
     notification: notificationReducer,
-    invoicingparties: invoicingpartylistReducer,
-    invoicingparty: selectedinvoicingpartyReducer,
+    billers: billerlistReducer,
+    biller: selectedbillerReducer,
     accounts: accountlistReducer,
     account: selectedaccountReducer,
     openaccount: openaccountReducer,
     bills: billlistReducer,
     bill: selectedbillReducer,
     selectedbills: selectedbillsReducer,
+    axayears: axayearsReducer,
+    axayear: axayearReducer,
     pdfurl: pdfurlReducer,
 });
 

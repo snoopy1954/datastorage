@@ -3,16 +3,19 @@ import { useSelector } from 'react-redux';
 import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
-import { Edittype } from "../../../../types/basic";
+import { Edittype, Option } from "../../../../types/basic";
 import { AccountNoID } from '../../../../../../backend/src/types/axa';
 import { AccountStatus } from '../../../../types/axa';
 
 import { RootState } from '../../../../state/store';
 
-import { TextField, SelectField, AccountStatusOption, ShowField } from "./FormField";
-import { PickField } from '../../../basic/formfields/pickdate';
+import { ShowField } from '../../../basic/formfields/showfield';
+import { PickField } from '../../../basic/formfields/pickdatefield';
+import { SelectField } from '../../../basic/formfields/selectfield';
+import { NumberField } from '../../../basic/formfields/numberfield';
 
-import { newAccount, getCurrentDate } from '../../../../utils/axa';
+import { getCurrentDate } from '../../../../utils/axa';
+import { newAccount } from '../../../../utils/axa/account';
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 import { isValidDate } from '../../../../utils/basic';
 
@@ -24,8 +27,9 @@ interface Props {
 
 export const AddAccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
   const account = useSelector((state: RootState) => state.account);
+  const accounts = useSelector((state: RootState) => state.accounts);
 
-  const statusOptions: AccountStatusOption[] = [];
+  const statusOptions: Option[] = [];
   Object.values(AccountStatus).forEach(statusvalue => {
     statusOptions.push({
       value: statusvalue,
@@ -33,7 +37,7 @@ export const AddAccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }
     })
   });
 
-  const initialValues = (edittype===Edittype.EDIT && account) ? account : newAccount();
+  const initialValues = (edittype===Edittype.EDIT && account) ? account : newAccount(accounts);
   if (edittype===Edittype.EDIT && initialValues.passed==='') initialValues.passed = getCurrentDate();
   
   return (
@@ -41,7 +45,7 @@ export const AddAccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }
       initialValues={initialValues}
       onSubmit={onSubmit}
       validate={values => {
-        console.log(values.status, values.passed)
+        console.log(values)
         const errors: { [field: string]: string } = {};
         if (edittype===Edittype.EDIT) {
           if (values.status===AccountStatus.PASSED) {
@@ -59,11 +63,31 @@ export const AddAccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }
       {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
-            <Field
+            {edittype===Edittype.ADD&&<Field
               label="Name"
-              placeholder="Name"
-              name="name"
-              component={TextField}
+              date={values.name.name}
+              name="name.name"
+              component={PickField}
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
+            />}
+            {edittype===Edittype.EDIT&&<Field
+              label="Name"
+              placeholder={initialValues.name}
+              name="name.name"
+              component={ShowField}
+            />}
+            <Field
+              name={`details[0].year`}
+              placeholder="Jahr"
+              type="text"
+            />
+            <Field
+              label="Seqnr"
+              placeholder="Seqnr"
+              name="name.seqnr"
+              component={NumberField}
+              min='0'
             />
             {edittype===Edittype.EDIT&&<SelectField
               label="Status"
@@ -84,12 +108,6 @@ export const AddAccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }
               component={PickField}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
-            />}
-            {edittype===Edittype.ADD&&<Field
-              label="Antragsdatum"
-              name="passed"
-              component={ShowField}
-              placeholder=''
             />}
             <Menu compact stackable borderless style={{ background: backgroundColor }}>
               <Menu.Item>
