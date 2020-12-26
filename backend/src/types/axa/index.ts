@@ -53,6 +53,7 @@ export interface Details {
     deny: string;
     retension: string;
     dent20: string;
+    cure10: string;
 }
 
 export interface Account {

@@ -12,7 +12,7 @@ interface Props {
   error?: string;
 }
 
-const AddBillModal = ({ edittype, modalOpen, onClose, onSubmit, error }: Props) => (
+export const AddBillModal = ({ edittype, modalOpen, onClose, onSubmit, error }: Props) => (
   <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
     <Modal.Header>Neue Rechnung anlegen</Modal.Header>
     <Modal.Content>

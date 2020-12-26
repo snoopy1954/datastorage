@@ -85,6 +85,12 @@ const AskDetailsForm: React.FC<AskProps> = ({ details, onSubmit, onClose }) => {
                 name="dent20"
                 component={TextField}
               />
+              <Field
+                label="Selbstbehalt (Heilmittel)"
+                placeholder="Selbstbehalt (Heilmittel)"
+                name="cure10"
+                component={TextField}
+              />
               <Menu compact stackable borderless style={{ background: backgroundColor }}>
                 <Menu.Item>
                   <Button type="submit" style={styleMainMenu} color="blue" disabled={!dirty || !isValid}>Speichern</Button>

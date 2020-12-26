@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 
 import { Edittype } from "../../../../types/basic";
-import { BillNoID, Bill } from '../../../../../../backend/src/types/axa';
+import { BillNoID, Bill, Note } from '../../../../../../backend/src/types/axa';
+import { Content } from '../../../../../../backend/src/types/image';
+
+import { create2 } from "../../../../services/image/images";
 
 import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';
@@ -16,17 +19,17 @@ import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
 import { AskAmount } from "../../../basic/askAmount";
+import { ShowModalPDF } from '../../../basic/showModalPDF';
+import { AskFiledateModal, NewFiledate } from '../../../basic/askFiledate';
+import { AddBillModal } from '../AddBillModal';
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 import { getImageUrl } from "../../../../utils/image";
 import { getSumAmounts } from '../../../../utils/axa/bill';
 
-import AddBillModal from "../AddBillModal";
-import ShowModalPDF from "../../../basic/showModalPDF";
-
 
 const BillDetailsPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
   const [error, setError] = React.useState<string | undefined>();
   const dispatch = useDispatch();
 
@@ -39,18 +42,20 @@ const BillDetailsPage: React.FC = () => {
     amount: string;
   };
 
-  const openModalChange = (): void => setModalOpen([true, false, false, false]);
-  const openModalDelete = (): void => setModalOpen([false, true, false, false]);
-  const openModalShow = (): void => setModalOpen([false, false, true, false]);
-  const openModalRefund = (): void => setModalOpen([false, false, false, true]);
+  const openModalChange = (): void => setModalOpen([true, false, false, false, false]);
+  const openModalDelete = (): void => setModalOpen([false, true, false, false, false]);
+  const openModalShow = (): void => setModalOpen([false, false, true, false, false]);
+  const openModalRefund = (): void => setModalOpen([false, false, false, true, false]);
+  const openModalFiledate = (): void => setModalOpen([false, false, false, false, true]);
   enum ModalDialog {
       CHANGE = 0,
       DELETE = 1,
       SHOW = 2,
       REFUND = 3,
+      FILEDATE = 4,
   }  
   const closeModal = (): void => {
-      setModalOpen([false, false, false, false]);
+      setModalOpen([false, false, false, false, false]);
       dispatch(clearPdfUrl());
       setError(undefined);
   };
@@ -76,8 +81,10 @@ const BillDetailsPage: React.FC = () => {
         dispatch(setPage({ mainpage, subpage: 'accounts' }));
         break;
       case 3:
-        console.log('Rechnung ändern');
         openModalRefund();
+        break;
+      case 4:
+        openModalFiledate();
         break;
       }
   };
@@ -114,7 +121,25 @@ const BillDetailsPage: React.FC = () => {
     closeModal();
     dispatch(clearSelectedBill());
     dispatch(setPage({ mainpage, subpage: 'bills' }));
-  }
+  };
+
+  const handleAddNote = async (newFiledate: NewFiledate) => {
+    const billToUpdate: Bill = {
+      ...bill,
+    };
+    const file: File = newFiledate.filedate.file;
+    const content: Content = await create2(file);
+    const note: Note = {
+      ...content,
+      received: newFiledate.filedate.date
+    };
+    billToUpdate.notes.push(note);
+    dispatch(updateBill(billToUpdate));
+    closeModal();
+    dispatch(clearSelectedBill());
+    dispatch(setPage({ mainpage, subpage: 'bills' }));
+  };
+
 
   const buttons: Item[] = 
   [
@@ -162,6 +187,12 @@ const BillDetailsPage: React.FC = () => {
           onSubmit={handleChangedRefund}
           onClose={closeModal}
       />
+      <AskFiledateModal
+          title={`Neues Dokument zu Rechnung ${bill.name.name} ablegen`}
+          modalOpen={modalOpen[ModalDialog.FILEDATE]}
+          onSubmit={handleAddNote}
+          onClose={closeModal}
+      />
       {pdfUrl!==''&&<ShowModalPDF
           title={bill.notes[0].filename}
           pdfUrl={pdfUrl}
@@ -207,6 +238,16 @@ const BillDetailsPage: React.FC = () => {
             <Table.Cell>Quittung</Table.Cell>
             <Table.Cell>{bill.notes[1].received}</Table.Cell>
             <Table.Cell><Button color='blue' style={styleMainMenu} onClick={() => handleSelection(1) }>Anzeigen</Button></Table.Cell>
+          </Table.Row>}
+          {bill.notes.length===0&&<Table.Row>
+            <Table.Cell>Rechnung</Table.Cell>
+            <Table.Cell></Table.Cell>
+            <Table.Cell><Button color='blue' style={styleMainMenu} onClick={() => handleSelection(4) }>Anlegen</Button></Table.Cell>
+          </Table.Row>}
+          {bill.notes.length===1&&<Table.Row>
+            <Table.Cell>Quittung</Table.Cell>
+            <Table.Cell></Table.Cell>
+            <Table.Cell><Button color='blue' style={styleMainMenu} onClick={() => handleSelection(4) }>Anlegen</Button></Table.Cell>
           </Table.Row>}
           <Table.Row>
             <Table.Cell>Abrechnung</Table.Cell>

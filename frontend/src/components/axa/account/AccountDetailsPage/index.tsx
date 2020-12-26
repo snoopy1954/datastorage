@@ -167,6 +167,7 @@ const AccountDetailsPage: React.FC = () => {
         Ablehnung: {details.deny}<br></br>
         Selbstbehalt: {details.retension}<br></br>
         Selbstbehalt (Zahn 20%): {details.dent20}<br></br>
+        Selbstbehalt (Heilmittel 10%): {details.cure10}<br></br>
       </div>
     );
   };

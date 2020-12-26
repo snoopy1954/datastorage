@@ -2,19 +2,21 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Account, AccountNoID, Bill } from '../../../../../../backend/src/types/axa';
+import { Account, AccountNoID, Bill, Year } from '../../../../../../backend/src/types/axa';
 import { Edittype } from "../../../../types/basic";
 
 import { getOne as getAccount } from '../../../../services/axa/accounts';
 import { getOne as getBill} from '../../../../services/axa/bills';
 
 import { RootState } from '../../../../state/store';
+import { setPage } from '../../../../state/page/actions';
 import { addAccount, refreshAccount } from  '../../../../state/axa/accountlist/actions';
-import { setSelectedAccount, clearSelectedAccount } from "../../../../state/axa/selectedaccount/actions";
+import { setSelectedAccount } from "../../../../state/axa/selectedaccount/actions";
 import { addSelectedBill, clearSelectedBills } from "../../../../state/axa/selectedbills/actions";
+import { clearSelectedYear, setSelectedYear } from '../../../../state/axa/year/actions';
 
 import { AppHeaderH3Plus } from "../../../basic/header";
-import { AppMenu, Item } from "../../../basic/menu";
+import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 import { getAmount } from '../../../../utils/axa/account';
@@ -27,8 +29,11 @@ const AccountListPage: React.FC = () => {
     const [error, setError] = React.useState<string | undefined>();
     const dispatch = useDispatch();
 
+    const mainpage: string = useSelector((state: RootState) => state.page.mainpage);      
     const accounts: Account[] = useSelector((state: RootState) => state.accounts);
     const account: Account = useSelector((state: RootState) => state.account);
+    const years: Year[] = useSelector((state: RootState) => state.axayears);
+    const year: Year = useSelector((state: RootState) => state.axayear);
 
     const openModal = (): void => setModalOpen(true);
     const closeModal = (): void => {
@@ -36,9 +41,9 @@ const AccountListPage: React.FC = () => {
         setError(undefined);
     };
 
-    React.useEffect(() => {
-      dispatch(clearSelectedAccount());
-    }, [dispatch]);
+    // React.useEffect(() => {
+    //   dispatch(clearSelectedAccount());
+    // }, [dispatch]);
 
     const handleSelection = async (account: Account) => {
       const fetchAccount = async () => {
@@ -72,25 +77,71 @@ const AccountListPage: React.FC = () => {
       closeModal();
     };
 
+    const handleSelectionClick = (_filter: string, selection: string) => {
+      Object.values(years).forEach(year => {
+        if (selection===year.name.name) {
+          dispatch(setSelectedYear(year));
+        }
+      });
+    };
+
+    const handleClose = () => {
+      dispatch(clearSelectedYear());
+      dispatch(setPage({ mainpage, subpage: 'accounts' }));
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const handleDummy = () => {
+    };   
+
+    const yearOptions: string[] = [];
+    Object.values(years).forEach(element => {
+      yearOptions.push(element.name.name);
+    });
+
     if (account.id!=="") {
       return (
         <AccountDetailsPage/>
       )
     }  
 
-    const buttons: Item[] = 
+    const buttons: ItemOpt[] = 
     [
+      {
+        name: 'Schliessen',
+        title: 'Alle',
+        color: 'blue',
+        type: '0',
+        options: [],    
+        onClick: handleClose,
+        onSelection: handleDummy
+      },
+      {
+        name: 'Jahr',
+        title: 'Jahr',
+        color: 'blue',
+        type: '1',
+        options: yearOptions,    
+        onClick: handleDummy,
+        onSelection: handleSelectionClick
+      },
       {
         name: 'Neu',
         title: 'Neu',
         color: 'blue',
-        onClick: openModal
+        type: '0',
+        options: [],    
+        onClick: openModal,
+        onSelection: handleDummy
       },
     ];
 
+    const accountsToShow: Account[] = Object.values(accounts).filter(item => item.details[0].year.includes(year.name.name));
+    const remarkToRest: string = year.id==='' ? '' : ' (Rest Selbstbehalt = ' + year.vital750 + ' €)';
+
     return (
         <div className="App">
-          <AppHeaderH3Plus text='Abrechnungen' icon='list'/>
+          <AppHeaderH3Plus text={'Abrechnungen ' + year.name.name + remarkToRest} icon='list'/>
           <AddAccountModal
             edittype={Edittype.ADD}
             title='Neu Abrechnung anlegen'
@@ -99,21 +150,21 @@ const AccountListPage: React.FC = () => {
             error={error}
             onClose={closeModal}
           />
-          <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
+          <AppMenuOpt menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
           <Table celled compact small='true' style={{ backgroundColor }}>
             <Table.Header>
               <Table.Row>
-              <Table.HeaderCell style={{ backgroundColor }}>Name</Table.HeaderCell>
-              <Table.HeaderCell className='three wide' style={{ backgroundColor }}>Betrag</Table.HeaderCell>
-              <Table.HeaderCell className='three wide' style={{ backgroundColor }}>Erstattung</Table.HeaderCell>
-              <Table.HeaderCell className='three wide' style={{ backgroundColor }}>Ablehnung</Table.HeaderCell>
-              <Table.HeaderCell className='three wide' style={{ backgroundColor }}>Selbstbehalt</Table.HeaderCell>
-              <Table.HeaderCell className='three wide' style={{ backgroundColor }}>Selbstbehalt (Zahn)</Table.HeaderCell>
-              <Table.HeaderCell className='three wide' style={{ backgroundColor }}>Status</Table.HeaderCell>
+              <Table.HeaderCell className='center aligned' style={{ backgroundColor }}>Name</Table.HeaderCell>
+              <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor }}>Betrag</Table.HeaderCell>
+              <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor }}>Erstattung</Table.HeaderCell>
+              <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor }}>Ablehnung</Table.HeaderCell>
+              <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor }}>Selbstbehalt</Table.HeaderCell>
+              <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor }}>Selbstbehalt (Zahn)</Table.HeaderCell>
+              <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor }}>Status</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {Object.values(accounts).map((account: Account) => (
+              {Object.values(accountsToShow).map((account: Account) => (
                 <Table.Row key={account.id}  onClick={() => handleSelection(account)}>
                   <Table.Cell>{account.name.name}</Table.Cell>
                   <Table.Cell className='right aligned'>{getAmount(account.details[0].amount)}</Table.Cell>

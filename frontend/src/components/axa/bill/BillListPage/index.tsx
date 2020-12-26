@@ -2,20 +2,22 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Bill, BillNoID, BillWithFileDatesNoID, Note, FileDate, Account } from '../../../../../../backend/src/types/axa';
+import { Bill, BillNoID, BillWithFileDatesNoID, Note, FileDate, Account, Year } from '../../../../../../backend/src/types/axa';
 import { Content } from '../../../../../../backend/src/types/image';
 import { Edittype } from "../../../../types/basic";
 
 import { RootState } from '../../../../state/store';
+import { setPage } from '../../../../state/page/actions';
 import { addBill } from  '../../../../state/axa/billlist/actions';
 import { setSelectedBill } from "../../../../state/axa/selectedbill/actions";
 import { setSelectedAccount } from "../../../../state/axa/selectedaccount/actions";
+import { clearSelectedYear, setSelectedYear } from '../../../../state/axa/year/actions';
 
 import { create2 } from "../../../../services/image/images";
 import { getOne } from '../../../../services/axa/accounts';
 
 import { AppHeaderH3Plus } from "../../../basic/header";
-import { AppMenu, Item } from "../../../basic/menu";
+import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 import { getSumAmounts } from '../../../../utils/axa/bill';
@@ -29,9 +31,12 @@ const BillListPage: React.FC = () => {
     const [error, setError] = React.useState<string | undefined>();
     const dispatch = useDispatch();
 
+    const mainpage: string = useSelector((state: RootState) => state.page.mainpage);      
     const bills = useSelector((state: RootState) => state.bills);
     const bill = useSelector((state: RootState) => state.bill);
     const openaccount = useSelector((state: RootState) => state.openaccount);
+    const years: Year[] = useSelector((state: RootState) => state.axayears);
+    const year: Year = useSelector((state: RootState) => state.axayear);
 
     const openModal = (): void => setModalOpen(true);
     const closeModal = (): void => {
@@ -43,6 +48,19 @@ const BillListPage: React.FC = () => {
       dispatch(setSelectedBill(bill));
       const account: Account = await getOne(bill.accountID);
       dispatch(setSelectedAccount(account));
+    };
+
+    const handleSelectionClick = (_filter: string, selection: string) => {
+      Object.values(years).forEach(year => {
+        if (selection===year.name.name) {
+          dispatch(setSelectedYear(year));
+        }
+      });
+    };
+
+    const handleClose = () => {
+      dispatch(clearSelectedYear());
+      dispatch(setPage({ mainpage, subpage: 'bills' }));
     };
 
     const submitBill = async (billdata: BillWithFileDatesNoID) => {
@@ -76,21 +94,53 @@ const BillListPage: React.FC = () => {
       closeModal();
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const handleDummy = () => {
+    };   
+    
+    const yearOptions: string[] = [];
+      Object.values(years).forEach(element => {
+        yearOptions.push(element.name.name);
+    });
+
     if (bill.id!=="") {
       return (
         <BillDetailsPage/>
       )
     }  
 
-    const buttons: Item[] = 
+    const buttons: ItemOpt[] = 
     [
+      {
+        name: 'Schliessen',
+        title: 'Alle',
+        color: 'blue',
+        type: '0',
+        options: [],    
+        onClick: handleClose,
+        onSelection: handleDummy
+      },
+      {
+        name: 'Jahr',
+        title: 'Jahr',
+        color: 'blue',
+        type: '1',
+        options: yearOptions,    
+        onClick: handleDummy,
+        onSelection: handleSelectionClick
+      },
       {
         name: 'Neu',
         title: 'Neu',
         color: 'blue',
-        onClick: openModal
+        type: '0',
+        options: [],    
+        onClick: openModal,
+        onSelection: handleDummy
       },
     ];
+
+    const billsToShow: Bill[] = Object.values(bills).filter(item => item.details[0].year.includes(year.name.name));
 
     return (
         <div className="App">
@@ -102,7 +152,7 @@ const BillListPage: React.FC = () => {
             error={error}
             onClose={closeModal}
           />
-          <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
+          <AppMenuOpt menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
           <Table celled compact small='true' style={{ backgroundColor }}>
             <Table.Header>
               <Table.Row>
@@ -112,7 +162,7 @@ const BillListPage: React.FC = () => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {Object.values(bills).map((bill: Bill) => (
+              {Object.values(billsToShow).map((bill: Bill) => (
                 <Table.Row key={bill.id}  onClick={() => handleSelection(bill)}>
                   <Table.Cell>{bill.name.name}</Table.Cell>
                   <Table.Cell>{getSumAmounts(bill)}</Table.Cell>

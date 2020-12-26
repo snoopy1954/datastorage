@@ -49,7 +49,8 @@ export const newDetails = (): Details => {
         refund: '',
         deny: '',
         retension: '',
-        dent20: ''
+        dent20: '',
+        cure10: '',
     };
 
     return details;

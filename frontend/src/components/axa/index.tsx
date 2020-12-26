@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Account } from '../../../../backend/src/types/axa';
+import { Account, Year } from '../../../../backend/src/types/axa';
 import { AccountStatus } from '../../types/axa';
 
 import { RootState } from '../../state/store';
@@ -11,6 +11,7 @@ import { initializeBillers } from  '../../state/axa/billerlist/actions';
 import { initializeBills } from  '../../state/axa/billlist/actions';
 import { initializeYears } from  '../../state/axa/years/actions';
 import { setOpenAccount } from '../../state/axa/openaccount/actions';
+import { setSelectedYear } from '../../state/axa/year/actions';
 import { AppHeaderH2 } from "../basic/header";
 import { AppMenu, Item } from "../basic/menu";
 import { backgroundColor, styleMainMenu } from "../../constants";
@@ -25,7 +26,8 @@ const Axa: React.FC = () => {
 
   const mainpage = useSelector((state: RootState) => state.page.mainpage);      
   const subpage = useSelector((state: RootState) => state.page.subpage);
-  const accounts: Account[] = useSelector((state: RootState) => state.accounts);      
+  const accounts: Account[] = useSelector((state: RootState) => state.accounts); 
+  const years: Year[] = useSelector((state: RootState) => state.axayears);
 
   React.useEffect(() => {
     dispatch(initializeBillers());
@@ -42,6 +44,15 @@ const Axa: React.FC = () => {
   React.useEffect(() => {
     dispatch(initializeBills());
   }, [dispatch]);
+
+  React.useEffect(() => {
+    const actYear = String(new Date().getFullYear());
+    Object.values(years).forEach(year => {
+      if (actYear===year.name.name) {
+        dispatch(setSelectedYear(year));
+      }
+    })
+  }, [dispatch, years]);
 
   React.useEffect(() => {
     Object.values(accounts).forEach(account => {

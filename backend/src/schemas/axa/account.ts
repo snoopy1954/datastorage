@@ -26,6 +26,7 @@ const detailsSchema = new mongoose.Schema({
   deny: { type: String, required: false },
   retension: { type: String, required: false },
   dent20: { type: String, required: false },
+  cure10: { type: String, required: false },
 });
 
 const accountSchema = new mongoose.Schema({
