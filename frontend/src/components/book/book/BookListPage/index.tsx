@@ -2,8 +2,9 @@ import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 
-import { Book, BookNoID, BookWithFileNoID, Bookgroup, Filter, Content } from '../../../../../../backend/src/types/book';
+import { Book, BookNoID, BookWithFileNoID, Bookgroup, Content, Tongue } from '../../../../../../backend/src/types/book';
 import { Image } from '../../../../../../backend/src/types/image';
+import { Filter } from "../../../../types/book";
 import { Edittype, Direction } from "../../../../types/basic";
 
 import { RootState } from '../../../../state/store';
@@ -19,6 +20,7 @@ import { create, update } from "../../../../services/image/images";
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
+import { AskString, Value } from "../../../basic/askString";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 import { getContent } from "../../../../utils/image";
@@ -29,12 +31,13 @@ import AddBookModal from "../AddBookModal";
 
 
 const BookListPage: React.FC = () => {
-    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    const [modalOpen, setModalOpen] = React.useState<[boolean, boolean]>([false, false]);
     const [error, setError] = React.useState<string | undefined>();
     const dispatch = useDispatch();
 
     const mainpage: string = useSelector((state: RootState) => state.page.mainpage);      
     const bookgroups: Bookgroup[] = useSelector((state: RootState) => state.bookgroups);      
+    const tongues: Tongue[] = useSelector((state: RootState) => state.tongues);      
     const filters: Filter = useSelector((state: RootState) => state.filters);
     const books: Book[] = useSelector((state: RootState) => state.books);
     const book: Book = useSelector((state: RootState) => state.book);
@@ -47,9 +50,14 @@ const BookListPage: React.FC = () => {
       dispatch(clearFilter());
     }, [dispatch]);  
   
-    const openModal = (): void => setModalOpen(true);
+    const openModalNew = (): void => setModalOpen([true, false]);
+    const openModalAuthor = (): void => setModalOpen([false, true]);
+    enum ModalDialog {
+      NEW = 0,
+      AUTHOR = 1,
+    };  
     const closeModal = (): void => {
-        setModalOpen(false);
+        setModalOpen([false, false]);
         setError(undefined);
     };
 
@@ -62,13 +70,33 @@ const BookListPage: React.FC = () => {
     const handleSelectionClick = (filter: string, selection: string) => {
       switch (filter) {
         case 'Gruppe':
-          dispatch(setFilter({ group: selection, subgroup: '' }));
+          dispatch(setFilter({
+            ...filters, 
+            group: selection,
+            subgroup: ''
+          }));
           break;
         case 'Untergruppe':
-          dispatch(setFilter({ group: filters.group, subgroup: selection }));
+          dispatch(setFilter({
+            ...filters, 
+            subgroup: selection
+          }));
+          break;
+        case 'Sprache':
+          dispatch(setFilter({
+            ...filters, 
+            tongue: selection
+          }));
           break;
         default:
-        }
+      }
+    };
+
+    const handleSelectedAuthor = (author: Value) => {
+      dispatch(setFilter({ 
+        ...filters, 
+        author: author.value }));
+      closeModal();
     };
 
     const handleNewBook = async (values: BookWithFileNoID) => {
@@ -147,6 +175,11 @@ const BookListPage: React.FC = () => {
       bookgroupOptions.push(element.groupname.name)
     });
 
+    const tongueOptions: string[] = [];
+    Object.values(tongues).forEach(element => {
+      tongueOptions.push(element.tonguename.name)
+    });
+
     const getBookgroup = (bookgroupName: string): Bookgroup | undefined => {
       const bookgroup = Object.values(bookgroups).filter(bookgroup => bookgroup.groupname.name===bookgroupName);
       return bookgroup.length > 0 ? bookgroup[0] : undefined;
@@ -188,20 +221,38 @@ const BookListPage: React.FC = () => {
         onSelection: handleSelectionClick
       },
       {
+        name: 'Sprache',
+        title: 'Sprache',
+        color: 'blue',
+        type: '1',
+        options: tongueOptions,    
+        onClick: handleDummy,
+        onSelection: handleSelectionClick
+      },
+      {
+        name: 'Autor',
+        title: 'Autor',
+        color: 'blue',
+        type: '0',
+        options: [],    
+        onClick: openModalAuthor,
+        onSelection: handleDummy
+      },
+      {
         name: 'Neu',
         title: 'Neu',
         color: 'blue',
         type: '0',
         options: [],    
-        onClick: openModal,
+        onClick: openModalNew,
         onSelection: handleSelectionClick
       },
     ];
 
     if ((filters.group!=='' && filters.subgroup!=='') || (filters.group!=='' && getBookgroup(filters.group)?.subgroups.length===0)) {
       buttons[buttons.length] =     {
-        name: 'Sort',
-        title: 'Sort',
+        name: 'Sortieren',
+        title: 'Sortieren',
         color: 'blue',
         type: '0',
         options: [],    
@@ -236,9 +287,16 @@ const BookListPage: React.FC = () => {
           <AppHeaderH3Plus text={title} icon='list'/>
           <AddBookModal
             edittype={Edittype.ADD}
-            modalOpen={modalOpen}
+            modalOpen={modalOpen[ModalDialog.NEW]}
             onSubmit={handleNewBook}
             error={error}
+            onClose={closeModal}
+          />
+          <AskString
+            header='Autor eingeben'
+            prompt='Autor eingeben'
+            modalOpen={modalOpen[ModalDialog.AUTHOR]}
+            onSubmit={handleSelectedAuthor}
             onClose={closeModal}
           />
           <AppMenuOpt menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>

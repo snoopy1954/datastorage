@@ -1,4 +1,5 @@
-import { Book, BookNoID, Bookgroup, Filter } from '../../../backend/src/types/book';
+import { Book, BookNoID, Bookgroup } from '../../../backend/src/types/book';
+import { Filter } from '../types/book';
 
 const sortBooks = (a: Book, b: Book) => {
     const nameA = a.title.seqnr;
@@ -32,7 +33,7 @@ const sortBookList = (books: Book[], bookgroups: Bookgroup[]) => {
     });
         
     return bookListSorted;
-}
+};
 
 export const newBook = (): BookNoID => {
     const book = {
@@ -64,23 +65,28 @@ export const newBook = (): BookNoID => {
     };
 
     return book;
-}
+};
 
 export const booklistTitle = (filters: Filter): string => {
     let filter = (filters.group!=="") ? ': ' + filters.group : '';
     filter += (filters.subgroup!=="") ? ' - ' + filters.subgroup : '';
+    filter += (filters.tongue!=="") ? ' - ' + filters.tongue : '';
 
     return filter;
-}
+};
 
 export const booklistFilter = (books: Book[], filters: Filter, bookgroups: Bookgroup[]): Book[] => {
 
+    console.log(filters)
+
     let filteredBooks = (filters.group!=="") ? Object.values(books).filter(book => book.bookgroup===filters.group) : books;
     filteredBooks = (filters.subgroup!=="") ? Object.values(filteredBooks).filter(book => book.subgroup===filters.subgroup) : filteredBooks;
+    filteredBooks = (filters.tongue!=="") ? Object.values(filteredBooks).filter(book => book.tongue===filters.tongue) : filteredBooks;
+    filteredBooks = (filters.author!=="") ? Object.values(filteredBooks).filter(book => book.author.familyname.includes(filters.author)) : filteredBooks;
     const sortedBooks = sortBookList(Object.values(filteredBooks), Object.values(bookgroups));
 
     return sortedBooks;
-}
+};
 
 export const nextSeqnr = (books: Book[], group: string, subgroup: string): number => {
     let maxNumber = 0;
@@ -89,4 +95,15 @@ export const nextSeqnr = (books: Book[], group: string, subgroup: string): numbe
     });
     
     return maxNumber;
-}
+};
+
+export const newFilter = (): Filter => {
+    const filter: Filter = {
+        group: '',
+        subgroup: '',
+        tongue: '',
+        author: ''
+    }
+
+    return filter;
+};

@@ -207,6 +207,11 @@ export const PersonFieldArray: React.FC<PersonFieldArrayProps> = ({
                     placeholder="Email"
                     type="text"
                   />
+                  <Field
+                    name={`persons.${index}.communication.web`}
+                    placeholder="Web"
+                    type="text"
+                  />
                  <Field
                     name={`persons.${index}.comment`}
                     placeholder="Kommentar"

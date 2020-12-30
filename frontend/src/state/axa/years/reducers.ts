@@ -8,10 +8,7 @@ export const axayearsReducer = (state = initialState, action: YearActionTypes): 
         case SET_AXAYEAR_LIST:
             return {
                 ...state,
-                ...action.payload.reduce(
-                    (memo, year) => ({ ...memo, [year.id]: year }),
-                    {}
-                ),
+                ...action.payload.reduce((memo, year) => ({ ...memo, [year.id]: year }), {}),
             }
         case ADD_AXAYEAR:
             return {

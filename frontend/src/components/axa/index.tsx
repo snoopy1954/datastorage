@@ -10,8 +10,11 @@ import { initializeAccounts } from  '../../state/axa/accountlist/actions';
 import { initializeBillers } from  '../../state/axa/billerlist/actions';
 import { initializeBills } from  '../../state/axa/billlist/actions';
 import { initializeYears } from  '../../state/axa/years/actions';
-import { setOpenAccount } from '../../state/axa/openaccount/actions';
+import { setOpenAccount, clearOpenAccount } from '../../state/axa/openaccount/actions';
 import { setSelectedYear } from '../../state/axa/year/actions';
+import { clearImage } from '../../state/image/actions';
+import { clearPdfUrl } from "../../state/axa/pdfUrl/actions";
+
 import { AppHeaderH2 } from "../basic/header";
 import { AppMenu, Item } from "../basic/menu";
 import { backgroundColor, styleMainMenu } from "../../constants";
@@ -55,12 +58,18 @@ const Axa: React.FC = () => {
   }, [dispatch, years]);
 
   React.useEffect(() => {
+    dispatch(clearOpenAccount());
     Object.values(accounts).forEach(account => {
       if(account.status===AccountStatus.OPEN) {
         dispatch(setOpenAccount(account));
       }
     })
   }, [accounts, dispatch]);
+
+  React.useEffect(() => {
+    dispatch(clearPdfUrl())
+    dispatch(clearImage());
+  }, [mainpage, dispatch]);
 
   React.useEffect(() => {
     dispatch(setPage({ mainpage, subpage: 'accounts' }));

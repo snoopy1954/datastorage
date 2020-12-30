@@ -14,6 +14,7 @@ export interface Communication {
     phone: string;
     mobile: string;
     email: string;
+    web: string;
 }
 
 export interface Person {

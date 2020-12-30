@@ -52,7 +52,8 @@ export const newPerson = (): Person => {
         communication: {
             phone: '',
             mobile: '',
-            email: ''
+            email: '',
+            web: '',
         },
         comment: ''
     };

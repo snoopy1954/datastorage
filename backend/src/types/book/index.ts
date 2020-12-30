@@ -1,8 +1,3 @@
-export interface Filter {
-    group: string;
-    subgroup: string;
-}
-
 export interface Name {
     seqnr: number;
     name: string;

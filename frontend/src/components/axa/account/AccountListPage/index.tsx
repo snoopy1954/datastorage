@@ -74,6 +74,7 @@ const AccountListPage: React.FC = () => {
         billIDs: values.billIDs
       }
       dispatch(addAccount(newAccount));
+      // offenen Account setzen, vorher Status prüfen
       closeModal();
     };
 

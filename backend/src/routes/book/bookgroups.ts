@@ -25,7 +25,6 @@ bookgroupsRouter.get('/:id', async (request, response) => {
 bookgroupsRouter.post('/', async (request, response) => {
     try {
         const newBookgroup = new Bookgroup(toNewBookgroup(request.body));
-        console.log('hier', newBookgroup);
         void await newBookgroup.save();
         response.json(newBookgroup);
     } catch (e) {

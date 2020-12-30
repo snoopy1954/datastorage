@@ -1,10 +1,9 @@
-import { Filter } from '../../../../../backend/src/types/book';
+import { Filter } from '../../../types/book';
+import { newFilter } from '../../../utils/book';
+
 import { SET_FILTER, CLEAR_FILTER, ActionTypes } from './types';
 
-const initialState: Filter = {
-    group: '',
-    subgroup: ''
-};
+const initialState: Filter = newFilter();
 
 export const filterReducer = (state = initialState, action: ActionTypes): Filter => {
     switch (action.type) {

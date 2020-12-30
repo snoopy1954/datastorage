@@ -183,8 +183,8 @@ const AddressListPage: React.FC = () => {
               <Table.Row>
                 <Table.HeaderCell>Name</Table.HeaderCell>
                 <Table.HeaderCell>Telefon</Table.HeaderCell>
-                <Table.HeaderCell>Gruppe</Table.HeaderCell>
-                <Table.HeaderCell>Personen</Table.HeaderCell>
+                {addressgroupfilter==='Gaststätte'&&<Table.HeaderCell>Kommentar</Table.HeaderCell>}
+                {addressgroupfilter!=='Gaststätte'&&<Table.HeaderCell>Email</Table.HeaderCell>}
                 {addressgroupfilter!==''&&sortbutton&&<Table.HeaderCell>Reihenfolge</Table.HeaderCell>}
               </Table.Row>
             </Table.Header>
@@ -194,8 +194,8 @@ const AddressListPage: React.FC = () => {
                   <Table.Cell onClick={() => handleSelection(address)}>{address.name.name}</Table.Cell>
                   {address.persons[0].communication.phone!==''&&<Table.Cell>{address.persons[0].communication.phone}</Table.Cell>}
                   {address.persons[0].communication.phone===''&&<Table.Cell>{address.persons[0].communication.mobile}</Table.Cell>}
-                  <Table.Cell>{address.group}</Table.Cell>
-                  <Table.Cell>{address.persons.length}</Table.Cell>
+                  {addressgroupfilter==='Gaststätte'&&<Table.Cell>{address.persons[0].comment}</Table.Cell>}
+                  {addressgroupfilter!=='Gaststätte'&&<Table.Cell>{address.persons[0].communication.email}</Table.Cell>}
                   {addressgroupfilter!==''&&sortbutton&&<Table.Cell>
                     <Button className="ui icon button" color='green' onClick={() => handleUpDown(Direction.UP, index, sortedAddresses) }>
                       <i className="angle up icon"></i>

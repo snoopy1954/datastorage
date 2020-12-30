@@ -4,3 +4,4 @@ export const styleMainMenu = { height: '40px', width: '100px' };
 export const styleLink = { marginLeft: '12px' };
 export const z100s = '511,29';
 export const vital750 = '900,00';
+export const zukunftID = '5fe769fd0389834a050500b7';

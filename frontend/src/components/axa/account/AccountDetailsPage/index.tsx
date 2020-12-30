@@ -15,6 +15,7 @@ import { setPage } from '../../../../state/page/actions';
 import { removeAccount, updateAccount } from '../../../../state/axa/accountlist/actions';
 import { setSelectedBill } from "../../../../state/axa/selectedbill/actions";
 import { clearSelectedAccount } from '../../../../state/axa/selectedaccount/actions';
+import { clearOpenAccount } from '../../../../state/axa/openaccount/actions';
 import { setPdfUrl, clearPdfUrl } from "../../../../state/axa/pdfUrl/actions";
 
 import { AppHeaderH3Plus } from '../../../basic/header';
@@ -128,6 +129,7 @@ const AccountDetailsPage: React.FC = () => {
     dispatch(updateAccount(accountToUpdate));
     closeModal();
     dispatch(clearSelectedAccount());
+    dispatch(clearOpenAccount());
     dispatch(setPage({ mainpage, subpage: 'accounts' }));
   };
 

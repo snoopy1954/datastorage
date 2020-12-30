@@ -65,6 +65,8 @@ const AddressDetailsPage: React.FC = () => {
     };
 
     const ShowPerson: React.FC<{ person: Person; index: number }> = ({ person, index }) => {
+
+        console.log(person.communication.web)
         return (
           <div>
             {index>0&&<br></br>}
@@ -74,6 +76,13 @@ const AddressDetailsPage: React.FC = () => {
             {person.communication.phone!==''&&<><Icon name='phone'/>{person.communication.phone}<br></br></>} 
             {person.communication.mobile!==''&&<><Icon name='mobile'/>{person.communication.mobile}<br></br></>} 
             {person.communication.email!==''&&<><Icon name='mail'/>{person.communication.email}<br></br></>}
+            {person.communication.web!==''&&person.communication.web!==undefined&&
+                <>
+                <Icon name='globe'/>
+                <a href={person.communication.web} target='_blank' rel="noopener noreferrer">{person.communication.web}</a>
+                <br></br>
+                </>
+            }
             {person.comment!==''&&<>{person.comment}</>}
           </div>
         );

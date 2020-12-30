@@ -22,8 +22,8 @@ export const YearPage: React.FC = () => {
     const [error, setError] = React.useState<string | undefined>();
     const dispatch = useDispatch();
 
-    const years = useSelector((state: RootState) => state.axayears);
-    const year = useSelector((state: RootState) => state.axayear);
+    const years: Year[] = useSelector((state: RootState) => state.axayears);
+    const year: Year = useSelector((state: RootState) => state.axayear);
 
     const openModal = (): void => setModalOpen(true);
     const closeModal = (): void => {
@@ -33,7 +33,7 @@ export const YearPage: React.FC = () => {
 
     const handleSelection = (year: Year) => {
       dispatch(setSelectedYear(year));
-    }  
+    };
 
     const submitYear = async (values: YearNoID) => {
       dispatch(addYear(values));
@@ -41,6 +41,9 @@ export const YearPage: React.FC = () => {
     };
 
     if (year.id!=="") {
+      console.log(year)
+      console.log(Object.values(years).filter(item => item.id===year.id)[0])
+      console.log({years}.years.length)
       return (
         <YearDetailsPage/>
       )

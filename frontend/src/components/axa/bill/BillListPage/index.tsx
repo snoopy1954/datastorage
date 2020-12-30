@@ -12,6 +12,7 @@ import { addBill } from  '../../../../state/axa/billlist/actions';
 import { setSelectedBill } from "../../../../state/axa/selectedbill/actions";
 import { setSelectedAccount } from "../../../../state/axa/selectedaccount/actions";
 import { clearSelectedYear, setSelectedYear } from '../../../../state/axa/year/actions';
+import { initializeAccounts } from  '../../../../state/axa/accountlist/actions';
 
 import { create2 } from "../../../../services/image/images";
 import { getOne } from '../../../../services/axa/accounts';
@@ -91,6 +92,10 @@ const BillListPage: React.FC = () => {
         accountID: openaccount.id
       };
       dispatch(addBill(billToSubmit));
+
+      // ???
+      dispatch(initializeAccounts());
+
       closeModal();
     };
 
@@ -142,16 +147,18 @@ const BillListPage: React.FC = () => {
 
     const billsToShow: Bill[] = Object.values(bills).filter(item => item.details[0].year.includes(year.name.name));
 
+    // console.log('open:', openaccount.name.name)
+
     return (
         <div className="App">
-          <AppHeaderH3Plus text='Rechnungen' icon='list'/>
-          <AddBillModal
+          <AppHeaderH3Plus text={'Rechnungen ' + year.name.name} icon='list'/>
+          {openaccount.name.name!==''&&<AddBillModal
             edittype={Edittype.ADD}
             modalOpen={modalOpen}
             onSubmit={submitBill}
             error={error}
             onClose={closeModal}
-          />
+          />}
           <AppMenuOpt menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
           <Table celled compact small='true' style={{ backgroundColor }}>
             <Table.Header>

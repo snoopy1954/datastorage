@@ -19,6 +19,7 @@ const communicationSchema = new mongoose.Schema({
   phone: { type: String, required: false },
   mobile: { type: String, required: false },
   email: { type: String, required: false },
+  web: { type: String, required: false },
 });
 
 const personSchema = new mongoose.Schema({
