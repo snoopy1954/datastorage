@@ -12,7 +12,7 @@ import {
 
 import { create, update, remove, getAll } from "../../../services/axa/billers";
 
-import { sortBillerList } from '../../../utils/axa';
+import { sortBillerList } from '../../../utils/axa/biller';
 
 
 export const initializeBillers = () => {

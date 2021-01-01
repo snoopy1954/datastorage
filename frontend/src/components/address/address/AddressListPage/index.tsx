@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 
 import { Address, AddressNoID, Addressgroup } from '../../../../../../backend/src/types/address';
-import { Edittype, Direction } from "../../../../types/basic";
+import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';
@@ -14,17 +14,17 @@ import { setAddressgroupFilter, clearAddressgroupFilter} from '../../../../state
 import { addChangedAddress, clearChangedAddress } from '../../../../state/address/changedaddresslist/actions';
 import { setSortButton, clearSortButton } from '../../../../state/address/sortbutton/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
-import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
+import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppMenuOpt, ItemOpt } from '../../../basic/menu';
+import { AddressDetailsPage } from '../AddressDetailsPage';
+import { AddAddressModal } from '../AddAddressModal';
 
-import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { addresslistTitle, addresslistFilter } from "../../../../utils/address";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
-import AddressDetailsPage from "../AddressDetailsPage";
-import AddAddressModal from "../AddAddressModal";
+import { addresslistTitle, addresslistFilter } from '../../../../utils/address';
 
 
-const AddressListPage: React.FC = () => {
+export const AddressListPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | undefined>();
     const dispatch = useDispatch();

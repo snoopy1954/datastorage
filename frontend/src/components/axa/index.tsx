@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { backgroundColor, styleMainMenu } from "../../constants";
 
 import { Account, Year } from '../../../../backend/src/types/axa';
 import { AccountStatus } from '../../types/axa';
@@ -17,12 +18,11 @@ import { clearPdfUrl } from "../../state/axa/pdfUrl/actions";
 
 import { AppHeaderH2 } from "../basic/header";
 import { AppMenu, Item } from "../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../constants";
-
 import AccountPage from './account/AccountListPage';
 import BillPage from './bill/BillListPage';
 import BillerPage from './biller/BillerListPage';
 import { YearPage } from './year/YearListPage';
+
 
 const Axa: React.FC = () => {
   const dispatch = useDispatch();

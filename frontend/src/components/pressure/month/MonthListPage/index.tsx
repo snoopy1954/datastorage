@@ -1,34 +1,54 @@
 import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 import { Month, MonthNoID } from '../../../../../../backend/src/types/pressure';
 
 import { RootState } from '../../../../state/store';
+import { setPage } from '../../../../state/page/actions';
 import { addMonth } from '../../../../state/pressure/monthlist/actions';
 import { setSelectedMonth } from '../../../../state/pressure/selectedmonth/actions';
+import { setOpenedYear, clearOpenedYear } from '../../../../state/pressure/openedyear/actions';
 
 import { create } from "../../../../services/pressure/months";
 import { getAll } from "../../../../services/pressure/exchange";
 
 import { AppHeaderH3Plus } from "../../../basic/header";
-
-import { formatData } from "../../../../utils/pressure";
-import { backgroundColor } from "../../../../constants";
+import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
+import { AskModal } from "../../../basic/askModal";
 
 import MonthDetailsPage from "../MonthDetailsPage";
 
+import { formatData, getNextMonth, getPromptForNextMonth } from "../../../../utils/pressure";
 
-const MonthListPage: React.FC = () => {
+
+export const MonthListPage: React.FC = () => {
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const dispatch = useDispatch();
 
-  const year = useSelector((state: RootState) => state.selectedyear);
+  const mainpage: string = useSelector((state: RootState) => state.page.mainpage);      
+  const year = useSelector((state: RootState) => state.openedyear);
+  const years = useSelector((state: RootState) => state.yearlist);
   const months = useSelector((state: RootState) => state.monthlist); 
   const month = useSelector((state: RootState) => state.selectedmonth);
+
+  const openModal = (): void => setModalOpen(true);
+  const closeModal = (): void => {
+      setModalOpen(false);
+  };
 
   const createOne = async (migrateOne: MonthNoID) => {
     const newMonth = await create(migrateOne);
     dispatch(addMonth(newMonth));
+  };
+
+  const submitNewMonth = async () => {
+    if (year) {
+      const nextMonth: MonthNoID = getNextMonth(year);
+      dispatch(addMonth(nextMonth));
+    }
+    closeModal();
   };
 
   const handleSelectedMonth = (month: Month) => {
@@ -42,11 +62,64 @@ const MonthListPage: React.FC = () => {
     });
   }
 
+  const handleSelectionClick = (_filter: string, selection: string) => {
+    Object.values(years).forEach(year => {
+      if (selection===year.name.name) {
+        dispatch(setOpenedYear(year));
+      }
+    });
+  };
+
+  const handleClose = () => {
+    dispatch(clearOpenedYear());
+    dispatch(setPage({ mainpage, subpage: 'months' }));
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const handleDummy = () => {
+  };   
+
+  const yearOptions: string[] = [];
+  Object.values(years).forEach(element => {
+    yearOptions.push(element.name.name);
+  });
+
   if (month.key!=="") {
     return (
       <MonthDetailsPage/>
     )
   }
+
+  const buttons: ItemOpt[] = 
+  [
+    {
+      name: 'Schliessen',
+      title: 'Alle',
+      color: 'blue',
+      type: '0',
+      options: [],    
+      onClick: handleClose,
+      onSelection: handleDummy
+    },
+    {
+      name: 'Jahr',
+      title: 'Jahr',
+      color: 'blue',
+      type: '1',
+      options: yearOptions,    
+      onClick: handleDummy,
+      onSelection: handleSelectionClick
+    },
+    {
+      name: 'Neu',
+      title: 'Neu',
+      color: 'blue',
+      type: '0',
+      options: [],    
+      onClick: openModal,
+      onSelection: handleDummy
+    },
+  ];
 
   if (!year) {
     return (
@@ -60,21 +133,29 @@ const MonthListPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={'Jahr: ' + year.name} icon='list'/>
+      <AppHeaderH3Plus text={'Monate des Jahres ' + year.name.name} icon='list'/>
+      <AskModal
+          header='Neuen Monat anlegen'
+          prompt={getPromptForNextMonth(year)}
+          modalOpen={modalOpen}
+          onSubmit={submitNewMonth}
+          onClose={closeModal}
+      />
+      <AppMenuOpt menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
       <Table celled style={{ backgroundColor }}>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Monat</Table.HeaderCell>
-            <Table.HeaderCell>Start- / Endgewicht</Table.HeaderCell>
-            <Table.HeaderCell>Durchschnittsgewicht</Table.HeaderCell>
-            <Table.HeaderCell>Durchschnitt Syst.</Table.HeaderCell>
-            <Table.HeaderCell>Durchschnitt Diast.</Table.HeaderCell>
-            <Table.HeaderCell>Durchschnitt Puls</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }}>Monat</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }}>Start- / Endgewicht</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }}>Durchschnittsgewicht</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }}>Durchschnitt Syst.</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }}>Durchschnitt Diast.</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }}>Durchschnitt Puls</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
         {Object.values(months).map((month: Month) => (
-            month.year===year.name&&
+            month.year===year.name.name&&
             <Table.Row key={month.id} onClick={() => handleSelectedMonth(month)}>
               <Table.Cell>{month.monthname}</Table.Cell>
               <Table.Cell>{month.weight.start} / {month.weight.end}</Table.Cell>

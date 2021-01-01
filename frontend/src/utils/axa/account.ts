@@ -2,7 +2,7 @@ import { AccountNoID, Account, Name, Details, BillNoID } from '../../../../backe
 
 import { AccountStatus } from '../../types/axa';
 
-import { newDetails } from '../axa';
+import { newDetails } from './axa';
 import { toCent, toEuro } from '../basic';
 
 export const newAccount = (accounts: Account[]): AccountNoID => {
@@ -76,7 +76,6 @@ export const sortAccounts = (accounts: Account[]) => {
 };
 
 export const getUpdatedAccount = (account: Account, bill: BillNoID): Account => {
-    console.log(account, bill)
     const updatedAccount: Account = {
         ...account
     };
@@ -97,8 +96,6 @@ export const getUpdatedAccount = (account: Account, bill: BillNoID): Account => 
     
         updatedAccount.details[0].amount = toEuro(toCent(updatedAccount.details[0].amount) + toCent(sumAmounts));
     } 
-
-    console.log(updatedAccount)
 
     return updatedAccount;
 };

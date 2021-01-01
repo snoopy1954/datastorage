@@ -2,11 +2,13 @@ import React from "react";
 import { useSelector } from 'react-redux';
 import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
+import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 import { Edittype } from "../../../../types/basic";
-import { Bill, BillWithFileDatesNoID, FileDate, Biller } from '../../../../../../backend/src/types/axa';
-import { BillStatus, Insurancetype } from '../../../../types/axa';
+import { Bill, Biller } from '../../../../../../backend/src/types/axa';
+import { BillStatus, Insurancetype, BillWithFileDatesNoID, FileDate } from '../../../../types/axa';
 import { Option } from '../../../../types/basic';
+
 import { RootState } from '../../../../state/store';
 
 import { TextField, BillStatusOption, InsurancetypeOption, DetailsFieldArray } from "./FormField";
@@ -14,9 +16,8 @@ import { SelectField } from '../../../basic/formfields/selectfield';
 import { FilePickDateField } from '../../../basic/formfields/filepickdatefield';
 import { NumberField } from '../../../basic/formfields/numberfield';
 
-import { newFiledate } from '../../../../utils/axa';
+import { newFiledate } from '../../../../utils/basic';
 import { newBill } from '../../../../utils/axa/bill';
-import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 
 interface Props {

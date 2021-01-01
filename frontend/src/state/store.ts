@@ -5,6 +5,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { pageReducer } from './page/reducers';
 import { yearlistReducer } from './pressure/yearlist/reducers';
 import { selectedyearReducer } from './pressure/selectedyear/reducers';
+import { openedyearReducer } from './pressure/openedyear/reducers';
 import { monthlistReducer } from './pressure/monthlist/reducers';
 import { selectedmonthReducer } from './pressure/selectedmonth/reducers';
 import { selecteddayReducer } from './pressure/selectedday/reducers';
@@ -71,6 +72,7 @@ const rootReducer = combineReducers({
     page: pageReducer,
     yearlist: yearlistReducer,
     selectedyear: selectedyearReducer,
+    openedyear: openedyearReducer,
     monthlist: monthlistReducer,
     selectedmonth: selectedmonthReducer,
     selectedday: selecteddayReducer,

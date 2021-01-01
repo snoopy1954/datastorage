@@ -1,7 +1,7 @@
 import React from "react";
 import { Field, FieldArray, FieldProps, FormikProps } from "formik";
 
-import { FileDate } from '../../../../../backend/src/types/axa';
+import { FileDate } from '../../../types/axa';
 
 import { FileField} from './filefield';
 import { PickField} from './pickdatefield';

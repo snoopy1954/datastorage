@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
-import AddAddressForm from './AddAddressForm';
+import { AddAddressForm } from './AddAddressForm';
 import { Edittype } from "../../../../types/basic";
 import { AddressNoID } from '../../../../../../backend/src/types/address';
 
@@ -12,7 +12,7 @@ interface Props {
   error?: string;
 }
 
-const AddAddressModal = ({ edittype, modalOpen, onClose, onSubmit, error }: Props) => (
+export const AddAddressModal = ({ edittype, modalOpen, onClose, onSubmit, error }: Props) => (
   <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
     <Modal.Header>Neue Adresse anlegen</Modal.Header>
     <Modal.Content>

@@ -4,9 +4,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import mongoose from 'mongoose';
 
-import connBlutdruck from "../../connections/pressure";
+import connPressure from "../../connections/pressure";
 import monthSchema from "../../schemas/pressure/month";
 
-const monthModel: mongoose.Model<mongoose.Document, {}> = connBlutdruck.model('Month', monthSchema);
+const monthModel: mongoose.Model<mongoose.Document, {}> = connPressure.model('Month', monthSchema);
 
 export default monthModel;

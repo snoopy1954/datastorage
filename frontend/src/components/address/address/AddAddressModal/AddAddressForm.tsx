@@ -3,15 +3,21 @@ import { useSelector } from 'react-redux';
 import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
-import { Edittype } from "../../../../types/basic";
+import { Edittype } from '../../../../types/basic';
+import { Option } from '../../../../types/basic';
 import { Addressgroup, Address, AddressNoID } from '../../../../../../backend/src/types/address';
 
 import { RootState } from '../../../../state/store';
 
-import { backgroundColor, styleMainMenu } from "../../../../constants";
+import { SelectField } from '../../../basic/formfields/selectfield';
+import { NumberField } from '../../../basic/formfields/numberfield';
+import { TextField } from '../../../basic/formfields/textfield';
+import { PersonFieldArray } from './FormField';
+
 import { newAddress } from '../../../../utils/address';
 
-import { TextField, SelectField, PersonFieldArray, NumberField, Option } from "./FormField";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
+
 
 interface Props {
   edittype: Edittype;

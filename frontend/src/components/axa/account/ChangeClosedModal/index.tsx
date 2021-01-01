@@ -3,10 +3,9 @@ import { Segment, Modal, Menu, Button } from 'semantic-ui-react';
 import { Field, Formik, Form } from "formik";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { AccountStatus } from '../../../../types/axa';
-import { FileDate } from '../../../../../../backend/src/types/axa';
+import { AccountStatus, FileDate } from '../../../../types/axa';
 
-import { newFiledate } from '../../../../utils/axa';
+import { newFiledate } from '../../../../utils/basic';
 
 import { ShowField } from '../../../basic/formfields/showfield'; 
 import { FilePickDateField } from '../../../basic/formfields/filepickdatefield';

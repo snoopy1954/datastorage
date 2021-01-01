@@ -432,12 +432,9 @@ const filterHiddensinglesInBox = (numbers: Field[], oldCandidates: boolean[], in
             }
         }
         if (singlepositions.length===1) {
-            for (let k=0; k<3; k++) {
-                for (let l=0; l<3; l++) {
-                    const position = tupel2index(i, j, k, l);
-                    if (position!==singlepositions[0]) candidates[position*9+value-1] = false;
-                }
-            }                
+            for (let clean=1; clean<10; clean++) {
+                if (clean!==value) candidates[singlepositions[0]*9+clean-1] = false;
+            }            
         }
     }
 
@@ -459,12 +456,9 @@ const filterHiddensinglesInRow = (numbers: Field[], oldCandidates: boolean[], in
             }
         }
         if (singlepositions.length===1) {
-            for (let j=0; j<3; j++) {
-                for (let l=0; l<3; l++) {
-                    const position = tupel2index(i, j, k, l);
-                    if (position!==singlepositions[0]) candidates[position*9+value-1] = false;
-                }
-            }                
+            for (let clean=1; clean<10; clean++) {
+                if (clean!==value) candidates[singlepositions[0]*9+clean-1] = false;
+            }            
         }
     }
 
@@ -486,12 +480,9 @@ const filterHiddensinglesInCol = (numbers: Field[], oldCandidates: boolean[], in
             }
         }
         if (singlepositions.length===1) {
-            for (let i=0; i<3; i++) {
-                for (let k=0; k<3; k++) {
-                    const position = tupel2index(i, j, k, l);
-                    if (position!==singlepositions[0]) candidates[position*9+value-1] = false;
-                }
-            }                
+            for (let clean=1; clean<10; clean++) {
+                if (clean!==value) candidates[singlepositions[0]*9+clean-1] = false;
+            }            
         }
     }
 

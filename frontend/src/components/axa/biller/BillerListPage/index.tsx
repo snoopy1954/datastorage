@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 import { Biller, BillerNoID } from '../../../../../../backend/src/types/axa';
 
@@ -10,12 +11,8 @@ import { setSelectedBiller } from "../../../../state/axa/selectedbiller/actions"
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
-
-import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { nextSeqnr } from '../../../../utils/axa';
-
-import AddBillerModal from '../AddBillerModal';
-import BillerDetailsPage from '../BillerDetailsPage';
+import { AddBillerModal } from '../AddBillerModal';
+import { BillerDetailsPage } from '../BillerDetailsPage';
 
 
 const BillerPage: React.FC = () => {
@@ -61,7 +58,6 @@ const BillerPage: React.FC = () => {
         <div className="App">
           <AppHeaderH3Plus text='Rechnungssteller' icon='list'/>
           <AddBillerModal
-            seqnr={nextSeqnr(billers)+1}
             modalOpen={modalOpen}
             onSubmit={submitBiller}
             error={error}

@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 
 import monthsRouter from './routes/pressure/months';
+import pressureyearsRouter from './routes/pressure/years';
 import exchangeRouter from './routes/pressure/exchange';
 import devicesRouter from './routes/network/devices';
 import devicetypesRouter from './routes/network/devicetypes';
@@ -29,6 +30,7 @@ app.use(express.static('build'));
 app.use(express.json());
 app.use(cors());
 app.use('/api/months', monthsRouter);
+app.use('/api/pressureyears', pressureyearsRouter);
 app.use('/api/exchange', exchangeRouter);
 app.use('/api/devices', devicesRouter);
 app.use('/api/devicetypes', devicetypesRouter);

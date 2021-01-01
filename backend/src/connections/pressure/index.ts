@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
 
-import { MONGODB_URI_BLUTDRUCK } from '../../utils/config';
+import { MONGODB_URI_PRESSURE } from '../../utils/config';
 import { logInfo, logError } from '../../utils/logger';
 
-const url: string = MONGODB_URI_BLUTDRUCK ? MONGODB_URI_BLUTDRUCK : "";
+const url: string = MONGODB_URI_PRESSURE ? MONGODB_URI_PRESSURE : "";
 
-const connBlutdruck: mongoose.Connection = mongoose.createConnection(url, {
+const connPressure: mongoose.Connection = mongoose.createConnection(url, {
     useNewUrlParser: true, 
     useUnifiedTopology: true, 
     useFindAndModify: false 
 });
-connBlutdruck.on('error', function () { logError(`error connecting to MongoDB blutdruck\n`); });
-connBlutdruck.once('open', function () { logInfo('connected to MongoDB blutdruck'); });
+connPressure.on('error', function () { logError(`error connecting to MongoDB blutdruck\n`); });
+connPressure.once('open', function () { logInfo('connected to MongoDB blutdruck'); });
 
-export default connBlutdruck;
+export default connPressure;

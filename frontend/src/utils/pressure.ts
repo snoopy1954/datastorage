@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/camelcase */
-import { Year, Month, MonthNoID, Day } from '../../../backend/src/types/pressure';
+import { Month, MonthNoID, Day, Year, YearNoID } from '../../../backend/src/types/pressure';
 import { Monthnames, Daynames } from '../types/basic';
 
 export const sortMonthList = (monthList: Month[]) => {
@@ -30,29 +30,29 @@ export const getCurrentYear = (): string => {
   return year;
 }
 
-export const getYearsFromMonths = (months: Month[]): Year[] => {
-  const years: Year[] = months
-    .map(month => month.key)
-    .map(date => date.substr(0,4))
-    .reduce((unique: string[], yearname: string) => 
-      unique.indexOf(yearname) !== -1 ? unique : [...unique, yearname],
-      []
-    )
-    .map(yearname => {
-      const year: Year = { name: yearname, lastMonth: 0, isLastYear: false }
-      months.forEach((month, index) => {
-        const testyear = month.key.substr(0,4);
-        const testmonth = month.key.substr(4);
-        if (testyear===yearname) {
-          year.lastMonth = +testmonth;
-          if (index===months.length-1) year.isLastYear = true;
-        }
-      });
-      return year;
-    });
+// export const getYearsFromMonths = (months: Month[]): Year[] => {
+//   const years: Year[] = months
+//     .map(month => month.key)
+//     .map(date => date.substr(0,4))
+//     .reduce((unique: string[], yearname: string) => 
+//       unique.indexOf(yearname) !== -1 ? unique : [...unique, yearname],
+//       []
+//     )
+//     .map(yearname => {
+//       const year: Year = { name: yearname, lastMonth: 0, isLastYear: false }
+//       months.forEach((month, index) => {
+//         const testyear = month.key.substr(0,4);
+//         const testmonth = month.key.substr(4);
+//         if (testyear===yearname) {
+//           year.lastMonth = +testmonth;
+//           if (index===months.length-1) year.isLastYear = true;
+//         }
+//       });
+//       return year;
+//     });
 
-  return years;
-}
+//   return years;
+// }
 
 export const formatWeight = (weightAsNumber: number): string => {
   let weightAsString = weightAsNumber===0 ? "" : String(weightAsNumber / 10).replace('.', ',');
@@ -143,8 +143,8 @@ export const getNextDate = (year: Year): string => {
 
 export const getPromptForNextMonth = (year: Year): string => {
   return (year.lastMonth===12)
-  ? `Soll der Monat Januar im Jahr ${+year.name+1} angelegt werden?`
-  : `Soll der Monat ${formatMonth(year.lastMonth+1)} im Jahr ${year.name} angelegt werden?`;
+  ? `Soll der Monat Januar im Jahr ${+year.name.name+1} angelegt werden?`
+  : `Soll der Monat ${formatMonth(year.lastMonth+1)} im Jahr ${year.name.name} angelegt werden?`;
 }
 
 export const getPromptForDeleteMonth = (month: Month): string => {
@@ -155,7 +155,7 @@ export const getNextMonth = (currentYear: Year): MonthNoID => {
   let year = '';
   let month = '';
   if ( currentYear.lastMonth!==12 ) {
-    year = currentYear.name;
+    year = currentYear.name.name;
     month = (currentYear.lastMonth < 9 ? "0" : "") + String(currentYear.lastMonth+1);
   } else {
     year = String(+currentYear.name+1);
@@ -268,4 +268,50 @@ export const setMonth = (month: Month, newDay: Day): Month => {
   updatedMonth.pulse.total = formatMeasure(sum/(count!==0 ? count : 1));
 
   return updatedMonth;
-} 
+};
+
+export const emptyYear = (): Year => {
+  const year: Year = {
+      id: '',
+      name: {
+        name: '',
+        seqnr: 0
+      },
+      lastMonth: 0,
+      isLastYear: false
+  };
+
+  return year;
+};
+
+export const newYear = (years: Year[]): YearNoID => {
+  let maxNumber = 0;
+  let maxName = '0';
+  Object.values(years).forEach(year => {
+      if (year.name.seqnr>maxNumber) {
+          maxNumber = year.name.seqnr;
+          maxName = year.name.name
+      }
+  });
+
+  const year: YearNoID = {
+    name: {
+      name: String(+maxName+1),
+      seqnr: maxNumber + 1
+    },
+    lastMonth: 1,
+    isLastYear: true
+  };
+
+  return year;
+};
+
+export const getYear = (years: Year[], yearName: string): Year => {
+  let year: Year = emptyYear();
+
+  Object.values(years).forEach(item => {
+    if (item.name.name===yearName) year = item;
+  });
+
+  return year;
+}

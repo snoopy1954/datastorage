@@ -43,7 +43,7 @@ const DayDetailsPage: React.FC = () => {
     dispatch(clearSelectedDay());
   }
 
-  if (month.key==="" || year.name==="" || day.date==="") {
+  if (month.key==="" || year.name.name==="" || day.date==="") {
     return (
       <div>
         Heute gibts noch nichts zu sehn, doch morgen bleibt man staunend stehn

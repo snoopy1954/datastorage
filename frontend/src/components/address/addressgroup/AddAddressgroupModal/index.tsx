@@ -1,7 +1,9 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
-import AddAddressgroupForm from './AddAddressgroupForm';
-import { AddressgroupNoID } from "../../../../../../backend/src/types/address";
+
+import { AddressgroupNoID } from '../../../../../../backend/src/types/address';
+
+import { AddAddressgroupForm } from './AddAddressgroupForm';
 
 
 interface Props {
@@ -11,7 +13,7 @@ interface Props {
   error?: string;
 }
 
-const AddAddressgroupModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
+export const AddAddressgroupModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
   <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
     <Modal.Header>Neue Gruppe anlegen</Modal.Header>
     <Modal.Content>

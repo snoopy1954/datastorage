@@ -1,11 +1,9 @@
 import { Biller } from '../../../../../backend/src/types/axa';
 import { SET_SELECTED_BILLER, CLEAR_SELECTED_BILLER, ActionTypes } from './types';
 
-const initialState: Biller = {
-    id: '',
-    name: { name: '', seqnr: 0 },
-    person: ''
-};
+import { emptyBiller } from '../../../utils/axa/biller';
+
+const initialState: Biller = emptyBiller();
 
 export const selectedbillerReducer = (state = initialState, action: ActionTypes): Biller => {
     switch (action.type) {

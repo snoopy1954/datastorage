@@ -5,9 +5,10 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { MonthNoID, Day, Weight, Average } from '../../types/pressure';
+import { YearNoID, MonthNoID, Day, Weight, Average } from '../../types/pressure';
+import { parseString, parseNumber, parseBoolean } from './../basicParser';
 
-export const toNewMonth = (object: any) => {
+export const toNewMonth = (object: any): MonthNoID => {
     const key = parseString(object.key);
     const year = parseString(object.year);
     const month = parseString(object.month);
@@ -33,6 +34,31 @@ export const toNewMonth = (object: any) => {
     return newMonth;
 };
 
+export const toNewYear = (object: any): YearNoID => {
+        // console.log(object);
+        const name = parseString(object.name.name);
+        // console.log(`name='${name.name}'`);
+        const seqnr = parseNumber(object.name.seqnr);
+        // console.log(`seqnr='${name.seqnr}'`);
+        const lastMonth = parseNumber(object.lastMonth);
+        // console.log(`lastMonth='${name.lastMonth}'`);
+        const isLastYear: boolean = parseBoolean(object.isLastYear);
+        // console.log(`isLastYear='${name.isLastYear}'`);
+ 
+    const year: YearNoID = {
+        name: {
+            seqnr,
+            name
+        },
+        lastMonth,
+        isLastYear
+    };
+
+    // console.log(year);
+
+    return year;
+};
+
 const parseWeight = (text: any): Weight => {
 
     return text;
@@ -46,16 +72,4 @@ const parseAverage = (text: any): Average => {
 const parseDays = (text: any): Day[] => {
 
     return text;
-};
-
-const parseString = (text: any): string => {
-    if (!text || !isString(text)) {
-      throw new Error(`Incorrect or missing parameter: ${text}`);
-    }
-  
-    return text;
-};
-
-const isString = (text: any): text is string => {
-    return typeof text === 'string' || text instanceof String;
 };

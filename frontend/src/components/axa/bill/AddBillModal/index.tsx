@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddBillForm from './AddBillForm';
 import { Edittype } from "../../../../types/basic";
-import { BillWithFileDatesNoID } from '../../../../../../backend/src/types/axa';
+import { BillWithFileDatesNoID } from '../../../../types/axa';
 
 interface Props {
   edittype: Edittype;

@@ -2,13 +2,13 @@ import React from "react";
 import { ErrorMessage, Field, FieldArray, FieldProps, FormikProps } from "formik";
 import { Form, Menu, Button } from "semantic-ui-react";
 
-import { BillStatus, Insurancetype } from '../../../../types/axa';
-import { Details, FileDate } from '../../../../../../backend/src/types/axa';
+import { BillStatus, Insurancetype, FileDate } from '../../../../types/axa';
+import { Details } from '../../../../../../backend/src/types/axa';
 import { Option } from '../../../../types/basic';
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
-import { newDetails } from '../../../../utils/axa';
+import { newDetails } from '../../../../utils/axa/axa';
 
 export type BillStatusOption = {
   value: BillStatus;

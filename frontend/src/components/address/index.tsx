@@ -6,12 +6,12 @@ import { setPage } from '../../state/page/actions';
 import { initializeAddressgroups } from '../../state/address/addressgrouplist/actions';
 import { initializeAddresses } from '../../state/address/addresslist/actions';
 
-import { AppHeaderH2 } from "../basic/header";
-import { AppMenu, Item } from "../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../constants";
+import { AppHeaderH2 } from '../basic/header';
+import { AppMenu, Item } from '../basic/menu';
+import { AddressListPage } from './address/AddressListPage';
+import { AddressgroupListPage } from './addressgroup/AddressgroupListPage';
 
-import AddressgroupListPage from "./addressgroup/AddressgroupListPage";
-import AddressListPage from "./address/AddressListPage";
+import { backgroundColor, styleMainMenu } from '../../constants';
 
 
 const Address: React.FC = () => {

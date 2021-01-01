@@ -3,11 +3,12 @@ import { Segment, Modal, Menu, Button } from 'semantic-ui-react';
 import { Field, Formik, Form } from "formik";
 
 import { backgroundColor, styleMainMenu } from "../../../constants";
-import { FileDate } from '../../../../../backend/src/types/axa';
-
-import { newFiledate } from '../../../utils/axa';
+import { FileDate } from '../../../types/axa';
 
 import { FilePickDateField } from '../../basic/formfields/filepickdatefield';
+
+import { newFiledate } from '../../../utils/basic';
+
 
 export interface NewFiledate {
     filedate: FileDate;

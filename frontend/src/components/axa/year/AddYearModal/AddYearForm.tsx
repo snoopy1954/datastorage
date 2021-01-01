@@ -8,7 +8,7 @@ import { NumberField } from '../../../basic/formfields/numberfield';
 import { ShowField } from '../../../basic/formfields/showfield';
 import { YearNoID, Year } from '../../../../../../backend/src/types/axa';
 
-import { newYear } from '../../../../utils/axa';
+import { newYear } from '../../../../utils/axa/year';
 
 
 interface Props {

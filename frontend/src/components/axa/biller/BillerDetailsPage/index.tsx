@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 import { RootState } from '../../../../state/store';
 import { removeBiller } from '../../../../state/axa/billerlist/actions';
@@ -10,10 +11,8 @@ import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
 
-import { backgroundColor, styleMainMenu } from "../../../../constants";
 
-
-const BillerDetailsPage: React.FC = () => {
+export const BillerDetailsPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
   const dispatch = useDispatch();

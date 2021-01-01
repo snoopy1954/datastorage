@@ -5,22 +5,20 @@ import { Table, Icon } from "semantic-ui-react";
 import { Edittype } from "../../../../types/basic";
 import { AddressNoID, Address, Person } from '../../../../../../backend/src/types/address';
 
-
 import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';
 import { removeAddress, updateAddress } from '../../../../state/address/addresslist/actions';
 import { clearSelectedAddress } from '../../../../state/address/selectedaddress/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
-import { AppMenu, Item } from "../../../basic/menu";
+import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppMenu, Item } from '../../../basic/menu';
+import { AskModal } from '../../../basic/askModal';
+import { AddAddressModal } from '../AddAddressModal';
 
-import { backgroundColor, styleMainMenu } from "../../../../constants";
-
-import AddAddressModal from "../AddAddressModal";
-import AskModal from "../../../basic/askModal";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
 
-const AddressDetailsPage: React.FC = () => {
+export const AddressDetailsPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<[boolean, boolean]>([false, false]);
     const [error, setError] = React.useState<string | undefined>();
     const dispatch = useDispatch();
@@ -33,7 +31,7 @@ const AddressDetailsPage: React.FC = () => {
     enum ModalDialog {
         CHANGE = 0,
         DELETE = 1
-    }  
+    };
     const closeModal = (): void => {
         setModalOpen([false, false]);
         setError(undefined);
@@ -66,7 +64,6 @@ const AddressDetailsPage: React.FC = () => {
 
     const ShowPerson: React.FC<{ person: Person; index: number }> = ({ person, index }) => {
 
-        console.log(person.communication.web)
         return (
           <div>
             {index>0&&<br></br>}
@@ -86,7 +83,7 @@ const AddressDetailsPage: React.FC = () => {
             {person.comment!==''&&<>{person.comment}</>}
           </div>
         );
-      };    
+    };    
         
     if (address===undefined) {
         return (

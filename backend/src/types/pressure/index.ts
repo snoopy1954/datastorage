@@ -1,8 +1,13 @@
+import { Name } from '../basic';
+
 export interface Year {
-    name: string;
+    id: string;
+    name: Name;
     lastMonth: number;
     isLastYear: boolean;
 }
+
+export type YearNoID = Omit<Year, 'id'>;
 
 export interface Measure {
     time: string;

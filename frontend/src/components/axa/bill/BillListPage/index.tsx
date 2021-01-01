@@ -2,7 +2,8 @@ import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
 
-import { Bill, BillNoID, BillWithFileDatesNoID, Note, FileDate, Account, Year } from '../../../../../../backend/src/types/axa';
+import { Bill, BillNoID, Note, Account, Year } from '../../../../../../backend/src/types/axa';
+import { BillWithFileDatesNoID, FileDate } from '../../../../types/axa';
 import { Content } from '../../../../../../backend/src/types/image';
 import { Edittype } from "../../../../types/basic";
 

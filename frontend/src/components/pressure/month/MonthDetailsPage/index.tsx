@@ -63,7 +63,7 @@ const MonthDetailsPage: React.FC = () => {
     )
   }
 
-  if (month.key==="" || year.name==="") {
+  if (month.key==="" || year.name.name==="") {
     return (
       <div>
         Heute gibts noch nichts zu sehn, doch morgen bleibt man staunend stehn

@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 import { Account, AccountNoID, Bill, Year } from '../../../../../../backend/src/types/axa';
 import { Edittype } from "../../../../types/basic";
@@ -18,7 +19,6 @@ import { clearSelectedYear, setSelectedYear } from '../../../../state/axa/year/a
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
 
-import { backgroundColor, styleMainMenu } from "../../../../constants";
 import { getAmount } from '../../../../utils/axa/account';
 import AddAccountModal from "../AddAccountModal";
 import AccountDetailsPage from '../AccountDetailsPage';
@@ -40,10 +40,6 @@ const AccountListPage: React.FC = () => {
         setModalOpen(false);
         setError(undefined);
     };
-
-    // React.useEffect(() => {
-    //   dispatch(clearSelectedAccount());
-    // }, [dispatch]);
 
     const handleSelection = async (account: Account) => {
       const fetchAccount = async () => {

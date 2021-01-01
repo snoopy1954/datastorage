@@ -9,10 +9,11 @@ import { clearSelectedAddressgroup } from '../../../../state/address/selectedadd
 import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item }  from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
-import { backgroundColor, styleMainMenu } from "../../../../constants";
+
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
 
-const AddressgroupDetailsPage: React.FC = () => {
+export const AddressgroupDetailsPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
   const dispatch = useDispatch();

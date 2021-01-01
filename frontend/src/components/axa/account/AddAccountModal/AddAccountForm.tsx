@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from 'react-redux';
 import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
+import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 import { Edittype, Option } from "../../../../types/basic";
 import { AccountNoID } from '../../../../../../backend/src/types/axa';
@@ -14,10 +15,9 @@ import { PickField } from '../../../basic/formfields/pickdatefield';
 import { SelectField } from '../../../basic/formfields/selectfield';
 import { NumberField } from '../../../basic/formfields/numberfield';
 
-import { getCurrentDate } from '../../../../utils/axa';
+import { getCurrentDate, isValidDate } from '../../../../utils/basic';
 import { newAccount } from '../../../../utils/axa/account';
-import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { isValidDate } from '../../../../utils/basic';
+
 
 interface Props {
   edittype: Edittype;

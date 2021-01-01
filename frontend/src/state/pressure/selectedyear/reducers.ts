@@ -2,7 +2,11 @@ import { Year } from '../../../../../backend/src/types/pressure';
 import { SET_SELECTED_YEAR, CLEAR_SELECTED_YEAR, SelectedYearActionTypes } from './types';
 
 const initialState: Year = {
-    name: '',
+    id: '',
+    name: {
+        name: '',
+        seqnr: 0
+    },
     isLastYear: false,
     lastMonth: 0
 };

@@ -11,13 +11,13 @@ import { setSelectedAddressgroup, clearSelectedAddressgroup } from '../../../../
 
 import { AppHeaderH3Plus } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../../../constants";
+import { AddressgroupDetailsPage } from '../AddressgroupDetailsPage';
+import { AddAddressgroupModal } from '../AddAddressgroupModal';
 
-import AddressgroupDetailsPage from "../AddressgroupDetailsPage";
-import AddAddressgroupModal from "../AddAddressgroupModal";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
 
-const AddressgroupListPage: React.FC = () => {
+export const AddressgroupListPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | undefined>();
     const dispatch = useDispatch();

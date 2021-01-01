@@ -1,7 +1,7 @@
 import { Year } from '../../../../../backend/src/types/axa';
 import { SET_SELECTED_AXAYEAR, CLEAR_SELECTED_AXAYEAR, ActionTypes } from './types';
 
-import { emptyYear } from '../../../utils/axa';
+import { emptyYear } from '../../../utils/axa/year';
 
 const initialState: Year = emptyYear();
 

@@ -1,5 +1,13 @@
 import { MD5 } from 'crypto-js';
 
+import { Name } from '../../../backend/src/types/axa';
+import { FileDate } from '../types/axa';
+
+
+export const newName = (): Name => {
+    return { name: '', seqnr: 0 };
+};
+
 export const getMD5 = (text: string): string => {
     return MD5(text).toString();
 }
@@ -38,12 +46,17 @@ export const getDiff = (startvalue: string, amounts: string[]): string => {
     return amounts.reduce(reducer,startvalue);
 }
 
-const getCurrentDate = (): number => {
+const getCurrentDateAsArray = (): number[] => {
     const year = new Date().getFullYear();
     const month = new Date().getMonth()+1;
     const day = new Date().getDate();
     
-    return year * 10000 + month * 100 + day;
+    return [year, month, day];
+};
+
+const getDateAsCompareValue = (values: number[]): number => {
+
+    return values[0] * 10000 + values[1] * 100 + values[2];
 };
 
 export const isValidDate = (text: string): boolean => {
@@ -57,8 +70,8 @@ export const isValidDate = (text: string): boolean => {
     const month = parseInt(parts[1], 10)-1;
     const year = parts[2].length === 4 ? parseInt(parts[2]) : 2000 + parseInt(parts[2]);
     
-    const today = getCurrentDate();
-    const test = year * 10000 + month * 100 + day;
+    const today = getDateAsCompareValue(getCurrentDateAsArray());
+    const test = getDateAsCompareValue([year, month, day]);
     if (test > today) return false;
 
     const checkdate = new Date(year, month, day);
@@ -68,4 +81,21 @@ export const isValidDate = (text: string): boolean => {
     else {
         return false;
     }
-}
+};
+
+export const getCurrentDate = (): string => {
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth()+1;
+    const day = new Date().getDate();
+    
+    return (day < 10 ? "0" : "") + day + "." + (month < 10 ? "0" : "") + month + "." + year;
+};
+
+export const newFiledate = (): FileDate => {
+    const filedate: FileDate = { 
+        file: new File([""], "filename"), 
+        date: getCurrentDate() 
+    };
+    
+    return filedate;
+};

@@ -1,28 +1,31 @@
 import React from "react";
+import { useSelector } from 'react-redux';
 import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
-import { TextField } from "./FormField";
+import { BillerNoID, Biller } from '../../../../../../backend/src/types/axa';
+
+import { RootState } from '../../../../state/store';
+
+import { TextField } from '../../../basic/formfields/textfield';
 import { NumberField } from '../../../basic/formfields/numberfield';
-import { BillerNoID } from '../../../../../../backend/src/types/axa';
+
+import { newBiller } from '../../../../utils/axa/biller';
+
 
 interface Props {
-  seqnr: number;
   onSubmit: (values: BillerNoID) => void;
   onCancel: () => void;
 }
 
-export const AddBillerForm: React.FC<Props> = ({ seqnr, onSubmit, onCancel }) => {
+export const AddBillerForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+  const billers: Biller[] = useSelector((state: RootState) => state.billers);
+
+  const initialValues = newBiller(billers);
   return (
     <Formik
-      initialValues={{
-        name: {
-          name: "",
-          seqnr: seqnr
-        },
-        person: ""
-      }}
+      initialValues={initialValues}
       onSubmit={onSubmit}
       validate={values => {
         const requiredError = "Field is required";

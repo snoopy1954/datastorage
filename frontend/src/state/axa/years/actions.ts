@@ -12,7 +12,7 @@ import {
 
 import { create, update, remove, getAll } from "../../../services/axa/year";
 
-import { sortYears } from '../../../utils/axa';
+import { sortYears } from '../../../utils/axa/year';
 
 
 export const initializeYears = () => {
