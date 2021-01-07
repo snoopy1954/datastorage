@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
 import { Address, AddressNoID, Addressgroup } from '../../../../../../backend/src/types/address';
 import { Edittype, Direction } from '../../../../types/basic';
@@ -18,8 +19,6 @@ import { AppHeaderH3Plus } from '../../../basic/header';
 import { AppMenuOpt, ItemOpt } from '../../../basic/menu';
 import { AddressDetailsPage } from '../AddressDetailsPage';
 import { AddAddressModal } from '../AddAddressModal';
-
-import { backgroundColor, styleMainMenu } from '../../../../constants';
 
 import { addresslistTitle, addresslistFilter } from '../../../../utils/address';
 

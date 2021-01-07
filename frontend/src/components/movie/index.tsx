@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { backgroundColor, styleMainMenu } from '../../constants';
 
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
@@ -7,13 +8,11 @@ import { initializeMovies } from '../../state/movie/movielist/actions';
 import { initializeMoviegroups } from '../../state/movie/moviegrouplist/actions';
 import { initializeMovieformats } from '../../state/movie/movieformatlist/actions';
 
-import { AppHeaderH2 } from "../basic/header";
-import { AppMenu, Item } from "../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../constants";
-
-import MovieListPage from "./movie/MovieListPage";
-import MoviegroupListPage from "./moviegroup/MoviegroupListPage";
-import MovieformatListPage from "./movieformat/MovieformatListPage";
+import { AppHeaderH2 } from '../basic/header';
+import { AppMenu, Item } from '../basic/menu';
+import { MovieListPage } from './movie/MovieListPage';
+import { MoviegroupListPage } from './moviegroup/MoviegroupListPage';
+import { MovieformatListPage } from './movieformat/MovieformatListPage';
 
 
 const Movie: React.FC = () => {

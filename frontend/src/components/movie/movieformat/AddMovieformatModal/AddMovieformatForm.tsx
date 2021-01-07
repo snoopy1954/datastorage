@@ -1,9 +1,13 @@
 import React from "react";
-import { Grid, Button } from "semantic-ui-react";
+import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
+import { backgroundColor, styleMainMenu } from "../../../../constants";
 
-import { TextField } from "./FormField";
 import { MovieformatNoID } from '../../../../../../backend/src/types/movie';
+
+import { TextField } from '../../../basic/formfields/textfield';
+
+import { newMovieformat } from '../../../../utils/movie/movieformat';
 
 interface Props {
   onSubmit: (values: MovieformatNoID) => void;
@@ -11,14 +15,11 @@ interface Props {
 }
 
 export const AddMovieformatForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+  const initialValues: MovieformatNoID = newMovieformat();
+
   return (
     <Formik
-      initialValues={{
-        formatname: {
-          name: "",
-          seqnr: 0
-        }
-      }}
+      initialValues={initialValues}
       onSubmit={onSubmit}
       validate={values => {
         const errors: { [field: string]: string } = {};
@@ -31,23 +32,17 @@ export const AddMovieformatForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
             <Field
               label="Name"
               placeholder="Name"
-              name="formatname.name"
+              name="name"
               component={TextField}
             />
-            <Grid>
-              <Grid.Column>
-                <Button type="button" onClick={onCancel} color="red">
-                  Abbrechen
-                </Button>
-                <Button
-                  type="submit"
-                  color="green"
-                  disabled={!dirty || !isValid}
-                >
-                  Speichern
-                </Button>
-              </Grid.Column>
-            </Grid>
+            <Menu compact stackable borderless style={{ background: backgroundColor }}>
+              <Menu.Item>
+                <Button type="submit" style={styleMainMenu} color="blue" disabled={!dirty || !isValid}>Speichern</Button>
+              </Menu.Item>
+              <Menu.Item>
+                <Button type="button" style={styleMainMenu} onClick={onCancel} color="blue">Abbrechen</Button>
+              </Menu.Item>
+            </Menu>
           </Form>
         );
       }}

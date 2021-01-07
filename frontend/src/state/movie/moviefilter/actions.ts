@@ -1,4 +1,4 @@
-import { Filter } from '../../../../../backend/src/types/movie';
+import { Filter } from '../../../types/movie';
 import { SET_MOVIEFILTER, CLEAR_MOVIEFILTER, ActionTypes } from './types';
 
 export const setMoviefilter = (moviefilter: Filter) => {

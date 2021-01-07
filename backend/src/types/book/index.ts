@@ -1,7 +1,4 @@
-export interface Name {
-    seqnr: number;
-    name: string;
-}
+import { Name } from '../basic';
 
 export interface Bookgroup {
     id: string;

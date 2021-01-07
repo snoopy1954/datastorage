@@ -2,8 +2,10 @@ import React from "react";
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
-import { TextField } from "./FormField";
 import { MoviegroupNoID } from '../../../../../../backend/src/types/movie';
+
+import { TextField } from '../../../basic/formfields/textfield';
+
 
 interface Props {
   onSubmit: (values: MoviegroupNoID) => void;
@@ -14,10 +16,10 @@ export const AddMoviegroupForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   return (
     <Formik
       initialValues={{
-        groupname: {
+//        groupname: {
           name: "",
-          seqnr: 0
-        },
+          seqnr: 0,
+//        },
         subgroups: []
       }}
       onSubmit={onSubmit}
@@ -32,7 +34,7 @@ export const AddMoviegroupForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
             <Field
               label="Name"
               placeholder="Name"
-              name="groupname.name"
+              name="name"
               component={TextField}
             />
             <Grid>

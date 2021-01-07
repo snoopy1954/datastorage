@@ -1,7 +1,11 @@
+// import * as fs from "fs";
 import { MD5 } from 'crypto-js';
-
 import { Name } from '../../../backend/src/types/axa';
 import { FileDate } from '../types/axa';
+
+import fs from 'fs';
+//const fs = window.require('fs');
+
 
 
 export const newName = (): Name => {
@@ -99,3 +103,22 @@ export const newFiledate = (): FileDate => {
     
     return filedate;
 };
+
+export const getAllFilesFromFolder = (dir: string) => { 
+    let results: string[] = []; 
+    const xxx = fs.readdirSync(dir);
+    console.log(xxx)
+    // fs.readdirSync(dir).forEach(file => { 
+    //     file = dir+'/'+file; 
+    //     const stat = fs.statSync(file); 
+
+    //     if (stat && stat.isDirectory()) { 
+    //         results = results.concat(getAllFilesFromFolder(file)) 
+    //     } else {
+    //         results.push(file); 
+    //     }
+    // }); 
+
+    return results; 
+}; 
+

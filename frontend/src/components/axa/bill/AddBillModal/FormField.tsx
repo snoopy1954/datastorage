@@ -1,5 +1,5 @@
 import React from "react";
-import { ErrorMessage, Field, FieldArray, FieldProps, FormikProps } from "formik";
+import { Field, FieldArray, FieldProps, FormikProps } from "formik";
 import { Form, Menu, Button } from "semantic-ui-react";
 
 import { BillStatus, Insurancetype, FileDate } from '../../../../types/axa';
@@ -19,25 +19,6 @@ export type InsurancetypeOption = {
   value: Insurancetype;
   label: string;
 };
-
-interface TextProps extends FieldProps {
-  label: string;
-  placeholder: string;
-}
-
-export const TextField: React.FC<TextProps> = ({
-  field,
-  label,
-  placeholder
-}) => (
-  <Form.Field>
-    <label>{label}</label>
-    <Field placeholder={placeholder} {...field} />
-    <div style={{ color:'red' }}>
-      <ErrorMessage name={field.name} />
-    </div>
-  </Form.Field>
-);
 
 type BillStatusSelectionFieldProps = {
   name: string;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { backgroundColor, styleMainMenu } from '../../constants';
 
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
@@ -10,8 +11,6 @@ import { AppHeaderH2 } from '../basic/header';
 import { AppMenu, Item } from '../basic/menu';
 import { AddressListPage } from './address/AddressListPage';
 import { AddressgroupListPage } from './addressgroup/AddressgroupListPage';
-
-import { backgroundColor, styleMainMenu } from '../../constants';
 
 
 const Address: React.FC = () => {

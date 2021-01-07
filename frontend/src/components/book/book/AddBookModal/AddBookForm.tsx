@@ -11,7 +11,8 @@ import { setSelectedSubgroups } from '../../../../state/book/selectedsubgroups/a
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
-import { TextField, SelectField, FileField, Option, SelectFieldWithChange, NumberField } from "./FormField";
+import { TextField, SelectField, Option, SelectFieldWithChange, NumberField } from "./FormField";
+import { FileField } from '../../../basic/formfields/filefield';
 
 interface Props {
   edittype: Edittype;
@@ -253,7 +254,7 @@ export const AddBookForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
             <Field
               label="Datei"
               placeholder="Datei"
-              name="image.filename"
+              name="file"
               component={FileField}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}

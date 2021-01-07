@@ -3,10 +3,10 @@ import { SET_SELECTED_MOVIEGROUP, CLEAR_SELECTED_MOVIEGROUP, ActionTypes } from 
 
 const initialState: Moviegroup = {
     id: '',
-    groupname: {
+//    groupname: {
         seqnr: 0,
-        name: ''
-    },
+        name: '',
+//    },
     subgroups: []
 };
 

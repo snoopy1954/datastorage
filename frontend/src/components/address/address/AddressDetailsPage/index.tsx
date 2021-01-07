@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Icon } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
 import { Edittype } from "../../../../types/basic";
 import { AddressNoID, Address, Person } from '../../../../../../backend/src/types/address';
@@ -14,8 +15,6 @@ import { AppHeaderH3Plus } from '../../../basic/header';
 import { AppMenu, Item } from '../../../basic/menu';
 import { AskModal } from '../../../basic/askModal';
 import { AddAddressModal } from '../AddAddressModal';
-
-import { backgroundColor, styleMainMenu } from '../../../../constants';
 
 
 export const AddressDetailsPage: React.FC = () => {

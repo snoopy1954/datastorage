@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 import { Bookgroup, BookgroupNoID } from '../../../../../../backend/src/types/book';
 
@@ -9,12 +10,10 @@ import { setPage } from '../../../../state/page/actions';
 import { addBookgroup } from '../../../../state/book/bookgrouplist/actions';
 import { setSelectedBookgroup, clearSelectedBookgroup } from '../../../../state/book/selectedbookgroup/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
-import { AppMenu, Item } from "../../../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../../../constants";
-
-import BookgroupDetailsPage from "../BookgroupDetailsPage";
-import AddBookgroupModal from "../AddBookgroupModal";
+import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppMenu, Item } from '../../../basic/menu';
+import { BookgroupDetailsPage } from '../BookgroupDetailsPage';
+import { AddBookgroupModal } from '../AddBookgroupModal';
 
 
 const BookgroupListPage: React.FC = () => {

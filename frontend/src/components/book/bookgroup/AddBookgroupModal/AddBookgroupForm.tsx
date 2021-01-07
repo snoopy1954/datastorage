@@ -2,7 +2,7 @@ import React from "react";
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
-import { TextField } from "./FormField";
+import { TextField } from '../../../basic/formfields/textfield';
 import { BookgroupNoID } from '../../../../../../backend/src/types/book';
 
 interface Props {

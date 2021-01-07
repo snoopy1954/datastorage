@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
-import AddBookgroupForm from './AddBookgroupForm';
+import { AddBookgroupForm } from './AddBookgroupForm';
 import { BookgroupNoID } from '../../../../../../backend/src/types/book';
 
 
@@ -11,7 +11,7 @@ interface Props {
   error?: string;
 }
 
-const AddBookgroupModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
+export const AddBookgroupModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
   <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
     <Modal.Header>Neue Gruppe anlegen</Modal.Header>
     <Modal.Content>

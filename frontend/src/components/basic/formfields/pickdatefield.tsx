@@ -100,24 +100,18 @@ const dayValue2date = (dayValue: DayValue): string => {
     return (dayValue.day < 10 ? "0" : "") + dayValue.day + "." + (dayValue.month < 10 ? "0" : "") + dayValue.month + "." + dayValue.year;
 }
 
-interface PickProps extends FieldProps {
+interface Props extends FieldProps {
     label: string;
     date: string;
     setFieldValue: FormikProps<{}>["setFieldValue"];
     setFieldTouched: FormikProps<{}>["setFieldTouched"];
 };
 
-export const PickField: React.FC<PickProps> = ({
-    field,
-    label,
-    date,
-    setFieldValue,
-    setFieldTouched  
-    }) => {
-        const formatInputValue = () => date;
+export const PickField: React.FC<Props> = ({ field, label, date, setFieldValue, setFieldTouched }) => {
+    const formatInputValue = () => date;
         
-        return (
-          <Form.Field>
+    return (
+        <Form.Field>
             <label>{label}</label>
             <DatePicker
               value={date2DayValue(date)}
@@ -131,8 +125,7 @@ export const PickField: React.FC<PickProps> = ({
               locale={customLocale}
               calendarPopperPosition={'auto'}
             />
-          </Form.Field>
-        );
+        </Form.Field>
+    );
 };
         
-  

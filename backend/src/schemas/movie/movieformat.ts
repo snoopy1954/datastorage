@@ -4,10 +4,8 @@
 import * as mongoose from 'mongoose';
 
 const movieformatSchema = new mongoose.Schema({
-  formatname: {
     seqnr: { type: Number, required: true },
     name: { type: String, required: true }
-  }
 });
 
 movieformatSchema.set('toJSON', {

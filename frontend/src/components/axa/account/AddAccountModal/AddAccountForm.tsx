@@ -11,6 +11,7 @@ import { AccountStatus } from '../../../../types/axa';
 import { RootState } from '../../../../state/store';
 
 import { ShowField } from '../../../basic/formfields/showfield';
+import { TextField } from '../../../basic/formfields/textfield';
 import { PickField } from '../../../basic/formfields/pickdatefield';
 import { SelectField } from '../../../basic/formfields/selectfield';
 import { NumberField } from '../../../basic/formfields/numberfield';
@@ -78,9 +79,10 @@ export const AddAccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }
               component={ShowField}
             />}
             <Field
-              name={`details[0].year`}
+              label="Jahr"
               placeholder="Jahr"
-              type="text"
+              name={`details[0].year`}
+              component={TextField}
             />
             <Field
               label="Seqnr"
@@ -89,10 +91,11 @@ export const AddAccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }
               component={NumberField}
               min='0'
             />
-            {edittype===Edittype.EDIT&&<SelectField
+            {edittype===Edittype.EDIT&&<Field
               label="Status"
               name="status"
               prompt="Bitte Status auswählen"
+              component={SelectField}
               options={statusOptions}
             />}
             {edittype===Edittype.ADD&&<Field

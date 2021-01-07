@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
-import AddMoviegroupForm from './AddMoviegroupForm';
+import { AddMoviegroupForm } from './AddMoviegroupForm';
 import { MoviegroupNoID } from '../../../../../../backend/src/types/movie';
 
 
@@ -11,7 +11,7 @@ interface Props {
   error?: string;
 }
 
-const AddMoviegroupModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
+export const AddMoviegroupModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
   <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
     <Modal.Header>Neue Gruppe anlegen</Modal.Header>
     <Modal.Content>

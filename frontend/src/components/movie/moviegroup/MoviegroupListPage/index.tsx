@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
 import { Moviegroup, MoviegroupNoID } from '../../../../../../backend/src/types/movie';
 
@@ -9,15 +10,13 @@ import { setPage } from '../../../../state/page/actions';
 import { addMoviegroup } from '../../../../state/movie/moviegrouplist/actions';
 import { setSelectedMoviegroup, clearSelectedMoviegroup } from '../../../../state/movie/selectedmoviegroup/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
-import { AppMenu, Item } from "../../../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../../../constants";
-
-import MoviegroupDetailsPage from "../MoviegroupDetailsPage";
-import AddMoviegroupModal from "../AddMoviegroupModal";
+import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppMenu, Item } from '../../../basic/menu';
+import { MoviegroupDetailsPage } from '../MoviegroupDetailsPage';
+import { AddMoviegroupModal } from '../AddMoviegroupModal';
 
 
-const MoviegroupListPage: React.FC = () => {
+export const MoviegroupListPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | undefined>();
     const dispatch = useDispatch();
@@ -87,7 +86,7 @@ const MoviegroupListPage: React.FC = () => {
             <Table.Body>
               {Object.values(moviegroups).map((moviegroup: Moviegroup) => (
                 <Table.Row key={moviegroup.id} onClick={() => handleSelection(moviegroup)}>
-                  <Table.Cell>{moviegroup.groupname.name}</Table.Cell>
+                  <Table.Cell>{moviegroup.name}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>

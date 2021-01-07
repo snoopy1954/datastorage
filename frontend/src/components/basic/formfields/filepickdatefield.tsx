@@ -6,22 +6,20 @@ import { FileDate } from '../../../types/axa';
 import { FileField} from './filefield';
 import { PickField} from './pickdatefield';
 
-interface FileDateProps extends FieldProps {
+interface Props extends FieldProps {
     filedate: FileDate;
-    name: string;
     label: string;
     setFieldValue: FormikProps<{}>["setFieldValue"];
     setFieldTouched: FormikProps<{}>["setFieldTouched"];
 };
 
-export const FilePickDateField: React.FC<FileDateProps> = ({
+export const FilePickDateField: React.FC<Props> = ({
     field,
     filedate,
-    name,
     label,
     setFieldValue,
     setFieldTouched
-  }: FileDateProps) => {
+  }: Props) => {
     const fieldnamefile = field.name + '.file';
     const fieldnamedate = field.name + '.date';
     return (

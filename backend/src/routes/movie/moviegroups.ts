@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
 import Moviegroup from '../../models/movie/moviegroup';
-import { toNewMoviegroup } from '../../utils/movie/parameters';
+import { toNewMoviegroup } from '../../utils/movie';
 
 const moviegroupsRouter = express.Router();
 
@@ -25,7 +25,6 @@ moviegroupsRouter.get('/:id', async (request, response) => {
 moviegroupsRouter.post('/', async (request, response) => {
     try {
         const newMoviegroup = new Moviegroup(toNewMoviegroup(request.body));
-        console.log('hier', newMoviegroup);
         void await newMoviegroup.save();
         response.json(newMoviegroup);
     } catch (e) {

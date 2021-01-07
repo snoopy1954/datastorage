@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { BookgroupNoID, FormatNoID, OwnershipNoID, TongueNoID, BookNoID } from '../../types/book';
-import { parseString, parseNumber, parseStringArray } from '../basicParser';
+import { parseString, parseNumber, parseStringArray, parseDate } from '../basicParser';
 
 export const toNewBook = (object: any) => {
     // console.log(object);
@@ -77,15 +77,6 @@ export const toNewBook = (object: any) => {
 //    console.log(newBook);
 
     return newBook;
-};
-
-const parseDate = (text: any): Date => {
-    if (!text) {
-      throw new Error(`Incorrect or missing parameter: ${text}`);
-    }
-  
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return text;
 };
 
 export const toNewBookgroup = (object: any) => {

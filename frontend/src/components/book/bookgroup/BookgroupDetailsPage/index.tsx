@@ -16,7 +16,7 @@ import { backgroundColor, styleMainMenu } from "../../../../constants";
 import AddSubgroupModal from "../AddSubgroupModal";
 
 
-const BookgroupDetailsPage: React.FC = () => {
+export const BookgroupDetailsPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const dispatch = useDispatch();

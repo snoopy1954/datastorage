@@ -1,27 +1,29 @@
 import React from "react";
 import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
-import { TextField } from "./FormField";
-import { Subgroup } from '../../../../../../backend/src/types/movie';
-import { backgroundColor, styleMainMenu } from "../../../../constants";
+import { TextField } from '../../../basic/formfields/textfield';
+
+export interface Value {
+    value: string
+}
 
 interface Props {
-  onSubmit: (values: Subgroup) => void;
+  onSubmit: (values: Value) => void;
   onCancel: () => void;
 }
 
-const AddSubgroupForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+export const AddSubgroupForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+  const initialValues = { value: '' };
   return (
     <Formik
-      initialValues={{
-        subgroup: "",
-      }}
+      initialValues={initialValues}
       onSubmit={onSubmit}
       validate={values => {
         const requiredError = "Field is required";
         const errors: { [field: string]: string } = {};
-        if (!values.subgroup) {
+        if (!values.value) {
           errors.version = requiredError;
         }
         return errors;
@@ -33,7 +35,7 @@ const AddSubgroupForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
             <Field
               label="Untergruppe"
               placeholder="Untergruppe"
-              name="subgroup"
+              name="value"
               component={TextField}
             />
             <Menu compact stackable borderless style={{ background: backgroundColor }}>

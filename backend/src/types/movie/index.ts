@@ -1,28 +1,14 @@
-export interface Filter {
-    group: string;
-    subgroup: string;
-}
+import { Name } from '../basic';
 
-export interface Name {
-    seqnr: number;
-    name: string;
-}
-
-export interface Moviegroup {
+export interface Moviegroup extends Name {
     id: string;
-    groupname: Name;
     subgroups: string[];
 }
 
 export type MoviegroupNoID = Omit<Moviegroup, 'id'>;
 
-export interface Subgroup {
-    subgroup: string;
-}
-
-export interface Movieformat {
+export interface Movieformat extends Name {
     id: string;
-    formatname: Name;
 }
 
 export type MovieformatNoID = Omit<Movieformat, 'id'>;
@@ -34,6 +20,10 @@ export interface Movie {
     format: string;
     moviegroup: string;
     subgroup: string;
+    season: string;
+    serial: string;
+    maximal: string;
+    launched: string;
     filename: string;
     checksum: string;
     createdAt: Date;
@@ -42,6 +32,3 @@ export interface Movie {
 
 export type MovieNoID = Omit<Movie, 'id'>;
 
-export interface MovieWithFileNoID extends MovieNoID {
-    file: File;
-}

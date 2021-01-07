@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { MovieNoID, MoviegroupNoID, MovieformatNoID } from '../../types/movie';
-import { parseString, parseNumber, parseStringArray } from '../basicParser';
+import { parseString, parseNumber, parseStringArray, parseDate } from '../basicParser';
+
 
 export const toNewMovie = (object: any) => {
     // console.log(object);
@@ -19,6 +19,14 @@ export const toNewMovie = (object: any) => {
     // console.log(`subgroup='${subgroup}'`);
     const format = parseString(object.format);
     // console.log(`format='${format}'`);
+    const season = parseString(object.season);
+    // console.log(`season='${season}'`);
+    const serial = parseString(object.serial);
+    // console.log(`serial='${serial}'`);
+    const maximal = parseString(object.maximal);
+    // console.log(`maximal='${maximal}'`);
+    const launched = parseString(object.launched);
+    // console.log(`launched='${launched}'`);
     const filename = parseString(object.filename);
     // console.log(`filename='${filename}'`);
     const checksum = parseString(object.checksum);
@@ -37,6 +45,10 @@ export const toNewMovie = (object: any) => {
         moviegroup,
         subgroup,
         format,
+        season,
+        serial,
+        maximal,
+        launched,
         filename,
         checksum,
         createdAt,
@@ -49,41 +61,29 @@ export const toNewMovie = (object: any) => {
 };
 
 export const toNewMoviegroup = (object: any) => {
-    const name = parseString(object.groupname.name);
-    const seqnr = parseNumber(object.groupname.seqnr);
+    const name = parseString(object.name);
+    const seqnr = parseNumber(object.seqnr);
     const subgroups = parseStringArray(object.subgroups);
     const newMoviegroup: MoviegroupNoID = {
-        groupname: {
-            name,
-            seqnr
-        },
-        subgroups: subgroups
+        name,
+        seqnr,
+        subgroups
     };
 
     return newMoviegroup;
 };
 
 export const toNewMovieformat = (object: any) => {
-    const name = parseString(object.formatname.name);
-    const seqnr = parseNumber(object.formatname.seqnr);
+    const name = parseString(object.name);
+    const seqnr = parseNumber(object.seqnr);
 
     const newMovieformat: MovieformatNoID = {
-        formatname: {
-            name,
-            seqnr
-        }
+        name,
+        seqnr
     };
 
     return newMovieformat;
 };
 
 
-const parseDate = (text: any): Date => {
-    if (!text) {
-      throw new Error(`Incorrect or missing parameter: ${text}`);
-    }
-  
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return text;
-};
 

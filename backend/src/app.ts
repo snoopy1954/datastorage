@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 
+import mp4Router from './routes/filesystem/mp4';
 import monthsRouter from './routes/pressure/months';
 import pressureyearsRouter from './routes/pressure/years';
 import exchangeRouter from './routes/pressure/exchange';
@@ -29,6 +30,7 @@ const app = express();
 app.use(express.static('build'));
 app.use(express.json());
 app.use(cors());
+app.use('/api/mp4', mp4Router);
 app.use('/api/months', monthsRouter);
 app.use('/api/pressureyears', pressureyearsRouter);
 app.use('/api/exchange', exchangeRouter);

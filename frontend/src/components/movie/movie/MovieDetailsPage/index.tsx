@@ -1,8 +1,9 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
-import { Edittype } from "../../../../types/basic";
+import { Edittype } from '../../../../types/basic';
 import { MovieNoID, Movie } from '../../../../../../backend/src/types/movie';
 
 import { RootState } from '../../../../state/store';
@@ -10,16 +11,13 @@ import { setPage } from '../../../../state/page/actions';
 import { removeMovie, updateMovie } from '../../../../state/movie/movielist/actions';
 import { clearSelectedMovie } from '../../../../state/movie/selectedmovie/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
-import { AppMenu, Item } from "../../../basic/menu";
-
-import { backgroundColor, styleMainMenu } from "../../../../constants";
-
-import AddMovieModal from "../AddMovieModal";
-import AskModal from "../../../basic/askModal";
+import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppMenu, Item } from '../../../basic/menu';
+import { AskModal } from '../../../basic/askModal';
+import { AddMovieModal } from '../AddMovieModal';
 
 
-const MovieDetailsPage: React.FC = () => {
+export const MovieDetailsPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<[boolean, boolean]>([false, false]);
     const [error, setError] = React.useState<string | undefined>();
     const dispatch = useDispatch();
@@ -43,6 +41,7 @@ const MovieDetailsPage: React.FC = () => {
             ...values,
             id: movie.id
         };
+        console.log(movieToUpdate)
         dispatch(updateMovie(movieToUpdate));
         closeModal();
         dispatch(clearSelectedMovie());

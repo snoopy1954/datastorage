@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
 import Movieformat from '../../models/movie/movieformat';
-import { toNewMovieformat } from '../../utils/movie/parameters';
+import { toNewMovieformat } from '../../utils/movie';
 
 const formatsRouter = express.Router();
 

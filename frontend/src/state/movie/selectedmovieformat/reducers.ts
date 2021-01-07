@@ -3,10 +3,10 @@ import { SET_SELECTED_MOVIEFORMAT, CLEAR_SELECTED_MOVIEFORMAT, ActionTypes } fro
 
 const initialState: Movieformat = {
     id: '',
-    formatname: {
+//    formatname: {
         seqnr: 0,
         name: ''
-    }
+//    }
 };
 
 export const selectedmovieformatReducer = (state = initialState, action: ActionTypes): Movieformat => {

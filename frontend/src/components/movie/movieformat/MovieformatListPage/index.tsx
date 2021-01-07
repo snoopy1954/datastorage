@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from "../../../../constants";
 
 import { Movieformat, MovieformatNoID } from '../../../../../../backend/src/types/movie';
 
@@ -9,15 +10,13 @@ import { setPage } from '../../../../state/page/actions';
 import { addMovieformat } from '../../../../state/movie/movieformatlist/actions';
 import { setSelectedMovieformat, clearSelectedMovieformat } from '../../../../state/movie/selectedmovieformat/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
-import { AppMenu, Item } from "../../../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../../../constants";
-
-import AddMovieformatModal from "../AddMovieformatModal";
-import MovieformatDetailsPage from "../MovieformatDetailsPage";
+import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppMenu, Item } from '../../../basic/menu';
+import { AddMovieformatModal } from '../AddMovieformatModal';
+import { MovieformatDetailsPage } from '../MovieformatDetailsPage';
 
 
-const MovieformatListPage: React.FC = () => {
+export const MovieformatListPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | undefined>();
     const dispatchRedux = useDispatch();
@@ -87,7 +86,7 @@ const MovieformatListPage: React.FC = () => {
             <Table.Body>
               {Object.values(movieformats).map((movieformat: Movieformat) => (
                 <Table.Row key={movieformat.id}  onClick={() => handleSelection(movieformat)}>
-                  <Table.Cell>{movieformat.formatname.name}</Table.Cell>
+                  <Table.Cell>{movieformat.name}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>

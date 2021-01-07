@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
-import AddMovieForm from './AddMovieForm';
+import { AddMovieForm } from './AddMovieForm';
 import { Edittype } from "../../../../types/basic";
 import { MovieNoID } from '../../../../../../backend/src/types/movie';
 
@@ -12,7 +12,7 @@ interface Props {
   error?: string;
 }
 
-const AddMovieModal = ({ edittype, modalOpen, onClose, onSubmit, error }: Props) => (
+export const AddMovieModal = ({ edittype, modalOpen, onClose, onSubmit, error }: Props) => (
   <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
     <Modal.Header>Neuen Film anlegen</Modal.Header>
     <Modal.Content>

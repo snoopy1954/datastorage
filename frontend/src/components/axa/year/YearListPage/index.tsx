@@ -41,9 +41,6 @@ export const YearPage: React.FC = () => {
     };
 
     if (year.id!=="") {
-      console.log(year)
-      console.log(Object.values(years).filter(item => item.id===year.id)[0])
-      console.log({years}.years.length)
       return (
         <YearDetailsPage/>
       )

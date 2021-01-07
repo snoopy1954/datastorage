@@ -2,17 +2,23 @@ import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
-import { Edittype } from "../../../../types/basic";
+import { Option, Edittype } from "../../../../types/basic";
 import { Moviegroup, MovieNoID } from '../../../../../../backend/src/types/movie';
 
 import { RootState } from '../../../../state/store';
 import { setSelectedMoviesubgroups } from '../../../../state/movie/selectedmoviesubgroups/actions';
 
-import { backgroundColor, styleMainMenu } from "../../../../constants";
+import { SelectField } from '../../../basic/formfields/selectfield';
+import { SelectFieldWithChange } from '../../../basic/formfields/selectfieldwithchange';
+import { TextField } from '../../../basic/formfields/textfield';
+import { ShowField } from '../../../basic/formfields/showfield';
+import { NumberField } from '../../../basic/formfields/numberfield';
+import { FileFieldWithChecksum } from '../../../basic/formfields/filefieldwithchecksum';
+
 import { newMovie } from '../../../../utils/movie';
 
-import { TextField, SelectField, FileField, Option, SelectFieldWithChange, NumberField } from "./FormField";
 
 interface Props {
   edittype: Edittype;
@@ -29,13 +35,13 @@ export const AddMovieForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) 
   const subgroups = useSelector((state: RootState) => state.moviesubgroups);
 
   React.useEffect(() => {
-    const selectedGroup: Moviegroup[] = Object.values(moviegroups).filter((moviegroup => moviegroup.groupname.name=== movie.moviegroup));
+    const selectedGroup: Moviegroup[] = Object.values(moviegroups).filter((moviegroup => moviegroup.name=== movie.moviegroup));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
     dispatch(setSelectedMoviesubgroups(selectedSubgroups));
   }, [dispatch, moviegroups, movie]);  
 
   const handleGroupSelection = (selection: string) => {
-    const selectedGroup: Moviegroup[] = Object.values(moviegroups).filter((moviegroup => moviegroup.groupname.name=== selection));
+    const selectedGroup: Moviegroup[] = Object.values(moviegroups).filter((moviegroup => moviegroup.name=== selection));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
     dispatch(setSelectedMoviesubgroups(selectedSubgroups));
   }
@@ -43,16 +49,16 @@ export const AddMovieForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) 
   const groupOptions: Option[] = [];
   Object.values(moviegroups).forEach(element => {
     groupOptions.push({
-      value: element.groupname.name,
-      label: element.groupname.name
+      value: element.name,
+      label: element.name
     })
   });
 
   const formatOptions: Option[] = [];
   Object.values(formats).forEach(element => {
     formatOptions.push({
-      value: element.formatname.name,
-      label: element.formatname.name
+      value: element.name,
+      label: element.name
     })
   });
 
@@ -75,7 +81,7 @@ export const AddMovieForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) 
         return errors;
       }}
     >
-      {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
+      {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
             <Field
@@ -97,34 +103,49 @@ export const AddMovieForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) 
               name="comment"
               component={TextField}
             />
-            <SelectFieldWithChange
+            <Field
               label="Gruppe"
               prompt="Bitte Gruppe auswählen"
               name="moviegroup"
               options={groupOptions}
+              component={SelectFieldWithChange}
               hasChanged={handleGroupSelection}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
             />
-            <SelectField
+            <Field
               label="Untergruppe"
               prompt="Untergruppe auswählen"
               name="subgroup"
+              component={SelectField}
               options={subgroupOptions}
             />
-            <SelectField
+            <Field
               label="Format"
               prompt="Bitte Format auswählen"
               name="format"
+              component={SelectField}
               options={formatOptions}
+            />
+            <Field
+              label="erschienen"
+              placeholder="erschienen"
+              name="launched"
+              component={TextField}
             />
             <Field
               label="Datei"
               placeholder="Datei"
               name="filename"
-              component={FileField}
+              component={FileFieldWithChecksum}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
+            />
+            <Field
+              label="Checksum"
+              placeholder={values.checksum}
+              name="checksum"
+              component={ShowField}
             />
             <Menu compact stackable borderless style={{ background: backgroundColor }}>
               <Menu.Item>

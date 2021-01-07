@@ -8,7 +8,7 @@ import { z100s, vital750 } from '../../constants';
 export const newYear = (years: Year[]): YearNoID => {
     let maxNumber = 0;
     let maxName = '0';
-    years.forEach(year => {
+    Object.values(years).forEach(year => {
         if (year.name.seqnr>maxNumber) {
             maxNumber = year.name.seqnr;
             maxName = year.name.name

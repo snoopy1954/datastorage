@@ -10,7 +10,7 @@ interface Props {
   error?: string;
 }
 
-const AddSubgroupModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
+export const AddSubgroupModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
   <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
     <Modal.Header>Neue Version anlegen</Modal.Header>
     <Modal.Content>

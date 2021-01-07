@@ -1,19 +1,18 @@
 import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
 import { RootState } from '../../../../state/store';
 import { removeMovieformat } from '../../../../state/movie/movieformatlist/actions';
 import { clearSelectedMovieformat } from '../../../../state/movie/selectedmovieformat/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
-import { AppMenu, Item } from "../../../basic/menu";
-import { AskModal } from "../../../basic/askModal";
-
-import { backgroundColor, styleMainMenu } from "../../../../constants";
+import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppMenu, Item } from '../../../basic/menu';
+import { AskModal } from '../../../basic/askModal';
 
 
-const MovieformatDetailsPage: React.FC = () => {
+export const MovieformatDetailsPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
   const dispatch = useDispatch();
@@ -55,10 +54,10 @@ const MovieformatDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={'Sprache ' + movieformat.formatname.name} icon='list'/>
+      <AppHeaderH3Plus text={'Sprache ' + movieformat.name} icon='list'/>
       <AskModal
           header='Sprache löschen'
-          prompt={'Sprache ' + movieformat.formatname.name}
+          prompt={'Sprache ' + movieformat.name}
           modalOpen={modalOpen}
           onSubmit={handleDelete}
           onClose={closeModal}
@@ -74,7 +73,7 @@ const MovieformatDetailsPage: React.FC = () => {
         <Table.Body>
           <Table.Row>
             <Table.Cell>Name</Table.Cell>
-            <Table.Cell>{movieformat.formatname.name}</Table.Cell>
+            <Table.Cell>{movieformat.name}</Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table>

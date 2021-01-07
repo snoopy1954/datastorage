@@ -1,17 +1,17 @@
 import React from "react";
 import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
-
-import { TextField } from "./FormField";
-import { Subgroup } from '../../../../../../backend/src/types/book';
 import { backgroundColor, styleMainMenu } from "../../../../constants";
+
+import { TextField } from '../../../basic/formfields/textfield';
+import { Subgroup } from '../../../../../../backend/src/types/book';
 
 interface Props {
   onSubmit: (values: Subgroup) => void;
   onCancel: () => void;
 }
 
-const AddVersionForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+export const AddVersionForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   return (
     <Formik
       initialValues={{

@@ -1,9 +1,13 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
-import { Movie, MovieNoID, Moviegroup, Filter } from '../../../../../../backend/src/types/movie';
-import { Edittype, Direction } from "../../../../types/basic";
+import { Movie, MovieNoID, Moviegroup } from '../../../../../../backend/src/types/movie';
+import { Filter } from '../../../../types/movie';
+import { Edittype, Direction } from '../../../../types/basic';
+
+import { getOne } from '../../../../services/filesystem/mp4';
 
 import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';
@@ -13,17 +17,16 @@ import { setSelectedMovie, clearSelectedMovie } from '../../../../state/movie/se
 import { addChangedMovie, clearChangedMovie } from '../../../../state/movie/changedmovielist/actions';
 import { setSortButton, clearSortButton } from '../../../../state/address/sortbutton/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
-import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
+import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppMenuOpt, ItemOpt } from '../../../basic/menu';
 
-import { backgroundColor, styleMainMenu } from "../../../../constants";
-import { movielistTitle, movielistFilter, nextSeqnr } from "../../../../utils/movie";
+import { AddMovieModal } from '../AddMovieModal';
+import { MovieDetailsPage } from '../MovieDetailsPage';
 
-import AddMovieModal from "../AddMovieModal";
-import MovieDetailsPage from "../MovieDetailsPage";
+import { movielistTitle, movielistFilter, nextSeqnr, findChecksum } from '../../../../utils/movie';
 
 
-const MovieListPage: React.FC = () => {
+export const MovieListPage: React.FC = () => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | undefined>();
     const dispatch = useDispatch();
@@ -71,6 +74,99 @@ const MovieListPage: React.FC = () => {
         closeModal();
     };
 
+    const handleImport = async () => {
+      const directory: string = moviefilter.group + (moviefilter.subgroup!=='' ? '|' + moviefilter.subgroup : '');
+      const fetchList = async () => {
+          const list = await getOne(directory);
+          Object.values(list).forEach((item, index) => {
+            const [ filename, checksum ] = item.split('|');
+            const newMovie: MovieNoID = {
+              format: 'MP4',
+              moviegroup: moviefilter.group,
+              subgroup: moviefilter.subgroup,
+              title: {
+                name: filename.replace('.mp4', ''),
+                seqnr: index,
+              },
+              season: '',
+              serial: '',
+              maximal: '',
+              launched: '',
+              filename: filename,
+              checksum: checksum,
+              comment: '',
+              createdAt: new Date(),
+              modifiedAt: new Date()
+            };
+            let numberOfDash: number = 0;
+            for (let iii = 0; iii < newMovie.title.name.length; iii++) {
+              if (newMovie.title.name.charAt(iii)==='-') numberOfDash++;
+            };
+            switch (moviefilter.subgroup) {
+              case "The Killing":
+                if (numberOfDash===3) {
+                  const [ a,b,c ] = newMovie.title.name.split('-');
+                  const seqnr: number = +(a.trim()+(b.trim().length===2 ? b.trim() : '0'+b.trim()));
+                  const season: string = a.trim();
+                  const serial: string = b.trim();
+                  const maximal: string = c.trim();
+                  const comment: string = 'Kopenhagen (Lund)';
+                  newMovie.title.seqnr = seqnr;
+                  switch (season) {
+                    case '1':
+                      newMovie.launched = '2007';
+                      break;
+                    case '2':
+                      newMovie.launched = '2009';
+                      break;
+                    case '3':
+                      newMovie.launched = '2012';
+                      break;
+                    default:
+                  }
+                  newMovie.season = season;
+                  newMovie.serial = serial;
+                  newMovie.maximal = maximal;
+                  newMovie.comment = comment;
+                }
+                break;
+                case "Tatort":
+                  if (numberOfDash===4) {
+                    const [ a,,c,d,e ] = newMovie.title.name.split('-');
+                    const seqnr: number = +(a.trim());
+                    const serial: string = a.trim();
+                    const launched: string = e.trim();
+                    const comment: string = c.trim() + ' (' + d.trim() + ')';
+                    newMovie.title.seqnr = seqnr;
+                    newMovie.launched = launched;
+                    newMovie.serial = serial;
+                    newMovie.comment = comment;
+                  }
+                  break;
+                case "Wilsberg":
+                  if (numberOfDash===1) {
+                    const [ a, ] = newMovie.title.name.split('-');
+                    const seqnr: number = +(a.trim());
+                    const serial: string = a.trim();
+                    const comment: string = 'Wilsberg (Münster)';
+                    newMovie.title.seqnr = seqnr;
+                    newMovie.serial = serial;
+                    newMovie.comment = comment;
+                  }
+                  break;
+                default:
+                  break;
+            }
+            console.log(newMovie)
+            if (!findChecksum(movies, checksum)) {
+              console.log('neu !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+              dispatch(addMovie(newMovie));
+            }
+          });
+        };
+      fetchList();
+    };
+
     const handleClose = () => {
         dispatch(clearMoviefilter());
         dispatch(setPage({ mainpage, subpage: 'movies' }));
@@ -109,11 +205,11 @@ const MovieListPage: React.FC = () => {
 
     const moviegroupOptions: string[] = [];
     Object.values(moviegroups).forEach(element => {
-      moviegroupOptions.push(element.groupname.name)
+      moviegroupOptions.push(element.name)
     });
 
     const getMoviegroup = (moviegroupName: string): Moviegroup | undefined => {
-      const moviegroup = Object.values(moviegroups).filter(moviegroup => moviegroup.groupname.name===moviegroupName);
+      const moviegroup = Object.values(moviegroups).filter(moviegroup => moviegroup.name===moviegroupName);
       return moviegroup.length > 0 ? moviegroup[0] : undefined;
     };
 
@@ -164,13 +260,22 @@ const MovieListPage: React.FC = () => {
     ];
 
     if ((moviefilter.group!=='' && moviefilter.subgroup!=='') || (moviefilter.group!=='' && getMoviegroup(moviefilter.group)?.subgroups.length===0)) {
-      buttons[buttons.length] =     {
+      buttons[buttons.length] = {
         name: 'Sort',
         title: 'Sort',
         color: 'blue',
         type: '0',
         options: [],    
         onClick: handleSort,
+        onSelection: handleDummy
+      };
+      buttons[buttons.length] = {
+        name: 'Einlesen',
+        title: 'Einlesen',
+        color: 'blue',
+        type: '0',
+        options: [],    
+        onClick: handleImport,
         onSelection: handleDummy
       };
     }
@@ -210,9 +315,10 @@ const MovieListPage: React.FC = () => {
           <Table celled style={{ backgroundColor }}>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>Filmtitel</Table.HeaderCell>
-                <Table.HeaderCell>Gruppe</Table.HeaderCell>
-                <Table.HeaderCell>Untergruppe</Table.HeaderCell>
+                <Table.HeaderCell style={{ backgroundColor }}>Filmtitel</Table.HeaderCell>
+                <Table.HeaderCell style={{ backgroundColor }}>Gruppe</Table.HeaderCell>
+                <Table.HeaderCell style={{ backgroundColor }}>Untergruppe</Table.HeaderCell>
+                <Table.HeaderCell style={{ backgroundColor }}>Sendejahr</Table.HeaderCell>
                 {sortbutton&&<Table.HeaderCell>Reihenfolge</Table.HeaderCell>}
                 </Table.Row>
             </Table.Header>
@@ -222,6 +328,7 @@ const MovieListPage: React.FC = () => {
                   <Table.Cell onClick={() => handleSelection(movie)}>{movie.title.name}</Table.Cell>
                   <Table.Cell>{movie.moviegroup}</Table.Cell>
                   <Table.Cell>{movie.subgroup}</Table.Cell>
+                  <Table.Cell>{movie.launched}</Table.Cell>
                   {sortbutton&&<Table.Cell>
                     <Button className="ui icon button" color='green' onClick={() => handleUpDown(Direction.UP, index, sortedMovies) }>
                       <i className="angle up icon"></i>

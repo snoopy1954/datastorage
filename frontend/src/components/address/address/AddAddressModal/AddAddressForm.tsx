@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from 'react-redux';
 import { Menu, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
 import { Edittype } from '../../../../types/basic';
 import { Option } from '../../../../types/basic';
@@ -15,8 +16,6 @@ import { TextField } from '../../../basic/formfields/textfield';
 import { PersonFieldArray } from './FormField';
 
 import { newAddress } from '../../../../utils/address';
-
-import { backgroundColor, styleMainMenu } from '../../../../constants';
 
 
 interface Props {
@@ -63,10 +62,11 @@ export const AddAddressForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }
               name="name.seqnr"
               component={NumberField}
             />
-            <SelectField
+            <Field
               label="Gruppe"
               name="group"
               prompt="Bitte Gruppe auswählen"
+              component={SelectField}
               options={addressgroupOptions}
             />
             <Field

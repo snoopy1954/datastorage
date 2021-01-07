@@ -4,11 +4,9 @@
 import * as mongoose from 'mongoose';
 
 const moviegroupSchema = new mongoose.Schema({
-  groupname: {
     seqnr: { type: Number, required: true },
-    name: { type: String, required: true }
-  },
-  subgroups: {type: [String], required: true }
+    name: { type: String, required: true },
+    subgroups: {type: [String], required: true }
 });
 
 moviegroupSchema.set('toJSON', {

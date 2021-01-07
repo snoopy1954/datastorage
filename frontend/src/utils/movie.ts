@@ -1,4 +1,5 @@
-import { Movie, MovieNoID, Moviegroup, Filter } from '../../../backend/src/types/movie';
+import { Movie, MovieNoID, Moviegroup } from '../../../backend/src/types/movie';
+import { Filter } from '../types/movie';
 
 const sortMovies = (a: Movie, b: Movie) => {
     const nameA = a.title.seqnr;
@@ -20,7 +21,7 @@ const sortMovieList = (movies: Movie[], moviegroups: Moviegroup[]) => {
     moviegroups.forEach(moviegroup => {
         sortedMoviegroup = [];
         if (moviegroup.subgroups.length===0) {
-            sortedMoviegroup = movies.filter(movie => movie.moviegroup===moviegroup.groupname.name);
+            sortedMoviegroup = movies.filter(movie => movie.moviegroup===moviegroup.name);
             movieListSorted = movieListSorted.concat(sortedMoviegroup.sort(sortMovies));
         }
         else {
@@ -36,18 +37,22 @@ const sortMovieList = (movies: Movie[], moviegroups: Moviegroup[]) => {
 
 export const newMovie = (): MovieNoID => {
     const movie = {
-    title: {
-        name: "",
-        seqnr: 0
-      },
-      comment: "",
-      filename: "",
-      checksum: "",
-      moviegroup: "",
-      subgroup: "",
-      format: "",
-      createdAt: new Date(),
-      modifiedAt: new Date(),
+        title: {
+            name: "",
+            seqnr: 0
+        },
+        comment: "",
+        filename: "",
+        checksum: "",
+        moviegroup: "",
+        subgroup: "",
+        format: "",
+        season: '',
+        serial: '',
+        maximal: '',
+        launched: '',
+        createdAt: new Date(),
+        modifiedAt: new Date(),
     };
 
     return movie;
@@ -78,5 +83,12 @@ export const nextSeqnr = (movies: Movie[], group: string, subgroup: string): num
     return maxNumber;
 }
 
+export const findChecksum = (movies: Movie[], checksum: string): boolean => {
+    let found: boolean = false;
+    Object.values(movies).forEach(movie => {
+        if (movie.checksum===checksum) found = true;
+    });
 
+    return found;
+}
 

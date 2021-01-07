@@ -11,7 +11,8 @@ import { Option } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 
-import { TextField, BillStatusOption, InsurancetypeOption, DetailsFieldArray } from "./FormField";
+import { BillStatusOption, InsurancetypeOption, DetailsFieldArray } from "./FormField";
+import { TextField } from '../../../basic/formfields/textfield';
 import { SelectField } from '../../../basic/formfields/selectfield';
 import { FilePickDateField } from '../../../basic/formfields/filepickdatefield';
 import { NumberField } from '../../../basic/formfields/numberfield';
@@ -55,10 +56,6 @@ export const AddBillForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
     })
   });
 
-  // const filedates: FileDate[] = [];
-  // filedates.push(newFiledate());
-  // filedates.push(newFiledate());
-
   const invoice: FileDate = newFiledate();
   const recipe: FileDate = newFiledate();
 
@@ -91,16 +88,18 @@ export const AddBillForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
               component={NumberField}
               min='0'
             />
-            <SelectField
+            {edittype===Edittype.EDIT&&<Field
               label="Status"
-              prompt="Bitte Status auswählen"
               name="status"
+              prompt="Bitte Status auswählen"
+              component={SelectField}
               options={statusOptions}
-            />
-            <SelectField
+            />}
+            <Field
               label="Rechnungssteller"
               name="invoicingparty"
               prompt="Bitte Rechnungssteller auswählen"
+              component={SelectField}
               options={billerOptions}
             />
             <Field

@@ -1,22 +1,22 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table } from "semantic-ui-react";
+import { backgroundColor, styleMainMenu } from '../../../../constants';
 
-import { Subgroup, MoviegroupNoID } from '../../../../../../backend/src/types/movie';
+import { update } from '../../../../services/movie/moviegroups';
+
+import { Moviegroup } from '../../../../../../backend/src/types/movie';
 
 import { RootState } from '../../../../state/store';
 import { clearSelectedMoviegroup } from '../../../../state/movie/selectedmoviegroup/actions';
 
-import { update } from "../../../../services/movie/moviegroups";
-
-import { AppHeaderH3 } from "../../../basic/header";
-import { AppMenu, Item }  from "../../../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../../../constants";
-
-import AddSubgroupModal from "../AddSubgroupModal";
+import { AppHeaderH3 } from '../../../basic/header';
+import { AppMenu, Item }  from '../../../basic/menu';
+import { AddSubgroupModal } from '../AddSubgroupModal';
+import { Value } from '../AddSubgroupModal/AddSubgroupForm';
 
 
-const MoviegroupDetailsPage: React.FC = () => {
+export const MoviegroupDetailsPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const dispatch = useDispatch();
@@ -29,13 +29,10 @@ const MoviegroupDetailsPage: React.FC = () => {
     setError(undefined);
   };
 
-  const handleNewSubgroup = async (values: Subgroup) => {
+  const handleNewSubgroup = async (values: Value) => {
     if (moviegroup) {
-      const newMoviegroup: MoviegroupNoID = {
-        groupname: moviegroup.groupname,
-        subgroups: moviegroup.subgroups
-      };
-      newMoviegroup.subgroups.push(values.subgroup);
+      const newMoviegroup: Moviegroup = moviegroup;
+      newMoviegroup.subgroups.push(values.value);
       update(moviegroup.id, newMoviegroup);
     }
     closeModal();
@@ -73,7 +70,7 @@ const MoviegroupDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3 text={moviegroup.groupname.name}/>
+      <AppHeaderH3 text={moviegroup.name}/>
       <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
       <Table celled>
         <Table.Header>
