@@ -73,7 +73,7 @@ export const BookgroupDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3 text={bookgroup.groupname.name}/>
+      <AppHeaderH3 text={bookgroup.groupname.name} icon='zoom-in'/>
       <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
       <Table celled>
         <Table.Header>

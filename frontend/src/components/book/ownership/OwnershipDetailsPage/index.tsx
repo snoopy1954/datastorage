@@ -6,7 +6,7 @@ import { RootState } from '../../../../state/store';
 import { removeOwnership } from '../../../../state/book/ownershiplist/actions';
 import { clearSelectedOwnership } from '../../../../state/book/selectedownership/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
 
@@ -55,7 +55,7 @@ const OwnershipDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={'Sprache ' + ownership.ownershipname.name} icon='list'/>
+      <AppHeaderH3 text={'Sprache ' + ownership.ownershipname.name} icon='list'/>
       <AskModal
           header='Sprache löschen'
           prompt={'Sprache ' + ownership.ownershipname.name}

@@ -5,7 +5,8 @@ import * as mongoose from 'mongoose';
 
 const osSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    versions: [{ type: String, required: true }]
+    versions: [{ type: String, required: true }],
+    description: { type: String, required: false }
 });
 
 osSchema.set('toJSON', {

@@ -10,9 +10,9 @@ import {
     DispatchRemoveDevice
 } from './types';
 
-import { create, update, remove, getAll } from "../../../services/network/devices";
+import { create, update, remove, getAll } from '../../../services/network/devices';
 
-import { sortDeviceList } from "../../../utils/network";
+import { sortDeviceList } from '../../../utils/network/device';
 
 
 export const initializeDevices = () => {

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Container, Modal, Button } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
+import { styleButton } from '../../../constants';
 
 interface Props {
   header: string;
@@ -14,18 +15,10 @@ export const AskModal = ({ header, prompt, modalOpen, onClose, onSubmit }: Props
     <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
       <Modal.Header>{header}</Modal.Header>
       <Modal.Content>
-        <Container textAlign="left">
-          <h4>{prompt}</h4>
-          <br></br>
-        </Container>   
-        <Container textAlign="left">
-          <Button type="button" onClick={onClose} color="blue" style={{ height: '40px', width: '80px' }}>
-            Nein
-          </Button>
-          <Button type="button" onClick={onSubmit} color="blue" style={{ height: '40px', width: '80px' }}>
-            Ja
-          </Button>
-        </Container>   
+        <h4>{prompt}</h4>
+        <br></br>
+        <Button style={styleButton} onClick={() => onSubmit()}>Ja</Button>
+        <Button style={styleButton} onClick={() => onClose()}>Nein</Button>
       </Modal.Content>
     </Modal>
   )};

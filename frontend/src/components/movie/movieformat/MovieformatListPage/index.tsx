@@ -10,7 +10,7 @@ import { setPage } from '../../../../state/page/actions';
 import { addMovieformat } from '../../../../state/movie/movieformatlist/actions';
 import { setSelectedMovieformat, clearSelectedMovieformat } from '../../../../state/movie/selectedmovieformat/actions';
 
-import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppHeaderH3 } from '../../../basic/header';
 import { AppMenu, Item } from '../../../basic/menu';
 import { AddMovieformatModal } from '../AddMovieformatModal';
 import { MovieformatDetailsPage } from '../MovieformatDetailsPage';
@@ -69,7 +69,7 @@ export const MovieformatListPage: React.FC = () => {
 
     return (
         <div className="App">
-          <AppHeaderH3Plus text='Formate' icon='list'/>
+          <AppHeaderH3 text='Formate' icon='list'/>
           <AddMovieformatModal
             modalOpen={modalOpen}
             onSubmit={handleNewMovieformat}

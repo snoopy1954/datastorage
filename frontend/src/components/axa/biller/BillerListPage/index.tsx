@@ -9,7 +9,7 @@ import { RootState } from '../../../../state/store';
 import { addBiller } from  '../../../../state/axa/billerlist/actions';
 import { setSelectedBiller } from "../../../../state/axa/selectedbiller/actions";
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AddBillerModal } from '../AddBillerModal';
 import { BillerDetailsPage } from '../BillerDetailsPage';
@@ -56,7 +56,7 @@ const BillerPage: React.FC = () => {
       
     return (
         <div className="App">
-          <AppHeaderH3Plus text='Rechnungssteller' icon='list'/>
+          <AppHeaderH3 text='Rechnungssteller' icon='list'/>
           <AddBillerModal
             modalOpen={modalOpen}
             onSubmit={submitBiller}

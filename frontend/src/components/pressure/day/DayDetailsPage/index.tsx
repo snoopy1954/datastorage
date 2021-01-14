@@ -8,7 +8,7 @@ import { RootState } from '../../../../state/store';
 import { updateMonth } from '../../../../state/pressure/monthlist/actions';
 import { clearSelectedDay } from '../../../../state/pressure/selectedday/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
@@ -69,7 +69,7 @@ const DayDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={day.date} icon='list'/>
+      <AppHeaderH3 text={day.date} icon='list'/>
       <Table celled>
         <Table.Header>
           <Table.Row>

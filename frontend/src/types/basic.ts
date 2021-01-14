@@ -1,6 +1,7 @@
 export enum Edittype {
     EDIT = "edit",
-    ADD = "add"
+    ADD = "add",
+    SHOW = 'show'
 }
 
 export enum Direction {

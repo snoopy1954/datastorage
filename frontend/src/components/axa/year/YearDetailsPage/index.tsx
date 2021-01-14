@@ -9,7 +9,7 @@ import { setPage } from '../../../../state/page/actions';
 import { removeYear, updateYear } from '../../../../state/axa/years/actions';
 import { clearSelectedYear } from '../../../../state/axa/year/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
 import { AskAmount } from "../../../basic/askAmount";
@@ -84,7 +84,7 @@ export const YearDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={'Jahr ' + year.name.name} icon='list'/>
+      <AppHeaderH3 text={'Jahr ' + year.name.name} icon='list'/>
       <AskModal
           header='Jahr löschen'
           prompt={'Jahr ' + year.name.name}

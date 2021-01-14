@@ -18,7 +18,7 @@ import { clearSelectedAccount } from '../../../../state/axa/selectedaccount/acti
 import { clearOpenAccount } from '../../../../state/axa/openaccount/actions';
 import { setPdfUrl, clearPdfUrl } from "../../../../state/axa/pdfUrl/actions";
 
-import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppHeaderH3 } from '../../../basic/header';
 import { AppMenu, Item } from '../../../basic/menu';
 import { AskModal } from "../../../basic/askModal";
 import { AskDetails } from "../../../basic/askDetails";
@@ -198,7 +198,7 @@ const AccountDetailsPage: React.FC = () => {
   
   return (
     <div className="App">
-      <AppHeaderH3Plus text={'Abrechnung ' + account.name.name} icon='zoom-in'/>
+      <AppHeaderH3 text={'Abrechnung ' + account.name.name} icon='zoom-in'/>
       <AddAccountModal
           edittype={Edittype.EDIT}
           title='Abrechnung ändern'

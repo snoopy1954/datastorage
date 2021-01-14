@@ -10,7 +10,7 @@ import { setPage } from '../../../../state/page/actions';
 import { addBookgroup } from '../../../../state/book/bookgrouplist/actions';
 import { setSelectedBookgroup, clearSelectedBookgroup } from '../../../../state/book/selectedbookgroup/actions';
 
-import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppHeaderH3 } from '../../../basic/header';
 import { AppMenu, Item } from '../../../basic/menu';
 import { BookgroupDetailsPage } from '../BookgroupDetailsPage';
 import { AddBookgroupModal } from '../AddBookgroupModal';
@@ -69,7 +69,7 @@ const BookgroupListPage: React.FC = () => {
     
     return (
         <div className="App">
-          <AppHeaderH3Plus text='Buchgruppen' icon='list'/>
+          <AppHeaderH3 text='Buchgruppen' icon='list'/>
           <AddBookgroupModal
             modalOpen={modalOpen}
             onSubmit={handleNewBookgroup}

@@ -7,7 +7,7 @@ import { RootState } from '../../../../state/store';
 import { removeMovieformat } from '../../../../state/movie/movieformatlist/actions';
 import { clearSelectedMovieformat } from '../../../../state/movie/selectedmovieformat/actions';
 
-import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppHeaderH3 } from '../../../basic/header';
 import { AppMenu, Item } from '../../../basic/menu';
 import { AskModal } from '../../../basic/askModal';
 
@@ -54,7 +54,7 @@ export const MovieformatDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={'Sprache ' + movieformat.name} icon='list'/>
+      <AppHeaderH3 text={'Sprache ' + movieformat.name} icon='list'/>
       <AskModal
           header='Sprache löschen'
           prompt={'Sprache ' + movieformat.name}

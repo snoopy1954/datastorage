@@ -14,11 +14,11 @@ import { setImage } from '../../../../state/image/actions';
 import { addBook, updateBook, exchangeBooks } from '../../../../state/book/booklist/actions';
 import { setSelectedBook, clearSelectedBook } from '../../../../state/book/selectedbook/actions';
 import { addChangedBook, clearChangedBook } from '../../../../state/book/changedbooklist/actions';
-import { setSortButton, clearSortButton } from '../../../../state/address/sortbutton/actions';
+import { setSortButton, clearSortButton } from '../../../../state/book/sortbutton/actions';
 
 import { create, update } from "../../../../services/image/images";
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
 import { AskString, Value } from "../../../basic/askString";
 
@@ -284,7 +284,7 @@ const BookListPage: React.FC = () => {
 
     return (
         <div className="App">
-          <AppHeaderH3Plus text={title} icon='list'/>
+          <AppHeaderH3 text={title} icon='list'/>
           <AddBookModal
             edittype={Edittype.ADD}
             modalOpen={modalOpen[ModalDialog.NEW]}

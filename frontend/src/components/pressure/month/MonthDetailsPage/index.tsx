@@ -11,7 +11,7 @@ import { setSelectedDay } from '../../../../state/pressure/selectedday/actions';
 
 import { create } from "../../../../services/pressure/exchange";
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
 
@@ -63,7 +63,11 @@ const MonthDetailsPage: React.FC = () => {
     )
   }
 
-  if (month.key==="" || year.name.name==="") {
+console.log(month.id, month.id, year)
+
+  if (month.key==="" 
+//  || year.name.name===""
+  ) {
     return (
       <div>
         Heute gibts noch nichts zu sehn, doch morgen bleibt man staunend stehn
@@ -95,7 +99,7 @@ const MonthDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={month.monthname + ' ' + month.year} icon='list'/>
+      <AppHeaderH3 text={month.monthname + ' ' + month.year} icon='list'/>
       <AskModal
           header='Monat löschen'
           prompt={getPromptForDeleteMonth(month)}

@@ -1,6 +1,24 @@
 import React from 'react';
 import { Menu, Button } from "semantic-ui-react";
 import { getColor } from "../../../utils/button";
+import { menubackgroundColor, backgroundColor }from '../../../constants';
+
+
+interface ButtonProps {
+    name: string;
+    title: string;
+    onClick: (name: string) => void;
+}
+
+export const AppButton = ({ name, title, onClick }: ButtonProps) => {
+    return (
+        <Menu compact stackable borderless style={{ background: backgroundColor }}>
+            <Menu.Item onClick={() => onClick(name)} style={{ background: menubackgroundColor }}>
+                {title}
+            </Menu.Item>
+        </Menu>
+    )
+};
 
 export interface Item {
     name: string;
@@ -19,7 +37,7 @@ export const AppMenu = ({ menuItems, style, backgroundColor }: MenuProps) => {
     return (
         <Menu compact stackable borderless style={{ background: backgroundColor }}>
             {Object.values(menuItems).map((menuItem: Item, index: number) => (
-                <Menu.Item key={menuItem.name} onClick={() => menuItem.onClick(menuItem.name) }>
+                <Menu.Item key={menuItem.name} onClick={() => menuItem.onClick(menuItem.name)} style={{ background: menubackgroundColor }}>
                     {menuItem.title}
                     {/* <Button color={getColor(menuItems[index].color)} style={style} onClick={() => menuItem.onClick(menuItem.name) }>{menuItem.title}</Button> */}
                 </Menu.Item>

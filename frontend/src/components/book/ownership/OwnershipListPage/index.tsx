@@ -9,7 +9,7 @@ import { setPage } from '../../../../state/page/actions';
 import { addOwnership } from '../../../../state/book/ownershiplist/actions';
 import { setSelectedOwnership, clearSelectedOwnership } from '../../../../state/book/selectedownership/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
@@ -70,7 +70,7 @@ const OwnershipListPage: React.FC = () => {
       
     return (
       <div className="App">
-        <AppHeaderH3Plus text='Besitztypen' icon='list'/>
+        <AppHeaderH3 text='Besitztypen' icon='list'/>
         <AddOwnershipModal
           modalOpen={modalOpen}
           onSubmit={handleNewOwnership}

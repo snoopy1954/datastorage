@@ -11,7 +11,7 @@ import { setPage } from '../../../../state/page/actions';
 import { removeMovie, updateMovie } from '../../../../state/movie/movielist/actions';
 import { clearSelectedMovie } from '../../../../state/movie/selectedmovie/actions';
 
-import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppHeaderH3 } from '../../../basic/header';
 import { AppMenu, Item } from '../../../basic/menu';
 import { AskModal } from '../../../basic/askModal';
 import { AddMovieModal } from '../AddMovieModal';
@@ -41,7 +41,6 @@ export const MovieDetailsPage: React.FC = () => {
             ...values,
             id: movie.id
         };
-        console.log(movieToUpdate)
         dispatch(updateMovie(movieToUpdate));
         closeModal();
         dispatch(clearSelectedMovie());
@@ -92,7 +91,7 @@ export const MovieDetailsPage: React.FC = () => {
 
     return (          
         <div className="App">
-            <AppHeaderH3Plus text={movie.title.name} icon='zoom-in'/>
+            <AppHeaderH3 text={movie.title.name} icon='zoom-in'/>
             <AddMovieModal
                 edittype={Edittype.EDIT}
                 modalOpen={modalOpen[ModalDialog.CHANGE]}

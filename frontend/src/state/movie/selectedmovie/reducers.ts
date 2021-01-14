@@ -1,6 +1,6 @@
 import { Movie } from '../../../../../backend/src/types/movie';
 import { SET_SELECTED_MOVIE, CLEAR_SELECTED_MOVIE, ActionTypes } from './types';
-import { newMovie } from '../../../utils/movie';
+import { newMovie } from '../../../utils/movie/movie';
 
 const movie = newMovie();
 const initialState: Movie = {

@@ -10,7 +10,7 @@ import { setPage } from '../../../../state/page/actions';
 import { addMoviegroup } from '../../../../state/movie/moviegrouplist/actions';
 import { setSelectedMoviegroup, clearSelectedMoviegroup } from '../../../../state/movie/selectedmoviegroup/actions';
 
-import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppHeaderH3 } from '../../../basic/header';
 import { AppMenu, Item } from '../../../basic/menu';
 import { MoviegroupDetailsPage } from '../MoviegroupDetailsPage';
 import { AddMoviegroupModal } from '../AddMoviegroupModal';
@@ -69,7 +69,7 @@ export const MoviegroupListPage: React.FC = () => {
     
     return (
         <div className="App">
-          <AppHeaderH3Plus text='Filmgruppen' icon='list'/>
+          <AppHeaderH3 text='Filmgruppen' icon='list'/>
           <AddMoviegroupModal
             modalOpen={modalOpen}
             onSubmit={handleNewMoviegroup}

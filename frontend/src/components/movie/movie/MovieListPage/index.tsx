@@ -15,15 +15,15 @@ import { addMovie, updateMovie, exchangeMovies } from '../../../../state/movie/m
 import { setMoviefilter, clearMoviefilter } from '../../../../state/movie/moviefilter/actions';
 import { setSelectedMovie, clearSelectedMovie } from '../../../../state/movie/selectedmovie/actions';
 import { addChangedMovie, clearChangedMovie } from '../../../../state/movie/changedmovielist/actions';
-import { setSortButton, clearSortButton } from '../../../../state/address/sortbutton/actions';
+import { setSortButton, clearSortButton } from '../../../../state/book/sortbutton/actions';
 
-import { AppHeaderH3Plus } from '../../../basic/header';
+import { AppHeaderH3 } from '../../../basic/header';
 import { AppMenuOpt, ItemOpt } from '../../../basic/menu';
 
 import { AddMovieModal } from '../AddMovieModal';
 import { MovieDetailsPage } from '../MovieDetailsPage';
 
-import { movielistTitle, movielistFilter, nextSeqnr, findChecksum } from '../../../../utils/movie';
+import { movielistTitle, movielistFilter, nextSeqnr, findChecksum, checkSerial } from '../../../../utils/movie/movie';
 
 
 export const MovieListPage: React.FC = () => {
@@ -80,7 +80,7 @@ export const MovieListPage: React.FC = () => {
           const list = await getOne(directory);
           Object.values(list).forEach((item, index) => {
             const [ filename, checksum ] = item.split('|');
-            const newMovie: MovieNoID = {
+            let newMovie: MovieNoID = {
               format: 'MP4',
               moviegroup: moviefilter.group,
               subgroup: moviefilter.subgroup,
@@ -98,66 +98,8 @@ export const MovieListPage: React.FC = () => {
               createdAt: new Date(),
               modifiedAt: new Date()
             };
-            let numberOfDash: number = 0;
-            for (let iii = 0; iii < newMovie.title.name.length; iii++) {
-              if (newMovie.title.name.charAt(iii)==='-') numberOfDash++;
-            };
-            switch (moviefilter.subgroup) {
-              case "The Killing":
-                if (numberOfDash===3) {
-                  const [ a,b,c ] = newMovie.title.name.split('-');
-                  const seqnr: number = +(a.trim()+(b.trim().length===2 ? b.trim() : '0'+b.trim()));
-                  const season: string = a.trim();
-                  const serial: string = b.trim();
-                  const maximal: string = c.trim();
-                  const comment: string = 'Kopenhagen (Lund)';
-                  newMovie.title.seqnr = seqnr;
-                  switch (season) {
-                    case '1':
-                      newMovie.launched = '2007';
-                      break;
-                    case '2':
-                      newMovie.launched = '2009';
-                      break;
-                    case '3':
-                      newMovie.launched = '2012';
-                      break;
-                    default:
-                  }
-                  newMovie.season = season;
-                  newMovie.serial = serial;
-                  newMovie.maximal = maximal;
-                  newMovie.comment = comment;
-                }
-                break;
-                case "Tatort":
-                  if (numberOfDash===4) {
-                    const [ a,,c,d,e ] = newMovie.title.name.split('-');
-                    const seqnr: number = +(a.trim());
-                    const serial: string = a.trim();
-                    const launched: string = e.trim();
-                    const comment: string = c.trim() + ' (' + d.trim() + ')';
-                    newMovie.title.seqnr = seqnr;
-                    newMovie.launched = launched;
-                    newMovie.serial = serial;
-                    newMovie.comment = comment;
-                  }
-                  break;
-                case "Wilsberg":
-                  if (numberOfDash===1) {
-                    const [ a, ] = newMovie.title.name.split('-');
-                    const seqnr: number = +(a.trim());
-                    const serial: string = a.trim();
-                    const comment: string = 'Wilsberg (Münster)';
-                    newMovie.title.seqnr = seqnr;
-                    newMovie.serial = serial;
-                    newMovie.comment = comment;
-                  }
-                  break;
-                default:
-                  break;
-            }
-            console.log(newMovie)
+            newMovie = checkSerial(newMovie, moviefilter.subgroup);
+            console.log(newMovie);
             if (!findChecksum(movies, checksum)) {
               console.log('neu !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
               dispatch(addMovie(newMovie));
@@ -303,7 +245,7 @@ export const MovieListPage: React.FC = () => {
 
     return (
         <div className="App">
-          <AppHeaderH3Plus text={title} icon='list'/>
+          <AppHeaderH3 text={title} icon='list'/>
           <AddMovieModal
             edittype={Edittype.ADD}
             modalOpen={modalOpen}

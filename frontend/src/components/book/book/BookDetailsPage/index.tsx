@@ -13,7 +13,7 @@ import { clearSelectedBook } from '../../../../state/book/selectedbook/actions';
 
 import { remove, create, update } from "../../../../services/image/images";
        
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 
 import { getContent, getImageUrl } from "../../../../utils/image";
@@ -141,7 +141,7 @@ const BookDetailsPage: React.FC = () => {
 
     return (          
         <div className="App">
-            <AppHeaderH3Plus text={book.title.name} icon='zoom-in'/>
+            <AppHeaderH3 text={book.title.name} icon='zoom-in'/>
             <AddBookModal
                 edittype={Edittype.EDIT}
                 modalOpen={modalOpen[ModalDialog.CHANGE]}

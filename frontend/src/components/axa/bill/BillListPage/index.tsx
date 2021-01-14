@@ -18,7 +18,7 @@ import { initializeAccounts } from  '../../../../state/axa/accountlist/actions';
 import { create2 } from "../../../../services/image/images";
 import { getOne } from '../../../../services/axa/accounts';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
@@ -152,7 +152,7 @@ const BillListPage: React.FC = () => {
 
     return (
         <div className="App">
-          <AppHeaderH3Plus text={'Rechnungen ' + year.name.name} icon='list'/>
+          <AppHeaderH3 text={'Rechnungen ' + year.name.name} icon='list'/>
           {openaccount.name.name!==''&&<AddBillModal
             edittype={Edittype.ADD}
             modalOpen={modalOpen}

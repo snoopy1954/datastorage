@@ -15,7 +15,7 @@ import { clearSelectedBill } from '../../../../state/axa/selectedbill/actions';
 import { getOne, remove } from '../../../../services/image/images';
 import { setPdfUrl, clearPdfUrl } from "../../../../state/axa/pdfUrl/actions";
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
 import { AskAmount } from "../../../basic/askAmount";
@@ -165,7 +165,7 @@ const BillDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={'Rechnung ' + bill.name.name} icon='zoom-in'/>
+      <AppHeaderH3 text={'Rechnung ' + bill.name.name} icon='zoom-in'/>
       <AddBillModal
           edittype={Edittype.EDIT}
           modalOpen={modalOpen[ModalDialog.CHANGE]}

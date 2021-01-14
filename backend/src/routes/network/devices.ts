@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
 import Device from '../../models/network/device';
-import { toNewDevice } from '../../utils/network/parameters';
+import { toNewDevice } from '../../utils/network';
 
 const devicesRouter = express.Router();
 

@@ -17,7 +17,7 @@ import { ShowField } from '../../../basic/formfields/showfield';
 import { NumberField } from '../../../basic/formfields/numberfield';
 import { FileFieldWithChecksum } from '../../../basic/formfields/filefieldwithchecksum';
 
-import { newMovie } from '../../../../utils/movie';
+import { newMovie } from '../../../../utils/movie/movie';
 
 
 interface Props {

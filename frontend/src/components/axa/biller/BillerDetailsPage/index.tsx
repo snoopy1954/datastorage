@@ -7,7 +7,7 @@ import { RootState } from '../../../../state/store';
 import { removeBiller } from '../../../../state/axa/billerlist/actions';
 import { clearSelectedBiller } from '../../../../state/axa/selectedbiller/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
 
@@ -54,7 +54,7 @@ export const BillerDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={'Rechnungssteller ' + biller.name} icon='list'/>
+      <AppHeaderH3 text={'Rechnungssteller ' + biller.name} icon='list'/>
       <AskModal
           header='Rechnungssteller löschen'
           prompt={'Rechnungssteller ' + biller.name}

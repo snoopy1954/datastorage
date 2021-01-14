@@ -9,7 +9,7 @@ import { setPage } from '../../../../state/page/actions';
 import { addTongue } from '../../../../state/book/tonguelist/actions';
 import { setSelectedTongue, clearSelectedTongue } from '../../../../state/book/selectedtongue/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
@@ -70,7 +70,7 @@ const TongueListPage: React.FC = () => {
      
     return (
         <div className="App">
-          <AppHeaderH3Plus text='Sprachen' icon='list'/>
+          <AppHeaderH3 text='Sprachen' icon='list'/>
           <AddTongueModal
             modalOpen={modalOpen}
             onSubmit={submitNewTongue}

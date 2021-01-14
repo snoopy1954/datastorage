@@ -6,8 +6,9 @@ import * as mongoose from 'mongoose';
 const addressgroupSchema = new mongoose.Schema({
   groupname: {
     seqnr: { type: Number, required: true },
-    name: { type: String, required: true }
-  }
+    name: { type: String, required: true },
+  },
+  comment: { type: String, required: false },
 });
 
 addressgroupSchema.set('toJSON', {

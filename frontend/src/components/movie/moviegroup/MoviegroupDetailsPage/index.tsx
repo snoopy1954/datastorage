@@ -70,7 +70,7 @@ export const MoviegroupDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3 text={moviegroup.name}/>
+      <AppHeaderH3 text={moviegroup.name} icon='zoom-in'/>
       <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
       <Table celled>
         <Table.Header>

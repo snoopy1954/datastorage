@@ -12,7 +12,7 @@ import {
 
 import { create, update, remove, getAll } from "../../../services/network/oss";
 
-import { sortOsList } from "../../../utils/network";
+import { sortOsList } from "../../../utils/network/os";
 
 
 export const initializeOss = () => {

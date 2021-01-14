@@ -1,11 +1,9 @@
-export interface Name {
-    seqnr: number;
-    name: string;
-}
+import { Name } from '../basic';
 
 export interface Addressgroup {
     id: string;
     groupname: Name;
+    comment: string;
 }
 
 export type AddressgroupNoID = Omit<Addressgroup, 'id'>;

@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
 import Os from '../../models/network/os';
-import { toNewOs } from '../../utils/network/parameters';
+import { toNewOs } from '../../utils/network';
 
 const ossRouter = express.Router();
 

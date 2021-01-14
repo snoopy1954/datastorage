@@ -6,7 +6,7 @@ import { RootState } from '../../../../state/store';
 import { removeFormat } from '../../../../state/book/formatlist/actions';
 import { clearSelectedFormat } from '../../../../state/book/selectedformat/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
 
@@ -55,7 +55,7 @@ const FormatDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={'Sprache ' + format.formatname.name} icon='list'/>
+      <AppHeaderH3 text={'Sprache ' + format.formatname.name} icon='list'/>
       <AskModal
           header='Sprache löschen'
           prompt={'Sprache ' + format.formatname.name}

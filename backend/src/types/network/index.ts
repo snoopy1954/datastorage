@@ -1,7 +1,7 @@
 export interface Devicetype {
     id: string;
     name: string;
-    description?: string
+    description?: string;
 }
 
 export type DevicetypeNoID = Omit<Devicetype, 'id'>;
@@ -10,6 +10,7 @@ export interface Os {
     id: string;
     name: string;
     versions: string[];
+    description?: string;
 }
 
 export type OsNoID = Omit<Os, 'id'>;

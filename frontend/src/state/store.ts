@@ -36,7 +36,7 @@ import { addresslistReducer } from './address/addresslist/reducers';
 import { selectedaddressReducer } from './address/selectedaddress/reducers';
 import { addressgroupfilterReducer } from './address/addressgroupfilter/reducers';
 import { changedaddresslistReducer } from './address/changedaddresslist/reducers';
-import { sortbuttonReducer } from './address/sortbutton/reducers';
+import { sortbuttonReducer } from './book/sortbutton/reducers';
 import { movielistReducer } from './movie/movielist/reducers';
 import { selectedmovieReducer } from './movie/selectedmovie/reducers';
 import { moviegrouplistReducer } from './movie/moviegrouplist/reducers';

@@ -10,7 +10,7 @@ import { RootState } from '../../../../state/store';
 import { addYear } from  '../../../../state/pressure/yearlist/actions';
 import { setSelectedYear } from '../../../../state/pressure/selectedyear/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AddYearModal } from '../AddYearModal';
 import { YearDetailsPage } from '../YearDetailsPage';
@@ -57,7 +57,7 @@ export const YearListPage: React.FC = () => {
       
     return (
         <div className="App">
-          <AppHeaderH3Plus text='Jahr anlegen' icon='list'/>
+          <AppHeaderH3 text='Jahr anlegen' icon='list'/>
           <AddYearModal
             edittype={Edittype.ADD}
             modalOpen={modalOpen}

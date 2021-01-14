@@ -9,8 +9,8 @@ export const AppFooter = () => {
     }
   
     return (
-      <Container textAlign="left" style={footerStyle}>
-        Datenbanken app by Snoopy 2020-2021
+      <Container textAlign="left" style={footerStyle} fluid>
+        Datenbanken V2.0 (14.01.2021) by Snoopy 2020-2021
       </Container>
     )
 }

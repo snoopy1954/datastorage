@@ -8,7 +8,7 @@ import { RootState } from '../../../../state/store';
 import { addYear } from  '../../../../state/axa/years/actions';
 import { setSelectedYear } from "../../../../state/axa/year/actions";
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 
 import { backgroundColor, styleMainMenu } from "../../../../constants";
@@ -58,7 +58,7 @@ export const YearPage: React.FC = () => {
       
     return (
         <div className="App">
-          <AppHeaderH3Plus text='Jahr anlegen' icon='list'/>
+          <AppHeaderH3 text='Jahr anlegen' icon='list'/>
           <AddYearModal
             years={years}
             modalOpen={modalOpen}

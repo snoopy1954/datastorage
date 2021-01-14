@@ -14,7 +14,7 @@ import { setOpenedYear, clearOpenedYear } from '../../../../state/pressure/opene
 import { create } from "../../../../services/pressure/months";
 import { getAll } from "../../../../services/pressure/exchange";
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
 
@@ -133,7 +133,7 @@ export const MonthListPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={'Monate des Jahres ' + year.name.name} icon='list'/>
+      <AppHeaderH3 text={'Monate des Jahres ' + year.name.name} icon='list'/>
       <AskModal
           header='Neuen Monat anlegen'
           prompt={getPromptForNextMonth(year)}

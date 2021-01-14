@@ -12,7 +12,7 @@ import {
 
 import { create, update, remove, getAll } from "../../../services/address/addressgroups";
 
-import { sortAddressgroupList } from '../../../utils/address';
+import { sortAddressgroupList } from '../../../utils/address/addressgroup';
 
 
 export const initializeAddressgroups = () => {

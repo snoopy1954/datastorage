@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
 import Devicetype from '../../models/network/devicetype';
-import { toNewDevicetype } from '../../utils/network/parameters';
+import { toNewDevicetype } from '../../utils/network';
 
 const devicetypesRouter = express.Router();
 

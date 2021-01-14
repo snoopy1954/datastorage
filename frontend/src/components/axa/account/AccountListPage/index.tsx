@@ -16,7 +16,7 @@ import { setSelectedAccount } from "../../../../state/axa/selectedaccount/action
 import { addSelectedBill, clearSelectedBills } from "../../../../state/axa/selectedbills/actions";
 import { clearSelectedYear, setSelectedYear } from '../../../../state/axa/year/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenuOpt, ItemOpt } from "../../../basic/menu";
 
 import { getAmount } from '../../../../utils/axa/account';
@@ -138,7 +138,7 @@ const AccountListPage: React.FC = () => {
 
     return (
         <div className="App">
-          <AppHeaderH3Plus text={'Abrechnungen ' + year.name.name + remarkToRest} icon='list'/>
+          <AppHeaderH3 text={'Abrechnungen ' + year.name.name + remarkToRest} icon='list'/>
           <AddAccountModal
             edittype={Edittype.ADD}
             title='Neu Abrechnung anlegen'

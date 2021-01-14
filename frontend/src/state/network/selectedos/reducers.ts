@@ -10,15 +10,9 @@ const initialState: Os = {
 export const selectedosReducer = (state = initialState, action: ActionTypes): Os => {
     switch (action.type) {
         case SET_SELECTED_OS:
-            return {
-                ...state,
-                ...action.payload
-            };
+            return (action.payload);
         case CLEAR_SELECTED_OS:
-            return {
-                ...state,
-                ...initialState
-            };
+            return (initialState);
         default:
             return state
     }

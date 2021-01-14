@@ -4,9 +4,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import mongoose from 'mongoose';
 
-import connectAdresse from "../../connections/address";
+import connectAddress from "../../connections/address";
 import addressSchema from "../../schemas/address/address";
 
-const addressModel: mongoose.Model<mongoose.Document, {}> = connectAdresse.model('Address', addressSchema);
+const addressModel: mongoose.Model<mongoose.Document, {}> = connectAddress.model('Address', addressSchema);
 
 export default addressModel;

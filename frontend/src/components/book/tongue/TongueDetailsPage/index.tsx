@@ -6,7 +6,7 @@ import { RootState } from '../../../../state/store';
 import { removeTongue } from '../../../../state/book/tonguelist/actions';
 import { clearSelectedTongue } from '../../../../state/book/selectedtongue/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { AskModal } from "../../../basic/askModal";
 
@@ -55,7 +55,7 @@ const DevicetypeDetailsPage: React.FC = () => {
 
   return (
     <div className="App">
-      <AppHeaderH3Plus text={'Sprache ' + tongue.tonguename.name} icon='list'/>
+      <AppHeaderH3 text={'Sprache ' + tongue.tonguename.name} icon='list'/>
       <AskModal
           header='Sprache löschen'
           prompt={'Sprache ' + tongue.tonguename.name}

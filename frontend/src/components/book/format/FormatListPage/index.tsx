@@ -9,7 +9,7 @@ import { setPage } from '../../../../state/page/actions';
 import { addFormat } from '../../../../state/book/formatlist/actions';
 import { setSelectedFormat, clearSelectedFormat } from '../../../../state/book/selectedformat/actions';
 
-import { AppHeaderH3Plus } from "../../../basic/header";
+import { AppHeaderH3 } from "../../../basic/header";
 import { AppMenu, Item } from "../../../basic/menu";
 import { backgroundColor, styleMainMenu } from "../../../../constants";
 
@@ -70,7 +70,7 @@ const FormatListPage: React.FC = () => {
 
     return (
         <div className="App">
-          <AppHeaderH3Plus text='Formate' icon='list'/>
+          <AppHeaderH3 text='Formate' icon='list'/>
           <AddFormatModal
             modalOpen={modalOpen}
             onSubmit={handleNewFormat}

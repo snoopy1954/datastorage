@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { backgroundColor, styleMainMenu } from '../../constants';
+import { Button } from "semantic-ui-react";
+import { styleButton } from '../../constants';
 
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
@@ -8,9 +9,8 @@ import { initializeAddressgroups } from '../../state/address/addressgrouplist/ac
 import { initializeAddresses } from '../../state/address/addresslist/actions';
 
 import { AppHeaderH2 } from '../basic/header';
-import { AppMenu, Item } from '../basic/menu';
-import { AddressListPage } from './address/AddressListPage';
-import { AddressgroupListPage } from './addressgroup/AddressgroupListPage';
+import { AddressPage } from './address/AddressPage';
+import { AddressgroupPage } from './addressgroup/AddressgroupPage';
 
 
 const Address: React.FC = () => {
@@ -20,46 +20,31 @@ const Address: React.FC = () => {
     const subpage = useSelector((state: RootState) => state.page.subpage);      
   
     React.useEffect(() => {
-      dispatch(initializeAddressgroups());
+        dispatch(initializeAddressgroups());
     }, [dispatch]);
 
     React.useEffect(() => {
-      dispatch(initializeAddresses());
+        dispatch(initializeAddresses());
     }, [dispatch]);
   
     React.useEffect(() => {
-      dispatch(setPage({ mainpage, subpage: 'addresses' }));
+        dispatch(setPage({ mainpage, subpage: 'address' }));
     }, [mainpage, dispatch]);
    
-    const handleSelection = (selected: string) => {
-      dispatch(setPage({ mainpage, subpage: selected }));
+    const actionSelect = (selected: string) => {
+        dispatch(setPage({ mainpage, subpage: selected }));
     };
   
-    const buttons: Item[] = 
-    [
-      {
-        name: 'addresses',
-        title: 'Adressen',
-        color: 'blue',
-        onClick: handleSelection
-      },
-      {
-        name: 'addressgroup',
-        title: 'Gruppe',
-        color: 'blue',
-        onClick: handleSelection
-      },
-    ];
-  
 
-  return (
-    <div className="App">
-      <AppHeaderH2 text='Adressen' icon='address book'/>
-      <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
-      {subpage==='addresses'&&<AddressListPage/>}
-      {subpage==='addressgroup'&&<AddressgroupListPage/>}
-    </div>
-  );
-}
+    return (
+        <div className="App">
+            <AppHeaderH2 text='Adressen' icon='address book'/>
+            <Button style={styleButton} onClick={() => actionSelect('address')}>Kontakte</Button>
+            <Button style={styleButton} onClick={() => actionSelect('addressgroup')}>Gruppen</Button>
+            {subpage==='address'&&<AddressPage/>}
+            {subpage==='addressgroup'&&<AddressgroupPage/>}
+        </div>
+    );
+};
     
 export default Address;
