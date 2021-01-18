@@ -22,6 +22,8 @@ export const FilePickDateField: React.FC<Props> = ({
   }: Props) => {
     const fieldnamefile = field.name + '.file';
     const fieldnamedate = field.name + '.date';
+
+    console.log(filedate)
     return (
       <FieldArray name="filedate">
         {() => (

@@ -3,10 +3,6 @@ import { MD5 } from 'crypto-js';
 import { Name } from '../../../backend/src/types/axa';
 import { FileDate } from '../types/axa';
 
-import fs from 'fs';
-//const fs = window.require('fs');
-
-
 
 export const newName = (): Name => {
     return { name: '', seqnr: 0 };
@@ -58,6 +54,12 @@ const getCurrentDateAsArray = (): number[] => {
     return [year, month, day];
 };
 
+export const getFolderFromAxaAccountname = (name: string): string => {
+    const folder: string = name.substr(6,4) + name.substr(3,2) + name.substr(0,2);
+
+    return folder;
+};
+
 const getDateAsCompareValue = (values: number[]): number => {
 
     return values[0] * 10000 + values[1] * 100 + values[2];
@@ -103,22 +105,4 @@ export const newFiledate = (): FileDate => {
     
     return filedate;
 };
-
-export const getAllFilesFromFolder = (dir: string) => { 
-    let results: string[] = []; 
-    const xxx = fs.readdirSync(dir);
-    console.log(xxx)
-    // fs.readdirSync(dir).forEach(file => { 
-    //     file = dir+'/'+file; 
-    //     const stat = fs.statSync(file); 
-
-    //     if (stat && stat.isDirectory()) { 
-    //         results = results.concat(getAllFilesFromFolder(file)) 
-    //     } else {
-    //         results.push(file); 
-    //     }
-    // }); 
-
-    return results; 
-}; 
 

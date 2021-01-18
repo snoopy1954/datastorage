@@ -8,15 +8,13 @@ const initialState: Biller = emptyBiller();
 export const selectedbillerReducer = (state = initialState, action: ActionTypes): Biller => {
     switch (action.type) {
         case SET_SELECTED_BILLER:
-            return {
-                ...state,
-                ...action.payload
-            };
+            return (
+                action.payload
+            );
         case CLEAR_SELECTED_BILLER:
-            return {
-                ...state,
-                ...initialState
-            };
+            return (
+                initialState
+            );
         default:
             return state
     }

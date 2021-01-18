@@ -4,7 +4,7 @@ import { Button, Table } from "semantic-ui-react";
 import { backgroundColor, styleButton } from '../../../../constants';
 
 import { Edittype } from "../../../../types/basic";
-import { Os, OsNoID, Version } from '../../../../../../backend/src/types/network';
+import { Os, OsNoID } from '../../../../../../backend/src/types/network';
 
 import { RootState } from '../../../../state/store';
 import { addOs, updateOs, removeOs } from  '../../../../state/network/oslist/actions';
@@ -14,11 +14,10 @@ import { clearSelectedDevice } from  '../../../../state/network/selecteddevice/a
 import { AppHeaderH3 } from "../../../basic/header";
 import { AskModal } from "../../../basic/askModal";
 import { OsModal } from '../OsModal';
-import { VersionModal } from '../VersionModal';
 
 
 export const OsPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
+  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
   const oss = useSelector((state: RootState) => state.oss);
@@ -29,39 +28,33 @@ export const OsPage: React.FC = () => {
   }, [dispatch]);  
 
   const openModalNew = (): void => {
-    setModalOpen([true, false, false, false, false]);
+    setModalOpen([true, false, false, false]);
   };
 
   const openModalDelete = (os: Os): void => {
     dispatch(setSelectedOs(os));
-    setModalOpen([false, true, false, false, false]);
+    setModalOpen([false, true, false, false]);
   };
   
   const openModalChange = (os: Os): void => {
     dispatch(setSelectedOs(os));
-    setModalOpen([false, false, true, false, false]);
+    setModalOpen([false, false, true, false]);
   };
   
   const openModalShow = (os: Os): void => {
     dispatch(setSelectedOs(os));
-    setModalOpen([false, false, false, true, false]);
+    setModalOpen([false, false, false, true]);
   };
   
-  const openModalVersion = (os: Os): void => {
-    dispatch(setSelectedOs(os));
-    setModalOpen([false, false, false, false, true]);
-  };
-
   enum ModalDialog {
     NEW = 0,
     DELETE = 1,
     CHANGE = 2,
     SHOW = 3,
-    VERSION = 4,
   };
 
   const closeModal = (): void => {
-    setModalOpen([false, false, false, false, false]);
+    setModalOpen([false, false, false, false]);
   };
 
   const actionAdd = async (values: OsNoID) => {
@@ -79,16 +72,6 @@ export const OsPage: React.FC = () => {
       ...values,
       id: os.id
     };
-    dispatch(updateOs(osToChange));
-    dispatch(clearSelectedOs());
-    closeModal();
-  };
-
-  const actionVersion = async (values: Version) => {
-    const osToChange: Os = {
-      ...os,
-    };
-    osToChange.versions.push(values.version);
     dispatch(updateOs(osToChange));
     dispatch(clearSelectedOs());
     closeModal();
@@ -123,12 +106,6 @@ export const OsPage: React.FC = () => {
         onSubmit={actionChange}
         onClose={closeModal}
       />
-      <VersionModal
-        title={'Neue Version zu ' + os.name + ' anlegen'}
-        modalOpen={modalOpen[ModalDialog.VERSION]}
-        onSubmit={actionVersion}
-        onClose={closeModal}
-      />
       <AskModal
         header='Betriebssystem löschen'
         prompt={'Betriebssystem ' + os.name + ' löschen?'}
@@ -154,7 +131,6 @@ export const OsPage: React.FC = () => {
               <Table.Cell>
                 <Button style={styleButton} onClick={() => openModalShow(os)}>Anzeigen</Button>
                 <Button style={styleButton} onClick={() => openModalChange(os)}>Ändern</Button>
-                <Button style={styleButton} onClick={() => openModalVersion(os)}>Version+</Button>
                 <Button style={styleButton} onClick={() => openModalDelete(os)}>Löschen</Button>
               </Table.Cell>
             </Table.Row>

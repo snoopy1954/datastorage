@@ -1,4 +1,4 @@
-import { BillNoID } from '../../../backend/src/types/axa';
+import { BillNoID, AccountNoID } from '../../../backend/src/types/axa';
 
 export enum Insurancetype {
     Z100S = 'Z 100 S',
@@ -28,5 +28,9 @@ export interface FileDate {
 export interface BillWithFileDatesNoID extends BillNoID {
     invoice: FileDate;
     recipe: FileDate;
+}
+
+export interface AccountWithFileDateNoID extends AccountNoID {
+    note: FileDate;
 }
 

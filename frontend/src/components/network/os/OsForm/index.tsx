@@ -10,6 +10,7 @@ import { OsNoID } from '../../../../../../backend/src/types/network';
 import { RootState } from '../../../../state/store';
 
 import { TextField } from '../../../basic/formfields/textfield';
+import { VersionFieldArray } from './versionfieldarray';
 
 import { newOs } from '../../../../utils/network/os';
 
@@ -41,7 +42,7 @@ export const OsForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
         return errors;
       }}
     >
-      {({ isValid, dirty }) => {
+      {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
             <Field
@@ -55,6 +56,11 @@ export const OsForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
               placeholder="Description"
               name="description"
               component={TextField}
+            />
+            <VersionFieldArray
+              versions={values.versions}
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
             />
             <Button style={styleButton} type="submit" disabled={!dirty || !isValid}>Speichern</Button>
             <Button style={styleButton} onClick={() => onCancel()}>Abbrechen</Button>

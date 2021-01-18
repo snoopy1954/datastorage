@@ -7,14 +7,14 @@ import { Address, AddressNoID, Addressgroup } from '../../../../../../backend/sr
 import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { addAddress, updateAddress, removeAddress ,exchangeAddresses } from '../../../../state/address/addresslist/actions';
+import { addAddress, updateAddress, removeAddress, exchangeAddresses } from '../../../../state/address/addresslist/actions';
 import { setSelectedAddress, clearSelectedAddress } from '../../../../state/address/selectedaddress/actions';
 import { clearSelectedAddressgroup } from '../../../../state/address/selectedaddressgroup/actions';
 import { setAddressgroupFilter, clearAddressgroupFilter} from '../../../../state/address/addressgroupfilter/actions';
 import { addChangedAddress, clearChangedAddress } from '../../../../state/address/changedaddresslist/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
-import { AskModal } from "../../../basic/askModal";
+import { AskModal } from '../../../basic/askModal';
 import { AddressModal } from '../AddressModal';
 
 import { addresslistTitle, addresslistFilter } from '../../../../utils/address/address';
@@ -69,10 +69,6 @@ export const AddressPage: React.FC = () => {
             dispatch(updateAddress(changedAddress));
         });
         dispatch(clearChangedAddress());
-    };
-
-    const handleSelection = async (address: Address) => {
-        dispatch(setSelectedAddress(address));
     };
 
     const actionSelectionClick = ( selection: string) => {
@@ -183,7 +179,7 @@ export const AddressPage: React.FC = () => {
                 <Table.Body>
                     {Object.values(sortedAddresses).map((address: Address, index: number) => (
                         <Table.Row key={address.id}>
-                            <Table.Cell onClick={() => handleSelection(address)}>{address.name.name}</Table.Cell>
+                            <Table.Cell>{address.name.name}</Table.Cell>
                             {address.persons[0].communication.phone!==''&&<Table.Cell>{address.persons[0].communication.phone}</Table.Cell>}
                             {address.persons[0].communication.phone===''&&<Table.Cell>{address.persons[0].communication.mobile}</Table.Cell>}
                             {addressgroupfilter==='Gaststätte'&&<Table.Cell>{address.persons[0].comment}</Table.Cell>}

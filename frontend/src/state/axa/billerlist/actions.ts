@@ -4,6 +4,7 @@ import {
     ADD_BILLER,
     UPDATE_BILLER,
     REMOVE_BILLER,
+    EXCHANGE_BILLERS,
     DispatchSetBillerList,
     DispatchAddBiller,
     DispatchUpdateBiller,
@@ -54,3 +55,14 @@ export const removeBiller = (id: string) => {
     });
   }
 };
+
+export const exchangeBillers = (billers: Biller[]) => {
+  const action = 
+    {
+      type: EXCHANGE_BILLERS,
+      payload: billers,
+    }
+        
+    return action;  
+};
+

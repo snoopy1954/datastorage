@@ -15,7 +15,7 @@ const sortBillers = (a: Biller, b: Biller) => {
 };
 
 export const sortBillerList = (billers: Biller[]) => {
-    return billers.sort(sortBillers);
+    return Object.values(billers).sort(sortBillers);
 };
 
 export const newBiller = (billers: Biller[]): BillerNoID => {

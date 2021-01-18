@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { backgroundColor, styleMainMenu } from "../../constants";
+import { Button } from "semantic-ui-react";
+import { styleButton } from '../../constants';
 
 import { Account, Year } from '../../../../backend/src/types/axa';
 import { AccountStatus } from '../../types/axa';
@@ -14,14 +15,13 @@ import { initializeYears } from  '../../state/axa/years/actions';
 import { setOpenAccount, clearOpenAccount } from '../../state/axa/openaccount/actions';
 import { setSelectedYear } from '../../state/axa/year/actions';
 import { clearImage } from '../../state/image/actions';
-import { clearPdfUrl } from "../../state/axa/pdfUrl/actions";
+import { clearPdfUrl } from '../../state/axa/pdfUrl/actions';
 
-import { AppHeaderH2 } from "../basic/header";
-import { AppMenu, Item } from "../basic/menu";
-import AccountPage from './account/AccountListPage';
-import BillPage from './bill/BillListPage';
-import BillerPage from './biller/BillerListPage';
-import { YearPage } from './year/YearListPage';
+import { AppHeaderH2 } from '../basic/header';
+import { AccountPage } from './account/AccountPage';
+import { BillPage } from './bill/BillPage';
+import { BillerPage } from './biller/BillerPage';
+import { YearPage } from './year/YearPage';
 
 
 const Axa: React.FC = () => {
@@ -75,42 +75,17 @@ const Axa: React.FC = () => {
     dispatch(setPage({ mainpage, subpage: 'accounts' }));
   }, [mainpage, dispatch]);
  
-  const handleSelection = (selected: string) => {
+  const actionSelect = (selected: string) => {
     dispatch(setPage({ mainpage, subpage: selected }));
   };
-
-  const buttons: Item[] = 
-  [
-    {
-      name: 'accounts',
-      title: 'Abrechnung',
-      color: 'blue',
-      onClick: handleSelection
-    },
-    {
-      name: 'bills',
-      title: 'Rechnung',
-      color: 'blue',
-      onClick: handleSelection
-    },
-    {
-      name: 'billers',
-      title: 'Kreditor',
-      color: 'blue',
-      onClick: handleSelection
-    },
-    {
-      name: 'years',
-      title: 'Jahr',
-      color: 'blue',
-      onClick: handleSelection
-    },
-  ];
 
   return (
     <div className="App">
       <AppHeaderH2 text='AXA' icon='ambulance'/>
-      <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
+      <Button style={styleButton} onClick={() => actionSelect('accounts')}>Abrechnung</Button>
+      <Button style={styleButton} onClick={() => actionSelect('bills')}>Rechnung</Button>
+      <Button style={styleButton} onClick={() => actionSelect('billers')}>Kreditor</Button>
+      <Button style={styleButton} onClick={() => actionSelect('years')}>Jahr</Button>
       {subpage==='accounts'&&<AccountPage />}
       {subpage==='bills'&&<BillPage />}
       {subpage==='billers'&&<BillerPage />}

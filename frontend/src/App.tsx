@@ -22,6 +22,7 @@ import Book from "./components/book";
 import Address from "./components/address";
 import Sudoku from './components/sudoku';
 import Account from './components/account';
+import Info from './components/info';
 
 
 const App: React.FC = () => {
@@ -61,6 +62,7 @@ const App: React.FC = () => {
                 {mainpage==='movie'&&<Movie/>}
                 {mainpage==='book'&&<Book/>}
                 {mainpage==='sudoku'&&<Sudoku/>}
+                {mainpage==='info'&&<Info/>}
                 <Divider/>
                 <AppFooter/>
             </Container>

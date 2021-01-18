@@ -56,6 +56,7 @@ import { candidatesReducer } from './sudoku/candidates/reducers';
 import { positionsReducer } from './sudoku/positions/reducers';
 import { notificationReducer } from './sudoku/notification/reducers';
 import { billerlistReducer } from './axa/billerlist/reducers';
+import { changedbillerlistReducer } from './axa/changedbillerlist/reducers';
 import { selectedbillerReducer } from './axa/selectedbiller/reducers';
 import { accountlistReducer } from './axa/accountlist/reducers';
 import { selectedaccountReducer } from './axa/selectedaccount/reducers';
@@ -66,6 +67,7 @@ import { selectedbillsReducer } from './axa/selectedbills/reducers';
 import { axayearsReducer } from './axa/years/reducers';
 import { axayearReducer } from './axa/year/reducers';
 import { pdfurlReducer } from './axa/pdfUrl/reducers';
+import { historylinesReducer } from './info/historylines/reducers';
 
 
 const rootReducer = combineReducers({
@@ -123,6 +125,7 @@ const rootReducer = combineReducers({
     positions: positionsReducer,
     notification: notificationReducer,
     billers: billerlistReducer,
+    changedbillers: changedbillerlistReducer,
     biller: selectedbillerReducer,
     accounts: accountlistReducer,
     account: selectedaccountReducer,
@@ -133,6 +136,7 @@ const rootReducer = combineReducers({
     axayears: axayearsReducer,
     axayear: axayearReducer,
     pdfurl: pdfurlReducer,
+    historylines: historylinesReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>; 

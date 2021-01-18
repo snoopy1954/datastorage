@@ -25,6 +25,8 @@ import billsRouter from './routes/axa/bill';
 import billersRouter from './routes/axa/biller';
 import accountsRouter from './routes/axa/account';
 import yearsRouter from './routes/axa/year';
+import loglinesRouter from './routes/logging/logline';
+import historylinesRouter from './routes/logging/historyline';
 
 const app = express();
 app.use(express.static('build'));
@@ -53,6 +55,8 @@ app.use('/api/bills', billsRouter);
 app.use('/api/billers', billersRouter);
 app.use('/api/accounts', accountsRouter);
 app.use('/api/years', yearsRouter);
+app.use('/api/loglines', loglinesRouter);
+app.use('/api/historylines', historylinesRouter);
 app.get('/api/ping', (_req, res) => {
     console.log('someone pinged here');
     res.json('pong');
