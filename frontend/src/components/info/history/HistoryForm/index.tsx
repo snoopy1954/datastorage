@@ -61,7 +61,7 @@ export const HistorylineForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
             />
             <Field
               label="Text"
-              placeholder="VerTextsion"
+              placeholder="Text"
               name="text"
               component={TextField}
             />

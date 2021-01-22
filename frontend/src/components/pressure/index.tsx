@@ -1,6 +1,7 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { backgroundColor, styleMainMenu } from "../../constants";
+import { useSelector, useDispatch } from 'react-redux';
+import { Button } from 'semantic-ui-react';
+import { styleButton } from '../../constants';
 
 import { Year, YearNoID } from '../../../../backend/src/types/pressure';
 
@@ -11,14 +12,12 @@ import { clearSelectedYear } from '../../state/pressure/selectedyear/actions';
 import { setOpenedYear } from '../../state/pressure/openedyear/actions';
 import { initializeMonths } from  '../../state/pressure/monthlist/actions';
 import { clearSelectedMonth } from '../../state/pressure/selectedmonth/actions';
-import { clearSelectedDay } from '../../state/pressure/selectedday/actions';
 
-import { AppHeaderH2 } from "../basic/header";
-import { YearListPage } from '../pressure/year/YearListPage';
-import { MonthListPage } from "../pressure/month/MonthListPage";
-import { AppMenu, Item } from "../basic/menu";
+import { AppHeaderH2 } from '../basic/header';
+import { YearPage } from '../pressure/year/YearPage';
+import { MonthPage } from '../pressure/month/MonthPage';
 
-import { getCurrentYear, newYear, getYear } from "../../utils/pressure";
+import { newYear, getYear, getCurrentYear } from '../../utils/pressure/year';
 
 
 const Pressure: React.FC = () => {
@@ -54,7 +53,6 @@ const Pressure: React.FC = () => {
   }, [dispatch, years]);
 
   React.useEffect(() => {
-     dispatch(clearSelectedDay());
      dispatch(clearSelectedMonth());
      dispatch(clearSelectedYear());
   }, [dispatch]);
@@ -63,32 +61,17 @@ const Pressure: React.FC = () => {
     dispatch(setPage({ mainpage, subpage: 'months' }));
   }, [mainpage, dispatch]);
 
-  const handleSelection = (selected: string) => {
+  const actionSelect = (selected: string) => {
     dispatch(setPage({ mainpage, subpage: selected }));
   };
  
-  const buttons: Item[] = 
-  [
-    {
-      name: 'months',
-      title: 'Monate',
-      color: 'blue',
-      onClick: handleSelection
-    },
-    {
-      name: 'years',
-      title: 'Jahr',
-      color: 'blue',
-      onClick: handleSelection
-    },
-  ];
-
   return (
-    <div className="App">
+    <div className='App'>
         <AppHeaderH2 text='Blutdruck' icon='heartbeat'/>
-        <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
-        {subpage==='months'&&<MonthListPage/>}
-        {subpage==='years'&&<YearListPage/>}
+        <Button style={styleButton} onClick={() => actionSelect('months')}>Monate</Button>
+        <Button style={styleButton} onClick={() => actionSelect('years')}>Jahr</Button>
+        {subpage==='months'&&<MonthPage/>}
+        {subpage==='years'&&<YearPage/>}
     </div>
   );
 }

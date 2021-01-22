@@ -23,7 +23,7 @@ import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { AccountModal } from '../AccountModal';
 
-import { getAmount } from '../../../../utils/axa/account';
+import { getAmount } from '../../../../utils/axa/axa';
 
 
 export const AccountPage: React.FC = () => {
@@ -185,13 +185,13 @@ export const AccountPage: React.FC = () => {
       <Table celled compact small='true' style={{ backgroundColor }}>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor }}>Name</Table.HeaderCell>
+            <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Name</Table.HeaderCell>
             <Table.HeaderCell className='two wide center aligned' style={{ backgroundColor }}>Status</Table.HeaderCell>
             <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Betrag</Table.HeaderCell>
             <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Erstattung</Table.HeaderCell>
             <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Ablehnung</Table.HeaderCell>
             <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Selbstbehalt</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='seven wide center aligned'>Aktion</Table.HeaderCell>
+            <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor}} >Aktion</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>

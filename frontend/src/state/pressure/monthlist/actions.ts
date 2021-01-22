@@ -12,7 +12,7 @@ import {
 
 import { create, update, remove, getAll } from "../../../services/pressure/months";
 
-import { sortMonthList } from '../../../utils/pressure';
+import { sortMonthList } from '../../../utils/pressure/month';
 
 
 export const initializeMonths = () => {

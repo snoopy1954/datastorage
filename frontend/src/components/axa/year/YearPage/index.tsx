@@ -111,10 +111,10 @@ export const YearPage: React.FC = () => {
           <Table celled compact small='true' style={{ backgroundColor }}>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Name</Table.HeaderCell>
+                <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Jahr</Table.HeaderCell>
                 <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Vital750 Rest</Table.HeaderCell>
                 <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Z100S Rest</Table.HeaderCell>
-                <Table.HeaderCell style={{ backgroundColor }} className='seven wide center aligned'>Aktion</Table.HeaderCell>
+                <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Aktion</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>

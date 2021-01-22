@@ -10,7 +10,7 @@ const connPressure: mongoose.Connection = mongoose.createConnection(url, {
     useUnifiedTopology: true, 
     useFindAndModify: false 
 });
-connPressure.on('error', function () { logError(`error connecting to MongoDB blutdruck\n`); });
-connPressure.once('open', function () { logInfo('connected to MongoDB blutdruck'); });
+connPressure.on('error', function () { logError(`error connecting to MongoDB pressure\n`); });
+connPressure.once('open', function () { logInfo('connected to MongoDB pressure'); });
 
 export default connPressure;

@@ -7,6 +7,7 @@ import { styleButton }from './constants';
 import { RootState } from './state/store';
 import { setPage } from './state/page/actions';
 import { Page } from './state/page/types';
+import { initializeInfos } from './state/info/infos/actions';
 
 import { checkService } from "./services/ping";
 
@@ -35,6 +36,10 @@ const App: React.FC = () => {
         dispatch(setPage(page));
     }, [dispatch]);
 
+    React.useEffect(() => {
+        dispatch(initializeInfos());
+    }, [dispatch]);
+    
     const handleSelection = (selected: string) => {
         const page: Page = { mainpage: selected, subpage: '' };
         dispatch(setPage(page));

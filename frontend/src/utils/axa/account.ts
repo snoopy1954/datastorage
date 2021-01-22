@@ -99,7 +99,3 @@ export const getUpdatedAccount = (account: Account, bill: BillNoID): Account => 
 
     return updatedAccount;
 };
-
-export const getAmount = (value: string): string => {
-    return value===''||value===undefined ? '' : value + ' €';
-};

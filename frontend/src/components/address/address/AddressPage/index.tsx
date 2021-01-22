@@ -167,13 +167,14 @@ export const AddressPage: React.FC = () => {
             <Table celled style={{ backgroundColor }}>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Name</Table.HeaderCell>
-                        <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Telefon</Table.HeaderCell>
+                        <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Name</Table.HeaderCell>
+                        <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Telefon</Table.HeaderCell>
                         {addressgroupfilter==='Gaststätte'&&
-                        <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Kommentar</Table.HeaderCell>}
+                        <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Kommentar</Table.HeaderCell>}
                         {addressgroupfilter!=='Gaststätte'&&
-                        <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Email</Table.HeaderCell>}
-                        <Table.HeaderCell style={{ backgroundColor }} className='seven wide center aligned'>Aktion</Table.HeaderCell>
+                        <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Email</Table.HeaderCell>}
+                        <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Auf/Ab</Table.HeaderCell>
+                        <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Aktion</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -185,10 +186,7 @@ export const AddressPage: React.FC = () => {
                             {addressgroupfilter==='Gaststätte'&&<Table.Cell>{address.persons[0].comment}</Table.Cell>}
                             {addressgroupfilter!=='Gaststätte'&&<Table.Cell>{address.persons[0].communication.email}</Table.Cell>}
                             <Table.Cell>
-                                <Button style={styleButton} onClick={() => openModalShow(address)}>Anzeigen</Button>
-                                <Button style={styleButton} onClick={() => openModalChange(address)}>Ändern</Button>
-                                <Button style={styleButton} onClick={() => openModalDelete(address)}>Löschen</Button>
-                                <Button className="ui icon button" style={styleButtonSmall} disabled={addressgroupfilter===''}
+                            <Button className="ui icon button" style={styleButtonSmall} disabled={addressgroupfilter===''}
                                       onClick={() => actionUpDown(Direction.UP, index, sortedAddresses) }>
                                     <i className="angle up icon"></i>
                                 </Button>
@@ -196,6 +194,11 @@ export const AddressPage: React.FC = () => {
                                       onClick={() => actionUpDown(Direction.DOWN, index, sortedAddresses) }>
                                     <i className="angle down icon"></i>
                                 </Button>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <Button style={styleButton} onClick={() => openModalShow(address)}>Anzeigen</Button>
+                                <Button style={styleButton} onClick={() => openModalChange(address)}>Ändern</Button>
+                                <Button style={styleButton} onClick={() => openModalDelete(address)}>Löschen</Button>
                             </Table.Cell>
                         </Table.Row>
                     ))}

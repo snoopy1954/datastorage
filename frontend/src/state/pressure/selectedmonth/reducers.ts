@@ -34,15 +34,13 @@ const initialState: Month = {
 export const selectedmonthReducer = (state = initialState, action: SelectedMonthActionTypes): Month => {
     switch (action.type) {
         case SET_SELECTED_MONTH:
-            return {
-                ...state,
-                ...action.payload
-            };
+            return (
+                action.payload
+            )
         case CLEAR_SELECTED_MONTH:
-            return {
-                ...state,
-                ...initialState
-            };
+            return (
+                initialState
+            )
         default:
             return state
     }

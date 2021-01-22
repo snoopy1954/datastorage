@@ -141,8 +141,9 @@ export const BillerPage: React.FC = () => {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Name</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='six wide center aligned'>Person</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='seven wide center aligned'>Aktion</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Person</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Auf/Ab</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Aktion</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -151,9 +152,6 @@ export const BillerPage: React.FC = () => {
               <Table.Cell>{biller.name.name}</Table.Cell>
               <Table.Cell>{biller.person}</Table.Cell>
               <Table.Cell>
-                <Button style={styleButton} onClick={() => openModalShow(biller)}>Anzeigen</Button>
-                <Button style={styleButton} onClick={() => openModalChange(biller)}>Ändern</Button>
-                <Button style={styleButton} onClick={() => openModalDelete(biller)}>Löschen</Button>
                 <Button className="ui icon button" style={styleButtonSmall} 
                     onClick={() => actionUpDown(Direction.UP, index, sortedBillers)}>
                   <i className="angle up icon"></i>
@@ -162,6 +160,11 @@ export const BillerPage: React.FC = () => {
                     onClick={() => actionUpDown(Direction.DOWN, index, sortedBillers)}>
                   <i className="angle down icon"></i>
                 </Button>
+              </Table.Cell>
+              <Table.Cell>
+                <Button style={styleButton} onClick={() => openModalShow(biller)}>Anzeigen</Button>
+                <Button style={styleButton} onClick={() => openModalChange(biller)}>Ändern</Button>
+                <Button style={styleButton} onClick={() => openModalDelete(biller)}>Löschen</Button>
               </Table.Cell>
             </Table.Row>
           ))}

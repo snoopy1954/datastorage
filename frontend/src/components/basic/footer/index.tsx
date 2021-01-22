@@ -1,7 +1,15 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Container } from 'semantic-ui-react';
 
+import { RootState } from '../../../state/store';
+
+
 export const AppFooter = () => {
+  const infos = useSelector((state: RootState) => state.infos);
+
+  const footerText: string = `Datenbanken ${infos.version} (${infos.date}) by Snoopy 2020-2021`;
+
   const footerStyle = {
     color: 'black',
     fontStyle: 'italic',
@@ -12,7 +20,7 @@ export const AppFooter = () => {
   return (
     <Container textAlign='left' style={footerStyle} fluid>
       <div>
-        <p>Datenbanken 2.03 (18.01.2021) by Snoopy 2020-2021</p>
+        <p>{footerText}</p>
       </div>
     </Container>
   );

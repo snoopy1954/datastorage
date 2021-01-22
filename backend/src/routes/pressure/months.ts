@@ -49,7 +49,7 @@ monthsRouter.put('/:id', async (request, response) => {
         const newMonth = toNewMonth(request.body);
         const updatedMonth = await Month.findByIdAndUpdate(request.params.id, newMonth);
         if (updatedMonth) {
-            response.json(updatedMonth.toJSON());
+            response.json(updatedMonth);
         }
         else {
             response.status(400).send('update failed');

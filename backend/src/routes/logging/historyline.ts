@@ -8,7 +8,7 @@ const historylinesRouter = express.Router();
 
 historylinesRouter.get('/', async (_request, response) => {
     const historylines = await Historyline.find({});
-  
+
     response.json(historylines.map(historyline => historyline.toJSON()));
 });
 

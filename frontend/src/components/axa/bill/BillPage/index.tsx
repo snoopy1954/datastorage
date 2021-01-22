@@ -23,6 +23,7 @@ import { AskModal } from '../../../basic/askModal';
 import { BillModal } from "../BillModal";
 
 import { getSumAmounts } from '../../../../utils/axa/bill';
+import { getAmount } from '../../../../utils/axa/axa';
 
 
 export const BillPage: React.FC = () => {
@@ -180,17 +181,17 @@ export const BillPage: React.FC = () => {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Name</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Betrag</Table.HeaderCell>
             <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Rechnungssteller</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='seven wide center aligned'>Aktion</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Betrag</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Aktion</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {Object.values(billsToShow).map((bill: Bill) => (
             <Table.Row key={bill.id}>
               <Table.Cell onClick={() => openModalShow(bill)}>{bill.name.name}</Table.Cell>
-              <Table.Cell onClick={() => openModalShow(bill)}>{getSumAmounts(bill)}</Table.Cell>
               <Table.Cell onClick={() => openModalShow(bill)}>{bill.invoicingparty}</Table.Cell>
+              <Table.Cell className='right aligned' onClick={() => openModalShow(bill)}>{getAmount(getSumAmounts(bill))}</Table.Cell>
               <Table.Cell>
                 <Button style={styleButton} onClick={() => openModalShow(bill)}>Anzeigen</Button>
                 <Button style={styleButton} onClick={() => openModalChange(bill)}>Ändern</Button>

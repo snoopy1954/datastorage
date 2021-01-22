@@ -118,9 +118,9 @@ export const OsPage: React.FC = () => {
       <Table celled compact small='true' style={{ backgroundColor }}>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Name</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Name</Table.HeaderCell>
             <Table.HeaderCell style={{ backgroundColor }} className='six wide center aligned'>Beschreibung</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='seven wide center aligned'>Aktion</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Aktion</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>

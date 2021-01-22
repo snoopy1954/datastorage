@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { LoglineNoID, HistorylineNoID } from '../../types/logging';
+import { LoglineNoID, HistorylineNoID, InfoNoID } from '../../types/logging';
 import { parseString, parseNumber } from '../basicParser';
 
 
@@ -50,5 +50,22 @@ export const toNewLogline = (object: any) => {
 //    console.log(newLogline);
 
     return newLogline;
+};
+
+export const toNewInfo = (object: any) => {
+    // console.log(object);
+    const date = parseString(object.date);
+    // console.log(`date='${date}'`);
+    const version = parseString(object.version);
+    // console.log(`version='${version}'`);
+ 
+    const newInfo: InfoNoID = {
+        date,
+        version
+    };
+
+//    console.log(newInfo);
+
+    return newInfo;
 };
 

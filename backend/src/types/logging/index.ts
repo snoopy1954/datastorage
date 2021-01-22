@@ -16,3 +16,11 @@ export interface Historyline {
 }
 
 export type HistorylineNoID = Omit<Historyline, 'id'>;
+
+export interface Info {
+    id: string;
+    date: string;
+    version: string;
+}
+
+export type InfoNoID = Omit<Info, 'id'>;

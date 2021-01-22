@@ -1,8 +1,8 @@
 import React from "react";
-import { Menu, Button } from "semantic-ui-react";
-import { Field, Formik, Form } from "formik";
 import { useSelector } from 'react-redux';
-import { backgroundColor, styleMainMenu } from "../../../../constants";
+import { Button } from "semantic-ui-react";
+import { Field, Formik, Form } from "formik";
+import { styleButton }from '../../../../constants';
 
 import { Edittype } from "../../../../types/basic";
 import { YearNoID, Year } from '../../../../../../backend/src/types/pressure';
@@ -13,7 +13,7 @@ import { TextField } from '../../../basic/formfields/textfield';
 import { NumberField } from '../../../basic/formfields/numberfield';
 import { BooleanField } from '../../../basic/formfields/booleanfield';
 
-import { newYear } from '../../../../utils/pressure';
+import { newYear } from '../../../../utils/pressure/year';
 
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
   onCancel: () => void;
 }
 
-export const AddYearForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
+export const YearForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
   const years: Year[] = useSelector((state: RootState) => state.yearlist);
   const year: Year = useSelector((state: RootState) => state.selectedyear);
 
@@ -41,7 +41,7 @@ export const AddYearForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
         return errors;
       }}
     >
-      {({ isValid }) => {
+      {({ isValid, dirty }) => {
         return (
           <Form className="form ui">
             <Field
@@ -70,14 +70,8 @@ export const AddYearForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
               name="isLastYear"
               component={BooleanField}
             />
-            <Menu compact stackable borderless style={{ background: backgroundColor }}>
-              <Menu.Item>
-                <Button type="submit" style={styleMainMenu} color="blue" disabled={!isValid}>Speichern</Button>
-              </Menu.Item>
-              <Menu.Item>
-                <Button type="button" style={styleMainMenu} onClick={onCancel} color="blue">Abbrechen</Button>
-              </Menu.Item>
-            </Menu>
+            <Button style={styleButton} type="submit" disabled={!dirty || !isValid}>Speichern</Button>
+            <Button style={styleButton} type="button" onClick={() => onCancel()}>Abbrechen</Button>
           </Form>
         );
       }}
@@ -85,4 +79,4 @@ export const AddYearForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
   );
 };
 
-export default AddYearForm;
+export default YearForm;

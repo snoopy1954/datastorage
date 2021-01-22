@@ -3,10 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { backgroundColor, styleButton } from '../../../../constants';
 
-import { Historyline, HistorylineNoID } from '../../../../../../backend/src/types/logging';
+import { Historyline, HistorylineNoID, Info } from '../../../../../../backend/src/types/logging';
 
 import { RootState } from '../../../../state/store';
 import { addHistoryline } from  '../../../../state/info/historylines/actions';
+import { updateInfo } from  '../../../../state/info/infos/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { HistoryModal } from '../HistoryModal';
@@ -17,6 +18,7 @@ export const HistoryPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const historylines = useSelector((state: RootState) => state.historylines);
+  const infos = useSelector((state: RootState) => state.infos);
 
   const openModal = (): void => setModalOpen(true);
     
@@ -26,6 +28,12 @@ export const HistoryPage: React.FC = () => {
 
   const actionAdd = async (values: HistorylineNoID) => {
     dispatch(addHistoryline(values));
+    const infosToUpdate: Info = {
+      id: infos.id,
+      date: values.date.name,
+      version: values.version
+    };
+    dispatch(updateInfo(infosToUpdate));
     closeModal();
   };
    

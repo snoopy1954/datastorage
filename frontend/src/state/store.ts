@@ -8,7 +8,6 @@ import { selectedyearReducer } from './pressure/selectedyear/reducers';
 import { openedyearReducer } from './pressure/openedyear/reducers';
 import { monthlistReducer } from './pressure/monthlist/reducers';
 import { selectedmonthReducer } from './pressure/selectedmonth/reducers';
-import { selecteddayReducer } from './pressure/selectedday/reducers';
 import { devicetypelistReducer } from './network/devicetypelist/reducers';
 import { selecteddevicetypeReducer } from './network/selecteddevicetype/reducers';
 import { oslistReducer } from './network/oslist/reducers';
@@ -68,7 +67,7 @@ import { axayearsReducer } from './axa/years/reducers';
 import { axayearReducer } from './axa/year/reducers';
 import { pdfurlReducer } from './axa/pdfUrl/reducers';
 import { historylinesReducer } from './info/historylines/reducers';
-
+import { infosReducer } from './info/infos/reducers';
 
 const rootReducer = combineReducers({
     page: pageReducer,
@@ -77,7 +76,6 @@ const rootReducer = combineReducers({
     openedyear: openedyearReducer,
     monthlist: monthlistReducer,
     selectedmonth: selectedmonthReducer,
-    selectedday: selecteddayReducer,
     devicetypes: devicetypelistReducer,
     devicetype: selecteddevicetypeReducer,
     oss: oslistReducer,
@@ -137,6 +135,7 @@ const rootReducer = combineReducers({
     axayear: axayearReducer,
     pdfurl: pdfurlReducer,
     historylines: historylinesReducer,
+    infos: infosReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>; 
