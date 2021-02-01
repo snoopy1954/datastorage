@@ -1,16 +1,14 @@
 import { Name } from '../basic';
 
-export interface Bookgroup {
+export interface Bookgroup  extends Name {
     id: string;
-    groupname: Name;
     subgroups: string[];
 }
 
 export type BookgroupNoID = Omit<Bookgroup, 'id'>;
 
-export interface Ownership {
+export interface Ownership extends Name {
     id: string;
-    ownershipname: Name;
 }
 
 export type OwnershipNoID = Omit<Ownership, 'id'>;
@@ -19,16 +17,14 @@ export interface Subgroup {
     subgroup: string;
 }
 
-export interface Format {
+export interface Format extends Name {
     id: string;
-    formatname: Name;
 }
 
 export type FormatNoID = Omit<Format, 'id'>;
 
-export interface Tongue {
+export interface Tongue extends Name {
     id: string;
-    tonguename: Name;
 }
 
 export type TongueNoID = Omit<Tongue, 'id'>;

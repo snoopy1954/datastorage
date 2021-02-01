@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
 import Tongue from '../../models/book/tongue';
-import { toNewTongue } from '../../utils/book/parameters';
+import { toNewTongue } from '../../utils/book';
 
 const tonguesRouter = express.Router();
 

@@ -32,7 +32,3 @@ export const newNote = (): Note => {
     return note;
 };
 
-export const getAmount = (value: string): string => {
-    return value===''||value===undefined ? '' : value + ' €';
-};
-

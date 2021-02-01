@@ -5,6 +5,9 @@ import { Edittype } from "../../../../types/basic";
 import { Month } from '../../../../../../backend/src/types/pressure';
 
 import { MonthDetails } from '../MonthDetails';
+import { MonthForm } from '../MonthForm';
+import { MonthPrint } from '../MonthPrint';
+import { MonthExport } from '../MonthExport';
 
 
 interface Props {
@@ -18,7 +21,10 @@ interface Props {
 export const MonthModal = ({ edittype, title, modalOpen, onClose, onSubmit }: Props) => (
   <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
     <Modal.Content>
-      <MonthDetails edittype={edittype} onSubmit={onSubmit} onCancel={onClose}/>
+      {edittype===Edittype.SHOW&&<MonthDetails onCancel={onClose}/>}
+      {edittype===Edittype.PRINT&&<MonthPrint onCancel={onClose}/>}
+      {edittype===Edittype.EXPORT&&<MonthExport onCancel={onClose}/>}
+      {edittype===Edittype.EDIT&&<MonthForm onSubmit={onSubmit} onCancel={onClose}/>}
     </Modal.Content>
   </Modal>
 );

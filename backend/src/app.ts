@@ -2,7 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 
-import mp4Router from './routes/filesystem/mp4';
+import filesRouter from './routes/filesystem/files';
 import monthsRouter from './routes/pressure/months';
 import pressureyearsRouter from './routes/pressure/years';
 import exchangeRouter from './routes/pressure/exchange';
@@ -28,12 +28,16 @@ import yearsRouter from './routes/axa/year';
 import infosRouter from './routes/logging/info';
 import loglinesRouter from './routes/logging/logline';
 import historylinesRouter from './routes/logging/historyline';
+import accounttypesRouter from './routes/account/accounttypes';
+import accountyearsRouter from './routes/account/accountyears';
+import transactionsRouter from './routes/account/transactions';
+import kontoPGRouter from './routes/account/exchange';
 
 const app = express();
 app.use(express.static('build'));
 app.use(express.json());
 app.use(cors());
-app.use('/api/mp4', mp4Router);
+app.use('/api/files', filesRouter);
 app.use('/api/months', monthsRouter);
 app.use('/api/pressureyears', pressureyearsRouter);
 app.use('/api/exchange', exchangeRouter);
@@ -58,7 +62,11 @@ app.use('/api/accounts', accountsRouter);
 app.use('/api/years', yearsRouter);
 app.use('/api/loglines', loglinesRouter);
 app.use('/api/historylines', historylinesRouter);
+app.use('/api/accounttypes', accounttypesRouter);
+app.use('/api/accountyears', accountyearsRouter);
 app.use('/api/infos', infosRouter);
+app.use('/api/transactions', transactionsRouter);
+app.use('/api/kontoPG', kontoPGRouter);
 app.get('/api/ping', (_req, res) => {
     console.log('someone pinged here');
     res.json('pong');

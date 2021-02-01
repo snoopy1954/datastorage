@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
 import Bookgroup from '../../models/book/bookgroup';
-import { toNewBookgroup } from '../../utils/book/parameters';
+import { toNewBookgroup } from '../../utils/book';
 
 const bookgroupsRouter = express.Router();
 

@@ -1,5 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Button } from "semantic-ui-react";
+import { styleButton } from '../../constants';
 
 import { Sudoku, SudokuNoID } from '../../../../backend/src/types/sudoku';
 import { Field, Settype, Setcolor, Flagtype } from '../../types/sudoku';
@@ -16,8 +18,6 @@ import { initializePositions } from '../../state/sudoku/positions/actions';
 import { showNotification } from '../../state/sudoku/notification/actions';
 
 import { AppHeaderH2 } from "../basic/header";
-import { AppMenu, Item } from "../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../constants";
 
 import { 
     game2string, 
@@ -274,40 +274,6 @@ const SudokuResolver: React.FC = () => {
         dispatch(popSequence());
     };
 
-    const buttons: Item[] = 
-    [
-      {
-        name: 'Start',
-        title: 'Start',
-        color: 'blue',
-        onClick: handleStart
-      },
-      {
-        name: 'Neu',
-        title: 'Neu',
-        color: 'blue',
-        onClick: handleNew
-      },
-      {
-        name: 'Lesen',
-        title: 'Lesen',
-        color: 'blue',
-        onClick: handleRead
-      },
-      {
-        name: 'Zurück',
-        title: 'Zurück',
-        color: 'blue',
-        onClick: handleUndo
-      },
-      {
-        name: 'Lösung',
-        title: 'Lösung',
-        color: 'blue',
-        onClick: handleSolution
-      },
-    ];  
-
     const markerposition: number[] = [matrix[selectedfield][0], matrix[selectedfield][1]];
     const numberfield = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
     const colors: Setcolor[] = getColors(gamefields);
@@ -320,8 +286,12 @@ const SudokuResolver: React.FC = () => {
     return (
         <div className="App">
             <AppHeaderH2 text='Sudoku' icon='puzzle'/> 
-            <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
-            <svg viewBox="0 0 20 10.5">
+            <Button style={styleButton} onClick={() => handleStart()}>Start</Button>
+            <Button style={styleButton} onClick={() => handleNew()}>Neu</Button>
+            <Button style={styleButton} onClick={() => handleRead()}>Lesen</Button>
+            <Button style={styleButton} onClick={() => handleUndo()}>Zurück</Button>
+            <Button style={styleButton} onClick={() => handleSolution()}>Lösung</Button>
+            <svg viewBox="0 0.5 20 9.7">
                 <defs>
                     <path id="quadrat" d="M0,0 h1 v1 h-1 z" stroke="black" strokeWidth="0.01"/>
                     <circle id="marker" r="0.5" strokeWidth="0.025" stroke="red" fill="none"/>

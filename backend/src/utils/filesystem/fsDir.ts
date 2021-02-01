@@ -4,11 +4,13 @@
 import * as fs from 'fs';
 import { MD5 } from 'crypto-js';
 
+import { FileContent } from '../../types/basic';
+
 
 export const fsDirWithChecksum = (directory: string, extension: string): string[] => {
     let content: string[] = [];
 
-    fs.readdirSync(directory).forEach(file => { 
+    fs.readdirSync(directory).forEach(file => {
         const fullname = directory+'/'+file; 
         const stat = fs.statSync(fullname); 
 
@@ -34,18 +36,33 @@ export const fsDirWithChecksum = (directory: string, extension: string): string[
 };
 
 export const fsDir = (directory: string, extension: string): string[] => {
-    let content: string[] = [];
+    const content: string[] = [];
 
     fs.readdirSync(directory).forEach(file => { 
         const fullname = directory+'/'+file; 
         const stat = fs.statSync(fullname); 
 
-        if (stat && stat.isDirectory()) { 
-            content = content.concat(fsDir(fullname, extension));
-        } else {
-            if (file.endsWith(extension)) content.push(file); 
+        if (stat && stat.isFile() && file.toLowerCase().endsWith(extension.toLocaleLowerCase())) { 
+            content.push(file); 
         }
     }); 
 
     return content;
+};
+
+export const fsDirWithContent = (directory: string, extension: string): FileContent[] => {
+    const filecontent: FileContent[] = [];
+    
+    fs.readdirSync(directory).forEach(file => { 
+        const fullname = directory+'/'+file; 
+        const stat = fs.statSync(fullname); 
+
+        if (stat && stat.isFile() && file.toLowerCase().endsWith(extension.toLocaleLowerCase())) { 
+            const filename: string = fullname;
+            const content: string = fs.readFileSync(fullname, 'latin1');
+            filecontent.push({ filename, content }); 
+        }
+    }); 
+
+    return filecontent;
 };

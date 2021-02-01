@@ -4,9 +4,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import mongoose from 'mongoose';
 
-import connectBuch from "../../connections/book";
-import ownershipSchema from "../../schemas/book/ownership";
+import connectBook from '../../connections/book';
+import ownershipSchema from '../../schemas/book/ownership';
 
-const ownershipModel: mongoose.Model<mongoose.Document, {}> = connectBuch.model('Ownership', ownershipSchema);
+const ownershipModel: mongoose.Model<mongoose.Document, {}> = connectBook.model('Ownership', ownershipSchema);
 
 export default ownershipModel;

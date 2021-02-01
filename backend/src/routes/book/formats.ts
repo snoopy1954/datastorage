@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
 import Format from '../../models/book/format';
-import { toNewFormat } from '../../utils/book/parameters';
+import { toNewFormat } from '../../utils/book';
 
 const formatsRouter = express.Router();
 

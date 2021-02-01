@@ -3,3 +3,7 @@ export interface Name {
     name: string;
 }
 
+export interface FileContent {
+    filename: string;
+    content: string;
+}

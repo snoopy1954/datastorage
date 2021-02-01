@@ -23,7 +23,7 @@ import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { AccountModal } from '../AccountModal';
 
-import { getAmount } from '../../../../utils/axa/axa';
+import { getAmount } from '../../../../utils/basic';
 
 
 export const AccountPage: React.FC = () => {

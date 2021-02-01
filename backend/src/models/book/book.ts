@@ -4,9 +4,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import mongoose from 'mongoose';
 
-import connectBuch from "../../connections/book";
-import bookSchema from "../../schemas/book/book";
+import connectBook from '../../connections/book';
+import bookSchema from '../../schemas/book/book';
 
-const bookModel: mongoose.Model<mongoose.Document, {}> = connectBuch.model('Book', bookSchema);
+const bookModel: mongoose.Model<mongoose.Document, {}> = connectBook.model('Book', bookSchema);
 
 export default bookModel;

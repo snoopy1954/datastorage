@@ -21,11 +21,12 @@ interface Props {
   onCancel: () => void;
 }
 
-export const AddBillerForm: React.FC<Props> = ({ edittype,  onSubmit, onCancel }) => {
+export const BillerForm: React.FC<Props> = ({ edittype,  onSubmit, onCancel }) => {
   const biller: Biller = useSelector((state: RootState) => state.biller);
   const billers: Biller[] = useSelector((state: RootState) => state.billers);
 
   const initialValues = (edittype===Edittype.EDIT && biller) ? biller : newBiller(billers);
+  
   return (
     <Formik
       initialValues={initialValues}
@@ -73,4 +74,4 @@ export const AddBillerForm: React.FC<Props> = ({ edittype,  onSubmit, onCancel }
   );
 };
 
-export default AddBillerForm;
+export default BillerForm;

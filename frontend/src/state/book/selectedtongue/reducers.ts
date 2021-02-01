@@ -1,13 +1,10 @@
 import { Tongue } from '../../../../../backend/src/types/book';
 import { SET_SELECTED_TONGUE, CLEAR_SELECTED_TONGUE, ActionTypes } from './types';
 
-const initialState: Tongue = {
-    id: '',
-    tonguename: {
-        seqnr: 0,
-        name: ''
-    }
-};
+import { emptyTongue } from '../../../utils/book/tongue';
+
+
+const initialState: Tongue = emptyTongue();
 
 export const selectedtongueReducer = (state = initialState, action: ActionTypes): Tongue => {
     switch (action.type) {

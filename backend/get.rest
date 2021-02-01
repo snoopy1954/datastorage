@@ -1,1 +1,1 @@
-GET HTTP://localhost:3001/api/books
+GET HTTP://localhost:3001/api/mp4/krimi|wilsberg?type=mp4

@@ -68,6 +68,13 @@ import { axayearReducer } from './axa/year/reducers';
 import { pdfurlReducer } from './axa/pdfUrl/reducers';
 import { historylinesReducer } from './info/historylines/reducers';
 import { infosReducer } from './info/infos/reducers';
+import { accounttypesReducer } from './account/accounttypes/reducers';
+import { accounttypeReducer } from './account/accounttype/reducers';
+import { accountyearsReducer } from './account/accountyears/reducers';
+import { accountyearReducer } from './account/accountyear/reducers';
+import { transactionsReducer } from './account/transactions/reducers';
+import { transactionReducer } from './account/transaction/reducers';
+import { accountfilterReducer } from './account/accountfilter/reducers';
 
 const rootReducer = combineReducers({
     page: pageReducer,
@@ -136,6 +143,13 @@ const rootReducer = combineReducers({
     pdfurl: pdfurlReducer,
     historylines: historylinesReducer,
     infos: infosReducer,
+    accounttypes: accounttypesReducer,
+    accounttype: accounttypeReducer,
+    accountyears: accountyearsReducer,
+    accountyear: accountyearReducer,
+    transactions: transactionsReducer,
+    transaction: transactionReducer,
+    accountfilter: accountfilterReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>; 

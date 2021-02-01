@@ -1,25 +1,19 @@
 import { Book } from '../../../../../backend/src/types/book';
 import { SET_SELECTED_BOOK, CLEAR_SELECTED_BOOK, ActionTypes } from './types';
-import { newBook } from '../../../utils/book';
+import { emptyBook } from '../../../utils/book/book';
 
-const book = newBook();
-const initialState: Book = {
-    id: '',
-    ...book
-};
+const initialState: Book = emptyBook();
 
 export const selectedbookReducer = (state = initialState, action: ActionTypes): Book => {
     switch (action.type) {
         case SET_SELECTED_BOOK:
-            return {
-                ...state,
-                ...action.payload
-            };
+            return (
+                action.payload
+            )
         case CLEAR_SELECTED_BOOK:
-            return {
-                ...state,
-                ...initialState
-            };
+            return (
+                initialState
+            );
         default:
             return state
     }

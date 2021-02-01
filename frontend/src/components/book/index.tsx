@@ -1,5 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Button } from 'semantic-ui-react';
+import { styleButton } from '../../constants';
 
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
@@ -9,15 +11,13 @@ import { initializeOwnerships } from '../../state/book/ownershiplist/actions';
 import { initializeBookgroups } from '../../state/book/bookgrouplist/actions';
 import { initializeBooks } from '../../state/book/booklist/actions';
 
-import { AppHeaderH2 } from "../basic/header";
-import { AppMenu, Item } from "../basic/menu";
-import { backgroundColor, styleMainMenu } from "../../constants";
+import { AppHeaderH2 } from '../basic/header';
 
-import BookListPage from "./book/BookListPage";
-import BookgroupListPage from "./bookgroup/BookgroupListPage";
-import OwnershipListPage from "./ownership/OwnershipListPage";
-import FormatListPage from "./format/FormatListPage";
-import TongueListPage from "./tongue/TongueListPage";
+import { BookPage } from './book/BookPage';
+import { BookgroupPage } from './bookgroup/BookgroupPage';
+import { OwnershipPage } from './ownership/OwnershipPage';
+import { FormatPage } from './format/FormatPage';
+import { TonguePage } from './tongue/TonguePage';
 
 
 const Book: React.FC = () => {
@@ -50,53 +50,23 @@ const Book: React.FC = () => {
     dispatch(setPage({ mainpage, subpage: 'books' }));
   }, [mainpage, dispatch]);
  
-  const handleSelection = (selected: string) => {
+  const actionSelect = (selected: string) => {
     dispatch(setPage({ mainpage, subpage: selected }));
   };
 
-  const buttons: Item[] = 
-  [
-    {
-      name: 'books',
-      title: 'Bücher',
-      color: 'blue',
-      onClick: handleSelection
-    },
-    {
-      name: 'bookgroup',
-      title: 'Gruppe',
-      color: 'blue',
-      onClick: handleSelection
-    },
-    {
-      name: 'ownership',
-      title: 'Besitz',
-      color: 'blue',
-      onClick: handleSelection
-    },
-    {
-      name: 'format',
-      title: 'Format',
-      color: 'blue',
-      onClick: handleSelection
-    },
-    {
-      name: 'tongue',
-      title: 'Sprache',
-      color: 'blue',
-      onClick: handleSelection
-    },      
-  ];
-
   return (
-    <div className="App">
+    <div className='App'>
       <AppHeaderH2 text='Bücher' icon='book'/>
-      <AppMenu menuItems={buttons} style={styleMainMenu} backgroundColor={backgroundColor}/>
-      {subpage==='books'&&<BookListPage/>}
-      {subpage==='bookgroup'&&<BookgroupListPage/>}
-      {subpage==='ownership'&&<OwnershipListPage/>}
-      {subpage==='format'&&<FormatListPage/>}
-      {subpage==='tongue'&&<TongueListPage/>}
+      <Button style={styleButton} onClick={() => actionSelect('books')}>Bücher</Button>
+      <Button style={styleButton} onClick={() => actionSelect('bookgroup')}>Gruppe</Button>
+      <Button style={styleButton} onClick={() => actionSelect('ownership')}>Besitz</Button>
+      <Button style={styleButton} onClick={() => actionSelect('format')}>Format</Button>
+      <Button style={styleButton} onClick={() => actionSelect('tongue')}>Sprache</Button>
+      {subpage==='books'&&<BookPage/>}
+      {subpage==='bookgroup'&&<BookgroupPage/>}
+      {subpage==='ownership'&&<OwnershipPage/>}
+      {subpage==='format'&&<FormatPage/>}
+      {subpage==='tongue'&&<TonguePage/>}
     </div>
   );
 }

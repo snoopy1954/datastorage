@@ -24,7 +24,7 @@ import { addStatsToMonth, getNextMonth, getPromptForNextMonth } from '../../../.
 
 
 export const MonthPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false, false]);
   const dispatch = useDispatch();
 
   const year = useSelector((state: RootState) => state.openedyear);
@@ -32,21 +32,31 @@ export const MonthPage: React.FC = () => {
   const months = useSelector((state: RootState) => state.monthlist); 
   const month = useSelector((state: RootState) => state.selectedmonth);
 
-  const openModalNew = (): void => setModalOpen([true, false, false, false]);
+  const openModalNew = (): void => setModalOpen([true, false, false, false, false, false]);
 
   const openModalDelete = async (month: Month): Promise<void> => {
     dispatch(setSelectedMonth(month));
-    setModalOpen([false, true, false, false]);
+    setModalOpen([false, true, false, false, false, false]);
   };
     
   const openModalChange = async (month: Month): Promise<void> => {
     dispatch(setSelectedMonth(month));
-    setModalOpen([false, false, true, false]);
+    setModalOpen([false, false, true, false, false, false]);
   };
 
   const openModalShow = async (month: Month): Promise<void> => {
     dispatch(setSelectedMonth(month));
-    setModalOpen([false, false, false, true]);
+    setModalOpen([false, false, false, true, false, false]);
+  };
+
+  const openModalPrint = async (month: Month): Promise<void> => {
+    dispatch(setSelectedMonth(month));
+    setModalOpen([false, false, false, false, true, false]);
+  };
+
+  const openModalExport = async (month: Month): Promise<void> => {
+    dispatch(setSelectedMonth(month));
+    setModalOpen([false, false, false, false, false, true]);
   };
 
   enum ModalDialog {
@@ -54,10 +64,12 @@ export const MonthPage: React.FC = () => {
     DELETE = 1,
     CHANGE = 2,
     SHOW = 3,
+    PRINT = 4,
+    EXPORT = 5
   };
   
   const closeModal = (): void => {
-    setModalOpen([false, false, false, false]);
+    setModalOpen([false, false, false, false, false, false]);
   };
 
   const createOne = async (migrateOne: MonthNoID) => {
@@ -79,7 +91,7 @@ export const MonthPage: React.FC = () => {
     closeModal();
   };  
 
-  const actionShow = () => {
+  const actionClose = () => {
     dispatch(clearSelectedMonth());
     closeModal();
   };  
@@ -125,7 +137,21 @@ export const MonthPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Monat ' + month.monthname + ' ' + month.year + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
-        onSubmit={actionShow}
+        onSubmit={actionClose}
+        onClose={closeModal}
+      />
+      <MonthModal
+        edittype={Edittype.PRINT}
+        title={'Monat ' + month.monthname + ' ' + month.year + ' drucken'}
+        modalOpen={modalOpen[ModalDialog.PRINT]}
+        onSubmit={actionClose}
+        onClose={closeModal}
+      />
+      <MonthModal
+        edittype={Edittype.EXPORT}
+        title={'Monat ' + month.monthname + ' ' + month.year + ' exportieren'}
+        modalOpen={modalOpen[ModalDialog.EXPORT]}
+        onSubmit={actionClose}
         onClose={closeModal}
       />
       <MonthModal
@@ -155,13 +181,13 @@ export const MonthPage: React.FC = () => {
       <Table celled compact small='true' style={{ backgroundColor }}>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell style={{ backgroundColor }}>Monat</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }}>Start- / Endgewicht</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }}>Durchschnittsgewicht</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }}>Durchschnitt Syst.</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }}>Durchschnitt Diast.</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }}>Durchschnitt Puls</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='four wide center aligned'>Aktion</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Monat</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Start- / Endgewicht</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Durchschnitt Gew.</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Durchschnitt Syst.</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Durchschnitt Diast.</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Durchschnitt Puls</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor }} className='five wide center aligned'>Aktion</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -177,6 +203,8 @@ export const MonthPage: React.FC = () => {
               <Table.Cell>
                 <Button style={styleButton} onClick={() => openModalShow(month)}>Anzeigen</Button>
                 <Button style={styleButton} onClick={() => openModalChange(month)}>Ändern</Button>
+                <Button style={styleButton} onClick={() => openModalPrint(month)}>Drucken</Button>
+                <Button style={styleButton} onClick={() => openModalExport(month)}>Exportieren</Button>
                 <Button style={styleButton} onClick={() => openModalDelete(month)}>Löschen</Button>
               </Table.Cell>
             </Table.Row>

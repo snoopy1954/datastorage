@@ -1,7 +1,7 @@
 import React from 'react';
-import { Segment, Modal, Menu, Button } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
 import { Field, Formik, Form } from "formik";
-import { backgroundColor, styleMainMenu } from "../../../constants";
+import { styleButton } from '../../../constants';
 
 import { TextField } from "../formfields/textfield";
 
@@ -11,26 +11,24 @@ interface Props {
   modalOpen: boolean;
   onClose: () => void;
   onSubmit: (values: Value) => void;
-  error?: string;
 };
 
 export interface Value {
-    value: string;
+  value: string;
 };
 
 interface AskProps {
-    prompt: string;
-    onClose: () => void;
-    onSubmit: (values: Value) => void;  
+  prompt: string;
+  onClose: () => void;
+  onSubmit: (values: Value) => void;  
 };
 
-export const AskString = ({ header, prompt, modalOpen, onClose, onSubmit, error }: Props) => (
-    <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
-      <Modal.Header>{header}</Modal.Header>
-      <Modal.Content>
-        {error && <Segment inverted color="red">{`Error: ${error}`}</Segment>}
-        <AskStringForm prompt={prompt} onSubmit={onSubmit} onClose={onClose} />
-      </Modal.Content>
+export const AskString = ({ header, prompt, modalOpen, onClose, onSubmit }: Props) => (
+  <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
+    <Modal.Header>{header}</Modal.Header>
+    <Modal.Content>
+      <AskStringForm prompt={prompt} onSubmit={onSubmit} onClose={onClose} />
+    </Modal.Content>
     </Modal>
 );
   
@@ -59,20 +57,13 @@ const AskStringForm: React.FC<AskProps> = ({ prompt, onSubmit, onClose }) => {
                 name="value"
                 component={TextField}
               />
-              <Menu compact stackable borderless style={{ background: backgroundColor }}>
-                <Menu.Item>
-                  <Button type="submit" style={styleMainMenu} color="blue" disabled={!dirty || !isValid}>Speichern</Button>
-                </Menu.Item>
-                <Menu.Item>
-                  <Button type="button" style={styleMainMenu} onClick={onClose} color="blue">Abbrechen</Button>
-                </Menu.Item>
-              </Menu>
+            <Button style={styleButton} type="submit" disabled={!dirty || !isValid}>Auswählen</Button>
+            <Button style={styleButton} onClick={() => onClose()}>Abbrechen</Button>
             </Form>
           );
         }}
       </Formik>
     );
-  };
-  
+};  
 
 export default AskString;

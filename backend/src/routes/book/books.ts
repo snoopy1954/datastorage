@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
 import Book from '../../models/book/book';
-import { toNewBook } from '../../utils/book/parameters';
+import { toNewBook } from '../../utils/book';
 
 const booksRouter = express.Router();
 

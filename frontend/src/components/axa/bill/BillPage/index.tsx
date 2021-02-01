@@ -23,7 +23,7 @@ import { AskModal } from '../../../basic/askModal';
 import { BillModal } from "../BillModal";
 
 import { getSumAmounts } from '../../../../utils/axa/bill';
-import { getAmount } from '../../../../utils/axa/axa';
+import { getAmount } from '../../../../utils/basic';
 
 
 export const BillPage: React.FC = () => {

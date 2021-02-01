@@ -106,3 +106,10 @@ export const newFiledate = (): FileDate => {
     return filedate;
 };
 
+export const getAmount = (value: string): string => {
+    return value===''||value===undefined ? '' : value + ' €';
+};
+
+export const getFormatedDate = (value: string): string => {
+    return value.length===8 ? `${value.substr(6,2)}.${value.substr(4,2)}.${value.substr(0,4)}` : ''; 
+}

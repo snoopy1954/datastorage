@@ -1,5 +1,5 @@
 import { Filter } from '../../../types/book';
-import { newFilter } from '../../../utils/book';
+import { newFilter } from '../../../utils/book/book';
 
 import { SET_FILTER, CLEAR_FILTER, ActionTypes } from './types';
 

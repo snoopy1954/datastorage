@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
 import Ownership from '../../models/book/ownership';
-import { toNewOwnership } from '../../utils/book/parameters';
+import { toNewOwnership } from '../../utils/book';
 
 const ownershipsRouter = express.Router();
 

@@ -4,9 +4,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import mongoose from 'mongoose';
 
-import connectBuch from "../../connections/book";
-import formatSchema from "../../schemas/book/format";
+import connectBook from '../../connections/book';
+import formatSchema from '../../schemas/book/format';
 
-const formatModel: mongoose.Model<mongoose.Document, {}> = connectBuch.model('Format', formatSchema);
+const formatModel: mongoose.Model<mongoose.Document, {}> = connectBook.model('Format', formatSchema);
 
 export default formatModel;
