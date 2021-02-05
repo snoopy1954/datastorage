@@ -175,7 +175,9 @@ export const MonthPage: React.FC = () => {
         onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick(event.currentTarget.value)}>
         <option value='' style={styleButton}>Jahr</option>
         {yearOptions.map((option: string, index: number) => (
-        <option key={index} value={option} style={styleButton}>{option}</option>
+          option===year.name.name
+          ?<option key={index} selected={true} value={option} style={styleButton}>{option}</option>
+          :<option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
       <Table celled compact small='true' style={{ backgroundColor }}>

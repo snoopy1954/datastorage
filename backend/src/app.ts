@@ -32,6 +32,9 @@ import accounttypesRouter from './routes/account/accounttypes';
 import accountyearsRouter from './routes/account/accountyears';
 import transactionsRouter from './routes/account/transactions';
 import kontoPGRouter from './routes/account/exchange';
+import recipegroupsRouter from './routes/recipe/groups';
+import recipesRouter from './routes/recipe/recipes';
+
 
 const app = express();
 app.use(express.static('build'));
@@ -67,6 +70,9 @@ app.use('/api/accountyears', accountyearsRouter);
 app.use('/api/infos', infosRouter);
 app.use('/api/transactions', transactionsRouter);
 app.use('/api/kontoPG', kontoPGRouter);
+app.use('/api/recipegroups', recipegroupsRouter);
+app.use('/api/recipes', recipesRouter);
+
 app.get('/api/ping', (_req, res) => {
     console.log('someone pinged here');
     res.json('pong');

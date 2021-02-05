@@ -11,7 +11,6 @@ import { RootState } from '../../../../state/store';
 
 import { TextField } from '../../../basic/formfields/textfield';
 import { NumberField } from '../../../basic/formfields/numberfield';
-import { ShowField } from '../../../basic/formfields/showfield';
 
 import { newYear } from '../../../../utils/axa/year';
 
@@ -59,15 +58,15 @@ export const YearForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
             />
             <Field
               label="Z100S"
-              placeholder={initialValues.z100s}
+              placeholder="Z100S"
               name="z100s"
-              component={ShowField}
+              component={TextField}
             />
             <Field
               label="VITAL750"
-              placeholder={initialValues.vital750}
+              placeholder="Z100S"
               name="vital750"
-              component={ShowField}
+              component={TextField}
             />
             <Button style={styleButton} type="submit" disabled={!dirty || !isValid}>Speichern</Button>
             <Button style={styleButton} onClick={() => onCancel()}>Abbrechen</Button>

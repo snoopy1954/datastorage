@@ -43,7 +43,7 @@ export const BillDetails: React.FC<Props> = ({ onCancel }) => {
         const id = bill.notes[index].dataId;
         const fetchImage = async () => {
           const newImage = await getOne(id);
-          dispatch(setPdfUrl(await getImageUrl(newImage)));
+          dispatch(setPdfUrl(getImageUrl(newImage)));
         };
         fetchImage();
         openModalShow();

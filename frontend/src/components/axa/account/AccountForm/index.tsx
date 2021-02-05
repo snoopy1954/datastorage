@@ -119,7 +119,7 @@ export const AccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
             />}
-            {(values.status!==AccountStatus.PASSED)&&<Field
+            {(values.status===AccountStatus.PASSED)&&<Field
               label="Antragsdatum"
               placeholder={initialValues.passed}
               name="passed"
@@ -141,7 +141,7 @@ export const AccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
                 component={ShowField}
               />
             ))}
-            {!addNote&&<Button type="button" style={styleButton} onClick={() => setAddNote(true)}>Anlegen</Button>}
+            {(values.status===AccountStatus.CLOSED)&&!addNote&&<Button type="button" style={styleButton} onClick={() => setAddNote(true)}>Anlegen</Button>}
             {(values.status===AccountStatus.CLOSED)&&<Field
               label="Betrag"
               placeholder="Betrag"
@@ -178,7 +178,7 @@ export const AccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
               name={`details[0].cure10`}
               component={TextField}
             />}
-            <Button style={styleButton} type="submit" disabled={!dirty || !isValid}>Speichern</Button>
+            <Button style={styleButton} type="submit" disabled={!isValid}>Speichern</Button>
             <Button style={styleButton} type="button" onClick={() => onCancel()}>Abbrechen</Button>
           </Form>
         );

@@ -14,6 +14,8 @@ import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { AccounttypeModal } from '../AccounttypeModal';
 
+import { getAmount } from '../../../../utils/basic';
+
 
 export const AccounttypePage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
@@ -114,10 +116,10 @@ export const AccounttypePage: React.FC = () => {
           <Table.Row>
             <Table.HeaderCell className='two wide center aligned' style={{ backgroundColor}}>Name</Table.HeaderCell>
             <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor}}>IBAN</Table.HeaderCell>
-            <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor}}>BIC</Table.HeaderCell>
-            <Table.HeaderCell className='two wide center aligned' style={{ backgroundColor}}>Kontostand</Table.HeaderCell>
+            <Table.HeaderCell className='two wide center aligned' style={{ backgroundColor}}>BIC</Table.HeaderCell>
             <Table.HeaderCell className='two wide center aligned' style={{ backgroundColor}}>Kommentar</Table.HeaderCell>
-            <Table.HeaderCell className='four wide center aligned' style={{ backgroundColor}}>Aktion</Table.HeaderCell>
+            <Table.HeaderCell className='two wide center aligned' style={{ backgroundColor}}>Kontostand</Table.HeaderCell>
+            <Table.HeaderCell className='five wide center aligned' style={{ backgroundColor}}>Aktion</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -126,8 +128,8 @@ export const AccounttypePage: React.FC = () => {
               <Table.Cell>{accounttype.name}</Table.Cell>
               <Table.Cell>{accounttype.iban}</Table.Cell>
               <Table.Cell>{accounttype.bic}</Table.Cell>
-              <Table.Cell>{accounttype.balance}</Table.Cell>
               <Table.Cell>{accounttype.comment}</Table.Cell>
+              <Table.Cell className='right aligned'>{getAmount(accounttype.balance)}</Table.Cell>
               <Table.Cell>
                 <Button style={styleButton} onClick={() => openModalShow(accounttype)}>Anzeigen</Button>
                 <Button style={styleButton} onClick={() => openModalChange(accounttype)}>Ändern</Button>

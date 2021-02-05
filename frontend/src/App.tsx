@@ -23,6 +23,7 @@ import Book from "./components/book";
 import Address from "./components/address";
 import Sudoku from './components/sudoku';
 import Account from './components/account';
+import Recipe from './components/recipe';
 import Info from './components/info';
 
 
@@ -51,6 +52,7 @@ const App: React.FC = () => {
                 <AppHeaderH1 text='Datenbanken' icon='database'/>
                 <Button style={styleButton} onClick={() => handleSelection('home')}>Home</Button>
                 <Button style={styleButton} onClick={() => handleSelection('account')}>Konto</Button>
+                <Button style={styleButton} onClick={() => handleSelection('recipe')}>Rezept</Button>
                 <Button style={styleButton} onClick={() => handleSelection('address')}>Adresse</Button>
                 <Button style={styleButton} onClick={() => handleSelection('network')}>Netzwerk</Button>
                 <Button style={styleButton} onClick={() => handleSelection('pressure')}>Blutdruck</Button>
@@ -60,6 +62,7 @@ const App: React.FC = () => {
                 <Button style={styleButton} onClick={() => handleSelection('sudoku')}>Sudoku</Button>
                 {mainpage==='home'&&<Home/>}
                 {mainpage==='account'&&<Account/>}
+                {mainpage==='recipe'&&<Recipe/>}
                 {mainpage==='address'&&<Address/>}
                 {mainpage==='network'&&<Network/>}
                 {mainpage==='pressure'&&<Pressure/>}

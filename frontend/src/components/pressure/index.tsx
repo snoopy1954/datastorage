@@ -17,7 +17,8 @@ import { AppHeaderH2 } from '../basic/header';
 import { YearPage } from '../pressure/year/YearPage';
 import { MonthPage } from '../pressure/month/MonthPage';
 
-import { newYear, getYear, getCurrentYear } from '../../utils/pressure/year';
+import { newYear, getYear } from '../../utils/pressure/year';
+import { getCurrentYear } from '../../utils/basic';
 
 
 const Pressure: React.FC = () => {

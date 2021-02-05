@@ -3,22 +3,31 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { styleButton } from '../../constants';
 
+import { Accountyear } from '../../../../backend/src/types/account';
+
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
 import { initializeAccounttypes } from '../../state/account/accounttypes/actions';
 import { initializeAccountyears } from '../../state/account/accountyears/actions';
 import { initializeTransactions } from '../../state/account/transactions/actions';
+import { setSelectedAccountyear } from '../../state/account/accountyear/actions';
+import { setAccountfilter } from '../../state/account/accountfilter/actions';
 
 import { AppHeaderH2 } from '../basic/header';
 import { AccounttypePage } from './accounttype/AccounttypePage';
 import { AccountyearPage } from './accountyear/AccountyearPage';
 import { TransactionPage } from './transaction/TransactionPage';
 
+import { getCurrentYear } from '../../utils/basic';
+import { getAccountyear } from '../../utils/account/accountyear';
+
+
 const Account: React.FC = () => {  
   const dispatch = useDispatch();
 
   const mainpage = useSelector((state: RootState) => state.page.mainpage);      
   const subpage = useSelector((state: RootState) => state.page.subpage);      
+  const years = useSelector((state: RootState) => state.accountyears);      
 
   React.useEffect(() => {
     dispatch(initializeAccounttypes());
@@ -31,6 +40,21 @@ const Account: React.FC = () => {
   React.useEffect(() => {
     dispatch(initializeTransactions());
   }, [dispatch]);
+
+  React.useEffect(() => {
+    if (years.length!==0) {
+      const currentYearName: number = +(getCurrentYear());
+      const currentYear: Accountyear = getAccountyear(years, String(currentYearName));
+      if (currentYear.id!=='') {
+        dispatch(setSelectedAccountyear(currentYear));
+        dispatch(setAccountfilter({
+          accountype: 'Diba Giro',
+          accountyear: currentYear.name,
+          person: ''
+        }));
+      }
+    }
+  }, [dispatch, years]);
 
   React.useEffect(() => {
     dispatch(setPage({ mainpage, subpage: 'transaction' }));

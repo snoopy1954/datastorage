@@ -50,6 +50,10 @@ export const AccounttypeDetails: React.FC<Props> = ({ onCancel }) => {
             <Table.Cell>Kommentar</Table.Cell>
             <Table.Cell>{accounttype.comment}</Table.Cell>
           </Table.Row>
+          <Table.Row>
+            <Table.Cell>Reihenfolge</Table.Cell>
+            <Table.Cell>{accounttype.seqnr}</Table.Cell>
+          </Table.Row>
         </Table.Body>
       </Table>
       <Button style={styleButton} onClick={onCancel}>Schliessen</Button>

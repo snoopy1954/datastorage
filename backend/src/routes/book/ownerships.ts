@@ -44,7 +44,7 @@ ownershipsRouter.delete('/:id', async (request, response) => {
   
 ownershipsRouter.put('/:id', async (request, response) => {
     try {
-        const newOwnership = new Ownership(toNewOwnership(request.body)); 
+        const newOwnership = toNewOwnership(request.body); 
         const ownership = await Ownership.findByIdAndUpdate(request.params.id, newOwnership, { new: true });
         if (ownership) response.json(ownership.toJSON());
         else response.status(404).end();

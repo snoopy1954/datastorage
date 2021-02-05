@@ -62,3 +62,20 @@ export const getAccounttypeFromFilename = (accounttypes: Accounttype[], filename
       
     return accountype;
 }
+
+const sortAccounttypelist = (a: Accounttype, b: Accounttype) => {
+    const nameA = a.seqnr;
+    const nameB = b.seqnr;
+    if (nameA < nameB) {
+        return -1;
+    }
+    if (nameA > nameB) {
+        return 1;
+    }
+    return 0;
+};
+  
+export const sortAccounttypes = (accounttypes: Accounttype[]) => {
+    return accounttypes.sort(sortAccounttypelist);
+};
+

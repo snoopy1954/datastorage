@@ -91,6 +91,7 @@ export const AccountPage: React.FC = () => {
       details: values.details,
       billIDs: values.billIDs
     }
+    console.log(newAccount)
     dispatch(addAccount(newAccount));
     // offenen Account setzen, vorher Status prüfen
     closeModal();
@@ -147,7 +148,7 @@ export const AccountPage: React.FC = () => {
     <div className='App'>
       <AccountModal
         edittype={Edittype.ADD}
-        title='Neu Abrechnung anlegen'
+        title='Neue Abrechnung anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
         onSubmit={actionAdd}
         onClose={closeModal}
@@ -179,7 +180,9 @@ export const AccountPage: React.FC = () => {
         onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick(event.currentTarget.value)}>
         <option value="" style={styleButton}>Jahr</option>
         {yearOptions.map((option: string, index: number) => (
-        <option key={index} value={option} style={styleButton}>{option}</option>
+          option===year.name.name
+          ?<option key={index} selected={true} value={option} style={styleButton}>{option}</option>
+          :<option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
       <Table celled compact small='true' style={{ backgroundColor }}>
@@ -191,7 +194,7 @@ export const AccountPage: React.FC = () => {
             <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Erstattung</Table.HeaderCell>
             <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Ablehnung</Table.HeaderCell>
             <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Selbstbehalt</Table.HeaderCell>
-            <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor}} >Aktion</Table.HeaderCell>
+            <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor}}>Aktion</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>

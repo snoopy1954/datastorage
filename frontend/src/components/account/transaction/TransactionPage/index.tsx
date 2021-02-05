@@ -12,7 +12,7 @@ import { getAll } from '../../../../services/account/exchange';
 import { getOne } from '../../../../services/filesystem/files';
 
 import { RootState } from '../../../../state/store';
-import { setAccountfilter, clearAccountfilter } from '../../../../state/account/accountfilter/actions';
+import { setAccountfilter } from '../../../../state/account/accountfilter/actions';
 import { addTransaction, updateTransaction, removeTransaction } from '../../../../state/account/transactions/actions';
 import { updateAccounttype } from '../../../../state/account/accounttypes/actions';
 import { setSelectedTransaction, clearSelectedTransaction } from '../../../../state/account/transaction/actions';
@@ -27,6 +27,7 @@ import { getAmount, getFormatedDate } from '../../../../utils/basic';
 import { getAccounttypeFromFilename } from '../../../../utils/account/accounttype';
 import { getTransactionsFromCSV, findChecksum } from '../../../../utils/account/transaction';
 
+
 export const TransactionPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ export const TransactionPage: React.FC = () => {
 
   React.useEffect(() => {
     dispatch(clearSelectedTransaction());
-    dispatch(clearAccountfilter());
+  //  dispatch(clearAccountfilter());
   }, [dispatch]);  
   
   const openModalNew = (): void => setModalOpen([true, false, false, false, false]);
@@ -145,6 +146,7 @@ export const TransactionPage: React.FC = () => {
         newTransactions.forEach(newTransaction => {
           if (!findChecksum(transactions, newTransaction.checksum)) {
             dispatch(addTransaction(newTransaction));
+            console.log(newTransaction, 'wird übernommen');
             balance = newTransaction.balance;
           }
           else {
@@ -220,17 +222,21 @@ export const TransactionPage: React.FC = () => {
         onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Konto', event.currentTarget.value)}>
         <option value="" style={styleButton}>Konto</option>
         {accounttypeOptions.map((option: string, index: number) => (
-        <option key={index} value={option} style={styleButton}>{option}</option>
+          option===accountfilter.accountype
+          ?<option key={index} selected={true} value={option} style={styleButton}>{option}</option>
+          :<option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
       <Button as="select" className="ui dropdown" style={styleButton}
         onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Jahr', event.currentTarget.value)}>
         <option value="" style={styleButton}>Jahr</option>
         {accountyearOptions.map((option: string, index: number) => (
-        <option key={index} value={option} style={styleButton}>{option}</option>
-        ))}
+          option===accountfilter.accountyear
+          ?<option key={index} selected={true} value={option} style={styleButton}>{option}</option>
+          :<option key={index} value={option} style={styleButton}>{option}</option>
+          ))}
       </Button>
-      <Button style={styleButton} onClick={() => openModalPerson()}>Author</Button>
+      <Button style={styleButton} onClick={() => openModalPerson()}>Person</Button>
       <Button style={styleButton} onClick={() => actionImportCSV()}>Import</Button>
       <Button style={styleButton} disabled={true} onClick={() => actionImportPG()}>Import PG</Button>
       {!filterSelected&&<AppHeaderH3 text='Konto und Jahr auswählen!' icon='search'/>}

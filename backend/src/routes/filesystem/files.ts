@@ -5,7 +5,7 @@ import express from 'express';
 
 import { mp4Folder, importFolder } from '../../constants';
 import { parseString } from '../../utils/basicParser';
-import { fsDirWithChecksum, fsDirWithContent } from '../../utils/filesystem/fsDir';
+import { fsDirWithChecksum, fsDirWithContent } from '../../utils/filesystem';
 
 
 const filesRouter = express.Router();

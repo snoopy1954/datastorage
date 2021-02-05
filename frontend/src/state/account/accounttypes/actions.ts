@@ -12,10 +12,11 @@ import {
 
 import { create, update, remove, getAll } from "../../../services/account/accounttypes";
 
+import { sortAccounttypes } from '../../../utils/account/accounttype';
 
 export const initializeAccounttypes = () => {
   return async (dispatch: DispatchSetAccounttypeList) => {
-    const accounttypes = await getAll();
+    const accounttypes = sortAccounttypes(await getAll());
     dispatch({
       type: SET_ACCOUNTTYPES,
       payload: accounttypes,

@@ -112,4 +112,11 @@ export const getAmount = (value: string): string => {
 
 export const getFormatedDate = (value: string): string => {
     return value.length===8 ? `${value.substr(6,2)}.${value.substr(4,2)}.${value.substr(0,4)}` : ''; 
-}
+};
+
+export const getCurrentYear = (): string => {
+    const year = String(new Date().getFullYear());
+  
+    return year;
+};
+

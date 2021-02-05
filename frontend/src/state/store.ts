@@ -75,6 +75,13 @@ import { accountyearReducer } from './account/accountyear/reducers';
 import { transactionsReducer } from './account/transactions/reducers';
 import { transactionReducer } from './account/transaction/reducers';
 import { accountfilterReducer } from './account/accountfilter/reducers';
+import { recipegroupsReducer } from './recipe/recipegroups/reducers';
+import { recipegroupReducer } from './recipe/recipegroup/reducers';
+import { recipesReducer } from './recipe/recipes/reducers';
+import { recipeReducer } from './recipe/recipe/reducers';
+import { recipefilterReducer } from './recipe/recipefilter/reducers';
+import { changedrecipesReducer } from './recipe/changedrecipes/reducers';
+
 
 const rootReducer = combineReducers({
     page: pageReducer,
@@ -150,6 +157,12 @@ const rootReducer = combineReducers({
     transactions: transactionsReducer,
     transaction: transactionReducer,
     accountfilter: accountfilterReducer,
+    recipegroups: recipegroupsReducer,
+    recipegroup: recipegroupReducer,
+    recipes: recipesReducer,
+    recipe: recipeReducer,
+    recipefilter: recipefilterReducer,
+    changedrecipes: changedrecipesReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>; 

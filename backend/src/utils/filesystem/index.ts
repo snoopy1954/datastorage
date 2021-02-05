@@ -66,3 +66,13 @@ export const fsDirWithContent = (directory: string, extension: string): FileCont
 
     return filecontent;
 };
+
+export const fsRename = (oldFilename: string, newFilename: string): boolean => {
+    let ok = true;
+
+    fs.rename(oldFilename, newFilename, (err) => {
+        if (err) ok = false;
+    });
+    
+    return ok;
+};

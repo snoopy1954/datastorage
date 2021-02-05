@@ -60,6 +60,15 @@ export const sortAccountyears = (years: Accountyear[]) => {
   return years.sort(sortYearlist);
 };
 
+export const getYear = (years: Accountyear[], yearName: string): Accountyear => {
+    let year: Accountyear = emptyAccountyear();
+  
+    Object.values(years).forEach(item => {
+      if (item.name===yearName) year = item;
+    });
+  
+    return year;
+};
 
   
   
