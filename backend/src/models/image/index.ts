@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/ban-types */
 import mongoose from 'mongoose';
 
-import connectImage from '../../connections/image';
+import imageConnection from '../../connections/image';
 import imageSchema from '../../schemas/image';
 
-const imageModel: mongoose.Model<mongoose.Document, {}> = connectImage.model('Image', imageSchema);
+const imageModel: mongoose.Model<mongoose.Document, {}> = imageConnection.model('Image', imageSchema);
 
 export default imageModel;

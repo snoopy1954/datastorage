@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
 
-import { MONGODB_URI_BOOK } from '../../utils/config';
+import { MONGODB_URI } from '../../utils/config';
 import { logInfo, logError } from '../../utils/logger';
 
-const url: string = MONGODB_URI_BOOK ? MONGODB_URI_BOOK : "";
+const database = 'book';
+const url: string = MONGODB_URI ? MONGODB_URI.replace('DATABASE', database) : "";
 
-const connBook: mongoose.Connection = mongoose.createConnection(url, {
+const bookConnection: mongoose.Connection = mongoose.createConnection(url, {
     useNewUrlParser: true, 
     useUnifiedTopology: true, 
     useFindAndModify: false 
 });
-connBook.on('error', function () { logError(`error connecting to MongoDB book\n`); });
-connBook.once('open', function () { logInfo('connected to MongoDB book'); });
+bookConnection.on('error', function () { logError(`error connecting to MongoDB ${database}\n`); });
+bookConnection.once('open', function () { logInfo(`connected to MongoDB ${database}`); });
 
-export default connBook;
+export default bookConnection;

@@ -10,8 +10,7 @@ import { Bookgroup } from '../../../../../../backend/src/types/book';
 import { RootState } from '../../../../state/store';
 
 import { AppHeaderH3 } from '../../../basic/header';
-import { SubgroupModal } from '../SubgroupModal';
-import { Value } from '../SubgroupForm';
+import { AskString, Value } from '../../../basic/askString';
 
 
 interface Props {
@@ -41,7 +40,9 @@ export const BookgroupDetails: React.FC<Props> = ({ onCancel }) => {
 
   return (
     <div className="App">
-      <SubgroupModal
+      <AskString
+        header='Neue Buchgruppe anlegen'
+        prompt='Buchgruppe eingeben'
         modalOpen={modalOpen}
         onSubmit={actionAdd}
         onClose={closeModal}

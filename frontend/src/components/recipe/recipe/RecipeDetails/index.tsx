@@ -44,6 +44,8 @@ export const RecipeDetails: React.FC<Props> = ({ onCancel }) => {
         openModalShow();
     };
 
+    const keywords = 'noch nichts da';
+
     return (          
         <div className='App'>
             {pdfUrl!==''&&<ShowModalPDF
@@ -76,6 +78,10 @@ export const RecipeDetails: React.FC<Props> = ({ onCancel }) => {
                     <Table.Row>
                         <Table.Cell>Untergruppe</Table.Cell>
                         <Table.Cell>{recipe.subgroup}</Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell>Schlüsselwörter</Table.Cell>
+                        <Table.Cell>{keywords}</Table.Cell>
                     </Table.Row>
                     <Table.Row>
                         <Table.Cell>Reihenfolge</Table.Cell>

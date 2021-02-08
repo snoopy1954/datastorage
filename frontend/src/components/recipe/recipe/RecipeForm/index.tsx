@@ -16,7 +16,7 @@ import { SelectFieldWithChange } from '../../../basic/formfields/selectfieldwith
 import { TextField } from '../../../basic/formfields/textfield';
 import { NumberField } from '../../../basic/formfields/numberfield';
 import { FileField } from '../../../basic/formfields/filefield';
-
+import { TextFieldArray } from '../../../basic/formfields/textfieldarray';
 import { nextRecipe } from '../../../../utils/recipe/recipe';
 
 
@@ -68,6 +68,7 @@ export const RecipeForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =>
   ? { ...recipe, file: cover } 
   : { ...nextRecipe(recipes), file: cover };
 
+  console.log(recipe.keywords)
   return (
     <Formik
       initialValues={initialValues}
@@ -77,7 +78,7 @@ export const RecipeForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =>
         return errors;
       }}
     >
-      {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
+      {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
             <Field
@@ -117,6 +118,13 @@ export const RecipeForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =>
               component={FileField}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
+            />
+            <Field
+              name='keywords'
+              items={values.keywords}
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
+              component={TextFieldArray}
             />
             <Button style={styleButton} type="submit" disabled={!dirty || !isValid}>Speichern</Button>
             <Button style={styleButton} onClick={() => onCancel()}>Abbrechen</Button>

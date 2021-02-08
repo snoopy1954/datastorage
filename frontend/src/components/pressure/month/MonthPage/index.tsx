@@ -168,7 +168,7 @@ export const MonthPage: React.FC = () => {
         onSubmit={actionDelete}
         onClose={closeModal}
       />
-      <AppHeaderH3 text={'Monate des Jahres ' + year.name.name} icon='list'/>
+      <AppHeaderH3 text={'Monatsübersicht des Jahres ' + year.name.name} icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
       {years.length===0&&<Button style={styleButton} onClick={() => handleMigrate()}>Migrate</Button>}
       <Button as='select' className='ui dropdown' style={styleButton}

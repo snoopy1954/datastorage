@@ -11,7 +11,7 @@ import { RootState } from '../../../../state/store';
 
 import { TextField } from '../../../basic/formfields/textfield';
 import { NumberField } from '../../../basic/formfields/numberfield';
-import { SubgroupsFieldArray } from './subgroupsfieldarray';
+import { TextFieldArray } from '../../../basic/formfields/textfieldarray';
 
 import { nextGroup } from '../../../../utils/basic/group';
 
@@ -52,10 +52,12 @@ export const RecipegroupForm: React.FC<Props> = ({ edittype, onSubmit, onCancel 
               name='seqnr'
               component={NumberField}
             />
-            <SubgroupsFieldArray
-              subgroups={values.subgroups}
+            <Field
+              name='subgroups'
+              items={values.subgroups}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
+              component={TextFieldArray}
             />
             <Button style={styleButton} type="submit" disabled={!dirty || !isValid}>Speichern</Button>
             <Button style={styleButton} onClick={() => onCancel()}>Abbrechen</Button>

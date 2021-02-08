@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
 
-import { MONGODB_URI_PRESSURE } from '../../utils/config';
+import { MONGODB_URI } from '../../utils/config';
 import { logInfo, logError } from '../../utils/logger';
 
-const url: string = MONGODB_URI_PRESSURE ? MONGODB_URI_PRESSURE : "";
+const database = 'pressure';
+const url: string = MONGODB_URI ? MONGODB_URI.replace('DATABASE', database) : "";
 
-const connPressure: mongoose.Connection = mongoose.createConnection(url, {
+const pressureConnection: mongoose.Connection = mongoose.createConnection(url, {
     useNewUrlParser: true, 
     useUnifiedTopology: true, 
     useFindAndModify: false 
 });
-connPressure.on('error', function () { logError(`error connecting to MongoDB pressure\n`); });
-connPressure.once('open', function () { logInfo('connected to MongoDB pressure'); });
+pressureConnection.on('error', function () { logError(`error connecting to MongoDB ${database}\n`); });
+pressureConnection.once('open', function () { logInfo(`connected to MongoDB ${database}`); });
 
-export default connPressure;
+export default pressureConnection;

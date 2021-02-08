@@ -106,7 +106,8 @@ export const RecipePage: React.FC = () => {
       seqnr: values.seqnr,
       group: values.group,
       subgroup: values.subgroup,
-      content: content
+      content: content,
+      keywords: values.keywords
     };
     dispatch(addRecipe(recipe));
     closeModal();

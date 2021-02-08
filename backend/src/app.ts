@@ -34,7 +34,9 @@ import transactionsRouter from './routes/account/transactions';
 import kontoPGRouter from './routes/account/exchange';
 import recipegroupsRouter from './routes/recipe/groups';
 import recipesRouter from './routes/recipe/recipes';
-
+import postgresRouter from './routes/postgres/postgres';
+import documentgroupsRouter from './routes/document/groups';
+import documentsRouter from './routes/document/documents';
 
 const app = express();
 app.use(express.static('build'));
@@ -72,7 +74,9 @@ app.use('/api/transactions', transactionsRouter);
 app.use('/api/kontoPG', kontoPGRouter);
 app.use('/api/recipegroups', recipegroupsRouter);
 app.use('/api/recipes', recipesRouter);
-
+app.use('/api/postgres', postgresRouter);
+app.use('/api/documentgroups', documentgroupsRouter);
+app.use('/api/documents', documentsRouter);
 app.get('/api/ping', (_req, res) => {
     console.log('someone pinged here');
     res.json('pong');

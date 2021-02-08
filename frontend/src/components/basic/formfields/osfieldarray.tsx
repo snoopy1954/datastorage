@@ -36,8 +36,10 @@ export const OsFieldArray: React.FC<OsFieldArrayProps> = ({
   };
 
   const onVersionChange = (event: React.FormEvent<HTMLInputElement>, current: number): void  => {
-    const currentName = osversions[current].name;
-    osversions[current] = { name: currentName, supplement: "", version: event.currentTarget.value };
+    osversions[current] = { 
+      ...osversions[current], 
+      version: event.currentTarget.value 
+    };
     setFieldValue(field, osversions);
   };
 

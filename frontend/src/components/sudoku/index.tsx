@@ -282,10 +282,11 @@ const SudokuResolver: React.FC = () => {
     const checkSingles = '  -  Singles: ' + (flags[Flagtype.SINGLES] ? 'ein' : 'aus');
     const checkHiddensingles = '  -  Hidden Singles: ' + (flags[Flagtype.HIDDENSINGLES] ? 'ein' : 'aus');
     const checkNakedpairs = '  -  Naked Pairs: ' + (flags[Flagtype.NAKEDPAIRS] ? 'ein' : 'aus');
+    const title = `Sudoku (${(Object.values(sudokus)).length} gespeicherte Spiele)`;
 
     return (
         <div className="App">
-            <AppHeaderH2 text='Sudoku' icon='puzzle'/> 
+            <AppHeaderH2 text={title} icon='puzzle'/> 
             <Button style={styleButton} onClick={() => handleStart()}>Start</Button>
             <Button style={styleButton} onClick={() => handleNew()}>Neu</Button>
             <Button style={styleButton} onClick={() => handleRead()}>Lesen</Button>

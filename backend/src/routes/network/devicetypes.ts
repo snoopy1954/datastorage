@@ -44,7 +44,7 @@ devicetypesRouter.delete('/:id', async (request, response) => {
   
 devicetypesRouter.put('/:id', async (request, response) => {
     try {
-        const newDevicetype = new Devicetype(toNewDevicetype(request.body)); 
+        const newDevicetype = toNewDevicetype(request.body); 
         const devicetype = await Devicetype.findByIdAndUpdate(request.params.id, newDevicetype, { new: true });
         if (devicetype) response.json(devicetype.toJSON());
         else response.status(404).end();

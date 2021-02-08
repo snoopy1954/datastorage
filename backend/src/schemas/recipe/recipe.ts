@@ -15,7 +15,8 @@ const recipeSchema = new mongoose.Schema({
     name: { type: String, required: true },
     group: { type: String, required: false },
     subgroup: { type: String, required: false },
-    content: contentSchema
+    content: contentSchema,
+    keywords: { type: [String], required: false }
 });
 
 recipeSchema.set('toJSON', {

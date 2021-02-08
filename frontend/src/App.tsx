@@ -24,6 +24,7 @@ import Address from "./components/address";
 import Sudoku from './components/sudoku';
 import Account from './components/account';
 import Recipe from './components/recipe';
+import Document from './components/document';
 import Info from './components/info';
 
 
@@ -51,16 +52,18 @@ const App: React.FC = () => {
             <Container fluid>
                 <AppHeaderH1 text='Datenbanken' icon='database'/>
                 <Button style={styleButton} onClick={() => handleSelection('home')}>Home</Button>
+                <Button style={styleButton} onClick={() => handleSelection('document')}>Dokument</Button>
                 <Button style={styleButton} onClick={() => handleSelection('account')}>Konto</Button>
-                <Button style={styleButton} onClick={() => handleSelection('recipe')}>Rezept</Button>
+                <Button style={styleButton} onClick={() => handleSelection('axa')}>AXA</Button>
+                <Button style={styleButton} onClick={() => handleSelection('pressure')}>Blutdruck</Button>
                 <Button style={styleButton} onClick={() => handleSelection('address')}>Adresse</Button>
                 <Button style={styleButton} onClick={() => handleSelection('network')}>Netzwerk</Button>
-                <Button style={styleButton} onClick={() => handleSelection('pressure')}>Blutdruck</Button>
-                <Button style={styleButton} onClick={() => handleSelection('axa')}>AXA</Button>
+                <Button style={styleButton} onClick={() => handleSelection('recipe')}>Rezept</Button>
                 <Button style={styleButton} onClick={() => handleSelection('movie')}>Film</Button>
                 <Button style={styleButton} onClick={() => handleSelection('book')}>Buch</Button>
                 <Button style={styleButton} onClick={() => handleSelection('sudoku')}>Sudoku</Button>
                 {mainpage==='home'&&<Home/>}
+                {mainpage==='document'&&<Document/>}
                 {mainpage==='account'&&<Account/>}
                 {mainpage==='recipe'&&<Recipe/>}
                 {mainpage==='address'&&<Address/>}

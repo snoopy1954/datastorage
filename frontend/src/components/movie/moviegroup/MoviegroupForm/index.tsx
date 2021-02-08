@@ -10,7 +10,8 @@ import { MoviegroupNoID } from '../../../../../../backend/src/types/movie';
 import { RootState } from '../../../../state/store';
 
 import { TextField } from '../../../basic/formfields/textfield';
-import { SubgroupsFieldArray } from './subgroupsfieldarray';
+import { NumberField } from '../../../basic/formfields/numberfield';
+import { TextFieldArray } from '../../../basic/formfields/textfieldarray';
 
 import { newMoviegroup } from '../../../../utils/movie/moviegroup';
 
@@ -44,10 +45,18 @@ export const MoviegroupForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }
               name="name"
               component={TextField}
             />
-            <SubgroupsFieldArray
-              subgroups={values.subgroups}
+           <Field
+              label='Reihenfolge'
+              placeholder='Reihenfolge'
+              name='seqnr'
+              component={NumberField}
+            />
+            <Field
+              name='subgroups'
+              items={values.subgroups}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
+              component={TextFieldArray}
             />
             <Button style={styleButton} type="submit" disabled={!dirty || !isValid}>Speichern</Button>
             <Button style={styleButton} onClick={() => onCancel()}>Abbrechen</Button>

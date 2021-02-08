@@ -110,7 +110,7 @@ export const YearPage: React.FC = () => {
         onSubmit={actionDelete}
         onClose={closeModal}
       />
-      <AppHeaderH3 text='Jahr anlegen' icon='list'/>
+      <AppHeaderH3 text='Jahre' icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
       <Table celled compact small='true' style={{ backgroundColor }}>
         <Table.Header>

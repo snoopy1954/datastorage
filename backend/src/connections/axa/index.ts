@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
 
-import { MONGODB_URI_AXA } from '../../utils/config';
+import { MONGODB_URI } from '../../utils/config';
 import { logInfo, logError } from '../../utils/logger';
 
-const url: string = MONGODB_URI_AXA ? MONGODB_URI_AXA : "";
+const database = 'axa';
+const url: string = MONGODB_URI ? MONGODB_URI.replace('DATABASE', database) : "";
 
-const connectAxa: mongoose.Connection = mongoose.createConnection(url, {
+const axaConnection: mongoose.Connection = mongoose.createConnection(url, {
     useNewUrlParser: true, 
     useUnifiedTopology: true, 
     useFindAndModify: false 
 });
-connectAxa.on('error', function () { logError(`error connecting to MongoDB axa\n`); });
-connectAxa.once('open', function () { logInfo('connected to MongoDB axa'); });
+axaConnection.on('error', function () { logError(`error connecting to MongoDB ${database}\n`); });
+axaConnection.once('open', function () { logInfo(`connected to MongoDB ${database}`); });
 
-export default connectAxa;
+export default axaConnection;

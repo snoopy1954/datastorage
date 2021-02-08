@@ -45,14 +45,10 @@ devicesRouter.delete('/:id', async (request, response) => {
 
 devicesRouter.put('/:id', async (request, response) => {
     try {
-        const newDevice = toNewDevice(request.body);
-        const updatedDevice = await Device.findByIdAndUpdate(request.params.id, newDevice);
-        if (updatedDevice) {
-            response.json(updatedDevice.toJSON());
-        }
-        else {
-            response.status(400).send('update failed');
-        }
+        const deviceToUpdate = toNewDevice(request.body);
+        const device = await Device.findByIdAndUpdate(request.params.id, deviceToUpdate, { new: true });
+        if (device) response.json(device.toJSON());
+        else response.status(400).send('update failed');
     } catch (e) {
         response.status(400).send(e.message);
     }

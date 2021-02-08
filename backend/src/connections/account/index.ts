@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
 
-import { MONGODB_URI_ACCOUNT } from '../../utils/config';
+import { MONGODB_URI } from '../../utils/config';
 import { logInfo, logError } from '../../utils/logger';
 
-const url: string = MONGODB_URI_ACCOUNT ? MONGODB_URI_ACCOUNT : "";
+const database = 'account';
+const url: string = MONGODB_URI ? MONGODB_URI.replace('DATABASE', database) : "";
 
-const connectAccount: mongoose.Connection = mongoose.createConnection(url, {
+const accountConnection: mongoose.Connection = mongoose.createConnection(url, {
     useNewUrlParser: true, 
     useUnifiedTopology: true, 
     useFindAndModify: false 
 });
-connectAccount.on('error', function () { logError(`error connecting to MongoDB account\n`); });
-connectAccount.once('open', function () { logInfo('connected to MongoDB account'); });
+accountConnection.on('error', function () { logError(`error connecting to MongoDB ${database}\n`); });
+accountConnection.once('open', function () { logInfo(`connected to MongoDB ${database}`); });
 
-export default connectAccount;
+export default accountConnection;

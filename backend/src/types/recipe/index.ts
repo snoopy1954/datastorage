@@ -5,6 +5,7 @@ export interface Recipe extends Name {
     group: string;
     subgroup: string;
     content: Content;
+    keywords: string[];
 }
 
 export type RecipeNoID = Omit<Recipe, 'id'>;

@@ -10,8 +10,7 @@ import { Group } from '../../../../../../backend/src/types/basic';
 import { RootState } from '../../../../state/store';
 
 import { AppHeaderH3 } from '../../../basic/header';
-import { SubgroupModal } from '../SubgroupModal';
-import { Value } from '../SubgroupForm';
+import { AskString, Value } from '../../../basic/askString';
 
 
 interface Props {
@@ -41,7 +40,9 @@ export const RecipegroupDetails: React.FC<Props> = ({ onCancel }) => {
 
   return (
     <div className="App">
-      <SubgroupModal
+      <AskString
+        header='Neue Rezeptgruppe anlegen'
+        prompt='Rezeptgruppe eingeben'
         modalOpen={modalOpen}
         onSubmit={actionAdd}
         onClose={closeModal}

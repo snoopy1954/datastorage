@@ -81,6 +81,12 @@ import { recipesReducer } from './recipe/recipes/reducers';
 import { recipeReducer } from './recipe/recipe/reducers';
 import { recipefilterReducer } from './recipe/recipefilter/reducers';
 import { changedrecipesReducer } from './recipe/changedrecipes/reducers';
+import { documentgroupsReducer } from './document/groups/reducers';
+import { documentgroupReducer } from './document/group/reducers';
+import { documentsReducer } from './document/documents/reducers';
+import { documentReducer } from './document/document/reducers';
+import { documentfilterReducer } from './document/filter/reducers';
+import { changeddocumentsReducer } from './document/changed/reducers';
 
 
 const rootReducer = combineReducers({
@@ -163,6 +169,13 @@ const rootReducer = combineReducers({
     recipe: recipeReducer,
     recipefilter: recipefilterReducer,
     changedrecipes: changedrecipesReducer,
+    documentgroups: documentgroupsReducer,
+    documentgroup: documentgroupReducer,
+    documents: documentsReducer,
+    document: documentReducer,
+    documentfilter: documentfilterReducer,
+    changeddocuments: changeddocumentsReducer,
+
 });
 
 export type RootState = ReturnType<typeof rootReducer>; 

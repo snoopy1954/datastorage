@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
 
-import { MONGODB_URI_IMAGE } from '../../utils/config';
+import { MONGODB_URI } from '../../utils/config';
 import { logInfo, logError } from '../../utils/logger';
 
-const url: string = MONGODB_URI_IMAGE ? MONGODB_URI_IMAGE : "";
+const database = 'image';
+const url: string = MONGODB_URI ? MONGODB_URI.replace('DATABASE', database) : "";
 
-const connImage: mongoose.Connection = mongoose.createConnection(url, {
+const imageConnection: mongoose.Connection = mongoose.createConnection(url, {
     useNewUrlParser: true, 
     useUnifiedTopology: true, 
     useFindAndModify: false 
 });
-connImage.on('error', function () { logError(`error connecting to MongoDB image\n`); });
-connImage.once('open', function () { logInfo('connected to MongoDB image'); });
+imageConnection.on('error', function () { logError(`error connecting to MongoDB ${database}\n`); });
+imageConnection.once('open', function () { logInfo(`connected to MongoDB ${database}`); });
 
-export default connImage;
+export default imageConnection;
