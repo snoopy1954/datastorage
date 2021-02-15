@@ -17,3 +17,12 @@ export interface Content {
     filesize: string;
     dataId: string;
 }
+
+export interface Binarydata {
+    id: string;
+    data: Buffer, 
+    type: string
+}
+
+export type BinarydataNoID = Omit<Binarydata, 'id'>;
+

@@ -1,4 +1,5 @@
 import { DocumentNoID } from '../../../backend/src/types/document';
+import { ContentWithFile } from '../types/basic';
 
 export interface Filter {
     group: string;
@@ -7,8 +8,8 @@ export interface Filter {
     person: string;
 }
 
-export interface DocumentWithFileNoID extends DocumentNoID {
-    file: File;
+export interface DocumentWithContentsNoID extends DocumentNoID {
+    contentswithfile: ContentWithFile[];
 }
 
 

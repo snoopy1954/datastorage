@@ -3,46 +3,63 @@ import express from 'express';
 import cors from 'cors';
 
 import filesRouter from './routes/filesystem/files';
+import postgresRouter from './routes/postgres/postgres';
+
+import imagesRouter from './routes/image';
+import binarydataRouter from './routes/binarydata';
+
 import monthsRouter from './routes/pressure/months';
 import pressureyearsRouter from './routes/pressure/years';
 import exchangeRouter from './routes/pressure/exchange';
+
 import devicesRouter from './routes/network/devices';
 import devicetypesRouter from './routes/network/devicetypes';
 import ossRouter from './routes/network/oss';
+
 import bookgroupsRouter from './routes/book/bookgroups';
 import ownershipsRouter from './routes/book/ownerships';
 import formatsRouter from './routes/book/formats';
 import tonguesRouter from './routes/book/tongues';
 import booksRouter from './routes/book/books';
-import imagesRouter from './routes/image';
+
 import addressgroupsRouter from './routes/address/addressgroups';
 import addressesRouter from './routes/address/addresses';
+
 import moviesRouter from './routes/movie/movies';
 import moviegroupsRouter from './routes/movie/moviegroups';
 import movieformatsRouter from './routes/movie/movieformats';
+
 import sudokusRouter from './routes/sudoku/sudoku';
+
 import billsRouter from './routes/axa/bill';
 import billersRouter from './routes/axa/biller';
 import accountsRouter from './routes/axa/account';
 import yearsRouter from './routes/axa/year';
+
 import infosRouter from './routes/logging/info';
 import loglinesRouter from './routes/logging/logline';
 import historylinesRouter from './routes/logging/historyline';
+
 import accounttypesRouter from './routes/account/accounttypes';
 import accountyearsRouter from './routes/account/accountyears';
 import transactionsRouter from './routes/account/transactions';
 import kontoPGRouter from './routes/account/exchange';
+
 import recipegroupsRouter from './routes/recipe/groups';
 import recipesRouter from './routes/recipe/recipes';
-import postgresRouter from './routes/postgres/postgres';
+
 import documentgroupsRouter from './routes/document/groups';
 import documentsRouter from './routes/document/documents';
+
 
 const app = express();
 app.use(express.static('build'));
 app.use(express.json());
 app.use(cors());
 app.use('/api/files', filesRouter);
+app.use('/api/postgres', postgresRouter);
+app.use('/api/images', imagesRouter);
+app.use('/api/binarydata', binarydataRouter);
 app.use('/api/months', monthsRouter);
 app.use('/api/pressureyears', pressureyearsRouter);
 app.use('/api/exchange', exchangeRouter);
@@ -54,7 +71,6 @@ app.use('/api/ownerships', ownershipsRouter);
 app.use('/api/formats', formatsRouter);
 app.use('/api/tongues', tonguesRouter);
 app.use('/api/books', booksRouter);
-app.use('/api/images', imagesRouter);
 app.use('/api/addressgroups', addressgroupsRouter);
 app.use('/api/addresses', addressesRouter);
 app.use('/api/movies', moviesRouter);
@@ -74,9 +90,9 @@ app.use('/api/transactions', transactionsRouter);
 app.use('/api/kontoPG', kontoPGRouter);
 app.use('/api/recipegroups', recipegroupsRouter);
 app.use('/api/recipes', recipesRouter);
-app.use('/api/postgres', postgresRouter);
 app.use('/api/documentgroups', documentgroupsRouter);
 app.use('/api/documents', documentsRouter);
+
 app.get('/api/ping', (_req, res) => {
     console.log('someone pinged here');
     res.json('pong');

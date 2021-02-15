@@ -3,16 +3,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { getOne as getImage } from '../../../../services/image/images';
+import { Binarydata } from '../../../../../../backend/src/types/image';
+import { Content2 } from '../../../../../../backend/src/types/basic';
+
+import { getOne as getImage } from '../../../../services/binarydata/images';
 
 import { RootState } from '../../../../state/store';
 import { setPdfUrl, clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
-
-import { getImageUrl } from '../../../../utils/image';
-
 import { ShowModalPDF } from '../../../basic/showModalPDF';
+
+import { getImageUrl } from '../../../../utils/binarydata/binarydata';
+import { sortContents } from '../../../../utils/basic/content';
 
 
 interface Props {
@@ -20,6 +23,7 @@ interface Props {
 }
 
 export const DocumentDetails: React.FC<Props> = ({ onCancel }) => {
+    const [title, setTitle] = React.useState<string>('');
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const dispatch = useDispatch();
     
@@ -34,22 +38,23 @@ export const DocumentDetails: React.FC<Props> = ({ onCancel }) => {
         dispatch(clearPdfUrl());
     };
 
-    const handleSelection = () => {
-        const id = document.content.dataId;
+    const handleSelection = (content: Content2) => {
+        const id = content.dataId;
         const fetchImage = async () => {
-          const newImage = await getImage(id);
-          dispatch(setPdfUrl(getImageUrl(newImage)));
+          const binarydata: Binarydata = await getImage(id);
+          dispatch(setPdfUrl(getImageUrl(binarydata)));
         };
         fetchImage();
+        setTitle(content.filename);
         openModalShow();
     };
 
-    const keywords = 'noch nichts da';
+    const sortedContents: Content2[] = sortContents(document.contents);
 
     return (          
         <div className='App'>
             {pdfUrl!==''&&<ShowModalPDF
-                title={document.content.filename}
+                title={title}
                 pdfUrl={pdfUrl}
                 modalOpen={modalOpen}
                 onClose={closeModal}
@@ -67,9 +72,13 @@ export const DocumentDetails: React.FC<Props> = ({ onCancel }) => {
                         <Table.Cell>Titel</Table.Cell>
                         <Table.Cell>{document.name}</Table.Cell>
                     </Table.Row>
-                    <Table.Row onClick={() => handleSelection()}>
-                        <Table.Cell>Cover</Table.Cell>
-                        <Table.Cell>{document.content.filename}</Table.Cell>
+                    <Table.Row>
+                        <Table.Cell>Dateien</Table.Cell>
+                        <Table.Cell>
+                            {sortedContents!==[]&&sortedContents.map((content, index) => (
+                                <p onClick={() => handleSelection(content)}>{content.filename}</p>
+                            ))}
+                        </Table.Cell>
                     </Table.Row>
                     <Table.Row>
                         <Table.Cell>Gruppe</Table.Cell>
@@ -81,7 +90,27 @@ export const DocumentDetails: React.FC<Props> = ({ onCancel }) => {
                     </Table.Row>
                     <Table.Row>
                         <Table.Cell>Schlüsselwörter</Table.Cell>
-                        <Table.Cell>{keywords}</Table.Cell>
+                        <Table.Cell>
+                            {document.keywords!==[]&&document.keywords.map(keyword => (
+                                <p>{keyword}</p>
+                            ))}
+                        </Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell>Jahr</Table.Cell>
+                        <Table.Cell>{document.year}</Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell>Datum</Table.Cell>
+                        <Table.Cell>{document.date}</Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell>Person</Table.Cell>
+                        <Table.Cell>{document.person}</Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell>Kommentar</Table.Cell>
+                        <Table.Cell>{document.comment}</Table.Cell>
                     </Table.Row>
                     <Table.Row>
                         <Table.Cell>Reihenfolge</Table.Cell>

@@ -176,8 +176,48 @@ export const TransactionPage: React.FC = () => {
   });
 
   const title = 'Buchungen' + transactionTitle(accountfilter);
-  const sortedTransactions = transactionFilter(transactions, accountfilter);
+  const sortedTransactions: Transaction[] = transactionFilter(transactions, accountfilter);
   const filterSelected: boolean = (accountfilter.accountyear===''||accountfilter.accountype==='') ? false : true;
+
+  const ShowTableHeader: React.FC = () => {
+    return (
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell style={{ backgroundColor, width: '20%' }} className='center aligned'>Buchung</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '20%' }} className='center aligned'>Person</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Datum</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Betrag</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Stand</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+    );
+  };
+
+  const ShowTableBody: React.FC = () => {
+    return (
+        <Table.Body>
+          {Object.values(sortedTransactions).map((transaction: Transaction, index: number) => (
+            <Table.Row key={transaction.id}>
+              <Table.Cell style={{ backgroundColor, width: '20%' } } className='left aligned'>
+                {transaction.purpose.length>40 ? transaction.purpose.substr(0,37)+'...' : transaction.purpose}
+              </Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '20%' } } className='left aligned'>
+                {transaction.person.length>40 ? transaction.person.substr(0,37)+'...' : transaction.person}
+              </Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='left aligned'>{getFormatedDate(transaction.date)}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='right aligned'>{getAmount(transaction.value)}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='right aligned'>{getAmount(transaction.balance)}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
+                <Button style={styleButton} onClick={() => openModalShow(transaction)}>Anzeigen</Button>
+                <Button style={styleButton} onClick={() => openModalChange(transaction)}>Ändern</Button>
+                <Button style={styleButton} onClick={() => openModalDelete(transaction)}>Löschen</Button>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>        
+    );
+  };
 
   return (
     <div className='App'>
@@ -240,34 +280,24 @@ export const TransactionPage: React.FC = () => {
       <Button style={styleButton} onClick={() => actionImportCSV()}>Import</Button>
       <Button style={styleButton} disabled={true} onClick={() => actionImportPG()}>Import PG</Button>
       {!filterSelected&&<AppHeaderH3 text='Konto und Jahr auswählen!' icon='search'/>}
-      {filterSelected&&<Table celled style={{ backgroundColor }}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Buchung</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Person</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Datum</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Betrag</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Stand</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='four wide center aligned'>Aktion</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {Object.values(sortedTransactions).map((transaction: Transaction, index: number) => (
-            <Table.Row key={transaction.id}>
-              <Table.Cell>{transaction.purpose.substr(0,60)}</Table.Cell>
-              <Table.Cell>{transaction.person}</Table.Cell>
-              <Table.Cell>{getFormatedDate(transaction.date)}</Table.Cell>
-              <Table.Cell className='right aligned'>{getAmount(transaction.value)}</Table.Cell>
-              <Table.Cell className='right aligned'>{getAmount(transaction.balance)}</Table.Cell>
-              <Table.Cell>
-                <Button style={styleButton} onClick={() => openModalShow(transaction)}>Anzeigen</Button>
-                <Button style={styleButton} onClick={() => openModalChange(transaction)}>Ändern</Button>
-                <Button style={styleButton} onClick={() => openModalDelete(transaction)}>Löschen</Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>}
+      {sortedTransactions.length>8&&filterSelected&&
+        <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
+          <ShowTableHeader/>
+        </Table>
+      }
+      {sortedTransactions.length>8&&filterSelected&&
+        <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
+          <div style={{ overflowY: 'scroll', height: '550px' }}>
+            <ShowTableBody/>
+          </div>
+        </Table>
+      }
+      {sortedTransactions.length<9&&filterSelected&&
+        <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
+            <ShowTableHeader/>
+            <ShowTableBody/>
+        </Table>
+      }
     </div>
   );
 }

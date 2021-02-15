@@ -7,13 +7,15 @@ interface Props extends FieldProps {
     placeholder: string;
   }
   
-  export const TextField: React.FC<Props> = ({ field, label, placeholder }) => (
-    <Form.Field>
-      <label>{label}</label>
-      <Field placeholder={placeholder} {...field} />
-      <div style={{ color:'red' }}>
-        <ErrorMessage name={field.name} />
-      </div>
-    </Form.Field>
-  );
+  export const TextField: React.FC<Props> = ({ field, label, placeholder }) => {
+    return (
+      <Form.Field>
+       <label>{label}</label>
+        <Field placeholder={placeholder} {...field} />
+        <div style={{ color:'red' }}>
+          <ErrorMessage name={field.name} />
+        </div>
+      </Form.Field>
+    );
+  }
   

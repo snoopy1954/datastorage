@@ -1,10 +1,11 @@
-import { Name, Content } from '../basic';
+import { Name } from '../basic';
+import { Content2 } from '../basic';
 
 export interface Document extends Name {
     id: string;
     group: string;
     subgroup: string;
-    content: Content;
+    contents: Content2[];
     keywords: string[];
     year: string;
     date: string;

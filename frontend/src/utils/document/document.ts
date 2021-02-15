@@ -8,12 +8,7 @@ export const newDocument = (): DocumentNoID => {
         seqnr: 0,
         group: '',
         subgroup: '',
-        content: {
-            filename: '',
-            filetype: '',
-            filesize: '',
-            dataId: ''
-        },
+        contents: [],
         keywords: [],
         year: '',
         date: '',
@@ -31,12 +26,7 @@ export const emptyDocument = (): Document => {
         seqnr: 0,
         group: '',
         subgroup: '',
-        content: {
-            filename: '',
-            filetype: '',
-            filesize: '',
-            dataId: ''
-        },
+        contents: [],
         keywords: [],
         year: '',
         date: '',
@@ -52,12 +42,7 @@ export const nextDocument = (documents: Document[]): DocumentNoID => {
         seqnr: nextSeqnr(documents),
         group: '',
         subgroup: '',
-        content: {
-            filename: '',
-            filetype: '',
-            filesize: '',
-            dataId: ''
-        },
+        contents: [],
         keywords: [],
         year: '',
         date: '',
@@ -128,6 +113,4 @@ export const documentFilter = (documents: Document[], filters: Filter, documentg
 
     return sortedDocuments;
 };
-
-
 

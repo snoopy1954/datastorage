@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal } from 'semantic-ui-react';
-import { DocumentWithFileNoID } from '../../../../types/document';
+import { DocumentWithContentsNoID } from '../../../../types/document';
 
 import { Edittype } from '../../../../types/basic';
 
@@ -13,7 +13,7 @@ interface Props {
   title: string;
   modalOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: DocumentWithFileNoID) => void;
+  onSubmit: (values: DocumentWithContentsNoID) => void;
 }
 
 export const DocumentModal = ({ edittype, title, modalOpen, onClose, onSubmit }: Props) => (

@@ -62,6 +62,8 @@ const App: React.FC = () => {
                 <Button style={styleButton} onClick={() => handleSelection('movie')}>Film</Button>
                 <Button style={styleButton} onClick={() => handleSelection('book')}>Buch</Button>
                 <Button style={styleButton} onClick={() => handleSelection('sudoku')}>Sudoku</Button>
+            </Container>
+            <Container fluid>
                 {mainpage==='home'&&<Home/>}
                 {mainpage==='document'&&<Document/>}
                 {mainpage==='account'&&<Account/>}
@@ -74,9 +76,9 @@ const App: React.FC = () => {
                 {mainpage==='book'&&<Book/>}
                 {mainpage==='sudoku'&&<Sudoku/>}
                 {mainpage==='info'&&<Info/>}
-                <Divider/>
-                <AppFooter/>
             </Container>
+            <Divider/>
+            <AppFooter/>
         </Router>
     );
 };

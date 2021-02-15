@@ -52,6 +52,7 @@ export const MoviegroupForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }
               component={NumberField}
             />
             <Field
+              label='Untergruppen'
               name='subgroups'
               items={values.subgroups}
               setFieldValue={setFieldValue}

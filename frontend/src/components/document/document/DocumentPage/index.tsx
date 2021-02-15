@@ -3,9 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
 
-import { Group, Content } from '../../../../../../backend/src/types/basic';
+import { Group } from '../../../../../../backend/src/types/basic';
+import { Content2 } from '../../../../../../backend/src/types/basic';
 import { Document, DocumentNoID } from '../../../../../../backend/src/types/document';
-import { Filter, DocumentWithFileNoID } from '../../../../types/document';
+import { Filter, DocumentWithContentsNoID } from '../../../../types/document';
 import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
@@ -15,14 +16,13 @@ import { setSelectedDocument, clearSelectedDocument } from '../../../../state/do
 import { addChangedDocument, clearChangedDocument } from '../../../../state/document/changed/actions';
 import { clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
-import { create2 } from '../../../../services/image/images';
-
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskString, Value } from '../../../basic/askString';
 import { AskModal } from '../../../basic/askModal';
 import { DocumentModal } from '../DocumentModal';
 
 import { documentTitle, documentFilter } from '../../../../utils/document/document';
+import { createContent, removeContent } from '../../../../utils/basic/content';
 
 
 export const DocumentPage: React.FC = () => {
@@ -98,30 +98,41 @@ export const DocumentPage: React.FC = () => {
     closeModal();
   };
 
-  const actionAdd = async (values: DocumentWithFileNoID) => {
-    const file: File = values.file;
-    const content: Content = await create2(file);
-    const document: DocumentNoID = {
-      name: values.name,
-      seqnr: values.seqnr,
-      group: values.group,
-      subgroup: values.subgroup,
-      content: content,
-      keywords: values.keywords,
-      year: values.year,
-      date: values.date,
-      comment: values.comment,
-      person: values.person
+  const actionAdd = async (values: DocumentWithContentsNoID) => {
+    const documentToAdd: DocumentNoID = {
+      ...values,
     };
-    dispatch(addDocument(document));
+    await Promise.all(values.contentswithfile.map(async contentwithfile => {
+      if (contentwithfile.dataId==='') {
+        const content: Content2 = await createContent(contentwithfile);
+        documentToAdd.contents.push(content);
+      }
+    }));
+    dispatch(addDocument(documentToAdd));
     closeModal();
   };
 
-  const actionChange = async (values: DocumentNoID) => {
+  const actionChange = async (values: DocumentWithContentsNoID) => {
     const documentToChange: Document = {
       ...values,
-      id: document.id
+      id: document.id,
     };
+    documentToChange.contents.forEach((content, index) => {
+      let found = false;
+      values.contentswithfile.forEach(contentwithfile => {
+        if (content.dataId===contentwithfile.dataId) found = true;
+      });
+      if (!found) {
+        removeContent(content.dataId);
+        documentToChange.contents.splice(index, 1);
+      }
+    });
+    await Promise.all(values.contentswithfile.map(async contentwithfile => {
+      if (contentwithfile.dataId==='') {
+        const content: Content2 = await createContent(contentwithfile);
+        documentToChange.contents.push(content);
+      }
+    }));
     dispatch(updateDocument(documentToChange));
     dispatch(clearSelectedDocument());
     closeModal();
@@ -183,6 +194,47 @@ export const DocumentPage: React.FC = () => {
   const title = 'Dokumentliste' + documentTitle(filters);
   const sortedDocuments = documentFilter(documents, filters, documentgroups);
 
+  const ShowTableHeader: React.FC = () => {
+    return (
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell style={{ backgroundColor, width: '35%' }} className='center aligned'>Dokumenttitel</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Gruppe</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Auf/Ab</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+    );
+  };
+
+  const ShowTableBody: React.FC = () => {
+    return (
+        <Table.Body>
+          {Object.values(sortedDocuments).map((document: Document, index: number) => (
+            <Table.Row key={document.id}>
+              <Table.Cell style={{ backgroundColor, width: '35%' } } className='left aligned'>{document.name}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '10%' } } className='left aligned'>{document.group}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='center aligned'>
+                <Button className="ui icon button" style={styleButtonSmall} disabled={!filterSelected} 
+                  onClick={() => actionUpDown(Direction.UP, index, sortedDocuments) }>
+                  <i className="angle up icon"></i>
+                </Button>
+                <Button className="ui icon button" style={styleButtonSmall} disabled={!filterSelected} 
+                  onClick={() => actionUpDown(Direction.DOWN, index, sortedDocuments) }>
+                  <i className="angle down icon"></i>
+                </Button>
+              </Table.Cell>
+                <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
+                <Button style={styleButton} onClick={() => openModalShow(document)}>Anzeigen</Button>
+                <Button style={styleButton} onClick={() => openModalChange(document)}>Ändern</Button>
+                <Button style={styleButton} onClick={() => openModalDelete(document)}>Löschen</Button>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>        
+    );
+  };
+
   return (
     <div className='App'>
       <DocumentModal
@@ -238,7 +290,7 @@ export const DocumentPage: React.FC = () => {
       </Button>
       <Button style={styleButton} onClick={() => openModalFind()}>Name</Button>
       <Button style={styleButton} disabled={!sequenceChanged} onClick={() => actionSaveSequence()}>Speichern</Button>
-      <Table celled style={{ backgroundColor }}>
+      {/* <Table celled style={{ backgroundColor }}>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell style={{ backgroundColor }} className='five wide center aligned'>Dokumenttitel</Table.HeaderCell>
@@ -270,7 +322,15 @@ export const DocumentPage: React.FC = () => {
             </Table.Row>
           ))}
         </Table.Body>
-      </Table>
+      </Table> */}
+      {sortedDocuments.length<9&&
+        <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
+          <div>
+            <ShowTableHeader/>
+            <ShowTableBody/>
+          </div>
+        </Table>
+      }
     </div>
   );
 }

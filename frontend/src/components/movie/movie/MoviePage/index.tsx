@@ -180,6 +180,47 @@ export const MoviePage: React.FC = () => {
   const title = 'Filmliste' + movielistTitle(moviefilter);
   const sortedMovies = movielistFilter(movies, moviefilter, moviegroups);
 
+  const ShowTableHeader: React.FC = () => {
+    return (
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell style={{ backgroundColor, width: '40%' }} className='center aligned'>Filmtitel</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Sendetermin</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Auf/Ab</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+    );
+  };
+
+  const ShowTableBody: React.FC = () => {
+    return (
+        <Table.Body>
+          {Object.values(sortedMovies).map((movie: Movie, index: number) => (
+            <Table.Row key={movie.id}>
+              <Table.Cell style={{ backgroundColor, width: '40%' } } className='left aligned'>{movie.title.name}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '10%' } } className='left aligned'>{movie.launched}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='center aligned'>
+                <Button className="ui icon button" style={styleButtonSmall} disabled={!filterSelected} 
+                  onClick={() => actionUpDown(Direction.UP, index, sortedMovies) }>
+                  <i className="angle up icon"></i>
+                </Button>
+                <Button className="ui icon button" style={styleButtonSmall} disabled={!filterSelected} 
+                  onClick={() => actionUpDown(Direction.DOWN, index, sortedMovies) }>
+                  <i className="angle down icon"></i>
+                </Button>
+              </Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
+                <Button style={styleButton} onClick={() => openModalShow(movie)}>Anzeigen</Button>
+                <Button style={styleButton} onClick={() => openModalChange(movie)}>Ändern</Button>
+                <Button style={styleButton} onClick={() => openModalDelete(movie)}>Löschen</Button>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>        
+    );
+  };
+
   return (
     <div className="App">
       <MovieModal
@@ -228,39 +269,26 @@ export const MoviePage: React.FC = () => {
       </Button>
       <Button style={styleButton} disabled={!filterSelected} onClick={() => actionImport()}>Einlesen</Button>
       <Button style={styleButton} disabled={!sequenceChanged} onClick={() => actionSaveSequence()}>Speichern</Button>
-      <Table celled style={{ backgroundColor }}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell style={{ backgroundColor }} className='six wide center aligned'>Filmtitel</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Sendejahr</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Auf/Ab</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Aktion</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {Object.values(sortedMovies).map((movie: Movie, index: number) => (
-            <Table.Row key={movie.id}>
-              <Table.Cell>{movie.title.name}</Table.Cell>
-              <Table.Cell>{movie.launched}</Table.Cell>
-              <Table.Cell>
-                <Button className="ui icon button" style={styleButtonSmall} disabled={!filterSelected} 
-                  onClick={() => actionUpDown(Direction.UP, index, sortedMovies) }>
-                  <i className="angle up icon"></i>
-                </Button>
-                <Button className="ui icon button" style={styleButtonSmall} disabled={!filterSelected} 
-                  onClick={() => actionUpDown(Direction.DOWN, index, sortedMovies) }>
-                  <i className="angle down icon"></i>
-                </Button>
-              </Table.Cell>
-              <Table.Cell>
-                <Button style={styleButton} onClick={() => openModalShow(movie)}>Anzeigen</Button>
-                <Button style={styleButton} onClick={() => openModalChange(movie)}>Ändern</Button>
-                <Button style={styleButton} onClick={() => openModalDelete(movie)}>Löschen</Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      {sortedMovies.length>8&&
+        <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
+          <ShowTableHeader/>
+        </Table>
+      }
+      {sortedMovies.length>8&&
+        <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
+          <div style={{ overflowY: 'scroll', height: '550px' }}>
+            <ShowTableBody/>
+          </div>
+        </Table>
+      }
+      {sortedMovies.length<9&&
+        <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
+          <div>
+            <ShowTableHeader/>
+            <ShowTableBody/>
+          </div>
+        </Table>
+      }
     </div>
   );
 };

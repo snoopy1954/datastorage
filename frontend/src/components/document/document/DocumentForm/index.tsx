@@ -6,7 +6,8 @@ import { styleButton }from '../../../../constants';
 
 import { Option, Edittype } from '../../../../types/basic';
 import { Group } from '../../../../../../backend/src/types/basic';
-import { DocumentWithFileNoID } from '../../../../types/document';
+import { DocumentWithContentsNoID } from '../../../../types/document';
+import { ContentWithFile } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { setSelectedSubgroups } from '../../../../state/book/selectedsubgroups/actions';
@@ -14,19 +15,25 @@ import { setSelectedSubgroups } from '../../../../state/book/selectedsubgroups/a
 import { SelectField } from '../../../basic/formfields/selectfield';
 import { SelectFieldWithChange } from '../../../basic/formfields/selectfieldwithchange';
 import { TextField } from '../../../basic/formfields/textfield';
+import { TextFieldWithDelete } from '../../../basic/formfields/textfieldwithdelete';
 import { NumberField } from '../../../basic/formfields/numberfield';
-import { FileField } from '../../../basic/formfields/filefield';
-import { TextFieldArray } from '../../../basic/formfields/textfieldarray';
 import { PickField } from '../../../basic/formfields/pickdatefield';
+import { ContentField } from '../../../basic/formfields/contentfield';
 
 import { nextDocument } from '../../../../utils/document/document';
+import { content2contentwithfile, newContent, sortContents } from '../../../../utils/basic/content';
 
 
 interface Props {
   edittype: Edittype;
-  onSubmit: (values: DocumentWithFileNoID) => void;
+  onSubmit: (values: DocumentWithContentsNoID) => void;
   onCancel: () => void;
 }
+
+const emptylineStyle = {
+  color: 'white',
+  fontSize: 8
+};
 
 export const DocumentForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
   const dispatch = useDispatch();
@@ -63,33 +70,78 @@ export const DocumentForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) 
       label: element
     });
   });
+
+  const reorderContents = (contentswithfile: ContentWithFile[]): ContentWithFile[] => {
+    const contentswithfileSorted: ContentWithFile[] = contentswithfile.map((contentwithfile, index) => {
+      contentwithfile.seqnr = index+1;
+      return contentwithfile;
+    });
+
+    return contentswithfileSorted;
+  }
   
-  const cover: File = new File([''], 'filename');
+  const contentsWithFile: ContentWithFile[] = [];
+  let initialValues;
+  if (edittype===Edittype.EDIT && document) {
+    document.contents = sortContents(document.contents);
+    document.contents.forEach(content => {
+      const contentWithFile: ContentWithFile = content2contentwithfile(content);
+      contentsWithFile.push(contentWithFile);
+    })
+    initialValues = { 
+      ...document, 
+      contentswithfile: contentsWithFile
+    }
+  } else {
+    initialValues = { 
+      ...nextDocument(documents), 
+      contentswithfile: contentsWithFile };
+  }
 
-  const initialValues = edittype===Edittype.EDIT && document
-  ? { ...document, file: cover } 
-  : { ...nextDocument(documents), file: cover };
-
-  console.log(document.keywords)
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={onSubmit}
       validate={values => {
-        const requiredError = "Pflichtfeld";
         const errors: { [field: string]: string } = {};
-        // console.log('validate', values.file)
-        // if (values.file.size===0) {
-        //   errors.file = requiredError;
-        // }
-        // else {
-        //   delete errors.file;
-        // }
-        // console.log(errors)
         return errors;
       }}
     >
       {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
+        const addKeyword = () => {
+          const keywords = values.keywords;
+          keywords.push('');
+          setFieldValue('keywords', keywords);
+        };
+
+        const deleteKeyword = (item: string) => {
+          const index = +item.substr('Schlüsselwort #'.length)-1
+          const keywords = values.keywords;
+          keywords.splice(index,1);
+          setFieldValue('keywords', keywords);
+        };
+
+        const addContent = () => {
+          let contents = values.contentswithfile;
+          contents.push(newContent());
+          contents = reorderContents(contents);
+          setFieldValue('contentswithfile', contents);
+        };
+
+        const deleteContent = (item: string) => {
+          const index = +item.substr('Datei #'.length)-1
+          const contents = values.contentswithfile;
+          contents.splice(index,1);
+          setFieldValue('contentswithfile', contents);
+        };
+
+        const changeContent = (item: string) => {
+          const index = +item.substr('Datei #'.length)-1
+          const contents = values.contentswithfile;
+          contents[index] = newContent();
+          setFieldValue('contentswithfile', contents);
+        };
+
         return (
           <Form className='form ui'>
             <Field
@@ -122,21 +174,31 @@ export const DocumentForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) 
               options={subgroupOptions}
               component={SelectField}
             />
-            <Field
-              label='Datei'
-              placeholder='Datei'
-              name='file'
-              setFieldValue={setFieldValue}
-              setFieldTouched={setFieldTouched}
-              component={FileField}
-            />
-            <Field
-              name='keywords'
-              items={values.keywords}
-              setFieldValue={setFieldValue}
-              setFieldTouched={setFieldTouched}
-              component={TextFieldArray}
-            />
+            {values.contentswithfile.map((content, index) => (
+              <Field key={index}
+                label={'Datei #' + (index+1)}
+                content={content}
+                name={`contentswithfile.${index}`}
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched}
+                removeitem={deleteContent}
+                changeitem={changeContent}
+                component={ContentField}
+              />
+            ))}
+            <Button type="button" style={styleButton} onClick={() => addContent()}>+Dokument</Button>
+            <p style={emptylineStyle}>.</p>
+            {values.keywords.map((_keyword, index) => (
+              <Field key={index}
+                removeitem={deleteKeyword}
+                label={'Schlüsselwort #' + (index+1)}
+                placeholder='Schlüsselwort'
+                name={`keywords.${index}`}
+                component={TextFieldWithDelete}
+              />
+            ))}
+            <Button type="button" style={styleButton} onClick={() => addKeyword()}>+Schl.wort</Button>
+            <p style={emptylineStyle}>.</p>
             <Field
               label='Jahr'
               placeholder='Jahr'

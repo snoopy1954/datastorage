@@ -211,6 +211,49 @@ export const BookPage: React.FC = () => {
   const title = 'Bücherliste' + booklistTitle(filters);
   const sortedBooks = booklistFilter(books, filters, bookgroups);
 
+  const ShowTableHeader: React.FC = () => {
+    return (
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell style={{ backgroundColor, width: '25%' } } className='center aligned'>Buchtitel</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Autor</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Sprache</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Auf/Ab</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+    );
+  };
+
+  const ShowTableBody: React.FC = () => {
+    return (
+        <Table.Body>
+          {Object.values(sortedBooks).map((book: Book, index: number) => (
+            <Table.Row key={book.id}>
+              <Table.Cell style={{ backgroundColor, width: '25%' } } className='left aligned'>{book.title.name}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '15%' } } className='left aligned'>{book.author.givenname} {book.author.familyname}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '10%' } } className='left aligned'>{book.tongue}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='center aligned'>
+                <Button className="ui icon button" style={styleButtonSmall} disabled={!filterSelected} 
+                  onClick={() => actionUpDown(Direction.UP, index, sortedBooks) }>
+                  <i className="angle up icon"></i>
+                </Button>
+                <Button className="ui icon button" style={styleButtonSmall} disabled={!filterSelected} 
+                  onClick={() => actionUpDown(Direction.DOWN, index, sortedBooks) }>
+                  <i className="angle down icon"></i>
+                </Button>
+              </Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
+                <Button style={styleButton} onClick={() => openModalShow(book)}>Anzeigen</Button>
+                <Button style={styleButton} onClick={() => openModalChange(book)}>Ändern</Button>
+                <Button style={styleButton} onClick={() => openModalDelete(book)}>Löschen</Button>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>        
+    );
+  };
+
   return (
     <div className='App'>
       <BookModal
@@ -273,41 +316,26 @@ export const BookPage: React.FC = () => {
       </Button>
       <Button style={styleButton} onClick={() => openModalAuthor()}>Author</Button>
       <Button style={styleButton} disabled={!sequenceChanged} onClick={() => actionSaveSequence()}>Speichern</Button>
-      <Table celled style={{ backgroundColor }}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell style={{ backgroundColor }} className='five wide center aligned'>Buchtitel</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Autor</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Sprache</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Auf/Ab</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='four wide center aligned'>Aktion</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {Object.values(sortedBooks).map((book: Book, index: number) => (
-            <Table.Row key={book.id}>
-              <Table.Cell>{book.title.name}</Table.Cell>
-              <Table.Cell>{book.author.givenname} {book.author.familyname}</Table.Cell>
-              <Table.Cell>{book.tongue}</Table.Cell>
-              <Table.Cell>
-                <Button className="ui icon button" style={styleButtonSmall} disabled={!filterSelected} 
-                  onClick={() => actionUpDown(Direction.UP, index, sortedBooks) }>
-                  <i className="angle up icon"></i>
-                </Button>
-                <Button className="ui icon button" style={styleButtonSmall} disabled={!filterSelected} 
-                  onClick={() => actionUpDown(Direction.DOWN, index, sortedBooks) }>
-                  <i className="angle down icon"></i>
-                </Button>
-              </Table.Cell>
-              <Table.Cell>
-                <Button style={styleButton} onClick={() => openModalShow(book)}>Anzeigen</Button>
-                <Button style={styleButton} onClick={() => openModalChange(book)}>Ändern</Button>
-                <Button style={styleButton} onClick={() => openModalDelete(book)}>Löschen</Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      {sortedBooks.length>8&&
+        <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
+          <ShowTableHeader/>
+        </Table>
+      }
+      {sortedBooks.length>8&&
+        <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
+          <div style={{ overflowY: 'scroll', height: '550px' }}>
+            <ShowTableBody/>
+          </div>
+        </Table>
+      }
+      {sortedBooks.length<9&&
+        <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
+          <div>
+            <ShowTableHeader/>
+            <ShowTableBody/>
+          </div>
+        </Table>
+      }
     </div>
   );
 }

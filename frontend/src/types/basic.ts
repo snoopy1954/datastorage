@@ -1,3 +1,5 @@
+import { Content2 } from '../../../backend/src/types/basic';
+
 export enum Edittype {
     EDIT = "edit",
     ADD = "add",
@@ -25,4 +27,13 @@ export type Option = {
     label: string;
 };
   
+export interface FileDate {
+    file: File;
+    date: string;
+};
+
+export interface ContentWithFile extends Content2 {
+    file: File;
+};
+
 

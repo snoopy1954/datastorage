@@ -21,3 +21,13 @@ export interface Content {
     filesize: string;
     dataId: string;
 }
+
+export interface Content2 {
+    dataId: string;
+    filename: string;
+    filetype: string;
+    filesize: string;
+    date: string;
+    description: string;
+    seqnr: number;
+}

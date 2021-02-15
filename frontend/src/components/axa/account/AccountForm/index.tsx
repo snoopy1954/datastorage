@@ -125,14 +125,6 @@ export const AccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
               name="passed"
               component={ShowField}
             />}
-            {(values.status===AccountStatus.CLOSED)&&(values.notes.length===0||addNote)&&<Field
-              label="Bescheid"
-              filedate={values.note}
-              name="note"
-              component={FilePickDateField}
-              setFieldValue={setFieldValue}
-              setFieldTouched={setFieldTouched}
-            />}
             {values.notes.map((note, index) => (
               <Field key={index}
                 label={'Bescheid #' + (index+1)}
@@ -141,6 +133,15 @@ export const AccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =
                 component={ShowField}
               />
             ))}
+            {(values.status===AccountStatus.CLOSED)&&(values.notes.length===0||addNote)&&<Field
+              label="Bescheid"
+              filedate={values.note}
+              name="note"
+              component={FilePickDateField}
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
+            />}
+            {(values.status===AccountStatus.CLOSED)&&!addNote&&<p>Bescheid</p>}
             {(values.status===AccountStatus.CLOSED)&&!addNote&&<Button type="button" style={styleButton} onClick={() => setAddNote(true)}>Anlegen</Button>}
             {(values.status===AccountStatus.CLOSED)&&<Field
               label="Betrag"
