@@ -51,6 +51,10 @@ import recipesRouter from './routes/recipe/recipes';
 import documentgroupsRouter from './routes/document/groups';
 import documentsRouter from './routes/document/documents';
 
+import sportyearsRouter from './routes/sport/sportyears';
+import sportgroupsRouter from './routes/sport/groups';
+import activitiesRouter from './routes/sport/activities';
+
 
 const app = express();
 app.use(express.static('build'));
@@ -92,6 +96,9 @@ app.use('/api/recipegroups', recipegroupsRouter);
 app.use('/api/recipes', recipesRouter);
 app.use('/api/documentgroups', documentgroupsRouter);
 app.use('/api/documents', documentsRouter);
+app.use('/api/sportyears', sportyearsRouter);
+app.use('/api/sportgroups', sportgroupsRouter);
+app.use('/api/activities', activitiesRouter);
 
 app.get('/api/ping', (_req, res) => {
     console.log('someone pinged here');

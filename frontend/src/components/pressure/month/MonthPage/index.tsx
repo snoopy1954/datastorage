@@ -124,6 +124,47 @@ export const MonthPage: React.FC = () => {
     yearOptions.push(element.name.name);
   });
 
+  const ShowTableHeader: React.FC = () => {
+    return (
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell style={{ backgroundColor, width: '7%' }} className='center aligned'>Monat</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '7%' }} className='center aligned'>Start- / Endgewicht</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '7%' }} className='center aligned'>Durchschnitt Gewicht</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '7%' }} className='center aligned'>Durchschnitt Systolisch</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '7%' }} className='center aligned'>Durchschnitt Diastolisch</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '7%' }} className='center aligned'>Durchschnitt Puls</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '25%' }} className='center aligned'>Aktion</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+    );
+  };
+
+  const ShowTableBody: React.FC = () => {
+    return (
+        <Table.Body>
+          {Object.values(months).map((month: Month) => (
+            month.year===year.name.name&&
+            <Table.Row key={month.id}>
+              <Table.Cell style={{ backgroundColor, width: '7%' } } className='left aligned'>{month.monthname}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '7%' } } className='left aligned'>{month.weight.start}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '7%' } } className='left aligned'>{month.weight.total}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '7%' } } className='left aligned'>{month.systolic.total}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '7%' } } className='left aligned'>{month.diastolic.total}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '7%' } } className='left aligned'>{month.pulse.total}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '25%' } } className='center aligned'>
+                <Button style={styleButton} onClick={() => openModalShow(month)}>Anzeigen</Button>
+                <Button style={styleButton} onClick={() => openModalChange(month)}>Ändern</Button>
+                <Button style={styleButton} onClick={() => openModalPrint(month)}>Drucken</Button>
+                <Button style={styleButton} onClick={() => openModalExport(month)}>Exportieren</Button>
+                <Button style={styleButton} onClick={() => openModalDelete(month)}>Löschen</Button>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>        
+    );
+  };
+
   return (
     <div className='App'>
       <AskModal
@@ -180,39 +221,24 @@ export const MonthPage: React.FC = () => {
           :<option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
-      <Table celled compact small='true' style={{ backgroundColor }}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Monat</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Start- / Endgewicht</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Durchschnitt Gew.</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Durchschnitt Syst.</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Durchschnitt Diast.</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Durchschnitt Puls</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='five wide center aligned'>Aktion</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-        {Object.values(months).map((month: Month) => (
-            month.year===year.name.name&&
-            <Table.Row key={month.id}>
-              <Table.Cell>{month.monthname}</Table.Cell>
-              <Table.Cell>{month.weight.start} / {month.weight.end}</Table.Cell>
-              <Table.Cell>{month.weight.total}</Table.Cell>
-              <Table.Cell>{month.systolic.total}</Table.Cell>
-              <Table.Cell>{month.diastolic.total}</Table.Cell>
-              <Table.Cell>{month.pulse.total}</Table.Cell>
-              <Table.Cell>
-                <Button style={styleButton} onClick={() => openModalShow(month)}>Anzeigen</Button>
-                <Button style={styleButton} onClick={() => openModalChange(month)}>Ändern</Button>
-                <Button style={styleButton} onClick={() => openModalPrint(month)}>Drucken</Button>
-                <Button style={styleButton} onClick={() => openModalExport(month)}>Exportieren</Button>
-                <Button style={styleButton} onClick={() => openModalDelete(month)}>Löschen</Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      {Object.values(months).length>8&&
+        <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
+          <ShowTableHeader/>
+        </Table>
+      }
+      {Object.values(months).length>8&&
+        <div style={{ overflowY: 'scroll', height: '550px' }}>
+          <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
+            <ShowTableBody/>
+          </Table>
+        </div>
+      }
+      {Object.values(months).length<9&&
+        <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
+            <ShowTableHeader/>
+            <ShowTableBody/>
+        </Table>
+      }
     </div>
   );
 }

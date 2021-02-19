@@ -17,9 +17,11 @@ import { AppFooter } from "./components/basic/footer";
 import Home from "./components/home";
 import Pressure from "./components/pressure";
 import Axa from './components/axa';
+import Sport from './components/sport';
 import Network from "./components/network";
 import Movie from "./components/movie";
 import Book from "./components/book";
+import Music from "./components/music";
 import Address from "./components/address";
 import Sudoku from './components/sudoku';
 import Account from './components/account';
@@ -56,11 +58,13 @@ const App: React.FC = () => {
                 <Button style={styleButton} onClick={() => handleSelection('account')}>Konto</Button>
                 <Button style={styleButton} onClick={() => handleSelection('axa')}>AXA</Button>
                 <Button style={styleButton} onClick={() => handleSelection('pressure')}>Blutdruck</Button>
+                <Button style={styleButton} onClick={() => handleSelection('sport')}>Sport</Button>
                 <Button style={styleButton} onClick={() => handleSelection('address')}>Adresse</Button>
                 <Button style={styleButton} onClick={() => handleSelection('network')}>Netzwerk</Button>
                 <Button style={styleButton} onClick={() => handleSelection('recipe')}>Rezept</Button>
                 <Button style={styleButton} onClick={() => handleSelection('movie')}>Film</Button>
                 <Button style={styleButton} onClick={() => handleSelection('book')}>Buch</Button>
+                <Button style={styleButton} onClick={() => handleSelection('music')}>Musik</Button>
                 <Button style={styleButton} onClick={() => handleSelection('sudoku')}>Sudoku</Button>
             </Container>
             <Container fluid>
@@ -71,9 +75,11 @@ const App: React.FC = () => {
                 {mainpage==='address'&&<Address/>}
                 {mainpage==='network'&&<Network/>}
                 {mainpage==='pressure'&&<Pressure/>}
+                {mainpage==='sport'&&<Sport/>}
                 {mainpage==='axa'&&<Axa/>}
                 {mainpage==='movie'&&<Movie/>}
                 {mainpage==='book'&&<Book/>}
+                {mainpage==='music'&&<Music/>}
                 {mainpage==='sudoku'&&<Sudoku/>}
                 {mainpage==='info'&&<Info/>}
             </Container>

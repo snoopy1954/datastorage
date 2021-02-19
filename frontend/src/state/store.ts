@@ -100,6 +100,13 @@ import { documentReducer } from './document/document/reducers';
 import { documentfilterReducer } from './document/filter/reducers';
 import { changeddocumentsReducer } from './document/changed/reducers';
 
+import { sportgroupsReducer } from './sport/groups/reducers';
+import { sportgroupReducer } from './sport/group/reducers';
+import { sportyearsReducer } from './sport/years/reducers';
+import { sportyearReducer } from './sport/year/reducers';
+import { activitiesReducer } from './sport/activities/reducers';
+import { activityReducer } from './sport/activity/reducers';
+
 
 const rootReducer = combineReducers({
     page: pageReducer,
@@ -188,6 +195,12 @@ const rootReducer = combineReducers({
     document: documentReducer,
     documentfilter: documentfilterReducer,
     changeddocuments: changeddocumentsReducer,
+    sportgroups: sportgroupsReducer,
+    sportgroup: sportgroupReducer,
+    sportyears: sportyearsReducer,
+    sportyear: sportyearReducer,
+    activities: activitiesReducer,
+    activity: activityReducer,
 
 });
 

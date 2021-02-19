@@ -138,6 +138,37 @@ export const BillPage: React.FC = () => {
     
   const billsToShow: Bill[] = Object.values(bills).filter(item => item.details[0].year.includes(year.name.name));
 
+  const ShowTableHeader: React.FC = () => {
+    return (
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell style={{ backgroundColor, width: '25%' }} className='center aligned'>Name</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '25%' }} className='center aligned'>Rechnungssteller</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Betrag</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+    );
+  };
+
+  const ShowTableBody: React.FC = () => {
+    return (
+        <Table.Body>
+          {Object.values(billsToShow).map((bill: Bill) => (
+            <Table.Row key={bill.id}>
+              <Table.Cell style={{ backgroundColor, width: '15%' } } className='left aligned' onClick={() => openModalShow(bill)}>{bill.name.name}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '10%' } } className='left aligned' onClick={() => openModalShow(bill)}>{bill.invoicingparty}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='right aligned'>{getAmount(getSumAmounts(bill))}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
+                <Button style={styleButton} onClick={() => openModalShow(bill)}>Anzeigen</Button>
+                <Button style={styleButton} onClick={() => openModalChange(bill)}>Ändern</Button>
+                <Button style={styleButton} onClick={() => openModalDelete(bill)}>Löschen</Button>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+       </Table.Body>        
+    );
+  };
   return (
     <div className="App">
       {openaccount.name.name!==''&&<BillModal
@@ -177,30 +208,24 @@ export const BillPage: React.FC = () => {
         <option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
-      <Table celled compact small='true' style={{ backgroundColor }}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Name</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Rechnungssteller</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Betrag</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Aktion</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {Object.values(billsToShow).map((bill: Bill) => (
-            <Table.Row key={bill.id}>
-              <Table.Cell onClick={() => openModalShow(bill)}>{bill.name.name}</Table.Cell>
-              <Table.Cell onClick={() => openModalShow(bill)}>{bill.invoicingparty}</Table.Cell>
-              <Table.Cell className='right aligned' onClick={() => openModalShow(bill)}>{getAmount(getSumAmounts(bill))}</Table.Cell>
-              <Table.Cell>
-                <Button style={styleButton} onClick={() => openModalShow(bill)}>Anzeigen</Button>
-                <Button style={styleButton} onClick={() => openModalChange(bill)}>Ändern</Button>
-                <Button style={styleButton} onClick={() => openModalDelete(bill)}>Löschen</Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      {billsToShow.length>8&&
+        <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
+          <ShowTableHeader/>
+        </Table>
+      }
+      {billsToShow.length>8&&
+        <div style={{ overflowY: 'scroll', height: '550px' }}>
+          <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
+            <ShowTableBody/>
+          </Table>
+        </div>
+      }
+      {billsToShow.length<9&&
+        <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
+            <ShowTableHeader/>
+            <ShowTableBody/>
+        </Table>
+      }
     </div>
   );
 };

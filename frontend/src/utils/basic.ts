@@ -8,6 +8,10 @@ export const newName = (): Name => {
     return { name: '', seqnr: 0 };
 };
 
+export const getRandomNumber = (randomNumberMax: number): number => {
+    return Math.floor(Math.random() * (randomNumberMax + 1));
+};
+
 export const getMD5 = (text: string): string => {
     return MD5(text).toString();
 }

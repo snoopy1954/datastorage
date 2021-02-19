@@ -13,7 +13,7 @@ import { GroupPage } from './group/GroupPage';
 import { DocumentPage } from './document/DocumentPage';
 
 
-const Document: React.FC = () => {  
+const Document: React.FC = () => {
   const dispatch = useDispatch();
 
   const mainpage = useSelector((state: RootState) => state.page.mainpage);      

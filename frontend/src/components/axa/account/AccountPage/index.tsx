@@ -144,6 +144,48 @@ export const AccountPage: React.FC = () => {
   const accountsToShow: Account[] = Object.values(accounts).filter(item => item.details[0].year.includes(year.name.name));
   const remarkToRest: string = year.id==='' ? '' : ' (Rest Selbstbehalt = ' + year.vital750 + ' €)';
 
+  const ShowTableHeader: React.FC = () => {
+    return (
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Name</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Status</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Betrag</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Erstattung</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Ablehnung</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Selbstbehalt</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Zahn</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Hilfsmittel</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+    );
+  };
+
+  const ShowTableBody: React.FC = () => {
+    return (
+        <Table.Body>
+          {Object.values(accountsToShow).map((account: Account) => (
+            <Table.Row key={account.id}  onClick={() => handleSelection(account)}>
+              <Table.Cell style={{ backgroundColor, width: '15%' } } className='left aligned'>{account.name.name}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '10%' } } className='left aligned'>{account.status}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='right aligned'>{getAmount(account.details[0].amount)}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='right aligned'>{getAmount(account.details[0].refund)}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='right aligned'>{getAmount(account.details[0].deny)}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='right aligned'>{getAmount(account.details[0].retension)}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='center aligned'>{getAmount(account.details[0].dent20)}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='center aligned'>{getAmount(account.details[0].cure10)}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
+                <Button style={styleButton} onClick={() => openModalShow(account)}>Anzeigen</Button>
+                <Button style={styleButton} onClick={() => openModalChange(account)}>Ändern</Button>
+                <Button style={styleButton} onClick={() => openModalDelete(account)}>Löschen</Button>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+       </Table.Body>        
+    );
+  };
+
   return (
     <div className='App'>
       <AccountModal
@@ -185,37 +227,24 @@ export const AccountPage: React.FC = () => {
           :<option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
-      <Table celled compact small='true' style={{ backgroundColor }}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Name</Table.HeaderCell>
-            <Table.HeaderCell className='two wide center aligned' style={{ backgroundColor }}>Status</Table.HeaderCell>
-            <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Betrag</Table.HeaderCell>
-            <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Erstattung</Table.HeaderCell>
-            <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Ablehnung</Table.HeaderCell>
-            <Table.HeaderCell className='one wide center aligned' style={{ backgroundColor }}>Selbstbehalt</Table.HeaderCell>
-            <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor}}>Aktion</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {Object.values(accountsToShow).map((account: Account) => (
-            <Table.Row key={account.id}  onClick={() => handleSelection(account)}>
-              <Table.Cell>{account.name.name}</Table.Cell>
-              <Table.Cell>{account.status}</Table.Cell>
-              <Table.Cell className='right aligned'>{getAmount(account.details[0].amount)}</Table.Cell>
-              <Table.Cell className='right aligned'>{getAmount(account.details[0].refund)}</Table.Cell>
-              <Table.Cell className='right aligned'>{getAmount(account.details[0].deny)}</Table.Cell>
-              <Table.Cell className='right aligned'>{getAmount(account.details[0].retension)}</Table.Cell>
-              {/* <Table.Cell className='right aligned'>{getAmount(account.details[0].dent20)}</Table.Cell> */}
-              <Table.Cell>
-                <Button style={styleButton} onClick={() => openModalShow(account)}>Anzeigen</Button>
-                <Button style={styleButton} onClick={() => openModalChange(account)}>Ändern</Button>
-                <Button style={styleButton} onClick={() => openModalDelete(account)}>Löschen</Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      {accountsToShow.length>8&&
+        <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
+          <ShowTableHeader/>
+        </Table>
+      }
+      {accountsToShow.length>8&&
+        <div style={{ overflowY: 'scroll', height: '550px' }}>
+          <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
+            <ShowTableBody/>
+          </Table>
+        </div>
+      }
+      {accountsToShow.length<9&&
+        <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
+            <ShowTableHeader/>
+            <ShowTableBody/>
+        </Table>
+      }
     </div>
   );
 };

@@ -275,18 +275,16 @@ export const MoviePage: React.FC = () => {
         </Table>
       }
       {sortedMovies.length>8&&
-        <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
-          <div style={{ overflowY: 'scroll', height: '550px' }}>
+        <div style={{ overflowY: 'scroll', height: '550px' }}>
+          <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
             <ShowTableBody/>
-          </div>
-        </Table>
+          </Table>
+        </div>
       }
       {sortedMovies.length<9&&
         <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
-          <div>
             <ShowTableHeader/>
             <ShowTableBody/>
-          </div>
         </Table>
       }
     </div>

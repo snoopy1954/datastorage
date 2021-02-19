@@ -6,6 +6,8 @@ import { styleButton } from '../../constants';
 import { Sudoku, SudokuNoID } from '../../../../backend/src/types/sudoku';
 import { Field, Settype, Setcolor, Flagtype } from '../../types/sudoku';
 
+import { getAll } from '../../services/postgres';
+
 import { RootState } from '../../state/store';
 import { setSelectedField } from '../../state/sudoku/selectedfield/actions';
 import { initializeGamefields, setGamefield } from '../../state/sudoku/gamefields/actions';
@@ -19,6 +21,7 @@ import { showNotification } from '../../state/sudoku/notification/actions';
 
 import { AppHeaderH2 } from "../basic/header";
 
+import { getRandomNumber } from '../../utils/basic';
 import { 
     game2string, 
     string2game, 
@@ -210,15 +213,16 @@ const SudokuResolver: React.FC = () => {
         dispatch(showNotification('Spiel starten', 5));
     };
 
-    const handleRead = () => {
+    const handleRead = (gamenumber: number) => {
         dispatch(initializeSequence());
         dispatch(initializeGamefields());
         dispatch(initializeSolutionfields());
         dispatch(initializeCandidates());
         dispatch(initializeFlags());
         dispatch(setSelectedField(0));
-        const gameAsString: string = Object.values(sudokus)[Object.values(sudokus).length-1].game;
-        const gamefieldvalues = string2game(gameAsString);
+
+        const gameAsString: string = Object.values(sudokus)[gamenumber].game;
+        const gamefieldvalues: Field[] = string2game(gameAsString);
         for (let index=0; index<81; index++) {
             if (gamefieldvalues[index].settype===Settype.SET) {
                 dispatch(setGamefield(gamefieldvalues[index]));
@@ -274,6 +278,34 @@ const SudokuResolver: React.FC = () => {
         dispatch(popSequence());
     };
 
+    const formatData = (migrateData: any): string[] => {
+        const formatedData: string[] = migrateData;
+        return formatedData;
+    };
+
+    const handleImport = async () => {
+        const games = formatData(await getAll('sudoku', 'games'));
+        for (let item=1; item<games.length; item++) {
+            let gameAsString = games[item].replace('{', '').replace('}', '').split(',')[2].split(':')[1].replace('"', '').replace('"', '')
+            let solutionAsString = '';
+            const solutionAsString4 = games[0].replace('{', '').replace('}', '').split(',')[3].split(':')[1].replace('"', '').replace('"', '')
+            for (let index=0; index<81;index++) {
+                if(gameAsString.substr(index*4,1)!=='0') {
+                    gameAsString = gameAsString.substr(0,index*4+1) + '1' + gameAsString.substr(index*4+2);
+                }
+            }
+            for (let index=0; index<81;index++) {
+                solutionAsString = solutionAsString + solutionAsString4.substr(index*4, 1);
+            }
+            const sudoku: SudokuNoID = {
+                game: gameAsString,
+                solution: solutionAsString
+            };
+            console.log(sudoku);
+            dispatch(addSudoku(sudoku));
+        }
+    };
+
     const markerposition: number[] = [matrix[selectedfield][0], matrix[selectedfield][1]];
     const numberfield = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
     const colors: Setcolor[] = getColors(gamefields);
@@ -289,9 +321,11 @@ const SudokuResolver: React.FC = () => {
             <AppHeaderH2 text={title} icon='puzzle'/> 
             <Button style={styleButton} onClick={() => handleStart()}>Start</Button>
             <Button style={styleButton} onClick={() => handleNew()}>Neu</Button>
-            <Button style={styleButton} onClick={() => handleRead()}>Lesen</Button>
+            <Button style={styleButton} onClick={() => handleRead(Object.values(sudokus).length-1)}>Lesen</Button>
+            <Button style={styleButton} onClick={() => handleRead(getRandomNumber(Object.values(sudokus).length-1))}>Zufall</Button>
             <Button style={styleButton} onClick={() => handleUndo()}>Zurück</Button>
             <Button style={styleButton} onClick={() => handleSolution()}>Lösung</Button>
+            <Button style={styleButton} onClick={() => handleImport()} disabled={true}>Import</Button>
             <svg viewBox="0 0.5 20 9.7">
                 <defs>
                     <path id="quadrat" d="M0,0 h1 v1 h-1 z" stroke="black" strokeWidth="0.01"/>

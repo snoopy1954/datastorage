@@ -322,18 +322,16 @@ export const BookPage: React.FC = () => {
         </Table>
       }
       {sortedBooks.length>8&&
-        <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
           <div style={{ overflowY: 'scroll', height: '550px' }}>
-            <ShowTableBody/>
+            <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
+              <ShowTableBody/>
+            </Table>
           </div>
-        </Table>
       }
       {sortedBooks.length<9&&
         <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
-          <div>
-            <ShowTableHeader/>
-            <ShowTableBody/>
-          </div>
+          <ShowTableHeader/>
+          <ShowTableBody/>
         </Table>
       }
     </div>

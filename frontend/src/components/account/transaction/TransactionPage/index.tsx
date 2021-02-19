@@ -286,11 +286,11 @@ export const TransactionPage: React.FC = () => {
         </Table>
       }
       {sortedTransactions.length>8&&filterSelected&&
-        <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
-          <div style={{ overflowY: 'scroll', height: '550px' }}>
+        <div style={{ overflowY: 'scroll', height: '550px' }}>
+          <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
             <ShowTableBody/>
-          </div>
-        </Table>
+          </Table>
+        </div>
       }
       {sortedTransactions.length<9&&filterSelected&&
         <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>

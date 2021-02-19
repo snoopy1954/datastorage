@@ -124,6 +124,58 @@ export const AddressPage: React.FC = () => {
     const title = 'Kontakte' + addresslistTitle(addressgroupfilter);
     const sortedAddresses = addresslistFilter(addresses, addressgroupfilter, addressgroups);
 
+    const ShowTableHeader: React.FC = () => {
+        return (
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell style={{ backgroundColor, width: '18%' }} className='center aligned'>Name</Table.HeaderCell>
+                    <Table.HeaderCell style={{ backgroundColor, width: '18%' }} className='center aligned'>Telefon</Table.HeaderCell>
+                    {addressgroupfilter==='Gaststätte'&&
+                        <Table.HeaderCell style={{ backgroundColor, width: '18%' }} className='center aligned'>Kommentar</Table.HeaderCell>}
+                    {addressgroupfilter!=='Gaststätte'&&
+                        <Table.HeaderCell style={{ backgroundColor, width: '18%' }} className='center aligned'>Email</Table.HeaderCell>}
+                    <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Auf/Ab</Table.HeaderCell>
+                    <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
+        );
+    };
+    
+    const ShowTableBody: React.FC = () => {
+        return (
+            <Table.Body>
+                {Object.values(sortedAddresses).map((address: Address, index: number) => (
+                <Table.Row key={address.id}>
+                    <Table.Cell style={{ backgroundColor, width: '18%' } } className='left aligned'>{address.name.name}</Table.Cell>
+                    {address.persons[0].communication.phone!==''&&
+                        <Table.Cell style={{ backgroundColor, width: '18%' } } className='left aligned'>{address.persons[0].communication.phone}</Table.Cell>}
+                    {address.persons[0].communication.phone===''&&
+                        <Table.Cell style={{ backgroundColor, width: '18%' } } className='left aligned'>{address.persons[0].communication.mobile}</Table.Cell>}
+                    {addressgroupfilter==='Gaststätte'&&
+                        <Table.Cell style={{ backgroundColor, width: '18%' } } className='left aligned'>{address.persons[0].comment}</Table.Cell>}
+                    {addressgroupfilter!=='Gaststätte'&&
+                        <Table.Cell style={{ backgroundColor, width: '18%' } } className='left aligned'>{address.persons[0].communication.email}</Table.Cell>}
+                    <Table.Cell style={{ backgroundColor, width: '5%' } } className='center aligned'>
+                        <Button className="ui icon button" style={styleButtonSmall} disabled={addressgroupfilter===''} 
+                            onClick={() => actionUpDown(Direction.UP, index, sortedAddresses) }>
+                            <i className="angle up icon"></i>
+                        </Button>
+                        <Button className="ui icon button" style={styleButtonSmall} disabled={addressgroupfilter===''} 
+                            onClick={() => actionUpDown(Direction.DOWN, index, sortedAddresses) }>
+                            <i className="angle down icon"></i>
+                        </Button>
+                    </Table.Cell>
+                    <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
+                        <Button style={styleButton} onClick={() => openModalShow(address)}>Anzeigen</Button>
+                        <Button style={styleButton} onClick={() => openModalChange(address)}>Ändern</Button>
+                        <Button style={styleButton} onClick={() => openModalDelete(address)}>Löschen</Button>
+                    </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>        
+        );
+    };
+
     return (
         <div className="App">
             <AddressModal
@@ -164,46 +216,24 @@ export const AddressPage: React.FC = () => {
                 ))}
             </Button>
             {Object.values(changedAddresses).length>0&&<Button style={styleButton} onClick={() => actionSaveSequence()}>Speichern</Button>}
-            <Table celled style={{ backgroundColor }}>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Name</Table.HeaderCell>
-                        <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Telefon</Table.HeaderCell>
-                        {addressgroupfilter==='Gaststätte'&&
-                        <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Kommentar</Table.HeaderCell>}
-                        {addressgroupfilter!=='Gaststätte'&&
-                        <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Email</Table.HeaderCell>}
-                        <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Auf/Ab</Table.HeaderCell>
-                        <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Aktion</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {Object.values(sortedAddresses).map((address: Address, index: number) => (
-                        <Table.Row key={address.id}>
-                            <Table.Cell>{address.name.name}</Table.Cell>
-                            {address.persons[0].communication.phone!==''&&<Table.Cell>{address.persons[0].communication.phone}</Table.Cell>}
-                            {address.persons[0].communication.phone===''&&<Table.Cell>{address.persons[0].communication.mobile}</Table.Cell>}
-                            {addressgroupfilter==='Gaststätte'&&<Table.Cell>{address.persons[0].comment}</Table.Cell>}
-                            {addressgroupfilter!=='Gaststätte'&&<Table.Cell>{address.persons[0].communication.email}</Table.Cell>}
-                            <Table.Cell>
-                            <Button className="ui icon button" style={styleButtonSmall} disabled={addressgroupfilter===''}
-                                      onClick={() => actionUpDown(Direction.UP, index, sortedAddresses) }>
-                                    <i className="angle up icon"></i>
-                                </Button>
-                                <Button className="ui icon button" style={styleButtonSmall} disabled={addressgroupfilter===''}
-                                      onClick={() => actionUpDown(Direction.DOWN, index, sortedAddresses) }>
-                                    <i className="angle down icon"></i>
-                                </Button>
-                            </Table.Cell>
-                            <Table.Cell>
-                                <Button style={styleButton} onClick={() => openModalShow(address)}>Anzeigen</Button>
-                                <Button style={styleButton} onClick={() => openModalChange(address)}>Ändern</Button>
-                                <Button style={styleButton} onClick={() => openModalDelete(address)}>Löschen</Button>
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-            </Table>
+            {sortedAddresses.length>8&&
+                <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
+                    <ShowTableHeader/>
+                </Table>
+            }
+            {sortedAddresses.length>8&&
+                <div style={{ overflowY: 'scroll', height: '550px' }}>
+                    <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
+                        <ShowTableBody/>
+                    </Table>
+                </div>
+            }
+            {sortedAddresses.length<9&&
+                <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
+                    <ShowTableHeader/>
+                    <ShowTableBody/>
+                </Table>
+            }
         </div>
     );
 };

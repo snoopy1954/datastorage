@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { GroupNoID } from '../../types/basic';
+import { GroupNoID, YearNoID } from '../../types/basic';
 
 import { parseString, parseNumber, parseStringArray } from '../basicParser';
 
@@ -16,4 +16,15 @@ export const toGroup = (object: any) => {
     };
 
     return group;
+};
+
+export const toYear = (object: any) => {
+    const name = parseString(object.name);
+    const seqnr = parseNumber(object.seqnr);
+    const year: YearNoID = {
+        name,
+        seqnr,
+    };
+
+    return year;
 };

@@ -103,6 +103,48 @@ export const BillerPage: React.FC = () => {
   };
 
   const sortedBillers = sortBillerList(billers);
+  console.log(sortedBillers, sortedBillers.length)
+
+  const ShowTableHeader: React.FC = () => {
+    return (
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell style={{ backgroundColor, width: '25%' } } className='center aligned'>Name</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '25%' }} className='center aligned'>Person</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Auf/Ab</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+    );
+  };
+
+  const ShowTableBody: React.FC = () => {
+    return (
+        <Table.Body>
+          {Object.values(sortedBillers).map((biller: Biller, index: number) => (
+            <Table.Row key={biller.id}>
+              <Table.Cell style={{ backgroundColor, width: '25%' } } className='left aligned'>{biller.name.name}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '25%' } } className='left aligned'>{biller.person}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '5%' } } className='center aligned'>
+                <Button className="ui icon button" style={styleButtonSmall} 
+                  onClick={() => actionUpDown(Direction.UP, index, sortedBillers) }>
+                  <i className="angle up icon"></i>
+                </Button>
+                <Button className="ui icon button" style={styleButtonSmall} 
+                  onClick={() => actionUpDown(Direction.DOWN, index, sortedBillers) }>
+                  <i className="angle down icon"></i>
+                </Button>
+              </Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
+                <Button style={styleButton} onClick={() => openModalShow(biller)}>Anzeigen</Button>
+                <Button style={styleButton} onClick={() => openModalChange(biller)}>Ändern</Button>
+                <Button style={styleButton} onClick={() => openModalDelete(biller)}>Löschen</Button>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>        
+    );
+  };
    
   return (
     <div className="App">
@@ -137,39 +179,24 @@ export const BillerPage: React.FC = () => {
       <AppHeaderH3 text='Rechnungssteller' icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
       {Object.values(changedBillers).length>0&&<Button style={styleButton} onClick={() => actionSaveSequence()}>Speichern</Button>}
-       <Table celled compact small='true' style={{ backgroundColor }}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Name</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Person</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='one wide center aligned'>Auf/Ab</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Aktion</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {Object.values(sortedBillers).map((biller: Biller, index: number) => (
-            <Table.Row key={biller.id}>
-              <Table.Cell>{biller.name.name}</Table.Cell>
-              <Table.Cell>{biller.person}</Table.Cell>
-              <Table.Cell>
-                <Button className="ui icon button" style={styleButtonSmall} 
-                    onClick={() => actionUpDown(Direction.UP, index, sortedBillers)}>
-                  <i className="angle up icon"></i>
-                </Button>
-                <Button className="ui icon button" style={styleButtonSmall}
-                    onClick={() => actionUpDown(Direction.DOWN, index, sortedBillers)}>
-                  <i className="angle down icon"></i>
-                </Button>
-              </Table.Cell>
-              <Table.Cell>
-                <Button style={styleButton} onClick={() => openModalShow(biller)}>Anzeigen</Button>
-                <Button style={styleButton} onClick={() => openModalChange(biller)}>Ändern</Button>
-                <Button style={styleButton} onClick={() => openModalDelete(biller)}>Löschen</Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      {sortedBillers.length>8&&
+        <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
+          <ShowTableHeader/>
+        </Table>
+      }
+      {sortedBillers.length>8&&
+          <div style={{ overflowY: 'scroll', height: '550px' }}>
+            <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
+              <ShowTableBody/>
+            </Table>
+          </div>
+      }
+      {sortedBillers.length<9&&
+        <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
+          <ShowTableHeader/>
+          <ShowTableBody/>
+        </Table>
+      }
     </div>
   );
 }

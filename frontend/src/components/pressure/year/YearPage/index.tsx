@@ -50,10 +50,6 @@ export const YearPage: React.FC = () => {
     setModalOpen([false, false, false, false]);
   };
 
-    const handleSelection = (year: Year) => {
-      dispatch(setSelectedYear(year));
-    };
-
   const actionAdd = async (values: YearNoID) => {
     dispatch(addYear(values));
     closeModal();
@@ -78,6 +74,38 @@ export const YearPage: React.FC = () => {
     dispatch(removeYear(year.id));
     dispatch(clearSelectedYear());
     closeModal();
+  };  
+
+  const ShowTableHeader: React.FC = () => {
+    return (
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell style={{ backgroundColor, width: '35%' }} className='center aligned'>Jahr</Table.HeaderCell>
+          <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Letzter Monat</Table.HeaderCell>
+          <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Letztes Jahr</Table.HeaderCell>
+          <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+    );
+  };
+    
+  const ShowTableBody: React.FC = () => {
+    return (
+      <Table.Body>
+        {Object.values(years).map((year: Year) => (
+          <Table.Row key={year.id}>
+            <Table.Cell style={{ backgroundColor, width: '35%' } } className='left aligned'>{year.name.name}</Table.Cell>
+            <Table.Cell style={{ backgroundColor, width: '10%' } } className='left aligned'>{year.lastMonth}</Table.Cell>
+            <Table.Cell style={{ backgroundColor, width: '10%' } } className='left aligned'>{year.isLastYear ? 'ja' : 'nein'}</Table.Cell>
+            <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
+              <Button style={styleButton} onClick={() => openModalShow(year)}>Anzeigen</Button>
+              <Button style={styleButton} onClick={() => openModalChange(year)}>Ändern</Button>
+              <Button style={styleButton} onClick={() => openModalDelete(year)}>Löschen</Button>
+            </Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>        
+    );
   };  
 
   return (
@@ -112,30 +140,24 @@ export const YearPage: React.FC = () => {
       />
       <AppHeaderH3 text='Jahre' icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
-      <Table celled compact small='true' style={{ backgroundColor }}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor }}>Name</Table.HeaderCell>
-            <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor }}>Letzter Monat</Table.HeaderCell>
-            <Table.HeaderCell className='three wide center aligned' style={{ backgroundColor }}>Letztes Jahr</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='three wide center aligned'>Aktion</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {Object.values(years).map((year: Year) => (
-            <Table.Row key={year.id}  onClick={() => handleSelection(year)}>
-              <Table.Cell>{year.name.name}</Table.Cell>
-              <Table.Cell>{year.lastMonth}</Table.Cell>
-              <Table.Cell>{year.isLastYear ? 'ja' : 'nein'}</Table.Cell>
-              <Table.Cell>
-                <Button style={styleButton} onClick={() => openModalShow(year)}>Anzeigen</Button>
-                <Button style={styleButton} onClick={() => openModalChange(year)}>Ändern</Button>
-                <Button style={styleButton} onClick={() => openModalDelete(year)}>Löschen</Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      {Object.values(years).length>8&&
+        <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
+          <ShowTableHeader/>
+        </Table>
+      }
+      {Object.values(years).length>8&&
+        <div style={{ overflowY: 'scroll', height: '550px' }}>
+          <Table celled style={{ backgroundColor, marginTop: '0px', borderTop: "none" }}>
+            <ShowTableBody/>
+          </Table>
+        </div>
+      }
+      {Object.values(years).length<9&&
+        <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
+          <ShowTableHeader/>
+          <ShowTableBody/>
+        </Table>
+      }
     </div>
   );
 };

@@ -31,3 +31,10 @@ export interface Content2 {
     description: string;
     seqnr: number;
 }
+
+export interface Year extends Name {
+    id: string;
+}
+
+export type YearNoID = Omit<Year, 'id'>;
+

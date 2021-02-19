@@ -199,7 +199,7 @@ export const DocumentPage: React.FC = () => {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell style={{ backgroundColor, width: '35%' }} className='center aligned'>Dokumenttitel</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Gruppe</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Gruppe</Table.HeaderCell>
             <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Auf/Ab</Table.HeaderCell>
             <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
           </Table.Row>
@@ -325,10 +325,8 @@ export const DocumentPage: React.FC = () => {
       </Table> */}
       {sortedDocuments.length<9&&
         <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
-          <div>
-            <ShowTableHeader/>
-            <ShowTableBody/>
-          </div>
+          <ShowTableHeader/>
+          <ShowTableBody/>
         </Table>
       }
     </div>
