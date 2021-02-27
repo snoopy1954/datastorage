@@ -55,6 +55,13 @@ import sportyearsRouter from './routes/sport/sportyears';
 import sportgroupsRouter from './routes/sport/groups';
 import activitiesRouter from './routes/sport/activities';
 
+import musicgroupRouter from './routes/music/group';
+import artistRouter from './routes/music/artist';
+import cdRouter from './routes/music/cd';
+import playlistRouter from './routes/music/playlist';
+import trackRouter from './routes/music/track';
+import selectionRouter from './routes/music/selection';
+
 
 const app = express();
 app.use(express.static('build'));
@@ -99,6 +106,12 @@ app.use('/api/documents', documentsRouter);
 app.use('/api/sportyears', sportyearsRouter);
 app.use('/api/sportgroups', sportgroupsRouter);
 app.use('/api/activities', activitiesRouter);
+app.use('/api/musicgroup', musicgroupRouter);
+app.use('/api/artist', artistRouter);
+app.use('/api/cd', cdRouter);
+app.use('/api/playlist', playlistRouter);
+app.use('/api/track', trackRouter);
+app.use('/api/selection', selectionRouter);
 
 app.get('/api/ping', (_req, res) => {
     console.log('someone pinged here');

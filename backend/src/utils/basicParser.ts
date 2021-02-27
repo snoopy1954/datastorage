@@ -2,6 +2,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { Content2 } from '../types/basic';
+
 export const parseString = (text: any): string => {
     if (!text || !isString(text)) {
 //      throw new Error(`Incorrect or missing parameter: ${text}`);
@@ -45,3 +47,12 @@ export const parseDate = (text: any): Date => {
     return text;
 };
 
+export const parseContents = (contents: any): Content2[] => {
+
+    if (!contents || !Array.isArray(contents) || contents.length < 1) {
+        throw new Error(`Missing parameter: contents`);  
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return contents;
+};

@@ -107,6 +107,14 @@ import { sportyearReducer } from './sport/year/reducers';
 import { activitiesReducer } from './sport/activities/reducers';
 import { activityReducer } from './sport/activity/reducers';
 
+import { musicgroupsReducer } from './music/groups/reducers';
+import { musicgroupReducer } from './music/group/reducers';
+import { artistsReducer } from './music/artists/reducers';
+import { artistReducer } from './music/artist/reducers';
+import { cdsReducer } from './music/cds/reducers';
+import { cdReducer } from './music/cd/reducers';
+import { artistfilterReducer } from './music/artistfilter/reducers';
+
 
 const rootReducer = combineReducers({
     page: pageReducer,
@@ -201,7 +209,14 @@ const rootReducer = combineReducers({
     sportyear: sportyearReducer,
     activities: activitiesReducer,
     activity: activityReducer,
-
+    musicgroups: musicgroupsReducer,
+    musicgroup: musicgroupReducer,
+    artists: artistsReducer,
+    artist: artistReducer,
+    cds: cdsReducer,
+    cd: cdReducer,
+    artistfilter: artistfilterReducer,
+    
 });
 
 export type RootState = ReturnType<typeof rootReducer>; 

@@ -76,3 +76,20 @@ export const fsRename = (oldFilename: string, newFilename: string): boolean => {
     
     return ok;
 };
+
+export const fsFile = (filename: string): string => {
+    return fs.readFileSync(filename, 'binary');
+};
+
+export const fsExistsFile = (filename: string): boolean => {
+    let exists;
+    try {
+        const stat = fs.statSync(filename);
+        exists = stat&&stat.isFile();
+    }
+    catch {
+        exists = false;
+    }
+    return exists;
+};
+

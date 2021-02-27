@@ -10,14 +10,13 @@ import { Edittype } from "../../../../types/basic";
 
 import { getOne as getAccount } from '../../../../services/axa/accounts';
 import { getOne as getBill} from '../../../../services/axa/bills';
+import { create2 } from "../../../../services/image/images";
 
 import { RootState } from '../../../../state/store';
 import { addAccount, refreshAccount, removeAccount, updateAccount } from  '../../../../state/axa/accountlist/actions';
 import { clearSelectedAccount, setSelectedAccount } from '../../../../state/axa/selectedaccount/actions';
 import { addSelectedBill, clearSelectedBills } from '../../../../state/axa/selectedbills/actions';
 import { setSelectedYear } from '../../../../state/axa/year/actions';
-
-import { create2 } from "../../../../services/image/images";
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';

@@ -128,8 +128,7 @@ export const MoviePage: React.FC = () => {
         newMovie = checkSerial(newMovie, moviefilter.subgroup);
         console.log(newMovie.title.name);
         if (!findChecksum(movies, checksum)) {
-//          dispatch(addMovie(newMovie));
-          console.log(newMovie.title.name);
+          dispatch(addMovie(newMovie));
         }
       });
     };

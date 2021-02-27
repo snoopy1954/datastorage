@@ -1,1 +1,1 @@
-GET HTTP://dt-mint-01:3001/api/postgres?database=sudoku&table=games
+GET HTTP://dt-mint-01:3001/api/postgres?database=musik&table=artists

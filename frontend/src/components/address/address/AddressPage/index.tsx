@@ -128,12 +128,12 @@ export const AddressPage: React.FC = () => {
         return (
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell style={{ backgroundColor, width: '18%' }} className='center aligned'>Name</Table.HeaderCell>
-                    <Table.HeaderCell style={{ backgroundColor, width: '18%' }} className='center aligned'>Telefon</Table.HeaderCell>
+                    <Table.HeaderCell style={{ backgroundColor, width: '17%' }} className='center aligned'>Name</Table.HeaderCell>
+                    <Table.HeaderCell style={{ backgroundColor, width: '17%' }} className='center aligned'>Telefon</Table.HeaderCell>
                     {addressgroupfilter==='Gaststätte'&&
-                        <Table.HeaderCell style={{ backgroundColor, width: '18%' }} className='center aligned'>Kommentar</Table.HeaderCell>}
+                        <Table.HeaderCell style={{ backgroundColor, width: '17%' }} className='center aligned'>Kommentar</Table.HeaderCell>}
                     {addressgroupfilter!=='Gaststätte'&&
-                        <Table.HeaderCell style={{ backgroundColor, width: '18%' }} className='center aligned'>Email</Table.HeaderCell>}
+                        <Table.HeaderCell style={{ backgroundColor, width: '17%' }} className='center aligned'>Email</Table.HeaderCell>}
                     <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Auf/Ab</Table.HeaderCell>
                     <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
                 </Table.Row>
@@ -146,15 +146,15 @@ export const AddressPage: React.FC = () => {
             <Table.Body>
                 {Object.values(sortedAddresses).map((address: Address, index: number) => (
                 <Table.Row key={address.id}>
-                    <Table.Cell style={{ backgroundColor, width: '18%' } } className='left aligned'>{address.name.name}</Table.Cell>
+                    <Table.Cell style={{ backgroundColor, width: '17%' } } className='left aligned'>{address.name.name}</Table.Cell>
                     {address.persons[0].communication.phone!==''&&
-                        <Table.Cell style={{ backgroundColor, width: '18%' } } className='left aligned'>{address.persons[0].communication.phone}</Table.Cell>}
+                        <Table.Cell style={{ backgroundColor, width: '17%' } } className='left aligned'>{address.persons[0].communication.phone}</Table.Cell>}
                     {address.persons[0].communication.phone===''&&
-                        <Table.Cell style={{ backgroundColor, width: '18%' } } className='left aligned'>{address.persons[0].communication.mobile}</Table.Cell>}
+                        <Table.Cell style={{ backgroundColor, width: '17%' } } className='left aligned'>{address.persons[0].communication.mobile}</Table.Cell>}
                     {addressgroupfilter==='Gaststätte'&&
-                        <Table.Cell style={{ backgroundColor, width: '18%' } } className='left aligned'>{address.persons[0].comment}</Table.Cell>}
+                        <Table.Cell style={{ backgroundColor, width: '17%' } } className='left aligned'>{address.persons[0].comment}</Table.Cell>}
                     {addressgroupfilter!=='Gaststätte'&&
-                        <Table.Cell style={{ backgroundColor, width: '18%' } } className='left aligned'>{address.persons[0].communication.email}</Table.Cell>}
+                        <Table.Cell style={{ backgroundColor, width: '17%' } } className='left aligned'>{address.persons[0].communication.email}</Table.Cell>}
                     <Table.Cell style={{ backgroundColor, width: '5%' } } className='center aligned'>
                         <Button className="ui icon button" style={styleButtonSmall} disabled={addressgroupfilter===''} 
                             onClick={() => actionUpDown(Direction.UP, index, sortedAddresses) }>

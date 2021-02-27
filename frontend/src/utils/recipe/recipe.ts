@@ -96,7 +96,7 @@ const sortRecipes = (recipes: Recipe[], recipegroups: Group[]) => {
             });
         }
     });
-        
+
     return recipeListSorted;
 };
 

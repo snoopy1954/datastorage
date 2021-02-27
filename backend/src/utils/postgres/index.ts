@@ -3,7 +3,7 @@ import pg from 'pg';
 import { POSTGRES_URI } from '../config';
 
 
-export const fetchPG = async (database: string, table: string): Promise<string[]> => {
+export const fetchPG = async (database: string, table: string, column: string, id: string): Promise<string[]> => {
     const result: string[] = [];
 
     const config = {
@@ -16,7 +16,7 @@ export const fetchPG = async (database: string, table: string): Promise<string[]
         if (err) throw err;
     });
     
-    const query = `SELECT * FROM ${table};`;
+    const query = id==='' ?`SELECT * FROM ${table};` : `SELECT * FROM ${table} WHERE ${column} = '${id}';`;
 
     await client.query(query)
         .then(res => {
@@ -29,6 +29,8 @@ export const fetchPG = async (database: string, table: string): Promise<string[]
         .catch(err => {
             console.log(err);
         });
+
+    await client.end();
 
     return result;
 };

@@ -33,6 +33,20 @@ const create = async (file: File) => {
     return response.data;
 }
 
+const createFromBuffer = async (filedata: ArrayBuffer, type: string) => {
+    const url = `${apiBaseUrl}/binarydata?type=${type}`;
+    const data: Uint8Array = new Uint8Array(filedata);
+    const options: AxiosRequestConfig = {
+        method: "POST",
+        url,
+        headers: { "content-type": "application/octet-stream" },
+        data
+    };
+    const response = await axios(options);
+
+    return response.data;
+}
+
 const remove = async (id: string) => {
     let response;
     try {
@@ -47,4 +61,4 @@ const remove = async (id: string) => {
     return response.data;
 }
 
-export { getAll, getOne, create, remove }
+export { getAll, getOne, create, createFromBuffer, remove }

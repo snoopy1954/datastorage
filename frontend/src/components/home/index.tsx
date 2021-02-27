@@ -25,8 +25,8 @@ const Home: React.FC = () => {
 
   React.useEffect(() => {
     const fetchImage = async () => {
-      const newImage = await getOne(zukunftID);
-      dispatch(setPdfUrl(getImageUrl(newImage)));
+      const image = await getOne(zukunftID);
+      dispatch(setPdfUrl(getImageUrl(image)));
     };
     fetchImage();
   }, [dispatch]);

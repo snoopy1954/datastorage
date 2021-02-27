@@ -6,6 +6,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import Binarydata from '../../models/binarydata';
+import Jpg from '../../models/binarydata/jpg';
+
 import { toBinarydata } from '../../utils/binarydata';
 
 const binarydataRouter = express.Router();
@@ -29,13 +31,27 @@ binarydataRouter.get('/:id', async (request, response) => {
 });
 
 binarydataRouter.post('/', async (request, response) => {
-    try {
-        const binarydata = new Binarydata(toBinarydata(request.body)); 
-        void await binarydata.save(); 
-        response.send(binarydata);
-    } catch (e) {
-       response.status(400).send(e.message);
-    }
+    const type = request.query.type&&request.query.type!=='' ? request.query.type : '';
+
+    switch (type) {
+        case 'jpg':
+            try {
+                const binarydata = new Jpg(toBinarydata(request.body)); 
+                void await binarydata.save(); 
+                response.send(binarydata);
+            } catch (e) {
+               response.status(400).send(e.message);
+            }
+            break;
+        default:
+            try {
+                const binarydata = new Binarydata(toBinarydata(request.body)); 
+                void await binarydata.save(); 
+                response.send(binarydata);
+            } catch (e) {
+               response.status(400).send(e.message);
+            }
+        }
 });
 
 binarydataRouter.delete('/:id', async (request, response) => {

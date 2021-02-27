@@ -10,7 +10,9 @@ const postgresRouter = express.Router();
 postgresRouter.get('/', async (request, response) => {
     const database = parseString(request.query.database);
     const table = parseString(request.query.table);
-    const importData = await fetchPG(database, table);
+    const column = parseString(request.query.column);
+    const id = parseString(request.query.id);
+    const importData = await fetchPG(database, table, column, id);
     try {
         response.json(importData);
     } catch (e) {

@@ -44,7 +44,9 @@ export const RecipeDetails: React.FC<Props> = ({ onCancel }) => {
         openModalShow();
     };
 
-    const keywords = 'noch nichts da';
+    const keywords: string[] = recipe.keywords.map((keyword, index) => {
+        return index===recipe.keywords.length-1 ? keyword : keyword + ', ';
+    });
 
     return (          
         <div className='App'>
