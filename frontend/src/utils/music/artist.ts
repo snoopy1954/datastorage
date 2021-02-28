@@ -10,7 +10,7 @@ export const newArtist = (): ArtistNoID => {
     const artist: ArtistNoID = {
         name: "",
         seqnr: 0,
-        pgid: '',
+        pgid: 0,
         group: '',
         cdnumber: 0,
         cdidents: [],
@@ -24,7 +24,7 @@ export const emptyArtist = (): Artist => {
         id: '',
         name: "",
         seqnr: 0,
-        pgid: '',
+        pgid: 0,
         group: '',
         cdnumber: 0,
         cdidents: [],
@@ -36,7 +36,7 @@ export const nextArtist = (artists: Artist[]): ArtistNoID => {
     const artist: ArtistNoID = {
         name: "",
         seqnr: nextSeqnr(artists),
-        pgid: '',
+        pgid: 0,
         group: '',
         cdnumber: 0,
         cdidents: [],
@@ -88,8 +88,9 @@ export const getFilteredArtists = (artists: Artist[], filter: Filter): Artist[] 
     return filteredArtists;
 };
 
-export const getArtistFromPgident = (artists: Artist[], pgid: string): Artist => {
-    let filteredArtists = (pgid!=="") ? Object.values(artists).filter(artist => artist.pgid===pgid) : [];
+export const getArtistFromPgident = (artists: Artist[], pgid: number): Artist => {
+    let filteredArtists = (pgid!==0) ? Object.values(artists).filter(artist => artist.pgid===pgid) : [];
+    console.log(pgid, filteredArtists)
 
     return filteredArtists.length>0 ? filteredArtists[0] :emptyArtist();
 };
@@ -107,10 +108,9 @@ export const createArtistFromPgRecord = async (record: string): Promise<Artist> 
     if (artistRegexp.test(record)) {
         const result: RegExpExecArray | null = artistRegexp.exec(record);
         if (result!==null&&result.length===7) {
-            artist.pgid = result[2];
+            artist.pgid = +result[2];
             artist.name = result[4];
-            artist.group = result[6];
-            console.log(artist)
+            artist.group = result[5];
             artist = (await create(artist));
         }
     }

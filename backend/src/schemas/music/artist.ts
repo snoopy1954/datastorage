@@ -6,7 +6,7 @@ import * as mongoose from 'mongoose';
 const artistSchema = new mongoose.Schema({
   seqnr: { type: Number, required: true },
   name: { type: String, required: true },
-  pgid: { type: String, required: true },
+  pgid: { type: Number, required: false },
   group: { type: String, required: true },
   cdnumber: { type: Number, required: true },
   cdidents: { type: [String], required: false },

@@ -8,7 +8,8 @@ export const newCd = (): CdNoID => {
     const cd: CdNoID = {
         name: "",
         seqnr: 0,
-        pgid: '',
+        pgid: 0,
+        pgartistident: 0,
         artistident: '',
         coverident: '',
         backident: '',
@@ -32,7 +33,8 @@ export const emptyCd = (): Cd => {
         id: '',
         name: "",
         seqnr: 0,
-        pgid: '',
+        pgid: 0,
+        pgartistident: 0,
         artistident: '',
         coverident: '',
         backident: '',
@@ -54,7 +56,8 @@ export const nextCd = (cds: Cd[]): CdNoID => {
     const cd: CdNoID = {
         name: "",
         seqnr: nextSeqnr(cds),
-        pgid: '',
+        pgid: 0,
+        pgartistident: 0,
         artistident: '',
         coverident: '',
         backident: '',
@@ -105,10 +108,12 @@ export const createCdFromPgRecord = async (record: string): Promise<Cd> => {
     const cdRegexp: RegExp = getCdRegexp();
     if (cdRegexp.test(record)) {
         const result: RegExpExecArray | null = cdRegexp.exec(record);
+        console.log('jetzt aber')
+        console.log(result)
         if (result!==null&&result.length===18) {
-            cd.pgid = result[2];
+            cd.pgid = +result[2];
             cd.name = result[4];
-            cd.artistident = result[5];
+            cd.pgartistident = +result[5];
             cd.group = result[6];
             cd.source = result[7];
             cd.folder = result[8];

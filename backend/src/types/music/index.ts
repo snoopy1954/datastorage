@@ -8,7 +8,7 @@ export interface MusicDetails {
 
 export interface Artist extends Name {
     id: string;
-    pgid: string;
+    pgid: number;
     cdnumber: number;
     cdidents: string[];
     group: string;
@@ -18,7 +18,8 @@ export type ArtistNoID = Omit<Artist, 'id'>;
 
 export interface Cd extends Name, MusicDetails {
     id: string;
-    pgid: string;
+    pgid: number;
+    pgartistident: number;
     artistident: string;
     coverident: string;
     backident: string;
@@ -35,7 +36,7 @@ export type CdNoID = Omit<Cd, 'id'>;
 
 export interface Playlist extends Name, MusicDetails {
     id: string;
-    pgid: string;
+    pgid: number;
     tracknumber: number;
     trackidents: string[];
 }
@@ -44,7 +45,7 @@ export type PlaylistNoID = Omit<Playlist, 'id'>;
 
 export interface Track extends Name, MusicDetails {
     id: string;
-    pgid: string;
+    pgid: number;
     artistident: string;
     cdident: string;
     songtitle: string;

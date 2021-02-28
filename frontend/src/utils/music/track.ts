@@ -8,7 +8,7 @@ export const newTrack = (): TrackNoID => {
     const track: TrackNoID = {
         name: "",
         seqnr: 0,
-        pgid: '',
+        pgid: 0,
         artistident: '',
         cdident: '',
         time: '',
@@ -26,7 +26,7 @@ export const emptyTrack = (): Track => {
         id: '',
         name: "",
         seqnr: 0,
-        pgid: '',
+        pgid: 0,
         artistident: '',
         cdident: '',
         time: '',
@@ -42,7 +42,7 @@ export const nextTrack = (tracks: Track[]): TrackNoID => {
     const track: TrackNoID = {
         name: "",
         seqnr: nextSeqnr(tracks),
-        pgid: '',
+        pgid: 0,
         artistident: '',
         cdident: '',
         time: '',
@@ -87,7 +87,7 @@ export const createTrackFromPgRecord = async (record: string, artistident: strin
     if (trackRegexp.test(record)) {
         const result: RegExpExecArray | null = trackRegexp.exec(record);
         if (result!==null&&result.length===16) {
-            track.pgid = result[2];
+            track.pgid = +result[2];
             track.seqnr = +result[3];
             track.name = result[4];
             track.artistident = artistident;

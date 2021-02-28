@@ -33,7 +33,7 @@ const Music: React.FC = () => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    dispatch(initializeCds());
+    // dispatch(initializeCds());
   }, [dispatch]);
 
   React.useEffect(() => {

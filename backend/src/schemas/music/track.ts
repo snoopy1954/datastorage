@@ -6,7 +6,7 @@ import * as mongoose from 'mongoose';
 const trackSchema = new mongoose.Schema({
   seqnr: { type: Number, required: true },
   name: { type: String, required: true },
-  pgid: { type: String, required: true },
+  pgid: { type: Number, required: false },
   artistident: { type: String, required: true },
   cdident: { type: String, required: true },
   time: { type: String, required: true },

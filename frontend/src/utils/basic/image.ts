@@ -4,7 +4,8 @@ import { Binarydata } from '../../../../backend/src/types/image';
 
 export const createImageFromFilename = async (filename: string): Promise<string> => {
     let id = '';
-    filename = filename.replace(/\//g,'|');
+    filename = filename.replace(/\//g,'|').replace(/%/g,'%25');
+//    console.log(filename)
     const exists = await getFile(filename, 'exists');
     if (exists) {
         const extension = filename.substring(filename.lastIndexOf('.') + 1);

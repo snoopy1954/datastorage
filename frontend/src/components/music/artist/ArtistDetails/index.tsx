@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { styleButton, backgroundColor } from '../../../../constants';
 
+import { Artist } from '../../../../../../backend/src/types/music';
+
 import { RootState } from '../../../../state/store';
 
 import { AppHeaderH3 } from '../../../basic/header';
@@ -13,7 +15,7 @@ interface Props {
 }
 
 export const ArtistDetails: React.FC<Props> = ({ onCancel }) => {
-    const artist  = useSelector((state: RootState) => state.artist);
+    const artist: Artist  = useSelector((state: RootState) => state.artist);
 
     return (          
         <div className='App'>
@@ -33,6 +35,18 @@ export const ArtistDetails: React.FC<Props> = ({ onCancel }) => {
                     <Table.Row>
                         <Table.Cell>Gruppe</Table.Cell>
                         <Table.Cell>{artist.group}</Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell>ID</Table.Cell>
+                        <Table.Cell>{artist.id}</Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell>Postgres ID</Table.Cell>
+                        <Table.Cell>{artist.pgid}</Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell>Anzahl CDs</Table.Cell>
+                        <Table.Cell>{artist.cdnumber}</Table.Cell>
                     </Table.Row>
                     <Table.Row>
                         <Table.Cell>Reihenfolge</Table.Cell>

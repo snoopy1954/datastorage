@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton } from '../../../../constants';
-import { Image } from 'semantic-ui-react';
 
 import { Group } from '../../../../../../backend/src/types/basic';
 import { Cd, CdNoID, Artist, Track } from '../../../../../../backend/src/types/music';
@@ -21,7 +20,7 @@ import { CdModal } from '../CdModal';
 import { formatData } from '../../../../utils/basic/import';
 import { createImageFromFilename } from '../../../../utils/basic/image';
 import { getArtistFromPgident, updateArtistFromPg } from '../../../../utils/music/artist';
-import { createCdFromPgRecord, updateCdFromPg, getFilename, cdTitle } from '../../../../utils/music/cd';
+import { createCdFromPgRecord, updateCdFromPg, getFilename, cdTitle, cdFilter } from '../../../../utils/music/cd';
 import { createTrackFromPgRecord } from '../../../../utils/music/track';
 
 
@@ -112,23 +111,13 @@ export const CdPage: React.FC = () => {
     groupOptions.push(element.name)
   });
 
-//   const handleTest = () => {
-//     const id = '60367ff04a18b530cdd6977f';
-//     const fetchImage = async () => {
-//       const binarydata: Binarydata = await getImage(id);
-//       setUrl(getImageUrl(binarydata));
-//     };
-//     fetchImage();
-// };
-
   const handleImport = async () => {
     const pgcds = formatData(await getAll('musik', 'cds'));
-    for (let item=500; item<2000; item++) {
+    for (let item=10; item<pgcds.length; item++) {
       const pgcd: string = pgcds[item];
       const cd: Cd = await createCdFromPgRecord(pgcd);
-      console.log(cd)
       if (cd.id!=='') {
-        const artist: Artist = getArtistFromPgident(artists, cd.artistident);
+        const artist: Artist = getArtistFromPgident(artists, cd.pgartistident);
         artist.cdidents.push(cd.id);
         artist.cdnumber += 1;
         await updateArtistFromPg(artist);
@@ -137,21 +126,19 @@ export const CdPage: React.FC = () => {
         cd.artistident = artist.id;
         cd.coverident = await createImageFromFilename(cover);
         cd.backident = await createImageFromFilename(back);
-        const pgtracks = formatData(await getOne('musik', 'tracks', 'cdident', cd.pgid));
+        const pgtracks = formatData(await getOne('musik', 'tracks', 'cdident', String(cd.pgid)));
         for (let tracknumber=0; tracknumber<Object.values(pgtracks).length; tracknumber++) {
           const pgtrack = pgtracks[tracknumber];
-          console.log(pgtrack)
           const track: Track = await createTrackFromPgRecord(pgtrack, artist.id, cd.id);
-          console.log(track)
           cd.trackidents.push(track.id);
         }
         updateCdFromPg(cd);
       }
     }
   };
-//URIError: Failed to decode param '%7Cmnt%7CMP3%7CMP3-Rock-CD%7C_Various%20Rock%7C100%%20Rock%20Vol.3%20CD1%7Ccover.jpg'
+
   const title = cdTitle(artist);
-  const sortedCds = cds;
+  const sortedCds: Cd[] = [];
   const filterSelected: boolean = artist.id!=='' ? true : false;
 
   const ShowTableHeader: React.FC = () => {

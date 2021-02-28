@@ -24,10 +24,12 @@ filesRouter.get('/:folder', (request, response) => {
             break;
         case 'file':
             name = parseString(request.params.folder).replace(/\|/g,'/');
+//            console.log(name);
             content = fsFile(name);
             break;
         case 'exists':
             name = parseString(request.params.folder).replace(/\|/g,'/');
+//            console.log(name);
             content = fsExistsFile(name);
             break;
         default:

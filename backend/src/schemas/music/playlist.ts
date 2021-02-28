@@ -6,7 +6,7 @@ import * as mongoose from 'mongoose';
 const playlistSchema = new mongoose.Schema({
   seqnr: { type: Number, required: true },
   name: { type: String, required: true },
-  pgid: { type: String, required: true },
+  pgid: { type: Number, required: false },
   time: { type: String, required: true },
   size: { type: String, required: true },
   bitrate: { type: String, required: true },

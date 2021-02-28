@@ -6,8 +6,9 @@ import * as mongoose from 'mongoose';
 const cdSchema = new mongoose.Schema({
   seqnr: { type: Number, required: true },
   name: { type: String, required: true },
-  pgid: { type: String, required: false },
-  artistident: { type: String, required: true },
+  pgid: { type: Number, required: false },
+  pgartistident: { type: Number, required: false },
+  artistident: { type: String, required: false },
   coverident: { type: String, required: false },
   backident: { type: String, required: false },
   time: { type: String, required: true },

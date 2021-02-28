@@ -8,7 +8,7 @@ import { parseString, parseNumber, parseStringArray } from './../basicParser';
 export const toArtist = (object: any) => {
     const name = parseString(object.name);
     const seqnr = parseNumber(object.seqnr);
-    const pgid = parseString(object.pgid);
+    const pgid = parseNumber(object.pgid);
     const cdnumber = parseNumber(object.cdnumber);
     const cdidents = parseStringArray(object.cdidents);
     const group = parseString(object.group);
@@ -28,7 +28,8 @@ export const toArtist = (object: any) => {
 export const toCd = (object: any) => {
     const name = parseString(object.name);
     const seqnr = parseNumber(object.seqnr);
-    const pgid = parseString(object.pgid);
+    const pgid = parseNumber(object.pgid);
+    const pgartistident = parseNumber(object.pgartistident);
     const artistident = parseString(object.artistident);
     const coverident = parseString(object.coverident);
     const backident = parseString(object.backident);
@@ -47,6 +48,7 @@ export const toCd = (object: any) => {
         name, 
         seqnr,
         pgid,
+        pgartistident,
         artistident,
         coverident,
         backident,
@@ -68,7 +70,7 @@ export const toCd = (object: any) => {
 export const toPlaylist = (object: any) => {
     const name = parseString(object.name);
     const seqnr = parseNumber(object.seqnr);
-    const pgid = parseString(object.pgid);
+    const pgid = parseNumber(object.pgid);
     const time = parseString(object.time);
     const size = parseString(object.size);
     const bitrate = parseString(object.bitrate);
@@ -92,7 +94,7 @@ export const toPlaylist = (object: any) => {
 export const toTrack = (object: any) => {
     const name = parseString(object.name);
     const seqnr = parseNumber(object.seqnr);
-    const pgid = parseString(object.pgid);
+    const pgid = parseNumber(object.pgid);
     const artistident = parseString(object.artistident);
     const cdident = parseString(object.cdident);
     const time = parseString(object.time);
