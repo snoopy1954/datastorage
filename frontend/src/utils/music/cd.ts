@@ -141,10 +141,18 @@ export const cdTitle = (artist: Artist): string => {
     return (artist.name!=="") ? 'CDs von ' + artist.name : 'CDs';
 };
 
-export const cdFilter = (artist: Artist): Cd[] => {
-    const Cds: Cd[] = [];
+export const getCdsOfArtist = async (artist: Artist): Promise<Cd[]> => {
+    const cds: Cd[] = [];
 
-    
-    return Cds;
+    if (artist&&artist.id!=='') {
+        await Promise.all(artist.cdidents.map(async (element: string) => {
+            console.log(element)
+            const cd: Cd = await getOne(element);
+            console.log(cd)
+            cds.push(cd);
+        }));     
+    }
+
+    return cds;
 };
 

@@ -24,6 +24,16 @@ export const initializeCds = () => {
   }
 };
 
+export const setCds = (cds: Cd[]) => {
+  const action = 
+  {
+    type: SET_CDS,
+    payload: cds,
+  }
+      
+  return action;  
+};
+
 export const addCd = (cd: CdNoID) => {
   return async (dispatch: DispatchAddCd) => {
     const newCd = await create(cd);

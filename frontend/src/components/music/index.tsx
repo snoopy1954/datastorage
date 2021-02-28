@@ -7,7 +7,6 @@ import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
 import { initializeMusicgroups } from '../../state/music/groups/actions';
 import { initializeArtists } from '../../state/music/artists/actions';
-import { initializeCds } from '../../state/music/cds/actions';
 import { setSelectedFilter } from '../../state/music/artistfilter/actions';
 
 import { AppHeaderH2 } from '../basic/header';
@@ -30,10 +29,6 @@ const Music: React.FC = () => {
 
   React.useEffect(() => {
     dispatch(initializeArtists());
-  }, [dispatch]);
-
-  React.useEffect(() => {
-    // dispatch(initializeCds());
   }, [dispatch]);
 
   React.useEffect(() => {

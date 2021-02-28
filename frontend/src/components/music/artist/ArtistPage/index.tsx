@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
@@ -69,7 +69,7 @@ export const ArtistPage: React.FC = () => {
     dispatch(setSelectedFilter({ ...filter, group }));
   };
 
-  const actionArtistSelection = (artist: Artist) => {
+  const actionArtistSelection = async (artist: Artist) => {
     dispatch(setSelectedArtist(artist));
   };
 
@@ -190,7 +190,7 @@ export const ArtistPage: React.FC = () => {
         <option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
-      <Button style={styleButton} onClick={() => handleImport()} disabled={false}>Import</Button>
+      <Button style={styleButton} onClick={() => handleImport()} disabled={true}>Import</Button>
       {characters.map(character => (
         <Button key={character} style={styleButtonSmall} onClick={() => actionStartCharacter(character)}>{character}</Button>
       ))}

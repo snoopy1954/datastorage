@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton } from '../../../../constants';
 
-import { Group } from '../../../../../../backend/src/types/basic';
 import { Cd, CdNoID, Artist, Track } from '../../../../../../backend/src/types/music';
 import { Edittype } from '../../../../types/basic';
 
 import { getAll, getOne } from '../../../../services/postgres';
 
 import { RootState } from '../../../../state/store';
-import { addCd, updateCd, removeCd } from '../../../../state/music/cds/actions';
+import { addCd, updateCd, removeCd, setCds as setCdsOfArtist } from '../../../../state/music/cds/actions';
 import { setSelectedCd, clearSelectedCd } from '../../../../state/music/cd/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
@@ -20,17 +19,14 @@ import { CdModal } from '../CdModal';
 import { formatData } from '../../../../utils/basic/import';
 import { createImageFromFilename } from '../../../../utils/basic/image';
 import { getArtistFromPgident, updateArtistFromPg } from '../../../../utils/music/artist';
-import { createCdFromPgRecord, updateCdFromPg, getFilename, cdTitle, cdFilter } from '../../../../utils/music/cd';
+import { createCdFromPgRecord, updateCdFromPg, getFilename, cdTitle, getCdsOfArtist } from '../../../../utils/music/cd';
 import { createTrackFromPgRecord } from '../../../../utils/music/track';
 
 
 export const CdPage: React.FC = () => {
-  const [group, setGroup] = useState('');
-
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
-  const groups: Group[] = useSelector((state: RootState) => state.musicgroups);    
   const artists: Artist[] = useSelector((state: RootState) => state.artists);  
   const artist: Artist = useSelector((state: RootState) => state.artist);  
   const cds: Cd[] = useSelector((state: RootState) => state.cds);
@@ -38,7 +34,13 @@ export const CdPage: React.FC = () => {
 
   React.useEffect(() => {
     dispatch(clearSelectedCd());
-  }, [dispatch]);  
+    let cdsOfArtist: Cd[] = [];
+    const fetchCds = async () => {
+      cdsOfArtist = await getCdsOfArtist(artist);
+      dispatch(setCdsOfArtist(cdsOfArtist));
+    };
+    fetchCds();
+  }, [dispatch, artist]);  
   
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
@@ -66,15 +68,6 @@ export const CdPage: React.FC = () => {
 
   const closeModal = (): void => {
       setModalOpen([false, false, false, false]);
-  };
-
-  const actionSelectionClick = (filter: string, selection: string) => {
-    switch (filter) {
-      case 'Gruppe':
-        setGroup(selection);
-        break;
-      default:
-    };
   };
 
   const actionAdd = async (values: CdNoID) => {
@@ -106,11 +99,6 @@ export const CdPage: React.FC = () => {
     closeModal();
   };
 
-  const groupOptions: string[] = [];
-  Object.values(groups).forEach(element => {
-    groupOptions.push(element.name)
-  });
-
   const handleImport = async () => {
     const pgcds = formatData(await getAll('musik', 'cds'));
     for (let item=10; item<pgcds.length; item++) {
@@ -138,7 +126,7 @@ export const CdPage: React.FC = () => {
   };
 
   const title = cdTitle(artist);
-  const sortedCds: Cd[] = [];
+  const sortedCds: Cd[] = cds;
   const filterSelected: boolean = artist.id!=='' ? true : false;
 
   const ShowTableHeader: React.FC = () => {
@@ -201,14 +189,7 @@ export const CdPage: React.FC = () => {
       />
       <AppHeaderH3 text={title} icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
-      <Button as="select" className="ui dropdown" style={styleButton}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Gruppe', event.currentTarget.value)}>
-        <option value="" style={styleButton}>Gruppe</option>
-        {groupOptions.map((option: string, index: number) => (
-        <option key={index} value={option} style={styleButton}>{option}</option>
-        ))}
-      </Button>
-      <Button style={styleButton} onClick={() => handleImport()} disabled={false}>Import</Button>
+      <Button style={styleButton} onClick={() => handleImport()} disabled={true}>Import</Button>
       {!filterSelected&&<AppHeaderH3 text='Interpret auswählen!' icon='search'/>}
       {Object.values(sortedCds).length>8&&filterSelected&&
         <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
