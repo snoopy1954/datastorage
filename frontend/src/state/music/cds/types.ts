@@ -1,6 +1,7 @@
 import { Cd } from '../../../../../backend/src/types/music';
 
 export const SET_CDS = 'SET_CDS';
+export const CLEAR_CDS = 'CLEAR_CDS';
 export const ADD_CD  = 'ADD_CD';
 export const UPDATE_CD = 'UPDATE_CD';
 export const REMOVE_CD = 'REMOVE_CD';
@@ -9,6 +10,10 @@ export const EXCHANGE_CDS = 'EXCHANGE_CDS';
 interface SetCdsAction {
     type: typeof SET_CDS;
     payload: Cd[];
+}
+
+interface ClearCdsAction {
+    type: typeof CLEAR_CDS;
 }
 
 interface AddCdAction {
@@ -32,9 +37,10 @@ interface ExchangeCdsAction {
 }
 
 export type DispatchSetCds = (arg: SetCdsAction) => (SetCdsAction);
+export type DispatchClearCds = (arg: ClearCdsAction) => (ClearCdsAction);
 export type DispatchAddCd = (arg: AddCdAction) => (AddCdAction);
 export type DispatchUpdateCd = (arg: UpdateCdAction) => (UpdateCdAction);
 export type DispatchRemoveCd = (arg: RemoveCdAction) => (RemoveCdAction);
     
-export type ActionTypes = SetCdsAction | AddCdAction | UpdateCdAction | RemoveCdAction | ExchangeCdsAction;
+export type ActionTypes = SetCdsAction | ClearCdsAction | AddCdAction | UpdateCdAction | RemoveCdAction | ExchangeCdsAction;
     

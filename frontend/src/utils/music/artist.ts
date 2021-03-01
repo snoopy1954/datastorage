@@ -1,5 +1,4 @@
 import { Artist, ArtistNoID } from '../../../../backend/src/types/music';
-import { Group } from '../../../../backend/src/types/basic';
 import { Filter } from '../../types/music';
 
 import { getArtistRegexp } from '../music/postgres';
@@ -75,14 +74,17 @@ export const getTitle = (filter: Filter): string => {
     let title = 'Interpreten';
     title += (filter.group!=="") ? ': ' + filter.group : '';
     title += (filter.startcharacter!=="") ? ' - \'' + filter.startcharacter + '\'' : '';
+    title += (filter.name!=="") ? ' - \'' + filter.name + '\'' : '';
 
     return title;
 };
 
 export const getFilteredArtists = (artists: Artist[], filter: Filter): Artist[] => {
     let filteredArtists = (filter.group!=="") ? Object.values(artists).filter(artist => artist.group===filter.group) : artists;
-    filteredArtists = (filter.startcharacter!=="") ? Object.values(filteredArtists).filter(artist => artist.name.startsWith(filter.startcharacter)) : filteredArtists;
-    filteredArtists = (filter.name!=="") ? Object.values(filteredArtists).filter(artist => artist.name.includes(filter.name)) : filteredArtists;
+    filteredArtists = (filter.startcharacter!==""&&filter.name==='') 
+        ? Object.values(filteredArtists).filter(artist => artist.name.startsWith(filter.startcharacter)) 
+        : filteredArtists;
+    filteredArtists = (filter.name!=="") ? Object.values(filteredArtists).filter(artist => artist.name.toUpperCase().includes(filter.name.toUpperCase())) : filteredArtists;
     filteredArtists = sortArtists(Object.values(filteredArtists));
 
     return filteredArtists;
@@ -90,7 +92,6 @@ export const getFilteredArtists = (artists: Artist[], filter: Filter): Artist[] 
 
 export const getArtistFromPgident = (artists: Artist[], pgid: number): Artist => {
     let filteredArtists = (pgid!==0) ? Object.values(artists).filter(artist => artist.pgid===pgid) : [];
-    console.log(pgid, filteredArtists)
 
     return filteredArtists.length>0 ? filteredArtists[0] :emptyArtist();
 };

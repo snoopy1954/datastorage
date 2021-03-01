@@ -1,7 +1,7 @@
-import { Track, TrackNoID } from '../../../../backend/src/types/music';
+import { Cd, Track, TrackNoID } from '../../../../backend/src/types/music';
 
 import { getTrackRegexp } from '../music/postgres';
-import { create } from '../../services/music/track';
+import { create, getOne } from '../../services/music/track';
 
 
 export const newTrack = (): TrackNoID => {
@@ -103,3 +103,17 @@ export const createTrackFromPgRecord = async (record: string, artistident: strin
 
     return track;
 };
+
+export const getTracksOfCd = async (cd: Cd): Promise<Track[]> => {
+    const tracks: Track[] = [];
+
+    if (cd&&cd.id!=='') {
+        await Promise.all(cd.trackidents.map(async (element: string) => {
+            const track: Track = await getOne(element);
+            tracks.push(track);
+        }));     
+    }
+
+    return sortTracks(tracks);
+};
+

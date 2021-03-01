@@ -21,12 +21,26 @@ binarydataRouter.get('/', async (_request, response) => {
 });
 
 binarydataRouter.get('/:id', async (request, response) => {
-    try {
-        const binarydata = await Binarydata.findById(request.params.id);
-        if (binarydata) response.send(binarydata);
-        else response.status(404).end();
-    } catch (e) {
-        response.status(400).send(e.message);
+    const type = request.query.type&&request.query.type!=='' ? request.query.type : '';
+
+    switch (type) {
+        case 'jpg':
+            try {
+                const binarydata = await Jpg.findById(request.params.id);
+                if (binarydata) response.send(binarydata);
+                else response.status(404).end();
+             } catch (e) {
+               response.status(400).send(e.message);
+            }
+            break;
+        default:
+            try {
+                const binarydata = await Binarydata.findById(request.params.id);
+                if (binarydata) response.send(binarydata);
+                else response.status(404).end();
+            } catch (e) {
+                response.status(400).send(e.message);
+            }
     }
 });
 

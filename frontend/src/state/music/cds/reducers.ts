@@ -1,5 +1,5 @@
 import { Cd } from '../../../../../backend/src/types/music';
-import { SET_CDS, ADD_CD, UPDATE_CD, REMOVE_CD, EXCHANGE_CDS, ActionTypes } from './types';
+import { SET_CDS, CLEAR_CDS, ADD_CD, UPDATE_CD, REMOVE_CD, EXCHANGE_CDS, ActionTypes } from './types';
 
 const initialState: Cd[] = [];
 
@@ -13,6 +13,10 @@ export const cdsReducer = (state = initialState, action: ActionTypes): Cd[] => {
                     {}
                 ),
             }
+        case CLEAR_CDS:
+            return {
+                ...initialState
+            };
         case ADD_CD:
             return {
                 ...state,

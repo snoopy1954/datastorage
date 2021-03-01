@@ -1,20 +1,19 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Table, Button } from 'semantic-ui-react';
+import { Table, Button, Input } from 'semantic-ui-react';
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
 
 import { Group } from '../../../../../../backend/src/types/basic';
 import { Artist, ArtistNoID } from '../../../../../../backend/src/types/music';
 import { Edittype } from '../../../../types/basic';
 import { Characters } from '../../../../types/basic';
-import { Filter } from '../../../../types/music';
 
 import { getAll } from '../../../../services/postgres';
 
 import { RootState } from '../../../../state/store';
+import { setPage } from '../../../../state/page/actions';
 import { addArtist, updateArtist, removeArtist } from '../../../../state/music/artists/actions';
 import { setSelectedArtist, clearSelectedArtist } from '../../../../state/music/artist/actions';
-import { setSelectedFilter } from '../../../../state/music/artistfilter/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
@@ -25,13 +24,14 @@ import { getTitle, getFilteredArtists, createArtistFromPgRecord } from '../../..
 
 
 export const ArtistPage: React.FC = () => {
+  const [filter, setFilter] = React.useState({ startcharacter: '_', group: '', name: '' });
+
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
   const groups: Group[] = useSelector((state: RootState) => state.musicgroups);      
   const artists: Artist[] = useSelector((state: RootState) => state.artists);
   const artist: Artist = useSelector((state: RootState) => state.artist);
-  const filter: Filter = useSelector((state: RootState) => state.artistfilter);
 
   React.useEffect(() => {
     dispatch(clearSelectedArtist());
@@ -50,6 +50,7 @@ export const ArtistPage: React.FC = () => {
   };
       
   const openModalShow = (artist: Artist): void => {
+
     dispatch(setSelectedArtist(artist));
     setModalOpen([false, false, false, true]);
   };
@@ -66,11 +67,12 @@ export const ArtistPage: React.FC = () => {
   };
 
   const actionSelectionClick = (group: string) => {
-    dispatch(setSelectedFilter({ ...filter, group }));
+    setFilter({ ...filter, group });
   };
 
   const actionArtistSelection = async (artist: Artist) => {
     dispatch(setSelectedArtist(artist));
+    dispatch(setPage({ mainpage: 'music', subpage: 'cd' }));
   };
 
   const actionAdd = async (values: ArtistNoID) => {
@@ -100,33 +102,38 @@ export const ArtistPage: React.FC = () => {
     closeModal();
   };
 
-  const actionStartCharacter = (startcharacter: string) => {
-    dispatch(setSelectedFilter({ ...filter, startcharacter }));
-  }
+  const actionCharacterSelection = (startcharacter: string) => {
+    setFilter({ ...filter, startcharacter });
+  };
+
+  const actionNameInput = (name: string) => {
+    setFilter({ ...filter, name });
+  };
 
   const groupOptions: string[] = [];
   Object.values(groups).forEach(element => {
     groupOptions.push(element.name)
   });
   
-  const handleImport = async () => {
-    const pgartists = formatData(await getAll('musik', 'artists'));
+  const actionImport = async () => {
+    const pgartists: string[] = formatData(await getAll('musik', 'artists'));
     for (let item=0; item<pgartists.length; item++) {
-      const pgartist = pgartists[item];
+      const pgartist: string = pgartists[item];
       await createArtistFromPgRecord(pgartist);
     }
   };
 
   const characters: string[] = Object.keys(Characters).filter(k => typeof Characters[k as any]==='number');
-  const title = getTitle(filter);
-  const sortedArtists = getFilteredArtists(artists, filter);
+  const title: string = getTitle(filter);
+  const sortedArtists: Artist[] = getFilteredArtists(artists, filter);
 
   const ShowTableHeader: React.FC = () => {
     return (
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell style={{ backgroundColor, width: '50%' }} className='center aligned'>Name</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '40%' }} className='center aligned'>Name</Table.HeaderCell>
             <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Gruppe</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Anzahl CDs</Table.HeaderCell>
             <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -136,10 +143,11 @@ export const ArtistPage: React.FC = () => {
   const ShowTableBody: React.FC = () => {
     return (
         <Table.Body>
-          {Object.values(sortedArtists).map((artist: Artist, index: number) => (
+          {Object.values(sortedArtists).map((artist: Artist) => (
             <Table.Row key={artist.id}>
-              <Table.Cell style={{ backgroundColor, width: '50%' } } className='left aligned' onClick={() => actionArtistSelection(artist)}>{artist.name}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '40%' } } className='left aligned' onClick={() => actionArtistSelection(artist)}>{artist.name}</Table.Cell>
               <Table.Cell style={{ backgroundColor, width: '10%' } } className='left aligned'>{artist.group}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '10%' } } className='left aligned'>{artist.cdnumber}</Table.Cell>
               <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
                 <Button style={styleButton} onClick={() => openModalShow(artist)}>Anzeigen</Button>
                 <Button style={styleButton} onClick={() => openModalChange(artist)}>Ändern</Button>
@@ -190,10 +198,11 @@ export const ArtistPage: React.FC = () => {
         <option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
-      <Button style={styleButton} onClick={() => handleImport()} disabled={true}>Import</Button>
+      <Button style={styleButton} onClick={() => actionImport()} disabled={true}>Import</Button>
       {characters.map(character => (
-        <Button key={character} style={styleButtonSmall} onClick={() => actionStartCharacter(character)}>{character}</Button>
+        <Button key={character} style={styleButtonSmall} onClick={() => actionCharacterSelection(character)}>{character}</Button>
       ))}
+      <Input placeholder='Name' onChange={(event: React.FormEvent<HTMLInputElement>) => actionNameInput(event.currentTarget.value)}></Input>
       {Object.values(sortedArtists).length>8&&
         <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
           <ShowTableHeader/>

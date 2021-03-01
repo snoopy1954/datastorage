@@ -1,6 +1,7 @@
 import { Cd, CdNoID } from '../../../../../backend/src/types/music';
 import { 
     SET_CDS, 
+    CLEAR_CDS,
     ADD_CD,
     UPDATE_CD,
     REMOVE_CD,
@@ -29,6 +30,15 @@ export const setCds = (cds: Cd[]) => {
   {
     type: SET_CDS,
     payload: cds,
+  }
+      
+  return action;  
+};
+
+export const clearCds = () => {
+  const action = 
+  {
+    type: CLEAR_CDS,
   }
       
   return action;  

@@ -124,3 +124,29 @@ export const getCurrentYear = (): string => {
     return year;
 };
 
+export const getFormatedTime = (value: string): string => {
+    const iValue: number = +value;
+
+    const iHours = Math.floor(iValue / 3600);
+    const iMinutes = Math.floor((iValue - (iHours * 3600)) / 60);
+    const iSeconds = iValue - (iHours * 3600) - (iMinutes * 60);
+
+    const hours: string = iHours>0 ? String(iHours) + ':' : '';
+    const minutes: string = iMinutes>9 ? String(iMinutes) + ':' : '0' + String(iMinutes) + ':';
+    const seconds: string = iSeconds>9 ? String(iSeconds) : '0' + String(iSeconds);
+
+    const time: string = hours + minutes + seconds;
+
+    return time;
+};
+
+export const getFormatedSize = (value: string): string => {
+    let size: string = String(+value / (1024*1024));
+    if (size.includes('.')) {
+        const parts: string[] = size.split('.');
+        size = parts[0] + '.' + parts[1].substr(0,1);
+    }
+    size += ' MB';
+    
+    return size;
+};

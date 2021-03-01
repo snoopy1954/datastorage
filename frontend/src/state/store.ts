@@ -113,7 +113,6 @@ import { artistsReducer } from './music/artists/reducers';
 import { artistReducer } from './music/artist/reducers';
 import { cdsReducer } from './music/cds/reducers';
 import { cdReducer } from './music/cd/reducers';
-import { artistfilterReducer } from './music/artistfilter/reducers';
 
 
 const rootReducer = combineReducers({
@@ -215,7 +214,6 @@ const rootReducer = combineReducers({
     artist: artistReducer,
     cds: cdsReducer,
     cd: cdReducer,
-    artistfilter: artistfilterReducer,
     
 });
 

@@ -9,7 +9,7 @@ import { Edittype } from '../../../../types/basic';
 import { getAll, getOne } from '../../../../services/postgres';
 
 import { RootState } from '../../../../state/store';
-import { addCd, updateCd, removeCd, setCds as setCdsOfArtist } from '../../../../state/music/cds/actions';
+import { addCd, updateCd, removeCd, setCds, clearCds } from '../../../../state/music/cds/actions';
 import { setSelectedCd, clearSelectedCd } from '../../../../state/music/cd/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
@@ -17,6 +17,7 @@ import { AskModal } from '../../../basic/askModal';
 import { CdModal } from '../CdModal';
 
 import { formatData } from '../../../../utils/basic/import';
+import { getFormatedTime, getFormatedSize } from '../../../../utils/basic';
 import { createImageFromFilename } from '../../../../utils/basic/image';
 import { getArtistFromPgident, updateArtistFromPg } from '../../../../utils/music/artist';
 import { createCdFromPgRecord, updateCdFromPg, getFilename, cdTitle, getCdsOfArtist } from '../../../../utils/music/cd';
@@ -34,10 +35,11 @@ export const CdPage: React.FC = () => {
 
   React.useEffect(() => {
     dispatch(clearSelectedCd());
+    dispatch(clearCds());
     let cdsOfArtist: Cd[] = [];
     const fetchCds = async () => {
       cdsOfArtist = await getCdsOfArtist(artist);
-      dispatch(setCdsOfArtist(cdsOfArtist));
+      dispatch(setCds(cdsOfArtist));
     };
     fetchCds();
   }, [dispatch, artist]);  
@@ -99,7 +101,7 @@ export const CdPage: React.FC = () => {
     closeModal();
   };
 
-  const handleImport = async () => {
+  const actionImport = async () => {
     const pgcds = formatData(await getAll('musik', 'cds'));
     for (let item=10; item<pgcds.length; item++) {
       const pgcd: string = pgcds[item];
@@ -133,7 +135,11 @@ export const CdPage: React.FC = () => {
     return (
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell style={{ backgroundColor, width: '50%' }} className='center aligned'>Name</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '20%' }} className='center aligned'>Name</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Jahr</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Stücke</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Zeit</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Größe</Table.HeaderCell>
             <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -145,7 +151,11 @@ export const CdPage: React.FC = () => {
         <Table.Body>
           {Object.values(sortedCds).map((cd: Cd, index: number) => (
             <Table.Row key={cd.id}>
-              <Table.Cell style={{ backgroundColor, width: '50%' } } className='left aligned'>{cd.name}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '20%' } } className='left aligned'>{cd.name}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '10%' } } className='center aligned'>{cd.year}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '10%' } } className='center aligned'>{cd.tracknumber}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '10%' } } className='center aligned'>{getFormatedTime(cd.time)}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '10%' } } className='center aligned'>{getFormatedSize(cd.size)}</Table.Cell>
               <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
                 <Button style={styleButton} onClick={() => openModalShow(cd)}>Anzeigen</Button>
                 <Button style={styleButton} onClick={() => openModalChange(cd)}>Ändern</Button>
@@ -189,7 +199,7 @@ export const CdPage: React.FC = () => {
       />
       <AppHeaderH3 text={title} icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
-      <Button style={styleButton} onClick={() => handleImport()} disabled={true}>Import</Button>
+      <Button style={styleButton} onClick={() => actionImport()} disabled={true}>Import</Button>
       {!filterSelected&&<AppHeaderH3 text='Interpret auswählen!' icon='search'/>}
       {Object.values(sortedCds).length>8&&filterSelected&&
         <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>

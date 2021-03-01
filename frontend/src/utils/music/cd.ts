@@ -108,8 +108,6 @@ export const createCdFromPgRecord = async (record: string): Promise<Cd> => {
     const cdRegexp: RegExp = getCdRegexp();
     if (cdRegexp.test(record)) {
         const result: RegExpExecArray | null = cdRegexp.exec(record);
-        console.log('jetzt aber')
-        console.log(result)
         if (result!==null&&result.length===18) {
             cd.pgid = +result[2];
             cd.name = result[4];
@@ -146,9 +144,7 @@ export const getCdsOfArtist = async (artist: Artist): Promise<Cd[]> => {
 
     if (artist&&artist.id!=='') {
         await Promise.all(artist.cdidents.map(async (element: string) => {
-            console.log(element)
             const cd: Cd = await getOne(element);
-            console.log(cd)
             cds.push(cd);
         }));     
     }

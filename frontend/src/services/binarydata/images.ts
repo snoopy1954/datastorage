@@ -19,6 +19,14 @@ const getOne = async (id: string) => {
     return image;
 }
 
+const getOneX = async (id: string, type: string) => {
+    const { data: image } = await axios.get<Binarydata>(
+        `${apiBaseUrl}/binarydata/${id}?type=${type}`
+    );
+
+    return image;
+}
+
 const create = async (file: File) => {
     const filedata: ArrayBuffer = await getContent(file);
     const data: Uint8Array = new Uint8Array(filedata);
@@ -61,4 +69,4 @@ const remove = async (id: string) => {
     return response.data;
 }
 
-export { getAll, getOne, create, createFromBuffer, remove }
+export { getAll, getOne, getOneX, create, createFromBuffer, remove }

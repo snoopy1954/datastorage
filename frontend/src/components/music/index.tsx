@@ -7,14 +7,11 @@ import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
 import { initializeMusicgroups } from '../../state/music/groups/actions';
 import { initializeArtists } from '../../state/music/artists/actions';
-import { setSelectedFilter } from '../../state/music/artistfilter/actions';
 
 import { AppHeaderH2 } from '../basic/header';
 import { GroupPage } from './group/GroupPage';
 import { ArtistPage } from './artist/ArtistPage';
 import { CdPage } from './cd/CdPage';
-
-import { newFilter } from '../../utils/music/filter';
 
 
 const Music: React.FC = () => {  
@@ -33,10 +30,6 @@ const Music: React.FC = () => {
 
   React.useEffect(() => {
     dispatch(setPage({ mainpage, subpage: 'artist' }));
-  }, [mainpage, dispatch]);
-
-  React.useEffect(() => {
-    dispatch(setSelectedFilter({ ...newFilter(), startcharacter: '_' }));
   }, [mainpage, dispatch]);
 
   const actionSelect = (selected: string) => {
