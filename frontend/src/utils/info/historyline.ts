@@ -1,6 +1,6 @@
 import { Historyline, HistorylineNoID } from '../../../../backend/src/types/logging';
 
-import { newName, getCurrentDate } from '../basic';
+import { newName, getCurrentDate } from '../basic/basic';
 
 const sortItems = (a: Historyline, b: Historyline) => {
     const nameA = a.date.seqnr;

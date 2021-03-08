@@ -2,7 +2,7 @@ import { Field } from '../../../types/sudoku';
 
 import { INITIALIZE_GAMEFIELDS, SET_GAMEFIELD, CLEAR_GAMEFIELD, ActionTypes } from './types';
 
-import { initializeValues } from '../../../utils/sudoku';
+import { initializeValues } from '../../../utils/sudoku/sudoku';
 
 const initialState: Field[] = initializeValues();
 

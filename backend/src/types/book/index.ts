@@ -1,4 +1,4 @@
-import { Name } from '../basic';
+import { Name, Content2 } from '../basic';
 
 export interface Bookgroup  extends Name {
     id: string;
@@ -41,6 +41,34 @@ export interface Content {
     dataId: string;
 }
 
+// export interface Book {
+//     id: string;
+//     title: Name;
+//     author: Person;
+//     comment: string;
+//     link: string;
+//     launched: string;
+//     read: string;
+//     createdAt: Date;
+//     modifiedAt: Date;
+//     bookgroup: string;
+//     subgroup: string;
+//     ownership: string;
+//     format: string;
+//     tongue: string;
+//     content: Content;
+// }
+
+// export type BookNoID = Omit<Book, 'id'>;
+
+// export interface BookWithFileNoID extends BookNoID {
+//     file: File;
+// }
+
+// export interface BookWithImageNoID extends BookNoID {
+//     img: Uint8Array;
+// }
+
 export interface Book {
     id: string;
     title: Name;
@@ -56,15 +84,8 @@ export interface Book {
     ownership: string;
     format: string;
     tongue: string;
-    content: Content;
+    content: Content2;
 }
 
 export type BookNoID = Omit<Book, 'id'>;
 
-export interface BookWithFileNoID extends BookNoID {
-    file: File;
-}
-
-export interface BookWithImageNoID extends BookNoID {
-    img: Uint8Array;
-}

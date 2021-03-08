@@ -1,6 +1,6 @@
-import { Field, Settype, Setcolor } from '../types/sudoku';
+import { Field, Settype, Setcolor } from '../../types/sudoku';
 
-import { getMD5 } from '../utils/basic';
+import { getMD5 } from '../basic/basic';
 
 const deepCopyFields = (fieldvalues: Field[]) => {
     const copiedfieldvalues: Field[] = [];

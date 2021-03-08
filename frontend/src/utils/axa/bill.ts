@@ -2,7 +2,7 @@ import { BillNoID, Bill, Name } from '../../../../backend/src/types/axa';
 
 import { BillStatus } from '../../types/axa';
 import { newDetails } from './axa';
-import { toCent, toEuro } from '../basic';
+import { toCent, toEuro } from '../basic/basic';
 
 export const newBill = (bills: Bill[]): BillNoID => {
     const name: Name = {

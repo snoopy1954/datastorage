@@ -3,7 +3,7 @@ import { AccountNoID, Account, Name, Details, BillNoID } from '../../../../backe
 import { AccountStatus } from '../../types/axa';
 
 import { newDetails } from './axa';
-import { toCent, toEuro } from '../basic';
+import { toCent, toEuro } from '../basic/basic';
 
 export const newAccount = (accounts: Account[]): AccountNoID => {
     const name: Name = {

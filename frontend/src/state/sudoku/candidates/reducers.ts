@@ -1,6 +1,6 @@
 import { INITIALIZE_CANDIDATES, SET_CANDIDATES, SET_CANDIDATE, CLEAR_CANDIDATE, ActionTypes } from './types';
 
-import { initializeCandidates } from '../../../utils/sudoku';
+import { initializeCandidates } from '../../../utils/sudoku/sudoku';
 
 const initialState: boolean[] = initializeCandidates();
 

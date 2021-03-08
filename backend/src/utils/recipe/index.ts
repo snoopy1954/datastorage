@@ -14,6 +14,8 @@ export const toRecipe = (object: any) => {
     const filetype = parseString(object.content.filetype);
     const filesize = parseString(object.content.filesize);
     const dataId = parseString(object.content.dataId);
+    const date = parseString(object.content.date);
+    const description = parseString(object.content.description);
     const keywords = parseStringArray(object.keywords);
     const recipe: RecipeNoID = {
         name, 
@@ -21,10 +23,13 @@ export const toRecipe = (object: any) => {
         group,
         subgroup,
         content: {
+            dataId,
             filename,
             filetype,
             filesize,
-            dataId
+            date,
+            description,
+            seqnr: 0
         },
         keywords
     };

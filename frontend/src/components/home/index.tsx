@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Image, Button } from 'semantic-ui-react';
 import { styleButton }from '../../constants';
 import { zukunftID } from '../../constants';
 
-import { getOne } from '../../services/image/images';
+import { getOneX } from '../../services/binarydata/images';
 
 import { RootState } from '../../state/store';
 import { setPdfUrl } from '../../state/axa/pdfUrl/actions';
@@ -13,7 +13,7 @@ import { Page } from '../../state/page/types';
 
 import { AppHeaderH2 } from '../basic/header';
 
-import { getImageUrl } from '../../utils/image';
+import { getImageUrl } from '../../utils/binarydata/binarydata';
 
 
 const Home: React.FC = () => {  
@@ -22,10 +22,10 @@ const Home: React.FC = () => {
 
   const pdfUrl = useSelector((state: RootState) => state.pdfurl);
   const infoPage: Page = { mainpage: 'info', subpage: '' };
-
-  React.useEffect(() => {
+ 
+  useEffect(() => {
     const fetchImage = async () => {
-      const image = await getOne(zukunftID);
+      const image = await getOneX(zukunftID, 'jpg');
       dispatch(setPdfUrl(getImageUrl(image)));
     };
     fetchImage();

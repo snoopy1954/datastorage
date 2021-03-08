@@ -1,6 +1,6 @@
 import { Activity, ActivityNoID } from '../../../../backend/src/types/sport';
 
-import { getCurrentDate, getCurrentYear } from '../../utils/basic';
+import { getCurrentDate, getCurrentYear } from '../basic/basic';
 
 
 export const newActivity = (): ActivityNoID => {
@@ -64,10 +64,10 @@ export const nextSeqnr = (activities: Activity[]): number => {
 const sortElements = (a: Activity, b: Activity) => {
     const nameA = a.seqnr;
     const nameB = b.seqnr;
-    if (nameA < nameB) {
+    if (nameA > nameB) {
         return -1;
     }
-    if (nameA > nameB) {
+    if (nameA < nameB) {
         return 1;
     }
     return 0;

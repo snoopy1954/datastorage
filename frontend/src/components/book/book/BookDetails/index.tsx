@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Image, Button } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
+
+import { Binarydata } from '../../../../../../backend/src/types/image';
+
+import { getOneX } from '../../../../services/binarydata/images';
 
 import { RootState } from '../../../../state/store';
 import { clearSelectedBook } from '../../../../state/book/selectedbook/actions';
        
 import { AppHeaderH3 } from "../../../basic/header";
 
-import { getImageUrl } from "../../../../utils/image";
+import { getImageUrl as getUrl } from '../../../../utils/binarydata/binarydata';
 
 import ShowModal from "../../../basic/showModal";
 
@@ -19,17 +23,27 @@ interface Props {
 
 export const BookDetails: React.FC<Props> = ({ onCancel }) => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    const [url, setUrl] = React.useState('');
+
     const dispatch = useDispatch();
 
     const book  = useSelector((state: RootState) => state.book);
-    const image = useSelector((state: RootState) => state.image); 
-    const imageUrl = (image&&image.id!=='') ? getImageUrl(image) : '';
+
+    useEffect(() => {
+        const fetchCover = async () => {
+            const id: string = book.content.dataId;
+            const image: Binarydata = await getOneX(id, 'jpg');
+            const url = (image&&image.id!=='') ? getUrl(image) : '';
+            setUrl(url);          
+        };
+        fetchCover();
+    }, [book]);  
 
     const openModalShow = (): void => setModalOpen(true);
 
     const closeModal = (): void => {
         setModalOpen(false);
-        URL.revokeObjectURL(imageUrl);
+        URL.revokeObjectURL(url);
         dispatch(clearSelectedBook());
     };
 
@@ -38,7 +52,7 @@ export const BookDetails: React.FC<Props> = ({ onCancel }) => {
             <AppHeaderH3 text={book.title.name} icon='zoom-in'/>
              <ShowModal
                 title={book.title.name}
-                imageUrl={imageUrl}
+                imageUrl={url}
                 modalOpen={modalOpen}
                 onClose={closeModal}
             />
@@ -56,7 +70,7 @@ export const BookDetails: React.FC<Props> = ({ onCancel }) => {
                     </Table.Row>
                     <Table.Row>
                         <Table.Cell>Cover</Table.Cell>
-                        <Table.Cell><Image className="ui tiny image" src={imageUrl} onClick={() => openModalShow()}/></Table.Cell>
+                        <Table.Cell><Image className="ui tiny image" src={url} onClick={() => openModalShow()}/></Table.Cell>
                     </Table.Row>
                     <Table.Row>
                         <Table.Cell>Autor</Table.Cell>

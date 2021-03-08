@@ -14,7 +14,7 @@ import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { AccounttypeModal } from '../AccounttypeModal';
 
-import { getAmount } from '../../../../utils/basic';
+import { getAmount } from '../../../../utils/basic/basic';
 
 
 export const AccounttypePage: React.FC = () => {

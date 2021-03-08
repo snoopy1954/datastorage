@@ -5,46 +5,29 @@
 import { BookgroupNoID, FormatNoID, OwnershipNoID, TongueNoID, BookNoID } from '../../types/book';
 import { parseString, parseNumber, parseStringArray, parseDate } from '../basicParser';
 
+
 export const toNewBook = (object: any) => {
-    // console.log(object);
     const name = parseString(object.title.name);
-    // console.log(`name='${name}'`);
     const seqnr = parseNumber(object.title.seqnr);
-    // console.log(`seqnr='${seqnr}'`);
     const givenname = parseString(object.author.givenname);
-    // console.log(`givenname='${givenname}'`);
     const familyname = parseString(object.author.familyname);
-    // console.log(`familyname='${familyname}'`);
     const comment = parseString(object.comment);
-    // console.log(`comment='${comment}'`);
     const link = parseString(object.link);
-    // console.log(`link='${link}'`);
     const launched = parseString(object.launched);
-    // console.log(`launched='${launched}'`);
     const read = parseString(object.read);
-    // console.log(`read='${read}'`);
     const createdAt = parseDate(object.createdAt);
-    // console.log(`createdAt='${createdAt}'`);
     const modifiedAt = parseDate(object.modifiedAt);
-    // console.log(`modifiedAt='${modifiedAt}'`);
     const bookgroup = parseString(object.bookgroup);
-    // console.log(`bookgroup='${bookgroup}'`);
     const subgroup = parseString(object.subgroup);
-    // console.log(`subgroup='${subgroup}'`);
     const ownership = parseString(object.ownership);
-    // console.log(`ownership='${ownership}'`);
     const format = parseString(object.format);
-    // console.log(`format='${format}'`);
     const tongue = parseString(object.tongue);
-    // console.log(`tongue='${tongue}'`);
     const filename = parseString(object.content.filename);
-    // console.log(`filename='${filename}'`);
     const filetype = parseString(object.content.filetype);
-    // console.log(`filetype='${filetype}'`);
     const filesize = parseString(object.content.filesize);
-    // console.log(`filesize='${filesize}'`);
     const dataId = parseString(object.content.dataId);
-    // console.log('dataId', dataId);
+    const date = parseString(object.content.date);
+    const description = parseString(object.content.description);
 
     const newBook: BookNoID = {
         title: {
@@ -70,11 +53,12 @@ export const toNewBook = (object: any) => {
             filename,
             filetype,
             filesize,
-            dataId
-        }
+            dataId,
+            date,
+            description,
+            seqnr: 0
+         }
     };
-
-//    console.log(newBook);
 
     return newBook;
 };

@@ -1,6 +1,6 @@
 import { INITIALIZE_POSITIONS, ActionTypes } from './types';
 
-import { setMatrix, setNumbermatrix, setCandidatematrix } from '../../../utils/sudoku';
+import { setMatrix, setNumbermatrix, setCandidatematrix } from '../../../utils/sudoku/sudoku';
 
 const initialState = {
     matrix: setMatrix(),

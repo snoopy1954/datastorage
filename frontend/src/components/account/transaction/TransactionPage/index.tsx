@@ -23,7 +23,7 @@ import { AskString, Value } from '../../../basic/askString';
 import { TransactionModal } from '../TransactionModal';
 
 import { transactionFilter, transactionTitle } from '../../../../utils/account/accountfilter';
-import { getAmount, getFormatedDate } from '../../../../utils/basic';
+import { getAmount, getFormatedDate } from '../../../../utils/basic/basic';
 import { getAccounttypeFromFilename } from '../../../../utils/account/accounttype';
 import { getTransactionsFromCSV, findChecksum } from '../../../../utils/account/transaction';
 

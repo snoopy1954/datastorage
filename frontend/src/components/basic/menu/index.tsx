@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu, Button } from "semantic-ui-react";
-import { getColor } from "../../../utils/button";
+import { getColor } from "../../../utils/basic/button";
 
 export interface Item {
     name: string;

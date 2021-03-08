@@ -76,6 +76,7 @@ import { axayearsReducer } from './axa/years/reducers';
 import { axayearReducer } from './axa/year/reducers';
 
 import { historylinesReducer } from './info/historylines/reducers';
+import { historylineReducer } from './info/historyline/reducers';
 import { infosReducer } from './info/infos/reducers';
 
 import { accounttypesReducer } from './account/accounttypes/reducers';
@@ -182,6 +183,7 @@ const rootReducer = combineReducers({
     axayears: axayearsReducer,
     axayear: axayearReducer,
     historylines: historylinesReducer,
+    historyline: historylineReducer,
     infos: infosReducer,
     accounttypes: accounttypesReducer,
     accounttype: accounttypeReducer,

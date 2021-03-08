@@ -1,7 +1,7 @@
 // import * as fs from "fs";
 import { MD5 } from 'crypto-js';
-import { Name } from '../../../backend/src/types/axa';
-import { FileDate } from '../types/axa';
+import { Name } from '../../../../backend/src/types/axa';
+import { FileDate } from '../../types/axa';
 
 
 export const newName = (): Name => {

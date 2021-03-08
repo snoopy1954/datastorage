@@ -4,10 +4,13 @@
 import * as mongoose from 'mongoose';
 
 const contentSchema = new mongoose.Schema({
+    dataId: { type: String, required: false },
     filename: { type: String, required: false },
     filetype: { type: String, required: false },
     filesize: { type: String, required: false },
-    dataId: { type: String, required: false }
+    date: { type: String, required: false },
+    description: { type: String, required: false },
+    seqnr: { type: Number, required: false },    
 });
 
 const recipeSchema = new mongoose.Schema({

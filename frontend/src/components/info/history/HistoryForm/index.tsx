@@ -4,6 +4,7 @@ import { Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { styleButton }from '../../../../constants';
 
+import { Edittype } from "../../../../types/basic";
 import { HistorylineNoID, Historyline } from '../../../../../../backend/src/types/logging';
 
 import { RootState } from '../../../../state/store';
@@ -15,14 +16,16 @@ import { newHistoryline } from '../../../../utils/info/historyline';
 
 
 interface Props {
+  edittype: Edittype;
   onSubmit: (values: HistorylineNoID) => void;
   onCancel: () => void;
 }
 
-export const HistorylineForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+export const HistorylineForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
   const historylines: Historyline[] = useSelector((state: RootState) => state.historylines);
+  const historyline: Historyline = useSelector((state: RootState) => state.historyline);
 
-  const initialValues = newHistoryline(historylines);
+  const initialValues = (edittype===Edittype.EDIT && historyline.id!=='') ? historyline : newHistoryline(historylines);;
 
   return (
     <Formik

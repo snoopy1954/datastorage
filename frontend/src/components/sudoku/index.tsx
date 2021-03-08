@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from "semantic-ui-react";
 import { styleButton } from '../../constants';
@@ -12,7 +12,7 @@ import { RootState } from '../../state/store';
 import { setSelectedField } from '../../state/sudoku/selectedfield/actions';
 import { initializeGamefields, setGamefield } from '../../state/sudoku/gamefields/actions';
 import { initializeSolutionfields, setSolutionfield } from '../../state/sudoku/solutionfields/actions';
-import { initializeSudokus, addSudoku } from '../../state/sudoku/sudokulist/actions';
+import { initializeSudokus, addSudoku, updateSudoku } from '../../state/sudoku/sudokulist/actions';
 import { initializeFlags, setFlag, toggleFlag, clearFlag } from '../../state/sudoku/flags/actions';
 import { initializeCandidates, setCandidates } from '../../state/sudoku/candidates/actions';
 import { initializeSequence, pushSequence, popSequence } from '../../state/sudoku/sequence/actions';
@@ -21,22 +21,25 @@ import { showNotification } from '../../state/sudoku/notification/actions';
 
 import { AppHeaderH2 } from "../basic/header";
 
-import { getRandomNumber } from '../../utils/basic';
+import { getRandomNumber } from '../../utils/basic/basic';
 import { 
+    initializeValues,
     game2string, 
     string2game, 
     solveBacktrack, 
     solution2string, 
-    string2solution, 
+//    string2solution, 
     getColors, 
     checkField, 
     findCandidates,
     checkComplete,
     isCandidate 
-} from '../../utils/sudoku';
+} from '../../utils/sudoku/sudoku';
 
 
 const SudokuResolver: React.FC = () => {
+    const [ id, setId ] = useState('');
+
     const dispatch = useDispatch();
   
     const selectedfield: number = useSelector((state: RootState) => state.selectedfield);
@@ -53,7 +56,10 @@ const SudokuResolver: React.FC = () => {
     const notification: string = useSelector((state: RootState) => state.notification);
 
     React.useEffect(() => {
-        dispatch(initializeSudokus());
+        const readSudokus = async () => {
+            dispatch(await initializeSudokus());
+        };
+        readSudokus();
     }, [dispatch]);
     
     React.useEffect(() => {
@@ -202,48 +208,54 @@ const SudokuResolver: React.FC = () => {
         for (let index=0; index<81; index++) {
             dispatch(setSolutionfield(solutionfields[index]));
         }
-        const gameAsString: string = game2string(gamefields);
-        const solutionAsString: string = solution2string(solutionfields);
-        const sudoku: SudokuNoID = {
-            game: gameAsString,
-            solution: solutionAsString
+        if (id==='') {
+            const gameAsString: string = game2string(gamefields);
+            const solutionAsString: string = solution2string(solutionfields);
+            const sudoku: SudokuNoID = {
+                game: gameAsString,
+                solution: solutionAsString
+            }
+            dispatch(addSudoku(sudoku));    
         }
-        dispatch(addSudoku(sudoku));
         dispatch(clearFlag(Flagtype.SET));
-        dispatch(showNotification('Spiel starten', 5));
+        dispatch(showNotification('Spiel wurde gestartet', 5));
     };
 
-    const handleRead = (gamenumber: number) => {
+    const handleRead = async (gamenumber: number) => {
+        const localValues: Field[] = initializeValues();
+        setId(Object.values(sudokus)[gamenumber].id);
         dispatch(initializeSequence());
         dispatch(initializeGamefields());
         dispatch(initializeSolutionfields());
         dispatch(initializeCandidates());
         dispatch(initializeFlags());
+        dispatch(setFlag(Flagtype.SET));
         dispatch(setSelectedField(0));
 
         const gameAsString: string = Object.values(sudokus)[gamenumber].game;
         const gamefieldvalues: Field[] = string2game(gameAsString);
+        gamefieldvalues.forEach((gamefieldvalue, index) => {
+            dispatch(setGamefield(gamefieldvalue));
+            localValues[index] = gamefieldvalue;
+        });
+        const [, solutionfields] = solveBacktrack(localValues, 0);
         for (let index=0; index<81; index++) {
-            if (gamefieldvalues[index].settype===Settype.SET) {
-                dispatch(setGamefield(gamefieldvalues[index]));
-            }
-            else {
-                const gamefield: Field = {
-                    number: 0,
-                    fieldnr: index,
-                    seqnr: 0,
-                    settype: Settype.NONE
-                };
-                dispatch(setGamefield(gamefield));
-            }
+            dispatch(setSolutionfield(solutionfields[index]));
+        };
+        const solutionAsString: string = solution2string(solutionfields);
+        const sudoku: Sudoku = {
+            id: Object.values(sudokus)[gamenumber].id,
+            game: gameAsString,
+            solution: solutionAsString
         }
         dispatch(clearFlag(Flagtype.SET));
-        const solutionAsString: string = Object.values(sudokus)[Object.values(sudokus).length-1].solution;
-        const solutionfieldvalues: Field[] = string2solution(solutionAsString);
-        for (let index=0; index<81; index++) {
-            dispatch(setSolutionfield(solutionfieldvalues[index]));
+        if (solutionAsString!==Object.values(sudokus)[gamenumber].solution) {
+            dispatch(updateSudoku(sudoku));    
+            dispatch(showNotification(`Spiel wurde eingelesen; falsche Solution in Mongo!, Ersetze die ${gamenumber}`, 5));
         }
-        dispatch(showNotification('Spiel einlesen', 5));
+        else {
+            dispatch(showNotification('Spiel wurde eingelesen', 5));
+        }
     };
 
     const handleSolution = () => {
@@ -256,6 +268,7 @@ const SudokuResolver: React.FC = () => {
     };
 
     const handleNew = () => {
+        setId('');
         dispatch(initializeSequence());
         dispatch(initializeGamefields());
         dispatch(initializeSolutionfields());
@@ -288,7 +301,7 @@ const SudokuResolver: React.FC = () => {
         for (let item=1; item<games.length; item++) {
             let gameAsString = games[item].replace('{', '').replace('}', '').split(',')[2].split(':')[1].replace('"', '').replace('"', '')
             let solutionAsString = '';
-            const solutionAsString4 = games[0].replace('{', '').replace('}', '').split(',')[3].split(':')[1].replace('"', '').replace('"', '')
+            const solutionAsString4 = games[item].replace('{', '').replace('}', '').split(',')[3].split(':')[1].replace('"', '').replace('"', '')
             for (let index=0; index<81;index++) {
                 if(gameAsString.substr(index*4,1)!=='0') {
                     gameAsString = gameAsString.substr(0,index*4+1) + '1' + gameAsString.substr(index*4+2);
@@ -301,7 +314,6 @@ const SudokuResolver: React.FC = () => {
                 game: gameAsString,
                 solution: solutionAsString
             };
-            console.log(sudoku);
             dispatch(addSudoku(sudoku));
         }
     };
@@ -316,6 +328,8 @@ const SudokuResolver: React.FC = () => {
     const checkNakedpairs = '  -  Naked Pairs: ' + (flags[Flagtype.NAKEDPAIRS] ? 'ein' : 'aus');
     const title = `Sudoku (${(Object.values(sudokus)).length} gespeicherte Spiele)`;
 
+//    console.log(Object.values(sudokus).length);
+
     return (
         <div className="App">
             <AppHeaderH2 text={title} icon='puzzle'/> 
@@ -326,7 +340,8 @@ const SudokuResolver: React.FC = () => {
             <Button style={styleButton} onClick={() => handleUndo()}>Zurück</Button>
             <Button style={styleButton} onClick={() => handleSolution()}>Lösung</Button>
             <Button style={styleButton} onClick={() => handleImport()} disabled={true}>Import</Button>
-            <svg viewBox="0 0.5 20 9.7">
+            {/* <svg viewBox="0 0.5 20 9.7"> */}
+            <svg viewBox="0 0.5 30 10">
                 <defs>
                     <path id="quadrat" d="M0,0 h1 v1 h-1 z" stroke="black" strokeWidth="0.01"/>
                     <circle id="marker" r="0.5" strokeWidth="0.025" stroke="red" fill="none"/>

@@ -3,14 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { getOne as getImage } from '../../../../services/image/images';
+import { getOneX } from '../../../../services/binarydata/images';
 
 import { RootState } from '../../../../state/store';
 import { setPdfUrl, clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 
-import { getImageUrl } from '../../../../utils/image';
+import { getImageUrl } from '../../../../utils/binarydata/binarydata';
 
 import { ShowModalPDF } from '../../../basic/showModalPDF';
 
@@ -37,8 +37,8 @@ export const RecipeDetails: React.FC<Props> = ({ onCancel }) => {
     const handleSelection = () => {
         const id = recipe.content.dataId;
         const fetchImage = async () => {
-          const newImage = await getImage(id);
-          dispatch(setPdfUrl(getImageUrl(newImage)));
+          const image = await getOneX(id, 'pdf');
+          dispatch(setPdfUrl(getImageUrl(image)));
         };
         fetchImage();
         openModalShow();

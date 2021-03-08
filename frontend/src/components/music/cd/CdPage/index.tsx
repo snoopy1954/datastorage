@@ -17,10 +17,10 @@ import { AskModal } from '../../../basic/askModal';
 import { CdModal } from '../CdModal';
 
 import { formatData } from '../../../../utils/basic/import';
-import { getFormatedTime, getFormatedSize } from '../../../../utils/basic';
+import { getFormatedTime, getFormatedSize } from '../../../../utils/basic/basic';
 import { createImageFromFilename } from '../../../../utils/basic/image';
 import { getArtistFromPgident, updateArtistFromPg } from '../../../../utils/music/artist';
-import { createCdFromPgRecord, updateCdFromPg, getFilename, cdTitle, getCdsOfArtist } from '../../../../utils/music/cd';
+import { createCdFromPgRecord, updateCdFromPg, getFilename, cdTitle, getCdsOfArtist, sortCdsByYear } from '../../../../utils/music/cd';
 import { createTrackFromPgRecord } from '../../../../utils/music/track';
 
 
@@ -128,7 +128,7 @@ export const CdPage: React.FC = () => {
   };
 
   const title = cdTitle(artist);
-  const sortedCds: Cd[] = cds;
+  const sortedCds: Cd[] = sortCdsByYear(Object.values(cds));
   const filterSelected: boolean = artist.id!=='' ? true : false;
 
   const ShowTableHeader: React.FC = () => {

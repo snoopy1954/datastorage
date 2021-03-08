@@ -60,12 +60,16 @@ export const newBook = (): BookNoID => {
         filename: "",
         filetype: "",
         filesize: "",
-        dataId: ""
+        dataId: "",
+        date: '',
+        description: '',
+        seqnr: 0
       },
     };
 
     return book;
 };
+
 export const emptyBook = (): Book => {
     const book = {
       id: '',
@@ -92,12 +96,51 @@ export const emptyBook = (): Book => {
         filename: "",
         filetype: "",
         filesize: "",
-        dataId: ""
+        dataId: "",
+        date: '',
+        description: '',
+        seqnr: 0
       },
     };
 
     return book;
 };
+
+export const nextBook = (books: Book[]): BookNoID => {
+    const book = {
+        id: '',
+        title: {
+          name: "",
+          seqnr: nextSeqnr(books),
+        },
+        author: {
+          givenname: "",
+          familyname: ""
+        },
+        comment: "",
+        link: "",
+        launched: "",
+        read: "",
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        bookgroup: "",
+        subgroup: "",
+        ownership: "",
+        format: "",
+        tongue: "",
+        content: {
+          filename: "",
+          filetype: "",
+          filesize: "",
+          dataId: "",
+          date: '',
+          description: '',
+          seqnr: 0
+        },
+      };
+  
+      return book;
+  }
 
 export const booklistTitle = (filters: Filter): string => {
     let filter = (filters.group!=="") ? ': ' + filters.group : '';
@@ -117,13 +160,13 @@ export const booklistFilter = (books: Book[], filters: Filter, bookgroups: Bookg
     return sortedBooks;
 };
 
-export const nextSeqnr = (books: Book[], group: string, subgroup: string): number => {
+export const nextSeqnr = (books: Book[]): number => {
     let maxNumber = 0;
     Object.values(books).forEach(book => {
-        if (book.bookgroup===group&&book.subgroup===subgroup&&book.title.seqnr>maxNumber) maxNumber = book.title.seqnr;
+        if (book.title.seqnr>maxNumber) maxNumber = book.title.seqnr;
     });
     
-    return maxNumber;
+    return maxNumber+1;
 };
 
 export const newFilter = (): Filter => {

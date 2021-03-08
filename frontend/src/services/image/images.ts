@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { apiBaseUrl } from "../../constants";
 import { Image } from '../../../../backend/src/types/image';
 import { Content } from '../../../../backend/src/types/book';
-import { getContent } from '../../utils/image';
+import { getContent } from '../../utils/binarydata/image';
 
 const getAll = async () => {
     const { data: images } = await axios.get<Image[]>(

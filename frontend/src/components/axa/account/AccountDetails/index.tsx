@@ -14,7 +14,7 @@ import { setPdfUrl, clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 
-import { getImageUrl } from '../../../../utils/image';
+import { getImageUrl } from '../../../../utils/binarydata/image';
 import { getSumAmounts } from '../../../../utils/axa/bill';
 
 import { ShowModalPDF } from '../../../basic/showModalPDF';

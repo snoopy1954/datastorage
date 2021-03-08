@@ -1,15 +1,20 @@
-import { HistorylineNoID } from '../../../../../backend/src/types/logging';
-import { SET_HISTORYLINES, ADD_HISTORYLINE, DispatchSetHistorylines, DispatchAddHistoryline } from './types';
+import { Historyline, HistorylineNoID } from '../../../../../backend/src/types/logging';
+import { SET_HISTORYLINES, 
+  ADD_HISTORYLINE, 
+  UPDATE_HISTORYLINE,
+  REMOVE_HISTORYLINE,
+  DispatchSetHistorylines, 
+  DispatchAddHistoryline,
+  DispatchUpdateHistoryline,
+  DispatchRemoveHistoryline 
+} from './types';
 
-import { create, getAll } from "../../../services/logging/historylines";
-
-import { sortHistorylines } from '../../../utils/info/historyline';
+import { create, getAll, update, remove } from "../../../services/logging/historylines";
 
 
 export const initializeHistorylines = () => {
   return async (dispatch: DispatchSetHistorylines) => {
-    const historylines = sortHistorylines(await getAll());
-//    const historylines = await getAll();
+    const historylines = await getAll(); 
     dispatch({
       type: SET_HISTORYLINES,
       payload: historylines,
@@ -26,4 +31,25 @@ export const addHistoryline = (historyline: HistorylineNoID) => {
     });
   }
 };
+
+export const updateHistoryline = (historyline: Historyline) => {
+  return async (dispatch: DispatchUpdateHistoryline) => {
+    const newHistoryline = await update(historyline.id, historyline);
+    dispatch({
+      type: UPDATE_HISTORYLINE,
+      payload: newHistoryline
+    });
+  }
+};
+  
+export const removeHistoryline = (id: string) => {
+  return async (dispatch: DispatchRemoveHistoryline) => {
+    await remove(id);
+    dispatch({
+      type: REMOVE_HISTORYLINE,
+      payload: id
+    });
+  }
+};
+
 

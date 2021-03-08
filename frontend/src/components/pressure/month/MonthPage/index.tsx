@@ -11,6 +11,7 @@ import { RootState } from '../../../../state/store';
 import { initializeMonths,  addMonth, removeMonth, updateMonth } from '../../../../state/pressure/monthlist/actions';
 import { setSelectedMonth, clearSelectedMonth } from '../../../../state/pressure/selectedmonth/actions';
 import { setOpenedYear } from '../../../../state/pressure/openedyear/actions';
+import { updateYear } from '../../../../state/pressure/yearlist/actions';
 
 import { create } from '../../../../services/pressure/months';
 import { getAll } from '../../../../services/pressure/exchange';
@@ -81,6 +82,8 @@ export const MonthPage: React.FC = () => {
     if (year) {
       const nextMonth: MonthNoID = getNextMonth(year);
       dispatch(addMonth(nextMonth));
+      year.lastMonth++;
+      dispatch(updateYear(year));
     }
     closeModal();
   };
@@ -147,7 +150,7 @@ export const MonthPage: React.FC = () => {
             month.year===year.name.name&&
             <Table.Row key={month.id}>
               <Table.Cell style={{ backgroundColor, width: '7%' } } className='left aligned'>{month.monthname}</Table.Cell>
-              <Table.Cell style={{ backgroundColor, width: '7%' } } className='left aligned'>{month.weight.start}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '7%' } } className='left aligned'>{month.weight.start} / {month.weight.end}</Table.Cell>
               <Table.Cell style={{ backgroundColor, width: '7%' } } className='left aligned'>{month.weight.total}</Table.Cell>
               <Table.Cell style={{ backgroundColor, width: '7%' } } className='left aligned'>{month.systolic.total}</Table.Cell>
               <Table.Cell style={{ backgroundColor, width: '7%' } } className='left aligned'>{month.diastolic.total}</Table.Cell>

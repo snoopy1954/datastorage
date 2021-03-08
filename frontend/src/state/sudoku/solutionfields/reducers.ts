@@ -2,7 +2,7 @@ import { Field } from '../../../types/sudoku';
 
 import { INITIALIZE_SOLUTIONFIELDS, SET_SOLUTIONFIELD, ActionTypes } from './types';
 
-import { initializeValues } from '../../../utils/sudoku';
+import { initializeValues } from '../../../utils/sudoku/sudoku';
 
 const initialState: Field[] = initializeValues();
 

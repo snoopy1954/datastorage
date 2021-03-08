@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
 
-import { Group, Content } from '../../../../../../backend/src/types/basic';
+import { Group, Content2 } from '../../../../../../backend/src/types/basic';
 import { Recipe, RecipeNoID } from '../../../../../../backend/src/types/recipe';
-import { Filter, RecipeWithFileNoID } from '../../../../types/recipe';
+import { Filter, RecipeWithContentNoID } from '../../../../types/recipe';
 import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
@@ -15,14 +15,13 @@ import { setSelectedRecipe, clearSelectedRecipe } from '../../../../state/recipe
 import { addChangedRecipe, clearChangedRecipe } from '../../../../state/recipe/changedrecipes/actions';
 import { clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
-import { create2 } from '../../../../services/image/images';
-
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskString, Value } from '../../../basic/askString';
 import { AskModal } from '../../../basic/askModal';
 import { RecipeModal } from '../RecipeModal';
 
 import { recipeTitle, recipeFilter } from '../../../../utils/recipe/recipe';
+import { createContentX, removeContentX, updateContentX } from '../../../../utils/basic/content';
 
 
 export const RecipePage: React.FC = () => {
@@ -35,10 +34,22 @@ export const RecipePage: React.FC = () => {
   const recipe: Recipe = useSelector((state: RootState) => state.recipe);
   const changedRecipes: Recipe[] = useSelector((state: RootState) => state.changedrecipes);
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(clearSelectedRecipe());
     dispatch(clearRecipefilter());
-  }, [dispatch]);  
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   const fetchImages = async () => {
+  //     const images = await getAll();
+  //     Object.values(images).forEach((image, index) => {
+  //       if (image.filename.endsWith('.pdf')) {
+  //       console.log(index, ':', image.filename)
+  //       }
+  //     })
+  //   };
+  //   fetchImages();
+  // }, [dispatch]);
   
   const openModalNew = (): void => setModalOpen([true, false, false, false, false]);
 
@@ -98,32 +109,34 @@ export const RecipePage: React.FC = () => {
     closeModal();
   };
 
-  const actionAdd = async (values: RecipeWithFileNoID) => {
-    const file: File = values.file;
-    const content: Content = await create2(file);
-    const recipe: RecipeNoID = {
-      name: values.name,
-      seqnr: values.seqnr,
-      group: values.group,
-      subgroup: values.subgroup,
-      content: content,
-      keywords: values.keywords
+  const actionAdd = async (values: RecipeWithContentNoID) => {
+    const recipeToAdd: RecipeNoID = {
+      ...values
     };
-    dispatch(addRecipe(recipe));
+    const contentWithFile = values.contentwithfile;
+    const content: Content2 = await createContentX(contentWithFile, 'pdf');
+    recipeToAdd.content = content;
+    dispatch(addRecipe(recipeToAdd));
     closeModal();
   };
 
-  const actionChange = async (values: RecipeNoID) => {
+  const actionChange = async (values: RecipeWithContentNoID) => {
     const recipeToChange: Recipe = {
       ...values,
       id: recipe.id
     };
+    const contentWithFile = values.contentwithfile;
+    if (contentWithFile.file.size>0) {
+      const content: Content2 = await updateContentX(recipe.content.dataId, contentWithFile, 'pdf');
+      recipeToChange.content = content;  
+    }
     dispatch(updateRecipe(recipeToChange));
     dispatch(clearSelectedRecipe());
     closeModal();
   };
 
-  const actionDelete = () => {
+  const actionDelete = async() => {
+    await removeContentX(recipe.content.dataId, 'pdf');
     dispatch(removeRecipe(recipe.id));
     dispatch(clearSelectedRecipe());
     closeModal();

@@ -1,6 +1,6 @@
 import { Movieformat, MovieformatNoID } from '../../../../backend/src/types/movie';
 
-import { newName } from '../basic';
+import { newName } from '../basic/basic';
 
 export const newMovieformat = (): MovieformatNoID => {
     const movieformat: MovieformatNoID = newName();

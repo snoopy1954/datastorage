@@ -1,6 +1,6 @@
 import { YearNoID, Year, Name } from '../../../../backend/src/types/axa';
 
-import { newName } from '../basic';
+import { newName } from '../basic/basic';
 
 import { z100s, vital750 } from '../../constants';
 

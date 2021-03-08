@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 
 import Binarydata from '../../models/binarydata';
 import Jpg from '../../models/binarydata/jpg';
+import Pdf from '../../models/binarydata/pdf';
 
 import { toBinarydata } from '../../utils/binarydata';
 
@@ -30,7 +31,16 @@ binarydataRouter.get('/:id', async (request, response) => {
                 if (binarydata) response.send(binarydata);
                 else response.status(404).end();
              } catch (e) {
-               response.status(400).send(e.message);
+                response.status(400).send(e.message);
+            }
+            break;
+        case 'pdf':
+            try {
+                const binarydata = await Pdf.findById(request.params.id);
+                if (binarydata) response.send(binarydata);
+                else response.status(404).end();
+            } catch (e) {
+                response.status(400).send(e.message);
             }
             break;
         default:
@@ -57,6 +67,15 @@ binarydataRouter.post('/', async (request, response) => {
                response.status(400).send(e.message);
             }
             break;
+        case 'pdf':
+            try {
+                const binarydata = new Pdf(toBinarydata(request.body)); 
+                void await binarydata.save(); 
+                response.send(binarydata);
+            } catch (e) {
+                response.status(400).send(e.message);
+            }
+            break;
         default:
             try {
                 const binarydata = new Binarydata(toBinarydata(request.body)); 
@@ -69,23 +88,72 @@ binarydataRouter.post('/', async (request, response) => {
 });
 
 binarydataRouter.delete('/:id', async (request, response) => {
-    try {
-        const binarydata = await Binarydata.findByIdAndRemove(request.params.id);
-        if (binarydata) response.json(binarydata.toJSON());
-        else response.status(404).end();
-    } catch (e) {
-        response.status(400).send(e.message);
+    const type = request.query.type&&request.query.type!=='' ? request.query.type : '';
+
+    switch (type) {
+        case 'jpg':
+            try {
+                const binarydata = await Jpg.findByIdAndRemove(request.params.id);
+                if (binarydata) response.json(binarydata.toJSON());
+                else response.status(404).end();
+            } catch (e) {
+                response.status(400).send(e.message);
+            }
+            break;
+        case 'pdf':
+            try {
+                const binarydata = await Pdf.findByIdAndRemove(request.params.id);
+                if (binarydata) response.json(binarydata.toJSON());
+                else response.status(404).end();
+            } catch (e) {
+                response.status(400).send(e.message);
+            }
+            break;
+        default:
+            try {
+                const binarydata = await Pdf.findByIdAndRemove(request.params.id);
+                if (binarydata) response.json(binarydata.toJSON());
+                else response.status(404).end();
+            } catch (e) {
+                response.status(400).send(e.message);
+            }
+            break;
     }
 });
   
 binarydataRouter.put('/:id', async (request, response) => {
-    try {
-        const newImage = toBinarydata(request.body); 
-        const binarydata = await Binarydata.findByIdAndUpdate(request.params.id, newImage, { new: true });
-        response.send(binarydata);
-    } catch (e) {
-        response.status(400).send(e.message);
+    const type = request.query.type&&request.query.type!=='' ? request.query.type : '';
+
+    switch (type) {
+        case 'jpg':
+            try {
+                const newImage = toBinarydata(request.body); 
+                const binarydata = await Jpg.findByIdAndUpdate(request.params.id, newImage, { new: true });
+                response.send(binarydata);
+            } catch (e) {
+                response.status(400).send(e.message);
+            }
+            break;
+        case 'pdf':
+            try {
+                const newImage = toBinarydata(request.body); 
+                const binarydata = await Pdf.findByIdAndUpdate(request.params.id, newImage, { new: true });
+                response.send(binarydata);
+            } catch (e) {
+                response.status(400).send(e.message);
+            }
+            break;
+        default:
+            try {
+                const newImage = toBinarydata(request.body); 
+                const binarydata = await Binarydata.findByIdAndUpdate(request.params.id, newImage, { new: true });
+                response.send(binarydata);
+            } catch (e) {
+                response.status(400).send(e.message);
+            }
+            break;
     }
+
 });
 
 export default binarydataRouter;

@@ -6,7 +6,8 @@ import { styleButton }from '../../../../constants';
 
 import { Option, Edittype } from "../../../../types/basic";
 import { Group } from '../../../../../../backend/src/types/basic';
-import { RecipeWithFileNoID } from '../../../../types/recipe';
+import { RecipeWithContentNoID } from '../../../../types/recipe';
+import { ContentWithFile } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { setSelectedSubgroups } from '../../../../state/book/selectedsubgroups/actions';
@@ -15,14 +16,14 @@ import { SelectField } from '../../../basic/formfields/selectfield';
 import { SelectFieldWithChange } from '../../../basic/formfields/selectfieldwithchange';
 import { TextField } from '../../../basic/formfields/textfield';
 import { NumberField } from '../../../basic/formfields/numberfield';
-import { FileField } from '../../../basic/formfields/filefield';
+import { ContentFieldSimple } from '../../../basic/formfields/contentfieldsimple';
 import { TextFieldArray } from '../../../basic/formfields/textfieldarray';
 import { nextRecipe } from '../../../../utils/recipe/recipe';
-
+import { newContent } from '../../../../utils/basic/content';
 
 interface Props {
   edittype: Edittype;
-  onSubmit: (values: RecipeWithFileNoID) => void;
+  onSubmit: (values: RecipeWithContentNoID) => void;
   onCancel: () => void;
 }
 
@@ -62,13 +63,12 @@ export const RecipeForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =>
     });
   });
   
-  const cover: File = new File([""], "filename");
+  const contentwithfile: ContentWithFile = newContent();
 
   const initialValues = edittype===Edittype.EDIT && recipe
-  ? { ...recipe, file: cover } 
-  : { ...nextRecipe(recipes), file: cover };
+  ? { ...recipe, contentwithfile } 
+  : { ...nextRecipe(recipes), contentwithfile };
 
-  console.log(recipe.keywords)
   return (
     <Formik
       initialValues={initialValues}
@@ -113,11 +113,11 @@ export const RecipeForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =>
             />
             <Field
               label="Datei"
-              placeholder="Datei"
-              name="file"
-              component={FileField}
+              content={values.contentwithfile}
+              name='contentwithfile'
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
+              component={ContentFieldSimple}
             />
             <Field
               name='keywords'

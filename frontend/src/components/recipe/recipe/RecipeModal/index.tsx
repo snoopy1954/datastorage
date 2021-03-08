@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal } from 'semantic-ui-react';
-import { RecipeWithFileNoID } from '../../../../types/recipe';
+import { RecipeWithContentNoID } from '../../../../types/recipe';
 
 import { Edittype } from '../../../../types/basic';
 
@@ -13,7 +13,7 @@ interface Props {
   title: string;
   modalOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: RecipeWithFileNoID) => void;
+  onSubmit: (values: RecipeWithContentNoID) => void;
 }
 
 export const RecipeModal = ({ edittype, title, modalOpen, onClose, onSubmit }: Props) => (

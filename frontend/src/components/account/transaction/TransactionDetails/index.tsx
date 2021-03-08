@@ -7,7 +7,7 @@ import { RootState } from '../../../../state/store';
        
 import { AppHeaderH3 } from "../../../basic/header";
 
-import { getAmount, getFormatedDate } from '../../../../utils/basic';
+import { getAmount, getFormatedDate } from '../../../../utils/basic/basic';
 
 
 interface Props {

@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { styleButton }from '../../../../constants';
 
 import { Option, Edittype } from "../../../../types/basic";
-import { Bookgroup, BookWithFileNoID } from '../../../../../../backend/src/types/book';
+import { Bookgroup } from '../../../../../../backend/src/types/book';
+import { BookWithContentNoID } from '../../../../types/book';
+import { ContentWithFile } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { setSelectedSubgroups } from '../../../../state/book/selectedsubgroups/actions';
@@ -14,14 +16,15 @@ import { SelectField } from '../../../basic/formfields/selectfield';
 import { SelectFieldWithChange } from '../../../basic/formfields/selectfieldwithchange';
 import { TextField } from '../../../basic/formfields/textfield';
 import { NumberField } from '../../../basic/formfields/numberfield';
-import { FileField } from '../../../basic/formfields/filefield';
+import { ContentFieldSimple } from '../../../basic/formfields/contentfieldsimple';
 
-import { newBook } from '../../../../utils/book/book';
+import { nextBook } from '../../../../utils/book/book';
+import { newContent } from '../../../../utils/basic/content';
 
 
 interface Props {
   edittype: Edittype;
-  onSubmit: (values: BookWithFileNoID) => void;
+  onSubmit: (values: BookWithContentNoID) => void;
   onCancel: () => void;
 }
 
@@ -29,13 +32,14 @@ export const BookForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
   const dispatch = useDispatch();
 
   const book = useSelector((state: RootState) => state.book);
+  const books = useSelector((state: RootState) => state.books);
   const tongues = useSelector((state: RootState) => state.tongues);
   const formats = useSelector((state: RootState) => state.formats);
   const ownerships = useSelector((state: RootState) => state.ownerships);
   const bookgroups = useSelector((state: RootState) => state.bookgroups);
   const subgroups = useSelector((state: RootState) => state.subgroups);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const selectedGroup: Bookgroup[] = Object.values(bookgroups).filter((bookgroup => bookgroup.name=== book.bookgroup));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
     dispatch(setSelectedSubgroups(selectedSubgroups));
@@ -87,11 +91,11 @@ export const BookForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
     });
   });
   
-  const cover: File = new File([""], "filename");
+  const contentwithfile: ContentWithFile = newContent();
 
   const initialValues = edittype===Edittype.EDIT && book
-  ? { ...book, file: cover } 
-  : { ...newBook(), file: cover };
+  ? { ...book, contentwithfile } 
+  : { ...nextBook(books), contentwithfile };
 
   return (
     <Formik
@@ -102,7 +106,7 @@ export const BookForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
         return errors;
       }}
     >
-      {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
+      {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
             <Field
@@ -206,13 +210,13 @@ export const BookForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
             />
             <Field
               label="Datei"
-              placeholder="Datei"
-              name="file"
-              component={FileField}
+              content={values.contentwithfile}
+              name='contentwithfile'
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
+              component={ContentFieldSimple}
             />
-            <Button style={styleButton} type="submit" disabled={!dirty || !isValid}>Speichern</Button>
+             <Button style={styleButton} type="submit" disabled={!dirty || !isValid}>Speichern</Button>
             <Button style={styleButton} onClick={() => onCancel()}>Abbrechen</Button>
           </Form>
         );

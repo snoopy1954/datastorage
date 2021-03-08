@@ -98,8 +98,24 @@ const sortElements = (a: Cd, b: Cd) => {
     return 0;
 };
 
+const sortElementsByYear = (a: Cd, b: Cd) => {
+    const nameA = a.year;
+    const nameB = b.year;
+    if (nameA < nameB) {
+        return -1;
+    }
+    if (nameA > nameB) {
+        return 1;
+    }
+    return 0;
+};
+
 export const sortCds = (cds: Cd[]): Cd[] => {
     return cds.sort(sortElements);
+};
+
+export const sortCdsByYear = (cds: Cd[]): Cd[] => {
+    return cds.sort(sortElementsByYear);
 };
 
 export const createCdFromPgRecord = async (record: string): Promise<Cd> => {

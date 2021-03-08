@@ -18,7 +18,7 @@ import { AccounttypePage } from './accounttype/AccounttypePage';
 import { AccountyearPage } from './accountyear/AccountyearPage';
 import { TransactionPage } from './transaction/TransactionPage';
 
-import { getCurrentYear } from '../../utils/basic';
+import { getCurrentYear } from '../../utils/basic/basic';
 import { getAccountyear } from '../../utils/account/accountyear';
 
 

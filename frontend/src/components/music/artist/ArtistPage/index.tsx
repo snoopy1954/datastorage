@@ -35,7 +35,7 @@ export const ArtistPage: React.FC = () => {
 
   React.useEffect(() => {
     dispatch(clearSelectedArtist());
-  }, [dispatch]);  
+  }, [dispatch]);   
   
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
 

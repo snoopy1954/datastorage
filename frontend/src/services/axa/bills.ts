@@ -2,7 +2,7 @@ import axios from 'axios';
 import { apiBaseUrl } from "../../constants";
 import { Bill, BillNoID, Account } from '../../../../backend/src/types/axa';
 
-import { getSum } from '../../utils/basic';
+import { getSum } from '../../utils/basic/basic';
 
 const getAll = async () => {
     const { data: bills } = await axios.get<Bill[]>(

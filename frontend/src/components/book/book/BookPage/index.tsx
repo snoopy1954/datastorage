@@ -1,29 +1,26 @@
-import React from 'react';
+import React, { useEffect }  from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
 
-import { Book, BookNoID, BookWithFileNoID, Bookgroup, Content, Tongue } from '../../../../../../backend/src/types/book';
-import { Image } from '../../../../../../backend/src/types/image';
-import { Filter } from '../../../../types/book';
+import { Book, BookNoID, Bookgroup, Content, Tongue } from '../../../../../../backend/src/types/book';
+import { Content2 } from '../../../../../../backend/src/types/basic';
+import { Filter, BookWithContentNoID } from '../../../../types/book';
 import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { setFilter, clearFilter } from '../../../../state/book/filter/actions';
-import { setImage } from '../../../../state/image/actions';
 import { addBook, updateBook, exchangeBooks, removeBook } from '../../../../state/book/booklist/actions';
 import { setSelectedBook, clearSelectedBook } from '../../../../state/book/selectedbook/actions';
 import { addChangedBook, clearChangedBook } from '../../../../state/book/changedbooklist/actions';
-
-import { create, update } from '../../../../services/image/images';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { AskString, Value } from '../../../basic/askString';
 import { BookModal } from '../BookModal';
 
-import { getContent } from '../../../../utils/image';
-import { booklistTitle, booklistFilter, nextSeqnr } from '../../../../utils/book/book';
+import { booklistTitle, booklistFilter } from '../../../../utils/book/book';
+import { createContentX, updateContentX, removeContentX } from '../../../../utils/basic/content';
 
 
 export const BookPage: React.FC = () => {
@@ -37,11 +34,11 @@ export const BookPage: React.FC = () => {
   const book: Book = useSelector((state: RootState) => state.book);
   const changedBooks: Book[] = useSelector((state: RootState) => state.changedbooklist);
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(clearSelectedBook());
     dispatch(clearFilter());
-  }, [dispatch]);  
-  
+  }, [dispatch]); 
+
   const openModalNew = (): void => setModalOpen([true, false, false, false, false]);
 
   const openModalDelete = (book: Book): void => {
@@ -56,8 +53,6 @@ export const BookPage: React.FC = () => {
       
   const openModalShow = (book: Book): void => {
     dispatch(setSelectedBook(book));
-    const id: string = book.content.dataId;
-    dispatch(setImage(id));
     setModalOpen([false, false, false, true, false]);
   };
   
@@ -107,50 +102,34 @@ export const BookPage: React.FC = () => {
     closeModal();
   };
 
-  const actionAdd = async (values: BookWithFileNoID) => {
-    const filedata: ArrayBuffer = await getContent(values.file);
-    const longInt8View: Uint8Array = new Uint8Array(filedata);
-    const newImage: Image = await create(longInt8View);
-    const id: string = newImage.id;
-    const content: Content = {
-      filename: values.file.name,
-      filetype: values.file.type,
-      filesize: String(values.file.size),
-      dataId: id
+  const actionAdd = async (values: BookWithContentNoID) => {
+    const bookToAdd: BookNoID = {
+      ...values
     };
-    await update(id, content);
-    const seqnr = values.title.seqnr===0 ? nextSeqnr(books, values.bookgroup, values.subgroup)+1 : values.title.seqnr;
-    const book: BookNoID = {
-      title: { name: values.title.name, seqnr: seqnr },
-      author: { givenname: values.author.givenname, familyname: values.author.familyname },
-      comment: values.comment,
-      link: values.link,
-      launched: values.launched,
-      read: values.read,
-      createdAt: values.createdAt,
-      modifiedAt: values.modifiedAt,
-      bookgroup: values.bookgroup,
-      subgroup: values.subgroup,
-      ownership: values.ownership,
-      format: values.format,
-      tongue: values.tongue,
-      content: content
-    };
-    dispatch(addBook(book));
+    const contentWithFile = values.contentwithfile;
+    const content: Content2 = await createContentX(contentWithFile, 'jpg');
+    bookToAdd.content = content;
+    dispatch(addBook(bookToAdd));
     closeModal();
   };
 
-  const actionChange = async (values: BookNoID) => {
+  const actionChange = async (values: BookWithContentNoID) => {
     const bookToChange: Book = {
       ...values,
       id: book.id
     };
+    const contentWithFile = values.contentwithfile;
+    if (contentWithFile.file.size>0) {
+      const content: Content2 = await updateContentX(book.content.dataId, contentWithFile, 'jpg');
+      bookToChange.content = content;  
+    }
     dispatch(updateBook(bookToChange));
     dispatch(clearSelectedBook());
     closeModal();
   };
 
-  const actionDelete = () => {
+  const actionDelete = async () => {
+    await removeContentX(book.content.dataId, 'jpg');
     dispatch(removeBook(book.id));
     dispatch(clearSelectedBook());
     closeModal();

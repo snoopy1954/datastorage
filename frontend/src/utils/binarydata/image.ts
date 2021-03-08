@@ -1,4 +1,4 @@
-import { Image } from '../../../backend/src/types/image';
+import { Image } from '../../../../backend/src/types/image';
 
 export const getContent = async (file: File) => {
     const data: ArrayBuffer = await new Response(file).arrayBuffer();

@@ -3,6 +3,9 @@ import { Content2 } from '../../../../backend/src/types/basic';
 import { Binarydata } from '../../../../backend/src/types/image';
 
 import { create, remove } from '../../services/binarydata/images';
+import { createX, updateX, removeX } from '../../services/binarydata/images';
+
+import { getContent } from '../../utils/binarydata/binarydata';
 
 
 export const newContent = (): ContentWithFile => {
@@ -43,9 +46,44 @@ export const createContent = async (contentWithFile: ContentWithFile): Promise<C
 
     return content;
 };
+export const createContentX = async (contentWithFile: ContentWithFile, type: string): Promise<Content2> => {
+    const filedata: ArrayBuffer = await getContent(contentWithFile.file);
+    const binarydata: Binarydata = await createX(filedata, type);
+    const content: Content2 = {
+      dataId: binarydata.id,
+      filename: contentWithFile.file.name,
+      filetype: contentWithFile.file.type,
+      filesize: String(contentWithFile.file.size),
+      date: contentWithFile.date,
+      description: contentWithFile.description,
+      seqnr: contentWithFile.seqnr
+    }
+
+    return content;
+};
 
 export const removeContent = async (id: string) => {
     remove(id);
+};
+
+export const removeContentX = async (id: string, type: string) => {
+    removeX(id, type);
+};
+
+export const updateContentX = async (id: string, contentWithFile: ContentWithFile, type: string): Promise<Content2> => {
+    const filedata: ArrayBuffer = await getContent(contentWithFile.file);
+    const binarydata: Binarydata = await updateX(id, filedata, type);
+    const content: Content2 = {
+      dataId: binarydata.id,
+      filename: contentWithFile.file.name,
+      filetype: contentWithFile.file.type,
+      filesize: String(contentWithFile.file.size),
+      date: contentWithFile.date,
+      description: contentWithFile.description,
+      seqnr: contentWithFile.seqnr
+    }
+
+    return content;
 };
 
 export const sortContents = (contents: Content2[]) => {

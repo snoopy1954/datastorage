@@ -15,7 +15,6 @@ export const ShowModalPDF = ({ title, pdfUrl, modalOpen, onClose }: Props) => {
   const [scale, setScale] = useState<number>(1);
   const [pageToShow, setPageToShow] = useState<string>('');
 
-  console.log('show', pdfUrl)
   if (pdfUrl==='') {
     return (
       <></>

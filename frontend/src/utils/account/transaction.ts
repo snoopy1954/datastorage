@@ -3,7 +3,7 @@ import { MD5 } from 'crypto-js';
 import { Transaction, TransactionNoID, Accounttype } from '../../../../backend/src/types/account';
 import { Accountfilter } from '../../types/account';
 
-import { getCurrentDate, getSum } from '../basic';
+import { getCurrentDate, getSum } from '../basic/basic';
 
 
 export const newTransaction = (): TransactionNoID => {

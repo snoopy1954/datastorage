@@ -1,6 +1,6 @@
 import { Biller, BillerNoID } from '../../../../backend/src/types/axa';
 
-import { newName } from '../basic';
+import { newName } from '../basic/basic';
 
 const sortBillers = (a: Biller, b: Biller) => {
     const nameA = a.name.seqnr;

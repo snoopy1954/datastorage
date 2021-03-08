@@ -12,7 +12,10 @@ export const newRecipe = (): RecipeNoID => {
             filename: '',
             filetype: '',
             filesize: '',
-            dataId: ''
+            dataId: '',
+            date: '',
+            description: '',
+            seqnr: 0
         },
         keywords: []
     };
@@ -31,7 +34,10 @@ export const emptyRecipe = (): Recipe => {
             filename: '',
             filetype: '',
             filesize: '',
-            dataId: ''
+            dataId: '',
+            date: '',
+            description: '',
+            seqnr: 0
         },
         keywords: []
     }
@@ -48,7 +54,10 @@ export const nextRecipe = (recipes: Recipe[]): RecipeNoID => {
             filename: '',
             filetype: '',
             filesize: '',
-            dataId: ''
+            dataId: '',
+            date: '',
+            description: '',
+            seqnr: 0
         },
         keywords: []
     };

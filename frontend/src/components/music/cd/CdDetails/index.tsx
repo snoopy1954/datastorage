@@ -13,7 +13,7 @@ import { AppHeaderH3 } from '../../../basic/header';
 import { ShowModal } from "../../../basic/showModal";
 
 import { getTracksOfCd } from '../../../../utils/music/track';
-import { getFormatedTime, getFormatedSize } from '../../../../utils/basic';
+import { getFormatedTime, getFormatedSize } from '../../../../utils/basic/basic';
 import { getImageUrl } from "../../../../utils/binarydata/binarydata";
 
 
@@ -119,6 +119,10 @@ export const CdDetails: React.FC<Props> = ({ onCancel }) => {
                     <Table.Row>
                         <Table.Cell>Größe</Table.Cell>
                         <Table.Cell>{getFormatedSize(cd.size)}</Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell>Kommentar</Table.Cell>
+                        <Table.Cell>{cd.comment}</Table.Cell>
                     </Table.Row>
                      <Table.Row>
                         <Table.Cell>Reihenfolge</Table.Cell>

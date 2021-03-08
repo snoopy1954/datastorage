@@ -2,7 +2,7 @@ import React from "react";
 import { FieldProps, FormikProps } from "formik";
 import { Form } from "semantic-ui-react";
 
-import { getMD5 } from '../../../utils/basic';
+import { getMD5 } from '../../../utils/basic/basic';
 
 
 interface Props extends FieldProps {

@@ -13,7 +13,7 @@ import {
 import { create, update, remove, getAll } from "../../../services/sudoku/sudokus";
 
 
-export const initializeSudokus = () => {
+export const initializeSudokus = async () => {
   return async (dispatch: DispatchSetSudokuList) => {
     const sudokus = await getAll();
     dispatch({
