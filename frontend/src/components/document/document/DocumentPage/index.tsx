@@ -104,7 +104,7 @@ export const DocumentPage: React.FC = () => {
     };
     await Promise.all(values.contentswithfile.map(async contentwithfile => {
       if (contentwithfile.dataId==='') {
-        const content: Content2 = await createContent(contentwithfile);
+        const content: Content2 = await createContent(contentwithfile, 'pdf');
         documentToAdd.contents.push(content);
       }
     }));
@@ -123,13 +123,13 @@ export const DocumentPage: React.FC = () => {
         if (content.dataId===contentwithfile.dataId) found = true;
       });
       if (!found) {
-        removeContent(content.dataId);
+        removeContent(content.dataId, 'pdf');
         documentToChange.contents.splice(index, 1);
       }
     });
     await Promise.all(values.contentswithfile.map(async contentwithfile => {
       if (contentwithfile.dataId==='') {
-        const content: Content2 = await createContent(contentwithfile);
+        const content: Content2 = await createContent(contentwithfile, 'pdf');
         documentToChange.contents.push(content);
       }
     }));

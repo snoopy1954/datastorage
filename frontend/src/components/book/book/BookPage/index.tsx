@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
 
-import { Book, BookNoID, Bookgroup, Content, Tongue } from '../../../../../../backend/src/types/book';
+import { Book, BookNoID, Bookgroup, Tongue } from '../../../../../../backend/src/types/book';
 import { Content2 } from '../../../../../../backend/src/types/basic';
 import { Filter, BookWithContentNoID } from '../../../../types/book';
 import { Edittype, Direction } from '../../../../types/basic';
@@ -20,7 +20,7 @@ import { AskString, Value } from '../../../basic/askString';
 import { BookModal } from '../BookModal';
 
 import { booklistTitle, booklistFilter } from '../../../../utils/book/book';
-import { createContentX, updateContentX, removeContentX } from '../../../../utils/basic/content';
+import { createContent, updateContent, removeContent } from '../../../../utils/basic/content';
 
 
 export const BookPage: React.FC = () => {
@@ -107,7 +107,7 @@ export const BookPage: React.FC = () => {
       ...values
     };
     const contentWithFile = values.contentwithfile;
-    const content: Content2 = await createContentX(contentWithFile, 'jpg');
+    const content: Content2 = await createContent(contentWithFile, 'jpg');
     bookToAdd.content = content;
     dispatch(addBook(bookToAdd));
     closeModal();
@@ -120,7 +120,7 @@ export const BookPage: React.FC = () => {
     };
     const contentWithFile = values.contentwithfile;
     if (contentWithFile.file.size>0) {
-      const content: Content2 = await updateContentX(book.content.dataId, contentWithFile, 'jpg');
+      const content: Content2 = await updateContent(book.content.dataId, contentWithFile, 'jpg');
       bookToChange.content = content;  
     }
     dispatch(updateBook(bookToChange));
@@ -129,7 +129,7 @@ export const BookPage: React.FC = () => {
   };
 
   const actionDelete = async () => {
-    await removeContentX(book.content.dataId, 'jpg');
+    await removeContent(book.content.dataId, 'jpg');
     dispatch(removeBook(book.id));
     dispatch(clearSelectedBook());
     closeModal();

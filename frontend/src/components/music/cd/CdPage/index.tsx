@@ -18,7 +18,7 @@ import { CdModal } from '../CdModal';
 
 import { formatData } from '../../../../utils/basic/import';
 import { getFormatedTime, getFormatedSize } from '../../../../utils/basic/basic';
-import { createImageFromFilename } from '../../../../utils/basic/image';
+import { createImageFromFile } from '../../../../utils/basic/content';
 import { getArtistFromPgident, updateArtistFromPg } from '../../../../utils/music/artist';
 import { createCdFromPgRecord, updateCdFromPg, getFilename, cdTitle, getCdsOfArtist, sortCdsByYear } from '../../../../utils/music/cd';
 import { createTrackFromPgRecord } from '../../../../utils/music/track';
@@ -114,8 +114,8 @@ export const CdPage: React.FC = () => {
         const cover = getFilename(cd, artist.name, 'cover');
         const back = getFilename(cd, artist.name, 'back');
         cd.artistident = artist.id;
-        cd.coverident = await createImageFromFilename(cover);
-        cd.backident = await createImageFromFilename(back);
+        cd.coverident = await createImageFromFile(cover);
+        cd.backident = await createImageFromFile(back);
         const pgtracks = formatData(await getOne('musik', 'tracks', 'cdident', String(cd.pgid)));
         for (let tracknumber=0; tracknumber<Object.values(pgtracks).length; tracknumber++) {
           const pgtrack = pgtracks[tracknumber];

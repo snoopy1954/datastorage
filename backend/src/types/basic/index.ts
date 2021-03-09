@@ -32,6 +32,14 @@ export interface Content2 {
     seqnr: number;
 }
 
+export interface Binarydata {
+    id: string;
+    data: Buffer, 
+    type: string
+}
+
+export type BinarydataNoID = Omit<Binarydata, 'id'>;
+
 export interface Year extends Name {
     id: string;
 }

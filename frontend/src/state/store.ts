@@ -3,9 +3,6 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import { pageReducer } from './page/reducers';
-import { imageReducer } from './image/reducers';
-import { binarydataReducer } from './binarydata/reducers';
-import { pdfurlReducer } from './axa/pdfUrl/reducers';
 
 import { yearlistReducer } from './pressure/yearlist/reducers';
 import { selectedyearReducer } from './pressure/selectedyear/reducers';
@@ -118,9 +115,6 @@ import { cdReducer } from './music/cd/reducers';
 
 const rootReducer = combineReducers({
     page: pageReducer,
-    image : imageReducer,
-    binarydata : binarydataReducer,
-    pdfurl: pdfurlReducer,
     yearlist: yearlistReducer,
     selectedyear: selectedyearReducer,
     openedyear: openedyearReducer,

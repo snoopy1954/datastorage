@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { GroupNoID, YearNoID } from '../../types/basic';
-
-import { parseString, parseNumber, parseStringArray } from '../basicParser';
+import { BinarydataNoID } from '../../types/basic';
+import { parseString, parseNumber, parseStringArray, parseBuffer } from '../basicParser';
 
 export const toGroup = (object: any) => {
     const name = parseString(object.name);
@@ -28,3 +28,15 @@ export const toYear = (object: any) => {
 
     return year;
 };
+
+export const toBinarydata = (object: any) => {
+    const data = parseBuffer(object);
+
+    const file: BinarydataNoID = {
+        data: data,
+        type: "application/octet-stream"
+    };
+
+    return file;
+};
+

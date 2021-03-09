@@ -4,8 +4,6 @@ import cors from 'cors';
 
 import filesRouter from './routes/filesystem/files';
 import postgresRouter from './routes/postgres/postgres';
-
-import imagesRouter from './routes/image';
 import binarydataRouter from './routes/binarydata';
 
 import monthsRouter from './routes/pressure/months';
@@ -69,7 +67,6 @@ app.use(express.json());
 app.use(cors());
 app.use('/api/files', filesRouter);
 app.use('/api/postgres', postgresRouter);
-app.use('/api/images', imagesRouter);
 app.use('/api/binarydata', binarydataRouter);
 app.use('/api/months', monthsRouter);
 app.use('/api/pressureyears', pressureyearsRouter);

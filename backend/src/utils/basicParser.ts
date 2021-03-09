@@ -56,3 +56,7 @@ export const parseContents = (contents: any): Content2[] => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return contents;
 };
+
+export const parseBuffer = (text: any): Buffer => {
+    return text;
+};

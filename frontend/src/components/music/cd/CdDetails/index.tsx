@@ -5,8 +5,6 @@ import { styleButton, backgroundColor } from '../../../../constants';
 
 import { Cd, Artist, Track } from '../../../../../../backend/src/types/music';
 
-import { getOneX } from '../../../../services/binarydata/images';
-
 import { RootState } from '../../../../state/store';
 
 import { AppHeaderH3 } from '../../../basic/header';
@@ -14,7 +12,8 @@ import { ShowModal } from "../../../basic/showModal";
 
 import { getTracksOfCd } from '../../../../utils/music/track';
 import { getFormatedTime, getFormatedSize } from '../../../../utils/basic/basic';
-import { getImageUrl } from "../../../../utils/binarydata/binarydata";
+import { getImageUrl } from '../../../../utils/basic/binarydata';
+import { getOneBinarydata } from '../../../../utils/basic/content'
 
 
 interface Props {
@@ -36,7 +35,6 @@ export const CdDetails: React.FC<Props> = ({ onCancel }) => {
 
     const closeModal = (): void => {
         setModalOpen(false);
-        URL.revokeObjectURL(url);
     };
 
     const artists: Artist[] = useSelector((state: RootState) => state.artists);
@@ -49,12 +47,12 @@ export const CdDetails: React.FC<Props> = ({ onCancel }) => {
         };
         fetchTracks();
         const fetchCover = async () => {
-            const image = await getOneX(cd.coverident, 'jpg');
+            const image = await getOneBinarydata(cd.coverident, 'jpg');
             setCover(getImageUrl(image));
         };
         fetchCover();
         const fetchBack = async () => {
-            const image = await getOneX(cd.backident, 'jpg');
+            const image = await getOneBinarydata(cd.backident, 'jpg');
             setBack(getImageUrl(image));
         };
         fetchBack();

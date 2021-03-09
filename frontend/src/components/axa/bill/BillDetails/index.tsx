@@ -3,15 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Table } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
+import { Account, Bill } from '../../../../../../backend/src/types/axa';
+import { Binarydata } from '../../../../../../backend/src/types/basic';
+
 import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';
-import { getOne } from '../../../../services/image/images';
-import { setPdfUrl, clearPdfUrl } from "../../../../state/axa/pdfUrl/actions";
 
 import { AppHeaderH3 } from "../../../basic/header";
 import { ShowModalPDF } from '../../../basic/showModalPDF';
 
-import { getImageUrl } from "../../../../utils/binarydata/image";
+import { getOneBinarydata } from '../../../../utils/basic/content'
+import { getImageUrl } from '../../../../utils/basic/binarydata';
 import { getSumAmounts } from '../../../../utils/axa/bill';
 import { getFolderFromAxaAccountname } from '../../../../utils/basic/basic';
 
@@ -21,32 +23,32 @@ interface Props {
 };
 
 export const BillDetails: React.FC<Props> = ({ onCancel }) => {
+  const [url, setUrl] = React.useState('');
+
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const dispatch = useDispatch();
 
-  const mainpage = useSelector((state: RootState) => state.page.mainpage);      
-  const bill = useSelector((state: RootState) => state.bill);
-  const account = useSelector((state: RootState) => state.account);
-  const pdfUrl = useSelector((state: RootState) => state.pdfurl);
+  const mainpage: string = useSelector((state: RootState) => state.page.mainpage);      
+  const bill: Bill = useSelector((state: RootState) => state.bill);
+  const account: Account = useSelector((state: RootState) => state.account);
 
   const openModalShow = (): void => setModalOpen(true);
 
   const closeModal = (): void => {
     setModalOpen(false);
-    dispatch(clearPdfUrl());
   };
 
   const handleNoteSelection = (index: number) => {
     switch (index) {
       case 0:
       case 1:
-        const id = bill.notes[index].dataId;
-        const fetchImage = async () => {
-          const newImage = await getOne(id);
-          dispatch(setPdfUrl(getImageUrl(newImage)));
-        };
-        fetchImage();
-        openModalShow();
+          const id: string = bill.notes[index].dataId;
+          const fetchImage = async () => {
+              const binarydata: Binarydata = await getOneBinarydata(id, 'pdf');
+              setUrl(getImageUrl(binarydata));  
+          };
+          fetchImage();
+          openModalShow();
         break;
       default:
     };
@@ -60,9 +62,9 @@ export const BillDetails: React.FC<Props> = ({ onCancel }) => {
 
   return (
     <div className="App">
-      {pdfUrl!==''&&<ShowModalPDF
+      {url!==''&&<ShowModalPDF
           title={bill.notes[0].filename}
-          pdfUrl={pdfUrl}
+          pdfUrl={url}
           modalOpen={modalOpen}
           onClose={closeModal}
       />}

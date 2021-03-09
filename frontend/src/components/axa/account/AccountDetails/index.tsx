@@ -3,21 +3,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { Bill, Note, Details } from '../../../../../../backend/src/types/axa';
-
-import { getOne as getImage } from '../../../../services/image/images';
+import { Account, Bill, Note, Details } from '../../../../../../backend/src/types/axa';
+import { Binarydata } from '../../../../../../backend/src/types/basic';
 
 import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';
 import { setSelectedBill } from '../../../../state/axa/selectedbill/actions';
-import { setPdfUrl, clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
-
-import { getImageUrl } from '../../../../utils/binarydata/image';
-import { getSumAmounts } from '../../../../utils/axa/bill';
-
 import { ShowModalPDF } from '../../../basic/showModalPDF';
+
+import { getOneBinarydata } from '../../../../utils/basic/content'
+import { getImageUrl } from '../../../../utils/basic/binarydata';
+import { getSumAmounts } from '../../../../utils/axa/bill';
 
 
 interface Props {
@@ -25,26 +23,26 @@ interface Props {
 }
 
 export const AccountDetails: React.FC<Props> = ({ onCancel }) => {
+  const [url, setUrl] = React.useState('');
+ 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const dispatch = useDispatch();
 
-  const mainpage = useSelector((state: RootState) => state.page.mainpage);      
-  const account = useSelector((state: RootState) => state.account);
+  const mainpage: string = useSelector((state: RootState) => state.page.mainpage);      
+  const account: Account = useSelector((state: RootState) => state.account);
   const selectedbills: Bill[] = useSelector((state: RootState) => state.selectedbills);
-  const pdfUrl = useSelector((state: RootState) => state.pdfurl);
 
   const openModalShow = (): void => setModalOpen(true);
 
   const closeModal = (): void => {
     setModalOpen(false);
-    dispatch(clearPdfUrl());
   };
 
   const handleNoteSelection = (index: number) => {
-    const id = account.notes[index].dataId;
+    const id: string = account.notes[index].dataId;
     const fetchImage = async () => {
-      const newImage = await getImage(id);
-      dispatch(setPdfUrl(getImageUrl(newImage)));
+        const binarydata: Binarydata = await getOneBinarydata(id, 'pdf');
+        setUrl(getImageUrl(binarydata));  
     };
     fetchImage();
     openModalShow();
@@ -80,9 +78,9 @@ export const AccountDetails: React.FC<Props> = ({ onCancel }) => {
 
   return (
     <div className="App">
-      {pdfUrl!==''&&<ShowModalPDF
+      {url!==''&&<ShowModalPDF
           title={account.notes[0].filename}
-          pdfUrl={pdfUrl}
+          pdfUrl={url}
           modalOpen={modalOpen}
           onClose={closeModal}
       />}

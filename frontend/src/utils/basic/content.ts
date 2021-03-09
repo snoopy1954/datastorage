@@ -1,11 +1,11 @@
 import { ContentWithFile } from '../../types/basic';
 import { Content2 } from '../../../../backend/src/types/basic';
-import { Binarydata } from '../../../../backend/src/types/image';
+import { Binarydata } from '../../../../backend/src/types/basic';
 
-import { create, remove } from '../../services/binarydata/images';
-import { createX, updateX, removeX } from '../../services/binarydata/images';
+import { getOne, create, update, remove } from '../../services/binarydata/images';
+import { getOne as getFile } from '../../services/filesystem/files';
 
-import { getContent } from '../../utils/binarydata/binarydata';
+import { getContent } from '../../utils/basic/binarydata';
 
 
 export const newContent = (): ContentWithFile => {
@@ -23,6 +23,16 @@ export const newContent = (): ContentWithFile => {
     return content;
 };
 
+export const newBinarydata = (): Binarydata => {
+    const binarydata: Binarydata = {
+        id: '',
+        data: Buffer.from(''),
+        type: "application/octet-stream"
+    };
+
+    return binarydata;
+}
+
 export const content2contentwithfile = (content: Content2): ContentWithFile => {
     const contentwithfile: ContentWithFile = {
         ...content,
@@ -32,8 +42,14 @@ export const content2contentwithfile = (content: Content2): ContentWithFile => {
     return contentwithfile;
 };
 
-export const createContent = async (contentWithFile: ContentWithFile): Promise<Content2> => {
-    const binarydata: Binarydata = await create(contentWithFile.file);
+export const getOneBinarydata = async (id: string, type: string): Promise<Binarydata> => {
+    const binarydata: Binarydata = await getOne(id, type);
+    return binarydata;
+};
+
+export const createContent = async (contentWithFile: ContentWithFile, type: string): Promise<Content2> => {
+    const filedata: ArrayBuffer = await getContent(contentWithFile.file);
+    const binarydata: Binarydata = await create(filedata, type);
     const content: Content2 = {
       dataId: binarydata.id,
       filename: contentWithFile.file.name,
@@ -46,33 +62,39 @@ export const createContent = async (contentWithFile: ContentWithFile): Promise<C
 
     return content;
 };
-export const createContentX = async (contentWithFile: ContentWithFile, type: string): Promise<Content2> => {
-    const filedata: ArrayBuffer = await getContent(contentWithFile.file);
-    const binarydata: Binarydata = await createX(filedata, type);
-    const content: Content2 = {
-      dataId: binarydata.id,
-      filename: contentWithFile.file.name,
-      filetype: contentWithFile.file.type,
-      filesize: String(contentWithFile.file.size),
-      date: contentWithFile.date,
-      description: contentWithFile.description,
-      seqnr: contentWithFile.seqnr
+
+// export const createImageFromImage = async (image: Image, extension: string): Promise<string> => {
+//     const values = Object.values(image)[0];
+//     console.log('createImageFromImage', values.data.data)
+//     const img: number = values.data.data;
+//     const arrayBuffer: Uint8Array = new Uint8Array(img);
+//     const binarydata: Binarydata = await create(arrayBuffer, extension);
+//     const id = binarydata.id; 
+
+//     return id;
+// };
+
+export const createImageFromFile = async (filename: string): Promise<string> => {
+    let id = '';
+    filename = filename.replace(/\//g,'|').replace(/%/g,'%25');
+    const exists = await getFile(filename, 'exists');
+    if (exists) {
+        const extension = filename.substring(filename.lastIndexOf('.') + 1);
+        const content = await getFile(filename, 'file');
+        const arrayBuffer = Buffer.from(content,'binary');
+        const binarydata: Binarydata = await create(arrayBuffer, extension);
+        id = binarydata.id;          
     }
-
-    return content;
+    return id;
 };
 
-export const removeContent = async (id: string) => {
-    remove(id);
+export const removeContent = async (id: string, type: string) => {
+    remove(id, type);
 };
 
-export const removeContentX = async (id: string, type: string) => {
-    removeX(id, type);
-};
-
-export const updateContentX = async (id: string, contentWithFile: ContentWithFile, type: string): Promise<Content2> => {
+export const updateContent = async (id: string, contentWithFile: ContentWithFile, type: string): Promise<Content2> => {
     const filedata: ArrayBuffer = await getContent(contentWithFile.file);
-    const binarydata: Binarydata = await updateX(id, filedata, type);
+    const binarydata: Binarydata = await update(id, filedata, type);
     const content: Content2 = {
       dataId: binarydata.id,
       filename: contentWithFile.file.name,

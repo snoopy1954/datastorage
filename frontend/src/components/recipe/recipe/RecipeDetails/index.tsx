@@ -1,18 +1,15 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { getOneX } from '../../../../services/binarydata/images';
-
 import { RootState } from '../../../../state/store';
-import { setPdfUrl, clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
-
-import { getImageUrl } from '../../../../utils/binarydata/binarydata';
-
 import { ShowModalPDF } from '../../../basic/showModalPDF';
+
+import { getImageUrl } from '../../../../utils/basic/binarydata';
+import { getOneBinarydata } from '../../../../utils/basic/content'
 
 
 interface Props {
@@ -20,25 +17,22 @@ interface Props {
 }
 
 export const RecipeDetails: React.FC<Props> = ({ onCancel }) => {
+    const [url, setUrl] = React.useState('');
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
-    const dispatch = useDispatch();
     
     const recipe  = useSelector((state: RootState) => state.recipe);
-    const pdfUrl = useSelector((state: RootState) => state.pdfurl);
 
     const openModalShow = (): void => setModalOpen(true);
 
     const closeModal = (): void => {
         setModalOpen(false);
-        URL.revokeObjectURL(pdfUrl);
-        dispatch(clearPdfUrl());
     };
 
     const handleSelection = () => {
         const id = recipe.content.dataId;
         const fetchImage = async () => {
-          const image = await getOneX(id, 'pdf');
-          dispatch(setPdfUrl(getImageUrl(image)));
+          const image = await getOneBinarydata(id, 'pdf');
+          setUrl(getImageUrl(image));
         };
         fetchImage();
         openModalShow();
@@ -50,9 +44,9 @@ export const RecipeDetails: React.FC<Props> = ({ onCancel }) => {
 
     return (          
         <div className='App'>
-            {pdfUrl!==''&&<ShowModalPDF
+            {url!==''&&<ShowModalPDF
                 title={recipe.content.filename}
-                pdfUrl={pdfUrl}
+                pdfUrl={url}
                 modalOpen={modalOpen}
                 onClose={closeModal}
             />}

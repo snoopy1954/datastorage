@@ -9,7 +9,7 @@ import Binarydata from '../../models/binarydata';
 import Jpg from '../../models/binarydata/jpg';
 import Pdf from '../../models/binarydata/pdf';
 
-import { toBinarydata } from '../../utils/binarydata';
+import { toBinarydata } from '../../utils/basic';
 
 const binarydataRouter = express.Router();
 binarydataRouter.use(bodyParser.raw({type: 'application/octet-stream', limit : '10mb'}));
@@ -111,7 +111,7 @@ binarydataRouter.delete('/:id', async (request, response) => {
             break;
         default:
             try {
-                const binarydata = await Pdf.findByIdAndRemove(request.params.id);
+                const binarydata = await Binarydata.findByIdAndRemove(request.params.id);
                 if (binarydata) response.json(binarydata.toJSON());
                 else response.status(404).end();
             } catch (e) {

@@ -5,12 +5,13 @@ import { backgroundColor, styleButton } from '../../../../constants';
 
 import { Account, AccountNoID, Bill, Year, Note } from '../../../../../../backend/src/types/axa';
 import { AccountWithFileDateNoID, FileDate } from '../../../../types/axa';
-import { Content } from '../../../../../../backend/src/types/image';
+import { Content2 } from '../../../../../../backend/src/types/basic';
+import { ContentWithFile } from '../../../../types/basic';
+
 import { Edittype } from "../../../../types/basic";
 
 import { getOne as getAccount } from '../../../../services/axa/accounts';
 import { getOne as getBill} from '../../../../services/axa/bills';
-import { create2 } from "../../../../services/image/images";
 
 import { RootState } from '../../../../state/store';
 import { addAccount, refreshAccount, removeAccount, updateAccount } from  '../../../../state/axa/accountlist/actions';
@@ -23,6 +24,8 @@ import { AskModal } from '../../../basic/askModal';
 import { AccountModal } from '../AccountModal';
 
 import { getAmount } from '../../../../utils/basic/basic';
+import { newContent } from '../../../../utils/basic/content';
+import { createContent } from '../../../../utils/basic/content';
 
 
 export const AccountPage: React.FC = () => {
@@ -82,16 +85,7 @@ export const AccountPage: React.FC = () => {
   };
 
   const actionAdd = async (values: AccountNoID) => {
-    const newAccount: AccountNoID = {
-      name: values.name,
-      status: values.status,
-      passed: values.passed,
-      notes: values.notes,
-      details: values.details,
-      billIDs: values.billIDs
-    }
-    console.log(newAccount)
-    dispatch(addAccount(newAccount));
+    dispatch(addAccount(values));
     // offenen Account setzen, vorher Status prüfen
     closeModal();
   };
@@ -116,8 +110,8 @@ export const AccountPage: React.FC = () => {
     };
     const note: FileDate = values.note;
     if (note.file.size > 0) {
-      const file: File = note.file;
-      const content: Content = await create2(file);
+      const contentwithfile: ContentWithFile = { ...newContent(), file: note.file };
+      const content: Content2 = await createContent(contentwithfile, 'pdf');
       const newNote: Note = {
         ...content,
         received: note.date

@@ -5,8 +5,9 @@ import { backgroundColor, styleButton } from '../../../../constants';
 
 import { Bill, BillNoID, Note, Account, Year } from '../../../../../../backend/src/types/axa';
 import { BillWithFileDatesNoID, FileDate } from '../../../../types/axa';
-import { Content } from '../../../../../../backend/src/types/image';
 import { Edittype } from "../../../../types/basic";
+import { Content2 } from '../../../../../../backend/src/types/basic';
+import { ContentWithFile } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { addBill, removeBill, updateBill } from  '../../../../state/axa/billlist/actions';
@@ -15,7 +16,6 @@ import { setSelectedAccount } from "../../../../state/axa/selectedaccount/action
 import { setSelectedYear } from '../../../../state/axa/year/actions';
 import { initializeAccounts } from  '../../../../state/axa/accountlist/actions';
 
-import { create2 } from "../../../../services/image/images";
 import { getOne } from '../../../../services/axa/accounts';
 
 import { AppHeaderH3 } from "../../../basic/header";
@@ -24,17 +24,20 @@ import { BillModal } from "../BillModal";
 
 import { getSumAmounts } from '../../../../utils/axa/bill';
 import { getAmount } from '../../../../utils/basic/basic';
+import { newContent } from '../../../../utils/basic/content';
+import { createContent, removeContent } from '../../../../utils/basic/content';
 
 
 export const BillPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
-  const bills = useSelector((state: RootState) => state.bills);
-  const bill = useSelector((state: RootState) => state.bill);
-  const openaccount = useSelector((state: RootState) => state.openaccount);
+  const bills: Bill[] = useSelector((state: RootState) => state.bills);
+  const bill: Bill = useSelector((state: RootState) => state.bill);
+  const openaccount: Account = useSelector((state: RootState) => state.openaccount);
   const years: Year[] = useSelector((state: RootState) => state.axayears);
   const year: Year = useSelector((state: RootState) => state.axayear);
+
 
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
@@ -75,8 +78,8 @@ export const BillPage: React.FC = () => {
     const recipe: FileDate = billdata.recipe;
     const invoice: FileDate = billdata.invoice;
     if (invoice.file.size > 0) {
-      const file: File = invoice.file;
-      const content: Content = await create2(file);
+      const contentwithfile: ContentWithFile = { ...newContent(), file: invoice.file };
+      const content: Content2 = await createContent(contentwithfile, 'pdf');
       const note: Note = {
         ...content,
         received: invoice.date
@@ -84,8 +87,8 @@ export const BillPage: React.FC = () => {
       notes.push(note);
     }
     if (recipe.file.size > 0) {
-      const file: File = recipe.file;
-      const content: Content = await create2(file);
+      const contentwithfile: ContentWithFile = { ...newContent(), file: recipe.file };
+      const content: Content2 = await createContent(contentwithfile, 'pdf');
       const note: Note = {
         ...content,
         received: recipe.date
@@ -112,7 +115,9 @@ export const BillPage: React.FC = () => {
     closeModal();
   };
 
-  const actionDelete = () => {
+  const actionDelete = async () => {
+    if (bill.notes.length>0) await removeContent(bill.notes[0].dataId, 'pdf');
+    if (bill.notes.length>1) await removeContent(bill.notes[1].dataId, 'pdf');
     dispatch(removeBill(bill.id));
     dispatch(clearSelectedBill());
     closeModal();

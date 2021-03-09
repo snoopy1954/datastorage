@@ -21,7 +21,7 @@ import { AskModal } from '../../../basic/askModal';
 import { RecipeModal } from '../RecipeModal';
 
 import { recipeTitle, recipeFilter } from '../../../../utils/recipe/recipe';
-import { createContentX, removeContentX, updateContentX } from '../../../../utils/basic/content';
+import { createContent, removeContent, updateContent } from '../../../../utils/basic/content';
 
 
 export const RecipePage: React.FC = () => {
@@ -39,18 +39,6 @@ export const RecipePage: React.FC = () => {
     dispatch(clearRecipefilter());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   const fetchImages = async () => {
-  //     const images = await getAll();
-  //     Object.values(images).forEach((image, index) => {
-  //       if (image.filename.endsWith('.pdf')) {
-  //       console.log(index, ':', image.filename)
-  //       }
-  //     })
-  //   };
-  //   fetchImages();
-  // }, [dispatch]);
-  
   const openModalNew = (): void => setModalOpen([true, false, false, false, false]);
 
   const openModalDelete = (recipe: Recipe): void => {
@@ -114,7 +102,7 @@ export const RecipePage: React.FC = () => {
       ...values
     };
     const contentWithFile = values.contentwithfile;
-    const content: Content2 = await createContentX(contentWithFile, 'pdf');
+    const content: Content2 = await createContent(contentWithFile, 'pdf');
     recipeToAdd.content = content;
     dispatch(addRecipe(recipeToAdd));
     closeModal();
@@ -127,7 +115,7 @@ export const RecipePage: React.FC = () => {
     };
     const contentWithFile = values.contentwithfile;
     if (contentWithFile.file.size>0) {
-      const content: Content2 = await updateContentX(recipe.content.dataId, contentWithFile, 'pdf');
+      const content: Content2 = await updateContent(recipe.content.dataId, contentWithFile, 'pdf');
       recipeToChange.content = content;  
     }
     dispatch(updateRecipe(recipeToChange));
@@ -136,7 +124,7 @@ export const RecipePage: React.FC = () => {
   };
 
   const actionDelete = async() => {
-    await removeContentX(recipe.content.dataId, 'pdf');
+    await removeContent(recipe.content.dataId, 'pdf');
     dispatch(removeRecipe(recipe.id));
     dispatch(clearSelectedRecipe());
     closeModal();

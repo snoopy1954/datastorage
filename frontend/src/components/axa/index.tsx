@@ -14,7 +14,6 @@ import { initializeBills } from  '../../state/axa/billlist/actions';
 import { initializeYears } from  '../../state/axa/years/actions';
 import { setOpenAccount, clearOpenAccount } from '../../state/axa/openaccount/actions';
 import { setSelectedYear } from '../../state/axa/year/actions';
-import { clearImage } from '../../state/image/actions';
 import { clearPdfUrl } from '../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH2 } from '../basic/header';
@@ -68,7 +67,6 @@ const Axa: React.FC = () => {
 
   React.useEffect(() => {
     dispatch(clearPdfUrl())
-    dispatch(clearImage());
   }, [mainpage, dispatch]);
 
   React.useEffect(() => {

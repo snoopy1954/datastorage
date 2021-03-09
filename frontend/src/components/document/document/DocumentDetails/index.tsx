@@ -1,20 +1,19 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { Binarydata } from '../../../../../../backend/src/types/image';
+import { Document } from '../../../../../../backend/src/types/document';
+import { Binarydata } from '../../../../../../backend/src/types/basic';
 import { Content2 } from '../../../../../../backend/src/types/basic';
 
-import { getOne as getImage } from '../../../../services/binarydata/images';
-
 import { RootState } from '../../../../state/store';
-import { setPdfUrl, clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { ShowModalPDF } from '../../../basic/showModalPDF';
 
-import { getImageUrl } from '../../../../utils/binarydata/binarydata';
+import { getImageUrl } from '../../../../utils/basic/binarydata';
+import { getOneBinarydata } from '../../../../utils/basic/content'
 import { sortContents } from '../../../../utils/basic/content';
 
 
@@ -23,26 +22,23 @@ interface Props {
 }
 
 export const DocumentDetails: React.FC<Props> = ({ onCancel }) => {
+    const [url, setUrl] = React.useState('');
     const [title, setTitle] = React.useState<string>('');
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
-    const dispatch = useDispatch();
-    
-    const document  = useSelector((state: RootState) => state.document);
-    const pdfUrl = useSelector((state: RootState) => state.pdfurl);
+
+    const document: Document = useSelector((state: RootState) => state.document);
 
     const openModalShow = (): void => setModalOpen(true);
 
     const closeModal = (): void => {
         setModalOpen(false);
-        URL.revokeObjectURL(pdfUrl);
-        dispatch(clearPdfUrl());
     };
 
     const handleSelection = (content: Content2) => {
-        const id = content.dataId;
+        const id: string = content.dataId;
         const fetchImage = async () => {
-          const binarydata: Binarydata = await getImage(id);
-          dispatch(setPdfUrl(getImageUrl(binarydata)));
+          const binarydata: Binarydata = await getOneBinarydata(id, 'pdf');
+          setUrl(getImageUrl(binarydata));
         };
         fetchImage();
         setTitle(content.filename);
@@ -53,9 +49,9 @@ export const DocumentDetails: React.FC<Props> = ({ onCancel }) => {
 
     return (          
         <div className='App'>
-            {pdfUrl!==''&&<ShowModalPDF
+            {url!==''&&<ShowModalPDF
                 title={title}
-                pdfUrl={pdfUrl}
+                pdfUrl={url}
                 modalOpen={modalOpen}
                 onClose={closeModal}
             />}

@@ -1,20 +1,17 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Table, Image, Button } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { Binarydata } from '../../../../../../backend/src/types/image';
-
-import { getOneX } from '../../../../services/binarydata/images';
+import { Binarydata } from '../../../../../../backend/src/types/basic';
 
 import { RootState } from '../../../../state/store';
-import { clearSelectedBook } from '../../../../state/book/selectedbook/actions';
        
 import { AppHeaderH3 } from "../../../basic/header";
+import { ShowModal } from "../../../basic/showModal";
 
-import { getImageUrl as getUrl } from '../../../../utils/binarydata/binarydata';
-
-import ShowModal from "../../../basic/showModal";
+import { getImageUrl } from '../../../../utils/basic/binarydata';
+import { getOneBinarydata } from '../../../../utils/basic/content'
 
 
 interface Props {
@@ -25,15 +22,13 @@ export const BookDetails: React.FC<Props> = ({ onCancel }) => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [url, setUrl] = React.useState('');
 
-    const dispatch = useDispatch();
-
     const book  = useSelector((state: RootState) => state.book);
 
     useEffect(() => {
         const fetchCover = async () => {
             const id: string = book.content.dataId;
-            const image: Binarydata = await getOneX(id, 'jpg');
-            const url = (image&&image.id!=='') ? getUrl(image) : '';
+            const image: Binarydata = await getOneBinarydata(id, 'jpg');
+            const url = (image&&image.id!=='') ? getImageUrl(image) : '';
             setUrl(url);          
         };
         fetchCover();
@@ -43,8 +38,6 @@ export const BookDetails: React.FC<Props> = ({ onCancel }) => {
 
     const closeModal = (): void => {
         setModalOpen(false);
-        URL.revokeObjectURL(url);
-        dispatch(clearSelectedBook());
     };
 
     return (          
