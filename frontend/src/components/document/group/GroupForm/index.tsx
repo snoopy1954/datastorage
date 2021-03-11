@@ -5,7 +5,7 @@ import { Field, Formik, Form } from "formik";
 import { styleButton }from '../../../../constants';
 
 import { Edittype } from '../../../../types/basic';
-import { GroupNoID } from '../../../../../../backend/src/types/basic';
+import { Group, GroupNoID } from '../../../../../../backend/src/types/basic';
 
 import { RootState } from '../../../../state/store';
 
@@ -18,15 +18,15 @@ import { nextGroup } from '../../../../utils/basic/group';
 
 interface Props {
   edittype: Edittype;
+  group: Group;
   onSubmit: (values: GroupNoID) => void;
   onCancel: () => void;
 }
 
-export const GroupForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const documentgroups = useSelector((state: RootState) => state.documentgroups);      
-  const documentgroup = useSelector((state: RootState) => state.documentgroup);      
+export const GroupForm: React.FC<Props> = ({ edittype, group, onSubmit, onCancel }) => {
+  const groups: Group[] = useSelector((state: RootState) => state.documentgroups);      
 
-  const initialValues = (edittype===Edittype.EDIT && documentgroup) ? documentgroup : nextGroup(documentgroups);
+  const initialValues = (edittype===Edittype.EDIT && group) ? group : nextGroup(groups);
 
   return (
     <Formik

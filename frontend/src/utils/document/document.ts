@@ -114,3 +114,13 @@ export const documentFilter = (documents: Document[], filters: Filter, documentg
     return sortedDocuments;
 };
 
+export const newFilter = (): Filter => {
+    const filter: Filter = {
+        group: '',
+        subgroup: '',
+        year: '',
+        person: ''
+    }
+
+    return filter;
+};

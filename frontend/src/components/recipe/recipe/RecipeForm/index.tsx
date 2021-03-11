@@ -32,24 +32,24 @@ export const RecipeForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =>
 
   const recipe = useSelector((state: RootState) => state.recipe);
   const recipes = useSelector((state: RootState) => state.recipes);
-  const recipegroups = useSelector((state: RootState) => state.recipegroups);
+  const groups = useSelector((state: RootState) => state.recipegroups);
   const subgroups = useSelector((state: RootState) => state.subgroups);
 
   React.useEffect(() => {
-    const selectedGroup: Group[] = Object.values(recipegroups).filter((recipegroup => recipegroup.name=== recipe.group));
+    const selectedGroup: Group[] = Object.values(groups).filter((group => group.name=== recipe.group));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
     dispatch(setSelectedSubgroups(selectedSubgroups));
-  }, [dispatch, recipegroups, recipe]);  
+  }, [dispatch, groups, recipe]);  
 
   const handleGroupSelection = (selection: string) => {
-    const selectedGroup: Group[] = Object.values(recipegroups).filter((recipegroup => recipegroup.name=== selection));
+    const selectedGroup: Group[] = Object.values(groups).filter((group => group.name=== selection));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
     dispatch(setSelectedSubgroups(selectedSubgroups));
   }
 
-  const recipegroupOptions: Option[] = [];
-  Object.values(recipegroups).forEach(element => {
-    recipegroupOptions.push({
+  const groupOptions: Option[] = [];
+  Object.values(groups).forEach(element => {
+    groupOptions.push({
       value: element.name,
       label: element.name
     })
@@ -98,7 +98,7 @@ export const RecipeForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =>
               label="Gruppe"
               prompt="Bitte Gruppe auswählen"
               name="group"
-              options={recipegroupOptions}
+              options={groupOptions}
               hasChanged={handleGroupSelection}
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
@@ -9,10 +9,8 @@ import { Filter, RecipeWithContentNoID } from '../../../../types/recipe';
 import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { setRecipefilter, clearRecipefilter } from '../../../../state/recipe/recipefilter/actions';
 import { addRecipe, updateRecipe, exchangeRecipes, removeRecipe } from '../../../../state/recipe/recipes/actions';
 import { setSelectedRecipe, clearSelectedRecipe } from '../../../../state/recipe/recipe/actions';
-import { addChangedRecipe, clearChangedRecipe } from '../../../../state/recipe/changedrecipes/actions';
 import { clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
@@ -20,23 +18,23 @@ import { AskString, Value } from '../../../basic/askString';
 import { AskModal } from '../../../basic/askModal';
 import { RecipeModal } from '../RecipeModal';
 
-import { recipeTitle, recipeFilter } from '../../../../utils/recipe/recipe';
+import { recipeTitle, recipeFilter, newFilter } from '../../../../utils/recipe/recipe';
 import { createContent, removeContent, updateContent } from '../../../../utils/basic/content';
 
 
 export const RecipePage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
+  const [filter, setFilter] = useState<Filter>(newFilter());
+  const [recipesChanged, setRecipesChanged] = useState<Array<Recipe>>([]);
+  const [modalOpen, setModalOpen] = useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
+
   const dispatch = useDispatch();
 
-  const recipegroups: Group[] = useSelector((state: RootState) => state.recipegroups);      
-  const filters: Filter = useSelector((state: RootState) => state.recipefilter);
+  const groups: Group[] = useSelector((state: RootState) => state.recipegroups);      
   const recipes: Recipe[] = useSelector((state: RootState) => state.recipes);
   const recipe: Recipe = useSelector((state: RootState) => state.recipe);
-  const changedRecipes: Recipe[] = useSelector((state: RootState) => state.changedrecipes);
 
   useEffect(() => {
     dispatch(clearSelectedRecipe());
-    dispatch(clearRecipefilter());
   }, [dispatch]);
 
   const openModalNew = (): void => setModalOpen([true, false, false, false, false]);
@@ -71,29 +69,16 @@ export const RecipePage: React.FC = () => {
       setModalOpen([false, false, false, false, false]);
   };
 
-  const actionSelectionClick = (filter: string, selection: string) => {
-    switch (filter) {
-      case 'Gruppe':
-        dispatch(setRecipefilter({
-          ...filters, 
-          group: selection,
-          subgroup: ''
-        }));
-        break;
-      case 'Untergruppe':
-        dispatch(setRecipefilter({
-          ...filters, 
-          subgroup: selection
-        }));
-        break;
-      default:
-    }
+  const actionSelectedGroup = (selection: string) => {
+    setFilter({ ...filter, group: selection, subgroup: '' });
+  };
+
+  const actionSelectedSubgroup = (selection: string) => {
+    setFilter({ ...filter, subgroup: selection });
   };
 
   const actionSelectedName = (name: Value) => {
-    dispatch(setRecipefilter({ 
-      ...filters, 
-      name: name.value }));
+    setFilter({ ...filter, name: name.value });
     closeModal();
   };
 
@@ -146,39 +131,39 @@ export const RecipePage: React.FC = () => {
     recipe2.seqnr = seqnr1;
     const recipesToChange: Recipe[] = [recipe1, recipe2];
     dispatch(exchangeRecipes(recipesToChange));
-    dispatch(addChangedRecipe(recipe1));
-    dispatch(addChangedRecipe(recipe2));
+    setRecipesChanged(arr => [...arr, recipe1]);
+    setRecipesChanged(arr => [...arr, recipe2]);
   };
 
   const actionSaveSequence = () => {
-    Object.values(changedRecipes).forEach(changedRecipe => {
-      dispatch(updateRecipe(changedRecipe));
+    recipesChanged.forEach(recipeChanged => {
+      dispatch(updateRecipe(recipeChanged));
     });
-    dispatch(clearChangedRecipe());
+    setRecipesChanged([]);
   };
 
-  const recipegroupOptions: string[] = [];
-  Object.values(recipegroups).forEach(element => {
-    recipegroupOptions.push(element.name)
+  const groupOptions: string[] = [];
+  Object.values(groups).forEach(element => {
+    groupOptions.push(element.name)
   });
 
-  const getRecipegroup = (recipegroupName: string): Group | undefined => {
-    const recipegroup = Object.values(recipegroups).filter(recipegroup => recipegroup.name===recipegroupName);
-    return recipegroup.length > 0 ? recipegroup[0] : undefined;
+  const getRecipegroup = (groupName: string): Group | undefined => {
+    const group = Object.values(groups).filter(group => group.name===groupName);
+    return group.length > 0 ? group[0] : undefined;
   };
 
   const subgroupOptions: string[] = [];
-  const recipegroup = getRecipegroup(filters.group);
-  if (recipegroup) {
-    recipegroup.subgroups.forEach(element => {
+  const group = getRecipegroup(filter.group);
+  if (group) {
+    group.subgroups.forEach(element => {
       subgroupOptions.push(element);
     });
   };
 
-  const filterSelected = (filters.group!=='' && filters.subgroup!=='') || (filters.group!=='' && getRecipegroup(filters.group)?.subgroups.length===0);
-  const sequenceChanged = (Object.values(changedRecipes).length > 0);
-  const title = 'Rezeptliste' + recipeTitle(filters);
-  const sortedRecipes = recipeFilter(recipes, filters, recipegroups);
+  const filterSelected: boolean = (filter.group!=='' && filter.subgroup!=='') || (filter.group!=='' && getRecipegroup(filter.group)?.subgroups.length===0);
+  const sequenceChanged: boolean = recipesChanged.length > 0;
+  const title: string = 'Rezeptliste' + recipeTitle(filter);
+  const sortedRecipes: Recipe[] = recipeFilter(recipes, filter, groups);
 
   return (
     <div className='App'>
@@ -220,14 +205,14 @@ export const RecipePage: React.FC = () => {
       <AppHeaderH3 text={title} icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
       <Button as='select' className='ui dropdown' style={styleButton}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Gruppe', event.currentTarget.value)}>
+        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectedGroup(event.currentTarget.value)}>
         <option value='' style={styleButton}>Gruppe</option>
-        {recipegroupOptions.map((option: string, index: number) => (
+        {groupOptions.map((option: string, index: number) => (
         <option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
       <Button as='select' className='ui dropdown' style={styleButton}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Untergruppe', event.currentTarget.value)}>
+        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectedSubgroup(event.currentTarget.value)}>
         <option value='' style={styleButton}>U.Gruppe</option>
         {subgroupOptions.map((option: string, index: number) => (
         <option key={index} value={option} style={styleButton}>{option}</option>

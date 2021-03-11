@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Table } from "semantic-ui-react";
 import { backgroundColor, styleButton } from '../../../../constants';
@@ -7,37 +7,38 @@ import { Edittype } from "../../../../types/basic";
 import { Group, GroupNoID } from '../../../../../../backend/src/types/basic';
 
 import { RootState } from '../../../../state/store';
-import { addRecipegroup, updateRecipegroup, removeRecipegroup } from '../../../../state/recipe/recipegroups/actions';
-import { setSelectedGroup, clearSelectedGroup } from '../../../../state/recipe/recipegroup/actions';
+import { addRecipegroup, updateRecipegroup, removeRecipegroup } from '../../../../state/recipe/groups/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from "../../../basic/askModal";
-import { RecipegroupModal } from '../RecipegroupModal';
+import { GroupModal } from '../GroupModal';
+
+import { emptyGroup } from '../../../../utils/basic/group';
 
 
-export const RecipegroupPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+export const GroupPage: React.FC = () => {
   const dispatch = useDispatch();
 
-  const groups: Group[] = useSelector((state: RootState) => state.recipegroups);      
-  const group: Group = useSelector((state: RootState) => state.recipegroup);      
+  const [modalOpen, setModalOpen] = useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+  const [group, setGroup] = useState<Group>(emptyGroup());
+  const groups: Group[] = useSelector((state: RootState) => state.recipegroups);
 
   const openModalNew = (): void => {
     setModalOpen([true, false, false, false]);
   };
   
   const openModalDelete = (group: Group): void => {
-    dispatch(setSelectedGroup(group));
+    setGroup(group);
     setModalOpen([false, true, false, false]);
   };
     
   const openModalChange = (group: Group): void => {
-    dispatch(setSelectedGroup(group));
+    setGroup(group);
     setModalOpen([false, false, true, false]);
   };
     
   const openModalShow = (group: Group): void => {
-    dispatch(setSelectedGroup(group));
+    setGroup(group);
     setModalOpen([false, false, false, true]);
   };
     
@@ -58,7 +59,7 @@ export const RecipegroupPage: React.FC = () => {
   };
           
   const actionShow = () => {
-    dispatch(clearSelectedGroup());
+    setGroup(emptyGroup());
     closeModal();
   };  
   
@@ -68,36 +69,39 @@ export const RecipegroupPage: React.FC = () => {
       id: group.id
     };
     dispatch(updateRecipegroup(groupToChange));
-    dispatch(clearSelectedGroup());
+    setGroup(emptyGroup());
     closeModal();
   };
   
-  const actionDelete = () => {
+  const actionDelete = async () => {
     dispatch(removeRecipegroup(group.id));
-    dispatch(clearSelectedGroup());
+    setGroup(emptyGroup());
     closeModal();
   };  
 
   return (
     <div className="App">
-      <RecipegroupModal
+      <GroupModal
         edittype={Edittype.ADD}
         title='Neue Gruppe anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        group={group}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
-      <RecipegroupModal
+      <GroupModal
         edittype={Edittype.SHOW}
         title={'Gruppe ' + group.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        group={group}
         onSubmit={actionShow}
         onClose={closeModal}
       />
-      <RecipegroupModal
+      <GroupModal
         edittype={Edittype.EDIT}
         title={'Gruppe ' + group.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        group={group}
         onSubmit={actionChange}
         onClose={closeModal}
       />
@@ -134,4 +138,4 @@ export const RecipegroupPage: React.FC = () => {
   );
 }
 
-export default RecipegroupPage;
+export default GroupPage;

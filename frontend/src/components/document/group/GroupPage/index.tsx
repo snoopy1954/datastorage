@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Table } from "semantic-ui-react";
 import { backgroundColor, styleButton } from '../../../../constants';
@@ -8,36 +8,38 @@ import { Group, GroupNoID } from '../../../../../../backend/src/types/basic';
 
 import { RootState } from '../../../../state/store';
 import { addDocumentgroup, updateDocumentgroup, removeDocumentgroup } from '../../../../state/document/groups/actions';
-import { setSelectedGroup, clearSelectedGroup } from '../../../../state/document/group/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from "../../../basic/askModal";
 import { GroupModal } from '../GroupModal';
 
+import { emptyGroup } from '../../../../utils/basic/group';
+
+
 
 export const GroupPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
+  const [modalOpen, setModalOpen] = useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+  const [group, setGroup] = useState<Group>(emptyGroup());
   const groups: Group[] = useSelector((state: RootState) => state.documentgroups);      
-  const group: Group = useSelector((state: RootState) => state.documentgroup);      
 
   const openModalNew = (): void => {
     setModalOpen([true, false, false, false]);
   };
   
   const openModalDelete = (group: Group): void => {
-    dispatch(setSelectedGroup(group));
+    setGroup(group);
     setModalOpen([false, true, false, false]);
   };
     
   const openModalChange = (group: Group): void => {
-    dispatch(setSelectedGroup(group));
+    setGroup(group);
     setModalOpen([false, false, true, false]);
   };
     
   const openModalShow = (group: Group): void => {
-    dispatch(setSelectedGroup(group));
+    setGroup(group);
     setModalOpen([false, false, false, true]);
   };
     
@@ -58,7 +60,7 @@ export const GroupPage: React.FC = () => {
   };
           
   const actionShow = () => {
-    dispatch(clearSelectedGroup());
+    setGroup(emptyGroup());
     closeModal();
   };  
   
@@ -68,14 +70,14 @@ export const GroupPage: React.FC = () => {
       id: group.id
     };
     dispatch(updateDocumentgroup(groupToChange));
-    dispatch(clearSelectedGroup());
+    setGroup(emptyGroup());
     closeModal();
   };
   
-  const actionDelete = () => {
+  const actionDelete = async () => {
     dispatch(removeDocumentgroup(group.id));
-    dispatch(clearSelectedGroup());
-    closeModal();
+     setGroup(emptyGroup());
+     closeModal();
   };  
 
   const ShowTableHeader: React.FC = () => {
@@ -112,6 +114,7 @@ export const GroupPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neue Gruppe anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        group={group}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -119,6 +122,7 @@ export const GroupPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Gruppe ' + group.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        group={group}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -126,6 +130,7 @@ export const GroupPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Gruppe ' + group.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        group={group}
         onSubmit={actionChange}
         onClose={closeModal}
       />

@@ -5,15 +5,15 @@ import { styleButton } from '../../constants';
 
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
-import { initializeRecipegroups } from '../../state/recipe/recipegroups/actions';
+import { initializeRecipegroups } from '../../state/recipe/groups/actions';
 import { initializeRecipes } from '../../state/recipe/recipes/actions';
 
 import { AppHeaderH2 } from '../basic/header';
+import { GroupPage } from '../recipe/group/GroupPage';
 import { RecipePage } from './recipe/RecipePage';
-import { RecipegroupPage } from './recipegroup/RecipegroupPage';
 
 
-const Book: React.FC = () => {
+const Recipe: React.FC = () => {
   const dispatch = useDispatch();
 
   const mainpage = useSelector((state: RootState) => state.page.mainpage);      
@@ -37,14 +37,14 @@ const Book: React.FC = () => {
 
   return (
     <div className='App'>
-      <AppHeaderH2 text='Rezepte' icon='book'/>
+      <AppHeaderH2 text='Rezepte' icon='coffee'/>
       <Button style={styleButton} onClick={() => actionSelect('recipes')}>Rezepte</Button>
-      <Button style={styleButton} onClick={() => actionSelect('recipegroups')}>Gruppe</Button>
+      <Button style={styleButton} onClick={() => actionSelect('groups')}>Gruppe</Button>
       {subpage==='recipes'&&<RecipePage/>}
-      {subpage==='recipegroups'&&<RecipegroupPage/>}
+      {subpage==='groups'&&<GroupPage/>}
     </div>
   );
 }
     
-export default Book;
+export default Recipe;
     

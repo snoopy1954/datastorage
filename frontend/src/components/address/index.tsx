@@ -38,7 +38,7 @@ const Address: React.FC = () => {
 
     return (
         <div className="App">
-            <AppHeaderH2 text='Adressen' icon='address book'/>
+            <AppHeaderH2 text='Adressen' icon='address card'/>
             <Button style={styleButton} onClick={() => actionSelect('address')}>Kontakte</Button>
             <Button style={styleButton} onClick={() => actionSelect('addressgroup')}>Gruppen</Button>
             {subpage==='address'&&<AddressPage/>}

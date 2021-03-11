@@ -3,7 +3,7 @@ import { Modal } from 'semantic-ui-react';
 
 import { Edittype } from "../../../../types/basic";
 import { Group, GroupNoID } from '../../../../../../backend/src/types/basic';
- 
+
 import { GroupForm } from '../GroupForm';
 import { GroupDetails } from '../GroupDetails';
 

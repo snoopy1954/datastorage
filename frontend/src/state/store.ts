@@ -84,19 +84,13 @@ import { transactionsReducer } from './account/transactions/reducers';
 import { transactionReducer } from './account/transaction/reducers';
 import { accountfilterReducer } from './account/accountfilter/reducers';
 
-import { recipegroupsReducer } from './recipe/recipegroups/reducers';
-import { recipegroupReducer } from './recipe/recipegroup/reducers';
+import { recipegroupsReducer } from './recipe/groups/reducers';
 import { recipesReducer } from './recipe/recipes/reducers';
 import { recipeReducer } from './recipe/recipe/reducers';
-import { recipefilterReducer } from './recipe/recipefilter/reducers';
-import { changedrecipesReducer } from './recipe/changedrecipes/reducers';
 
 import { documentgroupsReducer } from './document/groups/reducers';
-import { documentgroupReducer } from './document/group/reducers';
 import { documentsReducer } from './document/documents/reducers';
 import { documentReducer } from './document/document/reducers';
-import { documentfilterReducer } from './document/filter/reducers';
-import { changeddocumentsReducer } from './document/changed/reducers';
 
 import { sportgroupsReducer } from './sport/groups/reducers';
 import { sportgroupReducer } from './sport/group/reducers';
@@ -115,11 +109,13 @@ import { cdReducer } from './music/cd/reducers';
 
 const rootReducer = combineReducers({
     page: pageReducer,
+
     yearlist: yearlistReducer,
     selectedyear: selectedyearReducer,
     openedyear: openedyearReducer,
     monthlist: monthlistReducer,
     selectedmonth: selectedmonthReducer,
+    
     devicetypes: devicetypelistReducer,
     devicetype: selecteddevicetypeReducer,
     oss: oslistReducer,
@@ -127,6 +123,7 @@ const rootReducer = combineReducers({
     versions: versionsReducer,
     devices: devicelistReducer,
     device: selecteddeviceReducer,
+    
     tongues: tonguelistReducer,
     tongue: selectedtongueReducer,
     formats: formatlistReducer,
@@ -140,12 +137,14 @@ const rootReducer = combineReducers({
     books: booklistReducer,
     book: selectedbookReducer,
     changedbooklist: changedbooklistReducer,
+    
     addressgroups: addressgrouplistReducer,
     addressgroup: selectedaddressgroupReducer,
     addresses: addresslistReducer,
     address: selectedaddressReducer,
     addressgroupfilter: addressgroupfilterReducer,
     changedaddresslist: changedaddresslistReducer,
+    
     sortbutton: sortbuttonReducer,
     movies: movielistReducer,
     movie: selectedmovieReducer,
@@ -156,6 +155,7 @@ const rootReducer = combineReducers({
     movieformat: selectedmovieformatReducer,
     moviefilter: moviefilterReducer,
     changedmovies: changedmovielistReducer,
+    
     selectedfield: selectedfieldReducer,
     gamefields: gamefieldsReducer,
     sudokus: sudokulistReducer,
@@ -165,6 +165,7 @@ const rootReducer = combineReducers({
     candidates: candidatesReducer, 
     positions: positionsReducer,
     notification: notificationReducer,
+    
     billers: billerlistReducer,
     changedbillers: changedbillerlistReducer,
     biller: selectedbillerReducer,
@@ -176,9 +177,11 @@ const rootReducer = combineReducers({
     selectedbills: selectedbillsReducer,
     axayears: axayearsReducer,
     axayear: axayearReducer,
+    
     historylines: historylinesReducer,
     historyline: historylineReducer,
     infos: infosReducer,
+    
     accounttypes: accounttypesReducer,
     accounttype: accounttypeReducer,
     accountyears: accountyearsReducer,
@@ -186,24 +189,22 @@ const rootReducer = combineReducers({
     transactions: transactionsReducer,
     transaction: transactionReducer,
     accountfilter: accountfilterReducer,
+    
     recipegroups: recipegroupsReducer,
-    recipegroup: recipegroupReducer,
     recipes: recipesReducer,
     recipe: recipeReducer,
-    recipefilter: recipefilterReducer,
-    changedrecipes: changedrecipesReducer,
+    
     documentgroups: documentgroupsReducer,
-    documentgroup: documentgroupReducer,
     documents: documentsReducer,
     document: documentReducer,
-    documentfilter: documentfilterReducer,
-    changeddocuments: changeddocumentsReducer,
+    
     sportgroups: sportgroupsReducer,
     sportgroup: sportgroupReducer,
     sportyears: sportyearsReducer,
     sportyear: sportyearReducer,
     activities: activitiesReducer,
     activity: activityReducer,
+    
     musicgroups: musicgroupsReducer,
     musicgroup: musicgroupReducer,
     artists: artistsReducer,

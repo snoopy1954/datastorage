@@ -66,7 +66,7 @@ const Account: React.FC = () => {
 
   return (
     <div className='App'>
-      <AppHeaderH2 text='Konten' icon='book'/>
+      <AppHeaderH2 text='Konten' icon='money'/>
       <Button style={styleButton} onClick={() => actionSelect('transaction')}>Buchungen</Button>
       <Button style={styleButton} onClick={() => actionSelect('accounttype')}>Kontotyp</Button>
       <Button style={styleButton} onClick={() => actionSelect('accountyear')}>Jahr</Button>

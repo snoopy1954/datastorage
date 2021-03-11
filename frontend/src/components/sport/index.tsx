@@ -43,7 +43,7 @@ const Sport: React.FC = () => {
 
   return (
     <div className='App'>
-      <AppHeaderH2 text='Sport' icon='exclamation'/>
+      <AppHeaderH2 text='Sport' icon='blind'/>
       <Button style={styleButton} onClick={() => actionSelect('activity')}>Aktivitäten</Button>
       <Button style={styleButton} onClick={() => actionSelect('group')}>Gruppen</Button>
       <Button style={styleButton} onClick={() => actionSelect('year')}>Jahr</Button>

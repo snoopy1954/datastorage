@@ -1,19 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
 
-import { Group } from '../../../../../../backend/src/types/basic';
-import { Content2 } from '../../../../../../backend/src/types/basic';
+import { Group, Content2 } from '../../../../../../backend/src/types/basic';
 import { Document, DocumentNoID } from '../../../../../../backend/src/types/document';
 import { Filter, DocumentWithContentsNoID } from '../../../../types/document';
 import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { setDocumentfilter, clearDocumentfilter } from '../../../../state/document/filter/actions';
 import { addDocument, updateDocument, exchangeDocuments, removeDocument } from '../../../../state/document/documents/actions';
 import { setSelectedDocument, clearSelectedDocument } from '../../../../state/document/document/actions';
-import { addChangedDocument, clearChangedDocument } from '../../../../state/document/changed/actions';
 import { clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
@@ -21,23 +18,23 @@ import { AskString, Value } from '../../../basic/askString';
 import { AskModal } from '../../../basic/askModal';
 import { DocumentModal } from '../DocumentModal';
 
-import { documentTitle, documentFilter } from '../../../../utils/document/document';
+import { documentTitle, documentFilter, newFilter } from '../../../../utils/document/document';
 import { createContent, removeContent } from '../../../../utils/basic/content';
 
 
 export const DocumentPage: React.FC = () => {
+  const [filter, setFilter] = useState<Filter>(newFilter());
+  const [documentsChanged, setDocumentsChanged] = useState<Array<Document>>([]);
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
+
   const dispatch = useDispatch();
 
-  const documentgroups: Group[] = useSelector((state: RootState) => state.documentgroups);      
-  const filters: Filter = useSelector((state: RootState) => state.documentfilter);
+  const groups: Group[] = useSelector((state: RootState) => state.documentgroups); 
   const documents: Document[] = useSelector((state: RootState) => state.documents);
   const document: Document = useSelector((state: RootState) => state.document);
-  const changedDocuments: Document[] = useSelector((state: RootState) => state.changeddocuments);
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(clearSelectedDocument());
-    dispatch(clearDocumentfilter());
   }, [dispatch]);  
   
   const openModalNew = (): void => setModalOpen([true, false, false, false, false]);
@@ -72,29 +69,30 @@ export const DocumentPage: React.FC = () => {
       setModalOpen([false, false, false, false, false]);
   };
 
-  const actionSelectionClick = (filter: string, selection: string) => {
-    switch (filter) {
+  const actionSelectionClick = (type: string, selection: string) => {
+    switch (type) {
       case 'Gruppe':
-        dispatch(setDocumentfilter({
-          ...filters, 
+        setFilter({
+          ...filter, 
           group: selection,
           subgroup: ''
-        }));
+        });
         break;
       case 'Untergruppe':
-        dispatch(setDocumentfilter({
-          ...filters, 
+        setFilter({
+          ...filter, 
           subgroup: selection
-        }));
+        });
         break;
       default:
     }
   };
 
   const actionSelectedName = (name: Value) => {
-    dispatch(setDocumentfilter({ 
-      ...filters, 
-      person: name.value }));
+    setFilter({ 
+      ...filter, 
+      person: name.value
+    });
     closeModal();
   };
 
@@ -160,39 +158,39 @@ export const DocumentPage: React.FC = () => {
     document2.seqnr = seqnr1;
     const documentsToChange: Document[] = [document1, document2];
     dispatch(exchangeDocuments(documentsToChange));
-    dispatch(addChangedDocument(document1));
-    dispatch(addChangedDocument(document2));
+    setDocumentsChanged(arr => [...arr, document1]);
+    setDocumentsChanged(arr => [...arr, document2]);
   };
 
   const actionSaveSequence = () => {
-    Object.values(changedDocuments).forEach(changedDocument => {
-      dispatch(updateDocument(changedDocument));
+    Object.values(documentsChanged).forEach(documentChanged => {
+      dispatch(updateDocument(documentChanged));
     });
-    dispatch(clearChangedDocument());
+    setDocumentsChanged([]);
   };
 
   const documentgroupOptions: string[] = [];
-  Object.values(documentgroups).forEach(element => {
+  Object.values(groups).forEach(element => {
     documentgroupOptions.push(element.name)
   });
 
-  const getDocumentgroup = (documentgroupName: string): Group | undefined => {
-    const documentgroup = Object.values(documentgroups).filter(documentgroup => documentgroup.name===documentgroupName);
-    return documentgroup.length > 0 ? documentgroup[0] : undefined;
+  const getDocumentgroup = (groupName: string): Group | undefined => {
+    const group = Object.values(groups).filter(group => group.name===groupName);
+    return group.length > 0 ? group[0] : undefined;
   };
 
   const subgroupOptions: string[] = [];
-  const documentgroup = getDocumentgroup(filters.group);
-  if (documentgroup) {
-    documentgroup.subgroups.forEach(element => {
+  const group = getDocumentgroup(filter.group);
+  if (group) {
+    group.subgroups.forEach(element => {
       subgroupOptions.push(element);
     });
   };
 
-  const filterSelected = (filters.group!=='' && filters.subgroup!=='') || (filters.group!=='' && getDocumentgroup(filters.group)?.subgroups.length===0);
-  const sequenceChanged = (Object.values(changedDocuments).length > 0);
-  const title = 'Dokumentliste' + documentTitle(filters);
-  const sortedDocuments = documentFilter(documents, filters, documentgroups);
+  const filterSelected = (filter.group!=='' && filter.subgroup!=='') || (filter.group!=='' && getDocumentgroup(filter.group)?.subgroups.length===0);
+  const sequenceChanged = (Object.values(documentsChanged).length > 0);
+  const title = 'Dokumentliste' + documentTitle(filter);
+  const sortedDocuments = documentFilter(documents, filter, groups);
 
   const ShowTableHeader: React.FC = () => {
     return (

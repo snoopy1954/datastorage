@@ -125,5 +125,14 @@ export const recipeFilter = (recipes: Recipe[], filters: Filter, recipegroups: G
     return sortedRecipes;
 };
 
+export const newFilter = (): Filter => {
+    const filter: Filter = {
+        group: '',
+        subgroup: '',
+        name: ''
+    }
+
+    return filter;
+};
 
 
