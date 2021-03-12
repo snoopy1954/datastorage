@@ -29,7 +29,7 @@ export const RecipePage: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const groups: Group[] = useSelector((state: RootState) => state.recipegroups);      
+  const groups: Group[] = useSelector((state: RootState) => state.groups);      
   const recipes: Recipe[] = useSelector((state: RootState) => state.recipes);
   const recipe: Recipe = useSelector((state: RootState) => state.recipe);
 

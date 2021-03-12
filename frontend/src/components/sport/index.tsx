@@ -3,16 +3,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { styleButton } from '../../constants';
 
+import { Group } from '../../../../backend/src/types/basic';
+
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
-import { initializeSportgroups } from '../../state/sport/groups/actions';
+import { initializeGroups } from '../../state/groups/actions';
 import { initializeYears } from '../../state/sport/years/actions';
 import { initializeActivities } from '../../state/sport/activities/actions';
 
 import { AppHeaderH2 } from '../basic/header';
 import { ActivityPage } from './activity/ActivityPage';
-import { GroupPage } from './group/GroupPage';
+import { GroupPage } from '../basic/group/GroupPage';
 import { YearPage } from './year/YearPage';
+
+import { getAllDB, createDB, updateDB, removeDB } from '../../utils/sport/group';
 
 
 const Sport: React.FC = () => { 
@@ -22,7 +26,11 @@ const Sport: React.FC = () => {
   const subpage = useSelector((state: RootState) => state.page.subpage);      
 
   React.useEffect(() => {
-    dispatch(initializeSportgroups());
+    const fetchGroups = async () => {
+      const groups: Group[] = await getAllDB();
+      dispatch(initializeGroups(groups));
+    }
+    fetchGroups();
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -34,7 +42,7 @@ const Sport: React.FC = () => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    dispatch(setPage({ mainpage, subpage: 'activity' }));
+    dispatch(setPage({ mainpage, subpage: 'activities' }));
   }, [mainpage, dispatch]);
  
   const actionSelect = (selected: string) => {
@@ -44,12 +52,12 @@ const Sport: React.FC = () => {
   return (
     <div className='App'>
       <AppHeaderH2 text='Sport' icon='blind'/>
-      <Button style={styleButton} onClick={() => actionSelect('activity')}>Aktivitäten</Button>
-      <Button style={styleButton} onClick={() => actionSelect('group')}>Gruppen</Button>
-      <Button style={styleButton} onClick={() => actionSelect('year')}>Jahr</Button>
-      {subpage==='activity'&&<ActivityPage/>}
-      {subpage==='group'&&<GroupPage/>}
-      {subpage==='year'&&<YearPage/>}
+      <Button style={styleButton} onClick={() => actionSelect('activities')}>Aktivitäten</Button>
+      <Button style={styleButton} onClick={() => actionSelect('groups')}>Gruppen</Button>
+      <Button style={styleButton} onClick={() => actionSelect('years')}>Jahr</Button>
+      {subpage==='activities'&&<ActivityPage/>}
+      {subpage==='groups'&&<GroupPage title='Sportgruppe' createGroupDB={createDB} updateGroupDB={updateDB} removeGroupDB={removeDB}/>}
+      {subpage==='years'&&<YearPage/>}
     </div>
   );
 }

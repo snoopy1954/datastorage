@@ -26,7 +26,7 @@ export const ActivityPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const years: Year[] = useSelector((state: RootState) => state.sportyears);      
-  const groups: Group[] = useSelector((state: RootState) => state.sportgroups);      
+  const groups: Group[] = useSelector((state: RootState) => state.groups);      
   const activities: Activity[] = useSelector((state: RootState) => state.activities);
   const activity: Activity = useSelector((state: RootState) => state.activity);
 

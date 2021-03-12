@@ -1,20 +1,18 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { RootState } from '../../../../state/store';
+import { Ownership } from '../../../../../../backend/src/types/book';
 
 import { AppHeaderH3 } from "../../../basic/header";
 
 
 interface Props {
+  ownership: Ownership;
   onCancel: () => void;
 }
 
-export const OwnershipDetails: React.FC<Props> = ({ onCancel }) => {
-  const ownership = useSelector((state: RootState) => state.ownership);
-
+export const OwnershipDetails: React.FC<Props> = ({ ownership, onCancel }) => {
   return (
     <div className="App">
       <AppHeaderH3 text={'Sprache ' + ownership.name} icon='list'/>

@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { BookgroupNoID, FormatNoID, OwnershipNoID, TongueNoID, BookNoID } from '../../types/book';
-import { parseString, parseNumber, parseStringArray, parseDate } from '../basicParser';
+import { FormatNoID, OwnershipNoID, TongueNoID, BookNoID } from '../../types/book';
+import { parseString, parseNumber, parseDate } from '../basicParser';
 
 
 export const toNewBook = (object: any) => {
@@ -63,18 +63,18 @@ export const toNewBook = (object: any) => {
     return newBook;
 };
 
-export const toNewBookgroup = (object: any) => {
-    const name = parseString(object.name);
-    const seqnr = parseNumber(object.seqnr);
-    const subgroups = parseStringArray(object.subgroups);
-    const newBookgroup: BookgroupNoID = {
-        name,
-        seqnr,
-        subgroups: subgroups
-    };
+// export const toNewBookgroup = (object: any) => {
+//     const name = parseString(object.name);
+//     const seqnr = parseNumber(object.seqnr);
+//     const subgroups = parseStringArray(object.subgroups);
+//     const newBookgroup: BookgroupNoID = {
+//         name,
+//         seqnr,
+//         subgroups: subgroups
+//     };
 
-    return newBookgroup;
-};
+//     return newBookgroup;
+// };
 
 export const toNewFormat = (object: any) => {
     const name = parseString(object.name);

@@ -1,12 +1,5 @@
 import { Name, Content2 } from '../basic';
 
-export interface Bookgroup  extends Name {
-    id: string;
-    subgroups: string[];
-}
-
-export type BookgroupNoID = Omit<Bookgroup, 'id'>;
-
 export interface Ownership extends Name {
     id: string;
 }
@@ -40,34 +33,6 @@ export interface Content {
     filesize: string;
     dataId: string;
 }
-
-// export interface Book {
-//     id: string;
-//     title: Name;
-//     author: Person;
-//     comment: string;
-//     link: string;
-//     launched: string;
-//     read: string;
-//     createdAt: Date;
-//     modifiedAt: Date;
-//     bookgroup: string;
-//     subgroup: string;
-//     ownership: string;
-//     format: string;
-//     tongue: string;
-//     content: Content;
-// }
-
-// export type BookNoID = Omit<Book, 'id'>;
-
-// export interface BookWithFileNoID extends BookNoID {
-//     file: File;
-// }
-
-// export interface BookWithImageNoID extends BookNoID {
-//     img: Uint8Array;
-// }
 
 export interface Book {
     id: string;

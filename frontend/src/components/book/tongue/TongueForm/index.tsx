@@ -5,7 +5,7 @@ import { Field, Formik, Form } from 'formik';
 import { styleButton }from '../../../../constants';
 
 import { Edittype } from '../../../../types/basic';
-import { TongueNoID } from '../../../../../../backend/src/types/book';
+import { Tongue, TongueNoID } from '../../../../../../backend/src/types/book';
 
 import { RootState } from '../../../../state/store';
 
@@ -17,12 +17,12 @@ import { nextTongue } from '../../../../utils/book/tongue';
 
 interface Props {
   edittype: Edittype;
+  tongue: Tongue;
   onSubmit: (values: TongueNoID) => void;
   onCancel: () => void;
 }
 
-export const TongueForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const tongue = useSelector((state: RootState) => state.tongue);
+export const TongueForm: React.FC<Props> = ({ edittype, tongue, onSubmit, onCancel }) => {
   const tongues = useSelector((state: RootState) => state.tongues);
 
   const initialValues = (edittype===Edittype.EDIT && tongue) ? tongue : nextTongue(tongues);

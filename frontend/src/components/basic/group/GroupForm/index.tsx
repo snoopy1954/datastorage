@@ -1,31 +1,32 @@
 import React from "react";
 import { useSelector } from 'react-redux';
-import { Button } from 'semantic-ui-react';
-import { Field, Formik, Form } from 'formik';
+import { Button } from "semantic-ui-react";
+import { Field, Formik, Form } from "formik";
 import { styleButton }from '../../../../constants';
 
 import { Edittype } from '../../../../types/basic';
-import { Ownership, OwnershipNoID } from '../../../../../../backend/src/types/book';
+import { Group, GroupNoID } from '../../../../../../backend/src/types/basic';
 
 import { RootState } from '../../../../state/store';
 
 import { TextField } from '../../../basic/formfields/textfield';
 import { NumberField } from '../../../basic/formfields/numberfield';
+import { TextFieldArray } from '../../../basic/formfields/textfieldarray';
 
-import { nextOwnership } from '../../../../utils/book/ownership';
+import { nextGroup } from '../../../../utils/basic/group';
 
 
 interface Props {
   edittype: Edittype;
-  ownership: Ownership;
-  onSubmit: (values: OwnershipNoID) => void;
+  group: Group;
+  onSubmit: (values: GroupNoID) => void;
   onCancel: () => void;
-}
+};
 
-export const OwnershipForm: React.FC<Props> = ({ edittype, ownership, onSubmit, onCancel }) => {
-  const ownerships = useSelector((state: RootState) => state.ownerships);
+export const GroupForm: React.FC<Props> = ({ edittype, group, onSubmit, onCancel }) => {
+  const groups: Group[] = useSelector((state: RootState) => state.groups);      
 
-  const initialValues = (edittype===Edittype.EDIT && ownership) ? ownership : nextOwnership(ownerships);
+  const initialValues = (edittype===Edittype.EDIT && group) ? group : nextGroup(groups);
 
   return (
     <Formik
@@ -36,7 +37,7 @@ export const OwnershipForm: React.FC<Props> = ({ edittype, ownership, onSubmit, 
         return errors;
       }}
     >
-      {({ isValid, dirty }) => {
+      {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
             <Field
@@ -45,13 +46,20 @@ export const OwnershipForm: React.FC<Props> = ({ edittype, ownership, onSubmit, 
               name="name"
               component={TextField}
             />
-            <Field
+           <Field
               label='Reihenfolge'
               placeholder='Reihenfolge'
               name='seqnr'
               component={NumberField}
             />
-            <Button style={styleButton} type='submit' disabled={!dirty || !isValid}>Speichern</Button>
+            <Field
+              name='subgroups'
+              items={values.subgroups}
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
+              component={TextFieldArray}
+            />
+            <Button style={styleButton} type="submit" disabled={!dirty || !isValid}>Speichern</Button>
             <Button style={styleButton} onClick={() => onCancel()}>Abbrechen</Button>
           </Form>
         );
@@ -60,4 +68,4 @@ export const OwnershipForm: React.FC<Props> = ({ edittype, ownership, onSubmit, 
   );
 };
 
-export default OwnershipForm;
+export default GroupForm;

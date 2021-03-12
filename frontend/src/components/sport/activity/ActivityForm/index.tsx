@@ -26,10 +26,10 @@ interface Props {
 export const ActivityForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
   const activity = useSelector((state: RootState) => state.activity);
   const activities = useSelector((state: RootState) => state.activities);
-  const sportgroups = useSelector((state: RootState) => state.sportgroups);
+  const groups = useSelector((state: RootState) => state.groups);
 
   const sportgroupOptions: Option[] = [];
-  Object.values(sportgroups).forEach(element => {
+  Object.values(groups).forEach(element => {
     sportgroupOptions.push({
       value: element.name,
       label: element.name

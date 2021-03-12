@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton } from '../../../../constants';
@@ -7,35 +7,36 @@ import { Ownership, OwnershipNoID } from '../../../../../../backend/src/types/bo
 import { Edittype } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { addOwnership, removeOwnership, updateOwnership } from '../../../../state/book/ownershiplist/actions';
-import { setSelectedOwnership, clearSelectedOwnership } from '../../../../state/book/selectedownership/actions';
+import { addOwnership, removeOwnership, updateOwnership } from '../../../../state/book/ownerships/actions';
 
 import { AppHeaderH3 } from "../../../basic/header";
 import { AskModal } from '../../../basic/askModal';
 import { OwnershipModal } from "../OwnershipModal";
 
+import { emptyOwnership } from '../../../../utils/book/ownership';
+
 
 export const OwnershipPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+  const [ownership, setOwnership] = useState<Ownership>(emptyOwnership());
+  const [modalOpen, setModalOpen] = useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
   const ownerships = useSelector((state: RootState) => state.ownerships);
-  const ownership = useSelector((state: RootState) => state.ownership);
 
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
   const openModalDelete = async (ownership: Ownership): Promise<void> => {
-    dispatch(setSelectedOwnership(ownership));
+    setOwnership(ownership);
     setModalOpen([false, true, false, false]);
   };
      
   const openModalChange = async (ownership: Ownership): Promise<void> => {
-    dispatch(setSelectedOwnership(ownership));
+    setOwnership(ownership);
     setModalOpen([false, false, true, false]);
   };
  
   const openModalShow = async (ownership: Ownership): Promise<void> => {
-    dispatch(setSelectedOwnership(ownership));
+    setOwnership(ownership);
     setModalOpen([false, false, false, true]);
   };
  
@@ -56,7 +57,7 @@ export const OwnershipPage: React.FC = () => {
   };
     
   const actionShow = () => {
-    dispatch(clearSelectedOwnership());
+    setOwnership(emptyOwnership());
     closeModal();
   };  
   
@@ -66,13 +67,13 @@ export const OwnershipPage: React.FC = () => {
       id: ownership.id
     };
     dispatch(updateOwnership(ownershipToChange));
-    dispatch(clearSelectedOwnership());
+    setOwnership(emptyOwnership());
     closeModal();
   };
   
   const actionDelete = () => {
     dispatch(removeOwnership(ownership.id));
-    dispatch(clearSelectedOwnership());
+    setOwnership(emptyOwnership());
     closeModal();
   };
 
@@ -110,6 +111,7 @@ export const OwnershipPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neuen Besitztyp anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        ownership={ownership}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -117,6 +119,7 @@ export const OwnershipPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Besitztyp ' + ownership.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        ownership={ownership}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -124,6 +127,7 @@ export const OwnershipPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Besitztyp ' + ownership.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        ownership={ownership}
         onSubmit={actionChange}
         onClose={closeModal}
       />

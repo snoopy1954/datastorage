@@ -3,14 +3,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { styleButton } from '../../constants';
 
+import { Group } from '../../../../backend/src/types/basic';
+
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
-import { initializeDocumentgroups } from '../../state/document/groups/actions';
+import { initializeGroups } from '../../state/groups/actions';
 import { initializeDocuments } from '../../state/document/documents/actions';
 
 import { AppHeaderH2 } from '../basic/header';
-import { GroupPage } from './group/GroupPage';
+import { GroupPage } from '../basic/group/GroupPage';
 import { DocumentPage } from './document/DocumentPage';
+
+import { getAllDB, createDB, updateDB, removeDB } from '../../utils/document/group';
 
 
 const Document: React.FC = () => {
@@ -20,7 +24,11 @@ const Document: React.FC = () => {
   const subpage = useSelector((state: RootState) => state.page.subpage);      
 
   React.useEffect(() => {
-    dispatch(initializeDocumentgroups());
+    const fetchGroups = async () => {
+      const groups: Group[] = await getAllDB();
+      dispatch(initializeGroups(groups));
+    }
+    fetchGroups();
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -28,7 +36,7 @@ const Document: React.FC = () => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    dispatch(setPage({ mainpage, subpage: 'document' }));
+    dispatch(setPage({ mainpage, subpage: 'documents' }));
   }, [mainpage, dispatch]);
  
   const actionSelect = (selected: string) => {
@@ -38,10 +46,10 @@ const Document: React.FC = () => {
   return (
     <div className='App'>
       <AppHeaderH2 text='Dokumente' icon='file'/>
-      <Button style={styleButton} onClick={() => actionSelect('document')}>Dokumente</Button>
-      <Button style={styleButton} onClick={() => actionSelect('group')}>Gruppen</Button>
-      {subpage==='group'&&<GroupPage/>}
-      {subpage==='document'&&<DocumentPage/>}
+      <Button style={styleButton} onClick={() => actionSelect('documents')}>Dokumente</Button>
+      <Button style={styleButton} onClick={() => actionSelect('groups')}>Gruppen</Button>
+      {subpage==='documents'&&<DocumentPage/>}
+      {subpage==='groups'&&<GroupPage title='Dokumentgruppe' createGroupDB={createDB} updateGroupDB={updateDB} removeGroupDB={removeDB}/>}
     </div>
   );
 }

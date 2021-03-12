@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton } from '../../../../constants';
@@ -7,35 +7,37 @@ import { Format, FormatNoID } from '../../../../../../backend/src/types/book';
 import { Edittype } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { addFormat, removeFormat, updateFormat } from '../../../../state/book/formatlist/actions';
-import { setSelectedFormat, clearSelectedFormat } from '../../../../state/book/selectedformat/actions';
+import { addFormat, removeFormat, updateFormat } from '../../../../state/book/formats/actions';
 
 import { AppHeaderH3 } from "../../../basic/header";
 import { AskModal } from '../../../basic/askModal';
 import { FormatModal } from "../FormatModal";
 
+import { emptyFormat } from '../../../../utils/book/format';
+
 
 export const FormatPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+  const [format, setFormat] = useState<Format>(emptyFormat());
+  const [modalOpen, setModalOpen] = useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+
   const dispatch = useDispatch();
 
   const formats = useSelector((state: RootState) => state.formats);      
-  const format = useSelector((state: RootState) => state.format);      
 
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
   const openModalDelete = async (format: Format): Promise<void> => {
-    dispatch(setSelectedFormat(format));
+    setFormat(format);
     setModalOpen([false, true, false, false]);
   };
      
   const openModalChange = async (format: Format): Promise<void> => {
-    dispatch(setSelectedFormat(format));
+    setFormat(format);
     setModalOpen([false, false, true, false]);
   };
  
   const openModalShow = async (format: Format): Promise<void> => {
-    dispatch(setSelectedFormat(format));
+    setFormat(format);
     setModalOpen([false, false, false, true]);
   };
  
@@ -56,7 +58,7 @@ export const FormatPage: React.FC = () => {
   };
     
   const actionShow = () => {
-    dispatch(clearSelectedFormat());
+    setFormat(emptyFormat);
     closeModal();
   };  
   
@@ -66,13 +68,13 @@ export const FormatPage: React.FC = () => {
       id: format.id
     };
     dispatch(updateFormat(formatToChange));
-    dispatch(clearSelectedFormat());
+    setFormat(emptyFormat);
     closeModal();
   };
   
   const actionDelete = () => {
     dispatch(removeFormat(format.id));
-    dispatch(clearSelectedFormat());
+    setFormat(emptyFormat);
     closeModal();
   };  
 
@@ -110,12 +112,14 @@ export const FormatPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neues Format anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        format={format}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
       <FormatModal
         edittype={Edittype.SHOW}
         title={'Format ' + format.name + ' anzeigen'}
+        format={format}
         modalOpen={modalOpen[ModalDialog.SHOW]}
         onSubmit={actionShow}
         onClose={closeModal}
@@ -124,6 +128,7 @@ export const FormatPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Format ' + format.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        format={format}
         onSubmit={actionChange}
         onClose={closeModal}
       />

@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useSelector } from 'react-redux';
 import { Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { styleButton }from '../../../../constants';
 
 import { Option, Edittype } from "../../../../types/basic";
-import { Bookgroup } from '../../../../../../backend/src/types/book';
+import { Group } from '../../../../../../backend/src/types/basic';
 import { BookWithContentNoID } from '../../../../types/book';
 import { ContentWithFile } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { setSelectedSubgroups } from '../../../../state/book/selectedsubgroups/actions';
+// import { setSelectedSubgroups } from '../../../../state/book/selectedsubgroups/actions';
 
 import { SelectField } from '../../../basic/formfields/selectfield';
 import { SelectFieldWithChange } from '../../../basic/formfields/selectfieldwithchange';
@@ -29,30 +29,30 @@ interface Props {
 }
 
 export const BookForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const dispatch = useDispatch();
+  const [subgroups, setSubgroups] = useState<Array<string>>([]);
 
   const book = useSelector((state: RootState) => state.book);
   const books = useSelector((state: RootState) => state.books);
   const tongues = useSelector((state: RootState) => state.tongues);
   const formats = useSelector((state: RootState) => state.formats);
   const ownerships = useSelector((state: RootState) => state.ownerships);
-  const bookgroups = useSelector((state: RootState) => state.bookgroups);
-  const subgroups = useSelector((state: RootState) => state.subgroups);
+  const groups = useSelector((state: RootState) => state.groups);
+//  const subgroups = useSelector((state: RootState) => state.subgroups);
 
   useEffect(() => {
-    const selectedGroup: Bookgroup[] = Object.values(bookgroups).filter((bookgroup => bookgroup.name=== book.bookgroup));
+    const selectedGroup: Group[] = Object.values(groups).filter((bookgroup => bookgroup.name=== book.bookgroup));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
-    dispatch(setSelectedSubgroups(selectedSubgroups));
-  }, [dispatch, bookgroups, book]);  
+    setSubgroups(selectedSubgroups);
+  }, [groups, book]);  
 
   const handleGroupSelection = (selection: string) => {
-    const selectedGroup: Bookgroup[] = Object.values(bookgroups).filter((bookgroup => bookgroup.name=== selection));
+    const selectedGroup: Group[] = Object.values(groups).filter((bookgroup => bookgroup.name=== selection));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
-    dispatch(setSelectedSubgroups(selectedSubgroups));
+    setSubgroups(selectedSubgroups);
   }
 
   const bookgroupOptions: Option[] = [];
-  Object.values(bookgroups).forEach(element => {
+  Object.values(groups).forEach(element => {
     bookgroupOptions.push({
       value: element.name,
       label: element.name

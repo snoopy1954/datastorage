@@ -14,7 +14,7 @@ import devicesRouter from './routes/network/devices';
 import devicetypesRouter from './routes/network/devicetypes';
 import ossRouter from './routes/network/oss';
 
-import bookgroupsRouter from './routes/book/bookgroups';
+import bookgroupsRouter from './routes/book/groups';
 import ownershipsRouter from './routes/book/ownerships';
 import formatsRouter from './routes/book/formats';
 import tonguesRouter from './routes/book/tongues';

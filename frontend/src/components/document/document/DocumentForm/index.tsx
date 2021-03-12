@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { Field, Formik, Form } from 'formik';
 import { styleButton }from '../../../../constants';
@@ -10,7 +10,6 @@ import { DocumentWithContentsNoID } from '../../../../types/document';
 import { ContentWithFile } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { setSelectedSubgroups } from '../../../../state/book/selectedsubgroups/actions';
 
 import { SelectField } from '../../../basic/formfields/selectfield';
 import { SelectFieldWithChange } from '../../../basic/formfields/selectfieldwithchange';
@@ -36,27 +35,26 @@ const emptylineStyle = {
 };
 
 export const DocumentForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const dispatch = useDispatch();
+  const [subgroups, setSubgroups] = useState<Array<string>>([]);
 
   const document = useSelector((state: RootState) => state.document);
   const documents = useSelector((state: RootState) => state.documents);
-  const documentgroups = useSelector((state: RootState) => state.documentgroups);
-  const subgroups = useSelector((state: RootState) => state.subgroups);
+  const groups = useSelector((state: RootState) => state.groups);
 
-  React.useEffect(() => {
-    const selectedGroup: Group[] = Object.values(documentgroups).filter((documentgroup => documentgroup.name=== document.group));
+  useEffect(() => {
+    const selectedGroup: Group[] = Object.values(groups).filter((documentgroup => documentgroup.name=== document.group));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
-    dispatch(setSelectedSubgroups(selectedSubgroups));
-  }, [dispatch, documentgroups, document]);  
+    setSubgroups(selectedSubgroups);
+  }, [groups, document]);  
 
   const handleGroupSelection = (selection: string) => {
-    const selectedGroup: Group[] = Object.values(documentgroups).filter((documentgroup => documentgroup.name=== selection));
+    const selectedGroup: Group[] = Object.values(groups).filter((documentgroup => documentgroup.name=== selection));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
-    dispatch(setSelectedSubgroups(selectedSubgroups));
+    setSubgroups(selectedSubgroups);
   }
 
   const documentgroupOptions: Option[] = [];
-  Object.values(documentgroups).forEach(element => {
+  Object.values(groups).forEach(element => {
     documentgroupOptions.push({
       value: element.name,
       label: element.name

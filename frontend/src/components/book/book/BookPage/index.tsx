@@ -1,42 +1,41 @@
-import React, { useEffect }  from 'react';
+import React, { useEffect, useState }  from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
 
-import { Book, BookNoID, Bookgroup, Tongue } from '../../../../../../backend/src/types/book';
+import { Book, BookNoID, Tongue } from '../../../../../../backend/src/types/book';
+import { Group } from '../../../../../../backend/src/types/basic';
 import { Content2 } from '../../../../../../backend/src/types/basic';
 import { Filter, BookWithContentNoID } from '../../../../types/book';
 import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { setFilter, clearFilter } from '../../../../state/book/filter/actions';
-import { addBook, updateBook, exchangeBooks, removeBook } from '../../../../state/book/booklist/actions';
-import { setSelectedBook, clearSelectedBook } from '../../../../state/book/selectedbook/actions';
-import { addChangedBook, clearChangedBook } from '../../../../state/book/changedbooklist/actions';
+import { addBook, updateBook, exchangeBooks, removeBook } from '../../../../state/book/books/actions';
+import { setSelectedBook, clearSelectedBook } from '../../../../state/book/book/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { AskString, Value } from '../../../basic/askString';
 import { BookModal } from '../BookModal';
 
-import { booklistTitle, booklistFilter } from '../../../../utils/book/book';
+import { booklistTitle, booklistFilter, newFilter } from '../../../../utils/book/book';
 import { createContent, updateContent, removeContent } from '../../../../utils/basic/content';
 
 
 export const BookPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
+  const [filter, setFilter] = useState<Filter>(newFilter());
+  const [booksChanged, setBooksChanged] = useState<Array<Book>>([]);
+  const [modalOpen, setModalOpen] = useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
+
   const dispatch = useDispatch();
 
-  const bookgroups: Bookgroup[] = useSelector((state: RootState) => state.bookgroups);      
-  const tongues: Tongue[] = useSelector((state: RootState) => state.tongues);      
-  const filters: Filter = useSelector((state: RootState) => state.filters);
+  const groups: Group[] = useSelector((state: RootState) => state.groups);      
+  const tongues: Tongue[] = useSelector((state: RootState) => state.tongues);
   const books: Book[] = useSelector((state: RootState) => state.books);
   const book: Book = useSelector((state: RootState) => state.book);
-  const changedBooks: Book[] = useSelector((state: RootState) => state.changedbooklist);
 
   useEffect(() => {
     dispatch(clearSelectedBook());
-    dispatch(clearFilter());
   }, [dispatch]); 
 
   const openModalNew = (): void => setModalOpen([true, false, false, false, false]);
@@ -70,37 +69,54 @@ export const BookPage: React.FC = () => {
       setModalOpen([false, false, false, false, false]);
   };
 
-  const actionSelectionClick = (filter: string, selection: string) => {
-    switch (filter) {
-      case 'Gruppe':
-        dispatch(setFilter({
-          ...filters, 
-          group: selection,
-          subgroup: ''
-        }));
-        break;
-      case 'Untergruppe':
-        dispatch(setFilter({
-          ...filters, 
-          subgroup: selection
-        }));
-        break;
-      case 'Sprache':
-        dispatch(setFilter({
-          ...filters, 
-          tongue: selection
-        }));
-        break;
-      default:
-    }
+  const actionSelectedGroup = (selection: string) => {
+    setFilter({ ...filter, group: selection, subgroup: '' });
   };
 
-  const actionSelectedAuthor = (author: Value) => {
-    dispatch(setFilter({ 
-      ...filters, 
-      author: author.value }));
+  const actionSelectedSubgroup = (selection: string) => {
+    setFilter({ ...filter, subgroup: selection });
+  };
+
+  const actionSelectedTongue = (selection: string) => {
+    setFilter({ ...filter, tongue: selection });
+  };
+
+  const actionSelectedName = (name: Value) => {
+    setFilter({ ...filter, author: name.value });
     closeModal();
   };
+
+  // const actionSelectionClick = (filter: string, selection: string) => {
+  //   switch (filter) {
+  //     case 'Gruppe':
+  //       dispatch(setFilter({
+  //         ...filters, 
+  //         group: selection,
+  //         subgroup: ''
+  //       }));
+  //       break;
+  //     case 'Untergruppe':
+  //       dispatch(setFilter({
+  //         ...filters, 
+  //         subgroup: selection
+  //       }));
+  //       break;
+  //     case 'Sprache':
+  //       dispatch(setFilter({
+  //         ...filters, 
+  //         tongue: selection
+  //       }));
+  //       break;
+  //     default:
+  //   }
+  // };
+
+  // const actionSelectedAuthor = (author: Value) => {
+  //   dispatch(setFilter({ 
+  //     ...filters, 
+  //     author: author.value }));
+  //   closeModal();
+  // };
 
   const actionAdd = async (values: BookWithContentNoID) => {
     const bookToAdd: BookNoID = {
@@ -151,19 +167,19 @@ export const BookPage: React.FC = () => {
     book2.title.seqnr = seqnr1;
     const booksToChange: Book[] = [book1, book2];
     dispatch(exchangeBooks(booksToChange));
-    dispatch(addChangedBook(book1));
-    dispatch(addChangedBook(book2));
+    setBooksChanged(arr => [...arr, book1]);
+    setBooksChanged(arr => [...arr, book2]);
   };
 
   const actionSaveSequence = () => {
-    Object.values(changedBooks).forEach(changedBook => {
-      dispatch(updateBook(changedBook));
+    Object.values(booksChanged).forEach(bookChanged => {
+      dispatch(updateBook(bookChanged));
     });
-    dispatch(clearChangedBook());
+    setBooksChanged([]);
   };
 
   const bookgroupOptions: string[] = [];
-  Object.values(bookgroups).forEach(element => {
+  Object.values(groups).forEach(element => {
     bookgroupOptions.push(element.name)
   });
 
@@ -172,23 +188,23 @@ export const BookPage: React.FC = () => {
     tongueOptions.push(element.name)
   });
 
-  const getBookgroup = (bookgroupName: string): Bookgroup | undefined => {
-    const bookgroup = Object.values(bookgroups).filter(bookgroup => bookgroup.name===bookgroupName);
+  const getBookgroup = (bookgroupName: string): Group | undefined => {
+    const bookgroup = Object.values(groups).filter(bookgroup => bookgroup.name===bookgroupName);
     return bookgroup.length > 0 ? bookgroup[0] : undefined;
   };
 
   const subgroupOptions: string[] = [];
-  const bookgroup = getBookgroup(filters.group);
+  const bookgroup = getBookgroup(filter.group);
   if (bookgroup) {
     bookgroup.subgroups.forEach(element => {
       subgroupOptions.push(element);
     });
   };
 
-  const filterSelected = (filters.group!=='' && filters.subgroup!=='') || (filters.group!=='' && getBookgroup(filters.group)?.subgroups.length===0);
-  const sequenceChanged = (Object.values(changedBooks).length > 0);
-  const title = 'Bücherliste' + booklistTitle(filters);
-  const sortedBooks = booklistFilter(books, filters, bookgroups);
+  const filterSelected = (filter.group!=='' && filter.subgroup!=='') || (filter.group!=='' && getBookgroup(filter.group)?.subgroups.length===0);
+  const sequenceChanged = (Object.values(booksChanged).length > 0);
+  const title = 'Bücherliste' + booklistTitle(filter);
+  const sortedBooks = booklistFilter(books, filter, groups);
 
   const ShowTableHeader: React.FC = () => {
     return (
@@ -260,7 +276,7 @@ export const BookPage: React.FC = () => {
         header='Autor eingeben'
         prompt='Autor eingeben'
         modalOpen={modalOpen[ModalDialog.AUTHOR]}
-        onSubmit={actionSelectedAuthor}
+        onSubmit={actionSelectedName}
         onClose={closeModal}
       />
       <AskModal
@@ -273,21 +289,21 @@ export const BookPage: React.FC = () => {
       <AppHeaderH3 text={title} icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
       <Button as="select" className="ui dropdown" style={styleButton}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Gruppe', event.currentTarget.value)}>
+        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectedGroup(event.currentTarget.value)}>
         <option value="" style={styleButton}>Gruppe</option>
         {bookgroupOptions.map((option: string, index: number) => (
         <option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
       <Button as="select" className="ui dropdown" style={styleButton}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Untergruppe', event.currentTarget.value)}>
+        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectedSubgroup(event.currentTarget.value)}>
         <option value="" style={styleButton}>U.Gruppe</option>
         {subgroupOptions.map((option: string, index: number) => (
         <option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
       <Button as="select" className="ui dropdown" style={styleButton}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Sprache', event.currentTarget.value)}>
+        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectedTongue(event.currentTarget.value)}>
         <option value="" style={styleButton}>Sprache</option>
         {tongueOptions.map((option: string, index: number) => (
         <option key={index} value={option} style={styleButton}>{option}</option>

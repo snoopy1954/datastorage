@@ -29,9 +29,11 @@ export const DocumentPage: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const groups: Group[] = useSelector((state: RootState) => state.documentgroups); 
+  const groups: Group[] = useSelector((state: RootState) => state.groups); 
   const documents: Document[] = useSelector((state: RootState) => state.documents);
   const document: Document = useSelector((state: RootState) => state.document);
+
+  console.log('DocumentPage', groups)
 
   useEffect(() => {
     dispatch(clearSelectedDocument());

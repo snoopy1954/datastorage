@@ -1,5 +1,5 @@
-import React from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { styleButton }from '../../../../constants';
@@ -10,7 +10,6 @@ import { RecipeWithContentNoID } from '../../../../types/recipe';
 import { ContentWithFile } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { setSelectedSubgroups } from '../../../../state/book/selectedsubgroups/actions';
 
 import { SelectField } from '../../../basic/formfields/selectfield';
 import { SelectFieldWithChange } from '../../../basic/formfields/selectfieldwithchange';
@@ -28,23 +27,22 @@ interface Props {
 }
 
 export const RecipeForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const dispatch = useDispatch();
+  const [subgroups, setSubgroups] = useState<Array<string>>([]);
 
   const recipe = useSelector((state: RootState) => state.recipe);
   const recipes = useSelector((state: RootState) => state.recipes);
-  const groups = useSelector((state: RootState) => state.recipegroups);
-  const subgroups = useSelector((state: RootState) => state.subgroups);
+  const groups = useSelector((state: RootState) => state.groups);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const selectedGroup: Group[] = Object.values(groups).filter((group => group.name=== recipe.group));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
-    dispatch(setSelectedSubgroups(selectedSubgroups));
-  }, [dispatch, groups, recipe]);  
+    setSubgroups(selectedSubgroups);
+  }, [groups, recipe]);  
 
   const handleGroupSelection = (selection: string) => {
     const selectedGroup: Group[] = Object.values(groups).filter((group => group.name=== selection));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
-    dispatch(setSelectedSubgroups(selectedSubgroups));
+    setSubgroups(selectedSubgroups);
   }
 
   const groupOptions: Option[] = [];

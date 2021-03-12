@@ -5,7 +5,7 @@ import { Field, Formik, Form } from 'formik';
 import { styleButton }from '../../../../constants';
 
 import { Edittype } from '../../../../types/basic';
-import { FormatNoID } from '../../../../../../backend/src/types/book';
+import { Format, FormatNoID } from '../../../../../../backend/src/types/book';
 
 import { RootState } from '../../../../state/store';
 
@@ -17,12 +17,12 @@ import { nextFormat } from '../../../../utils/book/format';
 
 interface Props {
   edittype: Edittype;
+  format: Format;
   onSubmit: (values: FormatNoID) => void;
   onCancel: () => void;
 }
 
-export const FormatForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const format = useSelector((state: RootState) => state.format);
+export const FormatForm: React.FC<Props> = ({ edittype, format, onSubmit, onCancel }) => {
   const formats = useSelector((state: RootState) => state.formats);
 
   const initialValues = (edittype===Edittype.EDIT && format) ? format : nextFormat(formats);

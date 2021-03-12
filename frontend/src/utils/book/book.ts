@@ -1,4 +1,5 @@
-import { Book, BookNoID, Bookgroup } from '../../../../backend/src/types/book';
+import { Group } from '../../../../backend/src/types/basic';
+import { Book, BookNoID } from '../../../../backend/src/types/book';
 import { Filter } from '../../types/book';
 
 const sortBooks = (a: Book, b: Book) => {
@@ -13,7 +14,7 @@ const sortBooks = (a: Book, b: Book) => {
     return 0;
 };
 
-const sortBookList = (books: Book[], bookgroups: Bookgroup[]) => {
+const sortBookList = (books: Book[], bookgroups: Group[]) => {
     let bookListSorted: Book[] = [];
     let sortedBookgroup;
     let sortedSubgroup;
@@ -150,7 +151,7 @@ export const booklistTitle = (filters: Filter): string => {
     return filter;
 };
 
-export const booklistFilter = (books: Book[], filters: Filter, bookgroups: Bookgroup[]): Book[] => {
+export const booklistFilter = (books: Book[], filters: Filter, bookgroups: Group[]): Book[] => {
     let filteredBooks = (filters.group!=="") ? Object.values(books).filter(book => book.bookgroup===filters.group) : books;
     filteredBooks = (filters.subgroup!=="") ? Object.values(filteredBooks).filter(book => book.subgroup===filters.subgroup) : filteredBooks;
     filteredBooks = (filters.tongue!=="") ? Object.values(filteredBooks).filter(book => book.tongue===filters.tongue) : filteredBooks;
