@@ -8,9 +8,9 @@ import { Option, Edittype } from "../../../../types/basic";
 import { Group } from '../../../../../../backend/src/types/basic';
 import { BookWithContentNoID } from '../../../../types/book';
 import { ContentWithFile } from '../../../../types/basic';
+import { Book } from '../../../../../../backend/src/types/book';
 
 import { RootState } from '../../../../state/store';
-// import { setSelectedSubgroups } from '../../../../state/book/selectedsubgroups/actions';
 
 import { SelectField } from '../../../basic/formfields/selectfield';
 import { SelectFieldWithChange } from '../../../basic/formfields/selectfieldwithchange';
@@ -24,20 +24,19 @@ import { newContent } from '../../../../utils/basic/content';
 
 interface Props {
   edittype: Edittype;
+  book: Book;
   onSubmit: (values: BookWithContentNoID) => void;
   onCancel: () => void;
 }
 
-export const BookForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
+export const BookForm: React.FC<Props> = ({ edittype, book, onSubmit, onCancel }) => {
   const [subgroups, setSubgroups] = useState<Array<string>>([]);
 
-  const book = useSelector((state: RootState) => state.book);
   const books = useSelector((state: RootState) => state.books);
   const tongues = useSelector((state: RootState) => state.tongues);
   const formats = useSelector((state: RootState) => state.formats);
   const ownerships = useSelector((state: RootState) => state.ownerships);
   const groups = useSelector((state: RootState) => state.groups);
-//  const subgroups = useSelector((state: RootState) => state.subgroups);
 
   useEffect(() => {
     const selectedGroup: Group[] = Object.values(groups).filter((bookgroup => bookgroup.name=== book.bookgroup));

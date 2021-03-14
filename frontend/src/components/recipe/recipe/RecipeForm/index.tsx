@@ -7,6 +7,7 @@ import { styleButton }from '../../../../constants';
 import { Option, Edittype } from "../../../../types/basic";
 import { Group } from '../../../../../../backend/src/types/basic';
 import { RecipeWithContentNoID } from '../../../../types/recipe';
+import { Recipe } from '../../../../../../backend/src/types/recipe';
 import { ContentWithFile } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
@@ -22,14 +23,14 @@ import { newContent } from '../../../../utils/basic/content';
 
 interface Props {
   edittype: Edittype;
+  recipe: Recipe;
   onSubmit: (values: RecipeWithContentNoID) => void;
   onCancel: () => void;
 }
 
-export const RecipeForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
+export const RecipeForm: React.FC<Props> = ({ edittype, recipe, onSubmit, onCancel }) => {
   const [subgroups, setSubgroups] = useState<Array<string>>([]);
 
-  const recipe = useSelector((state: RootState) => state.recipe);
   const recipes = useSelector((state: RootState) => state.recipes);
   const groups = useSelector((state: RootState) => state.groups);
 

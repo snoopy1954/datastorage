@@ -1,20 +1,18 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { RootState } from '../../../../state/store';
+import { Accounttype } from '../../../../../../backend/src/types/account';
 
 import { AppHeaderH3 } from '../../../basic/header';
 
 
 interface Props {
+  accounttype: Accounttype,
   onCancel: () => void;
 }
 
-export const AccounttypeDetails: React.FC<Props> = ({ onCancel }) => {
-  const accounttype = useSelector((state: RootState) => state.accounttype);
-
+export const AccounttypeDetails: React.FC<Props> = ({ accounttype, onCancel }) => {
   return (
     <div className="App">
       <AppHeaderH3 text={'Format ' + accounttype.name} icon='list'/>

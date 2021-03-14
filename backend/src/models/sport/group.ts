@@ -4,6 +4,6 @@ import mongoose from 'mongoose';
 import sportConnection from '../../connections/sport';
 import groupSchema from '../../schemas/basic/group';
 
-const sportgroupModel: mongoose.Model<mongoose.Document, {}> = sportConnection.model('Sportgroup', groupSchema);
+const groupModel: mongoose.Model<mongoose.Document, {}> = sportConnection.model('Group', groupSchema);
 
-export default sportgroupModel;
+export default groupModel;

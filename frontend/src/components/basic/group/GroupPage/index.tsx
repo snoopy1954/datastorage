@@ -7,7 +7,7 @@ import { Edittype } from "../../../../types/basic";
 import { Group, GroupNoID } from '../../../../../../backend/src/types/basic';
 
 import { RootState } from '../../../../state/store';
-import { addGroup, updateGroup, removeGroup } from '../../../../state/groups/actions';
+import { addGroup, updateGroup, removeGroup } from '../../../../state/basic/groups/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from "../../../basic/askModal";

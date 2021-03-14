@@ -4,6 +4,6 @@ import mongoose from 'mongoose';
 import documentConnection from '../../connections/document';
 import groupSchema from '../../schemas/basic/group';
 
-const documentgroupModel: mongoose.Model<mongoose.Document, {}> = documentConnection.model('Documentgroup', groupSchema);
+const groupModel: mongoose.Model<mongoose.Document, {}> = documentConnection.model('Group', groupSchema);
 
-export default documentgroupModel;
+export default groupModel;

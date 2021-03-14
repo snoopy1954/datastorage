@@ -7,7 +7,7 @@ import { Group } from '../../../../backend/src/types/basic';
 
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
-import { initializeGroups } from '../../state/groups/actions';
+import { initializeGroups } from '../../state/basic/groups/actions';
 import { initializeRecipes } from '../../state/recipe/recipes/actions';
 
 import { AppHeaderH2 } from '../basic/header';

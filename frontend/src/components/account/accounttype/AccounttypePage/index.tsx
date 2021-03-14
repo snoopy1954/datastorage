@@ -8,36 +8,37 @@ import { Accounttype, AccounttypeNoID } from '../../../../../../backend/src/type
 
 import { RootState } from '../../../../state/store';
 import { addAccounttype, updateAccounttype, removeAccounttype } from '../../../../state/account/accounttypes/actions';
-import { setSelectedAccounttype, clearSelectedAccounttype } from '../../../../state/account/accounttype/actions';
+// import { setSelectedAccounttype, clearSelectedAccounttype } from '../../../../state/account/accounttype/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { AccounttypeModal } from '../AccounttypeModal';
 
 import { getAmount } from '../../../../utils/basic/basic';
-
+import { emptyAccounttype } from '../../../../utils/account/accounttype';
 
 export const AccounttypePage: React.FC = () => {
+  const [accounttype, setAccounttype] = React.useState<Accounttype>(emptyAccounttype());
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
   const accounttypes = useSelector((state: RootState) => state.accounttypes);      
-  const accounttype = useSelector((state: RootState) => state.accounttype);      
+  // const accounttype = useSelector((state: RootState) => state.accounttype);      
 
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
   const openModalDelete = async (account: Accounttype): Promise<void> => {
-    dispatch(setSelectedAccounttype(account));
+    setAccounttype(account);
     setModalOpen([false, true, false, false]);
   };
       
   const openModalChange = async (account: Accounttype): Promise<void> => {
-    dispatch(setSelectedAccounttype(account));
+    setAccounttype(account);
     setModalOpen([false, false, true, false]);
   };
   
   const openModalShow = async (account: Accounttype): Promise<void> => {
-    dispatch(setSelectedAccounttype(account));
+    setAccounttype(account);
     setModalOpen([false, false, false, true]);
   };
   
@@ -58,7 +59,7 @@ export const AccounttypePage: React.FC = () => {
   };
 
   const actionShow = () => {
-    dispatch(clearSelectedAccounttype());
+    setAccounttype(emptyAccounttype());
     closeModal();
   };
 
@@ -69,13 +70,13 @@ export const AccounttypePage: React.FC = () => {
     };
     console.log(accounttypeToChange)
     dispatch(updateAccounttype(accounttypeToChange));
-    dispatch(clearSelectedAccounttype());
+    setAccounttype(emptyAccounttype());
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeAccounttype(accounttype.id));
-    dispatch(clearSelectedAccounttype());
+    setAccounttype(emptyAccounttype());
     closeModal();
   };  
 
@@ -120,28 +121,31 @@ export const AccounttypePage: React.FC = () => {
     <div className="App">
       <AccounttypeModal
         edittype={Edittype.ADD}
-        title='Neues Format anlegen'
+        title='Neuen Kontotyp anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        accounttype={accounttype}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
       <AccounttypeModal
         edittype={Edittype.SHOW}
-        title={'Format ' + accounttype.name + ' anzeigen'}
+        title={'Kontotyp ' + accounttype.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        accounttype={accounttype}
         onSubmit={actionShow}
         onClose={closeModal}
       />
       <AccounttypeModal
         edittype={Edittype.EDIT}
-        title={'Format ' + accounttype.name + ' ändern'}
+        title={'Kontotyp ' + accounttype.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        accounttype={accounttype}
         onSubmit={actionChange}
         onClose={closeModal}
       />
       <AskModal
-        header='Format löschen'
-        prompt={'Format ' + accounttype.name + ' löschen?'}
+        header='Kontotyp löschen'
+        prompt={'Kontotyp ' + accounttype.name + ' löschen?'}
         modalOpen={modalOpen[ModalDialog.DELETE]}
         onSubmit={actionDelete}
         onClose={closeModal}

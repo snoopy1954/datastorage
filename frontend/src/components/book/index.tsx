@@ -10,7 +10,7 @@ import { setPage } from '../../state/page/actions';
 import { initializeTongues } from '../../state/book/tongues/actions';
 import { initializeFormats } from '../../state/book/formats/actions';
 import { initializeOwnerships } from '../../state/book/ownerships/actions';
-import { initializeGroups } from '../../state/groups/actions';
+import { initializeGroups } from '../../state/basic/groups/actions';
 import { initializeBooks } from '../../state/book/books/actions';
 
 import { AppHeaderH2 } from '../basic/header';

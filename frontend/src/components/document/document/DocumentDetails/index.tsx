@@ -1,13 +1,10 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { styleButton, backgroundColor } from '../../../../constants';
 
 import { Document } from '../../../../../../backend/src/types/document';
 import { Binarydata } from '../../../../../../backend/src/types/basic';
 import { Content2 } from '../../../../../../backend/src/types/basic';
-
-import { RootState } from '../../../../state/store';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { ShowModalPDF } from '../../../basic/showModalPDF';
@@ -18,15 +15,14 @@ import { sortContents } from '../../../../utils/basic/content';
 
 
 interface Props {
+    document: Document;
     onCancel: () => void;
 }
 
-export const DocumentDetails: React.FC<Props> = ({ onCancel }) => {
+export const DocumentDetails: React.FC<Props> = ({ document, onCancel }) => {
     const [url, setUrl] = React.useState('');
     const [title, setTitle] = React.useState<string>('');
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
-
-    const document: Document = useSelector((state: RootState) => state.document);
 
     const openModalShow = (): void => setModalOpen(true);
 

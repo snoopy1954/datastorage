@@ -1,6 +1,6 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useState }  from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Table, Button } from 'semantic-ui-react';
+import { Table, Button, Input } from 'semantic-ui-react';
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
 
 import { Book, BookNoID, Tongue } from '../../../../../../backend/src/types/book';
@@ -11,62 +11,53 @@ import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { addBook, updateBook, exchangeBooks, removeBook } from '../../../../state/book/books/actions';
-import { setSelectedBook, clearSelectedBook } from '../../../../state/book/book/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
-import { AskString, Value } from '../../../basic/askString';
 import { BookModal } from '../BookModal';
 
-import { booklistTitle, booklistFilter, newFilter } from '../../../../utils/book/book';
+import { booklistTitle, booklistFilter, newFilter, emptyBook } from '../../../../utils/book/book';
 import { createContent, updateContent, removeContent } from '../../../../utils/basic/content';
 
 
 export const BookPage: React.FC = () => {
+  const [book, setBook] = useState<Book>(emptyBook());
   const [filter, setFilter] = useState<Filter>(newFilter());
   const [booksChanged, setBooksChanged] = useState<Array<Book>>([]);
-  const [modalOpen, setModalOpen] = useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
+  const [modalOpen, setModalOpen] = useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
 
   const dispatch = useDispatch();
 
+  const books: Book[] = useSelector((state: RootState) => state.books);
   const groups: Group[] = useSelector((state: RootState) => state.groups);      
   const tongues: Tongue[] = useSelector((state: RootState) => state.tongues);
-  const books: Book[] = useSelector((state: RootState) => state.books);
-  const book: Book = useSelector((state: RootState) => state.book);
 
-  useEffect(() => {
-    dispatch(clearSelectedBook());
-  }, [dispatch]); 
-
-  const openModalNew = (): void => setModalOpen([true, false, false, false, false]);
+  const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
   const openModalDelete = (book: Book): void => {
-    dispatch(setSelectedBook(book));
-    setModalOpen([false, true, false, false, false]);
+    setBook(book);
+    setModalOpen([false, true, false, false]);
   };
       
   const openModalChange = (book: Book): void => {
-    dispatch(setSelectedBook(book));
-    setModalOpen([false, false, true, false, false]);
+    setBook(book);
+    setModalOpen([false, false, true, false]);
   };
       
   const openModalShow = (book: Book): void => {
-    dispatch(setSelectedBook(book));
-    setModalOpen([false, false, false, true, false]);
+    setBook(book);
+    setModalOpen([false, false, false, true]);
   };
   
-  const openModalAuthor = (): void => setModalOpen([false, false, false, false, true]);
-
   enum ModalDialog {
     NEW = 0,
     DELETE = 1,
     CHANGE = 2,
-    SHOW = 3,
-    AUTHOR = 4,
+    SHOW = 3
   };
 
   const closeModal = (): void => {
-      setModalOpen([false, false, false, false, false]);
+      setModalOpen([false, false, false, false]);
   };
 
   const actionSelectedGroup = (selection: string) => {
@@ -81,42 +72,9 @@ export const BookPage: React.FC = () => {
     setFilter({ ...filter, tongue: selection });
   };
 
-  const actionSelectedName = (name: Value) => {
-    setFilter({ ...filter, author: name.value });
-    closeModal();
+  const actionNameInput = (name: string) => {
+    setFilter({ ...filter, author: name });
   };
-
-  // const actionSelectionClick = (filter: string, selection: string) => {
-  //   switch (filter) {
-  //     case 'Gruppe':
-  //       dispatch(setFilter({
-  //         ...filters, 
-  //         group: selection,
-  //         subgroup: ''
-  //       }));
-  //       break;
-  //     case 'Untergruppe':
-  //       dispatch(setFilter({
-  //         ...filters, 
-  //         subgroup: selection
-  //       }));
-  //       break;
-  //     case 'Sprache':
-  //       dispatch(setFilter({
-  //         ...filters, 
-  //         tongue: selection
-  //       }));
-  //       break;
-  //     default:
-  //   }
-  // };
-
-  // const actionSelectedAuthor = (author: Value) => {
-  //   dispatch(setFilter({ 
-  //     ...filters, 
-  //     author: author.value }));
-  //   closeModal();
-  // };
 
   const actionAdd = async (values: BookWithContentNoID) => {
     const bookToAdd: BookNoID = {
@@ -140,19 +98,19 @@ export const BookPage: React.FC = () => {
       bookToChange.content = content;  
     }
     dispatch(updateBook(bookToChange));
-    dispatch(clearSelectedBook());
+    setBook(emptyBook());
     closeModal();
   };
 
   const actionDelete = async () => {
     await removeContent(book.content.dataId, 'jpg');
     dispatch(removeBook(book.id));
-    dispatch(clearSelectedBook());
+    setBook(emptyBook());
     closeModal();
   };  
 
   const actionShow = () => {
-    dispatch(clearSelectedBook());
+    setBook(emptyBook());
     closeModal();
   };
 
@@ -255,6 +213,7 @@ export const BookPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neues Buch anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        book={book}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -262,6 +221,7 @@ export const BookPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Buch ' + book.title.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        book={book}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -269,14 +229,8 @@ export const BookPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Buch ' + book.title.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        book={book}
         onSubmit={actionChange}
-        onClose={closeModal}
-      />
-      <AskString
-        header='Autor eingeben'
-        prompt='Autor eingeben'
-        modalOpen={modalOpen[ModalDialog.AUTHOR]}
-        onSubmit={actionSelectedName}
         onClose={closeModal}
       />
       <AskModal
@@ -309,7 +263,7 @@ export const BookPage: React.FC = () => {
         <option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
-      <Button style={styleButton} onClick={() => openModalAuthor()}>Author</Button>
+      <Input placeholder='Name' onChange={(event: React.FormEvent<HTMLInputElement>) => actionNameInput(event.currentTarget.value)}></Input>
       <Button style={styleButton} disabled={!sequenceChanged} onClick={() => actionSaveSequence()}>Speichern</Button>
       {sortedBooks.length>8&&
         <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>

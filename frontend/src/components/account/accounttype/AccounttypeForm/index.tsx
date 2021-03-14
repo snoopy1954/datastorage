@@ -17,13 +17,13 @@ import { nextAccounttype } from '../../../../utils/account/accounttype';
 
 interface Props {
   edittype: Edittype;
+  accounttype: Accounttype,
   onSubmit: (values: AccounttypeNoID) => void;
   onCancel: () => void;
 }
 
-export const AccounttypeForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
+export const AccounttypeForm: React.FC<Props> = ({ edittype, accounttype, onSubmit, onCancel }) => {
   const accounttypes: Accounttype[] = useSelector((state: RootState) => state.accounttypes);
-  const accounttype: Accounttype = useSelector((state: RootState) => state.accounttype);
 
   const initialValues = (edittype===Edittype.EDIT && accounttype) ? accounttype : nextAccounttype(accounttypes);
 

@@ -1,12 +1,10 @@
 import React, { useEffect } from "react";
-import { useSelector } from 'react-redux';
 import { Table, Image, Button } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
 import { Binarydata } from '../../../../../../backend/src/types/basic';
+import { Book } from '../../../../../../backend/src/types/book';
 
-import { RootState } from '../../../../state/store';
-       
 import { AppHeaderH3 } from "../../../basic/header";
 import { ShowModal } from "../../../basic/showModal";
 
@@ -15,14 +13,13 @@ import { getOneBinarydata } from '../../../../utils/basic/content'
 
 
 interface Props {
+    book: Book;
     onCancel: () => void;
 }
 
-export const BookDetails: React.FC<Props> = ({ onCancel }) => {
+export const BookDetails: React.FC<Props> = ({ book, onCancel }) => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [url, setUrl] = React.useState('');
-
-    const book  = useSelector((state: RootState) => state.book);
 
     useEffect(() => {
         const fetchCover = async () => {

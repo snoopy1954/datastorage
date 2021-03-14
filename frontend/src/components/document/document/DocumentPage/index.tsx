@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Table, Button } from 'semantic-ui-react';
+import { Table, Button, Input } from 'semantic-ui-react';
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
 
 import { Group, Content2 } from '../../../../../../backend/src/types/basic';
@@ -10,92 +10,66 @@ import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { addDocument, updateDocument, exchangeDocuments, removeDocument } from '../../../../state/document/documents/actions';
-import { setSelectedDocument, clearSelectedDocument } from '../../../../state/document/document/actions';
 import { clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
-import { AskString, Value } from '../../../basic/askString';
 import { AskModal } from '../../../basic/askModal';
 import { DocumentModal } from '../DocumentModal';
 
-import { documentTitle, documentFilter, newFilter } from '../../../../utils/document/document';
+import { documentTitle, documentFilter, newFilter, emptyDocument } from '../../../../utils/document/document';
 import { createContent, removeContent } from '../../../../utils/basic/content';
 
 
 export const DocumentPage: React.FC = () => {
+  const [document, setDocument] = useState<Document>(emptyDocument());
   const [filter, setFilter] = useState<Filter>(newFilter());
   const [documentsChanged, setDocumentsChanged] = useState<Array<Document>>([]);
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
+  const [modalOpen, setModalOpen] = useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
 
   const dispatch = useDispatch();
 
   const groups: Group[] = useSelector((state: RootState) => state.groups); 
   const documents: Document[] = useSelector((state: RootState) => state.documents);
-  const document: Document = useSelector((state: RootState) => state.document);
-
-  console.log('DocumentPage', groups)
-
-  useEffect(() => {
-    dispatch(clearSelectedDocument());
-  }, [dispatch]);  
   
-  const openModalNew = (): void => setModalOpen([true, false, false, false, false]);
+  const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
   const openModalDelete = (document: Document): void => {
-    dispatch(setSelectedDocument(document));
-    setModalOpen([false, true, false, false, false]);
+    setDocument(document);
+    setModalOpen([false, true, false, false]);
   };
       
   const openModalChange = (document: Document): void => {
-    dispatch(setSelectedDocument(document));
-    setModalOpen([false, false, true, false, false]);
+    setDocument(document);
+    setModalOpen([false, false, true, false]);
   };
       
   const openModalShow = (document: Document): void => {
-    dispatch(setSelectedDocument(document));
+    setDocument(document);
     dispatch(clearPdfUrl());
-    setModalOpen([false, false, false, true, false]);
+    setModalOpen([false, false, false, true]);
   };
   
-  const openModalFind = (): void => setModalOpen([false, false, false, false, true]);
-
   enum ModalDialog {
     NEW = 0,
     DELETE = 1,
     CHANGE = 2,
-    SHOW = 3,
-    FIND = 4,
+    SHOW = 3
   };
 
   const closeModal = (): void => {
-      setModalOpen([false, false, false, false, false]);
+      setModalOpen([false, false, false, false]);
   };
 
-  const actionSelectionClick = (type: string, selection: string) => {
-    switch (type) {
-      case 'Gruppe':
-        setFilter({
-          ...filter, 
-          group: selection,
-          subgroup: ''
-        });
-        break;
-      case 'Untergruppe':
-        setFilter({
-          ...filter, 
-          subgroup: selection
-        });
-        break;
-      default:
-    }
+  const actionSelectedGroup = (selection: string) => {
+    setFilter({ ...filter, group: selection, subgroup: '' });
   };
 
-  const actionSelectedName = (name: Value) => {
-    setFilter({ 
-      ...filter, 
-      person: name.value
-    });
-    closeModal();
+  const actionSelectedSubgroup = (selection: string) => {
+    setFilter({ ...filter, subgroup: selection });
+  };
+
+  const actionNameInput = (name: string) => {
+    setFilter({ ...filter, person: name });
   };
 
   const actionAdd = async (values: DocumentWithContentsNoID) => {
@@ -134,18 +108,18 @@ export const DocumentPage: React.FC = () => {
       }
     }));
     dispatch(updateDocument(documentToChange));
-    dispatch(clearSelectedDocument());
+    setDocument(emptyDocument);
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeDocument(document.id));
-    dispatch(clearSelectedDocument());
+    setDocument(emptyDocument);
     closeModal();
   };  
 
   const actionShow = () => {
-    dispatch(clearSelectedDocument());
+    setDocument(emptyDocument);
     closeModal();
   };
 
@@ -241,6 +215,7 @@ export const DocumentPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neues Dokument anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        document={document}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -248,6 +223,7 @@ export const DocumentPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Dokument ' + document.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        document={document}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -255,6 +231,7 @@ export const DocumentPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Dokument ' + document.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        document={document}
         onSubmit={actionChange}
         onClose={closeModal}
       />
@@ -265,64 +242,24 @@ export const DocumentPage: React.FC = () => {
         onSubmit={actionDelete}
         onClose={closeModal}
       />
-      <AskString
-        header='Dokumentname eingeben'
-        prompt='Dokumentname eingeben'
-        modalOpen={modalOpen[ModalDialog.FIND]}
-        onSubmit={actionSelectedName}
-        onClose={closeModal}
-      />
       <AppHeaderH3 text={title} icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
       <Button as='select' className='ui dropdown' style={styleButton}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Gruppe', event.currentTarget.value)}>
+        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectedGroup(event.currentTarget.value)}>
         <option value='' style={styleButton}>Gruppe</option>
         {documentgroupOptions.map((option: string, index: number) => (
         <option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
       <Button as='select' className='ui dropdown' style={styleButton}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Untergruppe', event.currentTarget.value)}>
+        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectedSubgroup(event.currentTarget.value)}>
         <option value='' style={styleButton}>U.Gruppe</option>
         {subgroupOptions.map((option: string, index: number) => (
         <option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
-      <Button style={styleButton} onClick={() => openModalFind()}>Name</Button>
+      <Input placeholder='Name' onChange={(event: React.FormEvent<HTMLInputElement>) => actionNameInput(event.currentTarget.value)}></Input>
       <Button style={styleButton} disabled={!sequenceChanged} onClick={() => actionSaveSequence()}>Speichern</Button>
-      {/* <Table celled style={{ backgroundColor }}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell style={{ backgroundColor }} className='five wide center aligned'>Dokumenttitel</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Gruppe</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='two wide center aligned'>Auf/Ab</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor }} className='four wide center aligned'>Aktion</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {Object.values(sortedDocuments).map((document: Document, index: number) => (
-            <Table.Row key={document.id}>
-              <Table.Cell>{document.name}</Table.Cell>
-              <Table.Cell>{document.group}</Table.Cell>
-              <Table.Cell>
-                <Button className='ui icon button' style={styleButtonSmall} disabled={!filterSelected} 
-                  onClick={() => actionUpDown(Direction.UP, index, sortedDocuments) }>
-                  <i className='angle up icon'></i>
-                </Button>
-                <Button className='ui icon button' style={styleButtonSmall} disabled={!filterSelected} 
-                  onClick={() => actionUpDown(Direction.DOWN, index, sortedDocuments) }>
-                  <i className='angle down icon'></i>
-                </Button>
-              </Table.Cell>
-              <Table.Cell>
-                <Button style={styleButton} onClick={() => openModalShow(document)}>Anzeigen</Button>
-                <Button style={styleButton} onClick={() => openModalChange(document)}>Ändern</Button>
-                <Button style={styleButton} onClick={() => openModalDelete(document)}>Löschen</Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table> */}
       {sortedDocuments.length<9&&
         <Table celled style={{ backgroundColor, marginTop: '15px', borderTop: "none", width: '99.36%' }}>
           <ShowTableHeader/>

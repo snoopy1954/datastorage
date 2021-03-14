@@ -1,9 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { RootState } from '../../../../state/store';
+import { Recipe } from '../../../../../../backend/src/types/recipe';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { ShowModalPDF } from '../../../basic/showModalPDF';
@@ -13,15 +12,14 @@ import { getOneBinarydata } from '../../../../utils/basic/content'
 
 
 interface Props {
+    recipe: Recipe;
     onCancel: () => void;
 }
 
-export const RecipeDetails: React.FC<Props> = ({ onCancel }) => {
+export const RecipeDetails: React.FC<Props> = ({ recipe, onCancel }) => {
     const [url, setUrl] = React.useState('');
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     
-    const recipe  = useSelector((state: RootState) => state.recipe);
-
     const openModalShow = (): void => setModalOpen(true);
 
     const closeModal = (): void => {

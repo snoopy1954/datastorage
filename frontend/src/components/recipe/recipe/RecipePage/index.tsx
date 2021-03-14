@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
@@ -10,7 +10,6 @@ import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { addRecipe, updateRecipe, exchangeRecipes, removeRecipe } from '../../../../state/recipe/recipes/actions';
-import { setSelectedRecipe, clearSelectedRecipe } from '../../../../state/recipe/recipe/actions';
 import { clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
@@ -18,39 +17,35 @@ import { AskString, Value } from '../../../basic/askString';
 import { AskModal } from '../../../basic/askModal';
 import { RecipeModal } from '../RecipeModal';
 
-import { recipeTitle, recipeFilter, newFilter } from '../../../../utils/recipe/recipe';
+import { recipeTitle, recipeFilter, newFilter, emptyRecipe } from '../../../../utils/recipe/recipe';
 import { createContent, removeContent, updateContent } from '../../../../utils/basic/content';
 
 
 export const RecipePage: React.FC = () => {
+  const [recipe, setRecipe] = useState<Recipe>(emptyRecipe());
   const [filter, setFilter] = useState<Filter>(newFilter());
   const [recipesChanged, setRecipesChanged] = useState<Array<Recipe>>([]);
   const [modalOpen, setModalOpen] = useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
 
   const dispatch = useDispatch();
 
-  const groups: Group[] = useSelector((state: RootState) => state.groups);      
   const recipes: Recipe[] = useSelector((state: RootState) => state.recipes);
-  const recipe: Recipe = useSelector((state: RootState) => state.recipe);
-
-  useEffect(() => {
-    dispatch(clearSelectedRecipe());
-  }, [dispatch]);
+  const groups: Group[] = useSelector((state: RootState) => state.groups);      
 
   const openModalNew = (): void => setModalOpen([true, false, false, false, false]);
 
   const openModalDelete = (recipe: Recipe): void => {
-    dispatch(setSelectedRecipe(recipe));
+    setRecipe(recipe);
     setModalOpen([false, true, false, false, false]);
   };
       
   const openModalChange = (recipe: Recipe): void => {
-    dispatch(setSelectedRecipe(recipe));
+    setRecipe(recipe);
     setModalOpen([false, false, true, false, false]);
   };
       
   const openModalShow = (recipe: Recipe): void => {
-    dispatch(setSelectedRecipe(recipe));
+    setRecipe(recipe);
     dispatch(clearPdfUrl());
     setModalOpen([false, false, false, true, false]);
   };
@@ -104,19 +99,19 @@ export const RecipePage: React.FC = () => {
       recipeToChange.content = content;  
     }
     dispatch(updateRecipe(recipeToChange));
-    dispatch(clearSelectedRecipe());
+    setRecipe(emptyRecipe());
     closeModal();
   };
 
   const actionDelete = async() => {
     await removeContent(recipe.content.dataId, 'pdf');
     dispatch(removeRecipe(recipe.id));
-    dispatch(clearSelectedRecipe());
+    setRecipe(emptyRecipe());
     closeModal();
   };  
 
   const actionShow = () => {
-    dispatch(clearSelectedRecipe());
+    setRecipe(emptyRecipe());
     closeModal();
   };
 
@@ -171,6 +166,7 @@ export const RecipePage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neues Rezept anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        recipe={recipe}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -178,6 +174,7 @@ export const RecipePage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Rezept ' + recipe.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        recipe={recipe}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -185,6 +182,7 @@ export const RecipePage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Rezept ' + recipe.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        recipe={recipe}
         onSubmit={actionChange}
         onClose={closeModal}
       />

@@ -1,5 +1,5 @@
-export interface Accountfilter {
+export interface Filter {
     accountype: string;
-    accountyear: string;
+    year: string;
     person: string;
 }

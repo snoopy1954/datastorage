@@ -5,7 +5,7 @@ import { Field, Formik, Form } from 'formik';
 import { styleButton }from '../../../../constants';
 
 import { Option, Edittype } from '../../../../types/basic';
-import { ActivityNoID } from '../../../../../../backend/src/types/sport';
+import { Activity, ActivityNoID } from '../../../../../../backend/src/types/sport';
 
 import { RootState } from '../../../../state/store';
 
@@ -19,12 +19,12 @@ import { nextActivity } from '../../../../utils/sport/activity';
 
 interface Props {
   edittype: Edittype;
+  activity: Activity;
   onSubmit: (values: ActivityNoID) => void;
   onCancel: () => void;
 }
 
-export const ActivityForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const activity = useSelector((state: RootState) => state.activity);
+export const ActivityForm: React.FC<Props> = ({ edittype, activity, onSubmit, onCancel }) => {
   const activities = useSelector((state: RootState) => state.activities);
   const groups = useSelector((state: RootState) => state.groups);
 

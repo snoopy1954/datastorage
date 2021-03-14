@@ -3,20 +3,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { styleButton } from '../../constants';
 
-import { Group } from '../../../../backend/src/types/basic';
+import { Group, Year } from '../../../../backend/src/types/basic';
 
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
-import { initializeGroups } from '../../state/groups/actions';
-import { initializeYears } from '../../state/sport/years/actions';
+import { initializeGroups } from '../../state/basic/groups/actions';
+import { initializeYears } from '../../state/basic/years/actions';
 import { initializeActivities } from '../../state/sport/activities/actions';
 
 import { AppHeaderH2 } from '../basic/header';
 import { ActivityPage } from './activity/ActivityPage';
 import { GroupPage } from '../basic/group/GroupPage';
-import { YearPage } from './year/YearPage';
+import { YearPage } from '../basic/year/YearPage';
 
 import { getAllDB, createDB, updateDB, removeDB } from '../../utils/sport/group';
+import { getAllYearDB, createYearDB, updateYearDB, removeYearDB } from '../../utils/sport/year';
 
 
 const Sport: React.FC = () => { 
@@ -34,7 +35,11 @@ const Sport: React.FC = () => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    dispatch(initializeYears());
+    const fetchYears = async () => {
+      const years: Year[] = await getAllYearDB();
+      dispatch(initializeYears(years));
+    }
+    fetchYears();
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -57,7 +62,7 @@ const Sport: React.FC = () => {
       <Button style={styleButton} onClick={() => actionSelect('years')}>Jahr</Button>
       {subpage==='activities'&&<ActivityPage/>}
       {subpage==='groups'&&<GroupPage title='Sportgruppe' createGroupDB={createDB} updateGroupDB={updateDB} removeGroupDB={removeDB}/>}
-      {subpage==='years'&&<YearPage/>}
+      {subpage==='years'&&<YearPage title='Jahre' createYearDB={createYearDB} updateYearDB={updateYearDB} removeYearDB={removeYearDB}/>}
     </div>
   );
 }

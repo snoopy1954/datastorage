@@ -1,103 +1,101 @@
-import React from 'react';
+import React,  { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Table, Button } from 'semantic-ui-react';
+import { Table, Button, Input } from 'semantic-ui-react';
 import { backgroundColor, styleButton } from '../../../../constants';
 
-import { Transaction, TransactionNoID, Accounttype, Accountyear } from '../../../../../../backend/src/types/account';
-import { FileContent } from '../../../../../../backend/src/types/basic';
-import { Accountfilter } from '../../../../types/account';
+import { Transaction, TransactionNoID, Accounttype } from '../../../../../../backend/src/types/account';
+import { Year, FileContent } from '../../../../../../backend/src/types/basic';
+import { Filter } from '../../../../types/account';
 import { Edittype } from '../../../../types/basic';
 
 import { getAll } from '../../../../services/account/exchange';
 import { getOne } from '../../../../services/filesystem/files';
 
 import { RootState } from '../../../../state/store';
-import { setAccountfilter } from '../../../../state/account/accountfilter/actions';
 import { addTransaction, updateTransaction, removeTransaction } from '../../../../state/account/transactions/actions';
 import { updateAccounttype } from '../../../../state/account/accounttypes/actions';
-import { setSelectedTransaction, clearSelectedTransaction } from '../../../../state/account/transaction/actions';
+// import { setSelectedTransaction, clearSelectedTransaction } from '../../../../state/account/transaction/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
-import { AskString, Value } from '../../../basic/askString';
 import { TransactionModal } from '../TransactionModal';
 
-import { transactionFilter, transactionTitle } from '../../../../utils/account/accountfilter';
+import { transactionFilter, transactionTitle } from '../../../../utils/account/transaction';
 import { getAmount, getFormatedDate } from '../../../../utils/basic/basic';
 import { getAccounttypeFromFilename } from '../../../../utils/account/accounttype';
-import { getTransactionsFromCSV, findChecksum } from '../../../../utils/account/transaction';
+import { getTransactionsFromCSV, findChecksum, newFilter, emptyTransaction } from '../../../../utils/account/transaction';
+import { getCurrentYear } from '../../../../utils/basic/basic';
+import { getYear } from '../../../../utils/basic/year';
 
 
 export const TransactionPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false]);
+  const [transaction, setTransaction] = useState<Transaction>(emptyTransaction());
+  const [filter, setFilter] = useState<Filter>(newFilter());
+  const [modalOpen, setModalOpen] = useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+
   const dispatch = useDispatch();
 
   const accounttypes: Accounttype[] = useSelector((state: RootState) => state.accounttypes);      
-  const accountyears: Accountyear[] = useSelector((state: RootState) => state.accountyears);      
-  const accountfilter: Accountfilter = useSelector((state: RootState) => state.accountfilter);
+  const years: Year[] = useSelector((state: RootState) => state.years);      
   const transactions: Transaction[] = useSelector((state: RootState) => state.transactions);
-  const transaction: Transaction = useSelector((state: RootState) => state.transaction);
+//  const transaction: Transaction = useSelector((state: RootState) => state.transaction);
 
-  React.useEffect(() => {
-    dispatch(clearSelectedTransaction());
-  //  dispatch(clearAccountfilter());
-  }, [dispatch]);  
+  // useEffect(() => {
+  //   dispatch(clearSelectedTransaction());
+  // }, [dispatch]);  
+
+  useEffect(() => {
+    if (years.length!==0) {
+      const currentYearName: number = +(getCurrentYear());
+      const currentYear: Year = getYear(years, String(currentYearName));
+      if (currentYear.id!=='') {
+        setFilter({
+          accountype: 'Diba Giro',
+          year: currentYear.name,
+          person: ''
+        });
+      }
+    }
+  }, [years]);
   
-  const openModalNew = (): void => setModalOpen([true, false, false, false, false]);
+  const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
   const openModalDelete = (transaction: Transaction): void => {
-    dispatch(setSelectedTransaction(transaction));
-    setModalOpen([false, true, false, false, false]);
+    setTransaction(transaction);
+    setModalOpen([false, true, false, false]);
   };
       
   const openModalChange = (transaction: Transaction): void => {
-    dispatch(setSelectedTransaction(transaction));
-    setModalOpen([false, false, true, false, false]);
+    setTransaction(transaction);
+    setModalOpen([false, false, true, false]);
   };
       
   const openModalShow = (transaction: Transaction): void => {
-    dispatch(setSelectedTransaction(transaction));
-    setModalOpen([false, false, false, true, false]);
+    setTransaction(transaction);
+    setModalOpen([false, false, false, true]);
   };
   
-  const openModalPerson = (): void => setModalOpen([false, false, false, false, true]);
-
   enum ModalDialog {
     NEW = 0,
     DELETE = 1,
     CHANGE = 2,
-    SHOW = 3,
-    AUTHOR = 4,
+    SHOW = 3
   };
 
   const closeModal = (): void => {
-      setModalOpen([false, false, false, false, false]);
+      setModalOpen([false, false, false, false]);
   };
 
-  const actionSelectionClick = (filter: string, selection: string) => {
-    switch (filter) {
-      case 'Konto':
-        dispatch(setAccountfilter({
-          ...accountfilter, 
-          accountype: selection,
-        }));
-        break;
-      case 'Jahr':
-        dispatch(setAccountfilter({
-          ...accountfilter, 
-          accountyear: selection
-        }));
-        break;
-      default:
-    }
+  const actionSelectedAccount = (selection: string) => {
+    setFilter({ ...filter, accountype: selection });
   };
 
-  const actionSelectedPerson = (selection: Value) => {
-    dispatch(setAccountfilter({
-      ...accountfilter, 
-      person: selection.value
-    }));
-    closeModal();
+  const actionSelectedYear = (selection: string) => {
+    setFilter({ ...filter, year: selection });
+  };
+
+  const actionNameInput = (name: string) => {
+    setFilter({ ...filter, person: name });
   };
 
   const actionAdd = async (values: TransactionNoID) => {
@@ -111,13 +109,13 @@ export const TransactionPage: React.FC = () => {
       id: transaction.id
     };
     dispatch(updateTransaction(transactionToChange));
-    dispatch(clearSelectedTransaction());
+    setTransaction(emptyTransaction());
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeTransaction(transaction.id));
-    dispatch(clearSelectedTransaction());
+    setTransaction(emptyTransaction());
     closeModal();
   };
 
@@ -161,7 +159,7 @@ export const TransactionPage: React.FC = () => {
   };
 
   const actionShow = () => {
-    dispatch(clearSelectedTransaction());
+    setTransaction(emptyTransaction());
     closeModal();
   };
 
@@ -171,13 +169,13 @@ export const TransactionPage: React.FC = () => {
   });
 
   const accountyearOptions: string[] = [];
-  Object.values(accountyears).forEach(element => {
+  Object.values(years).forEach(element => {
     accountyearOptions.push(element.name)
   });
 
-  const title = 'Buchungen' + transactionTitle(accountfilter);
-  const sortedTransactions: Transaction[] = transactionFilter(transactions, accountfilter);
-  const filterSelected: boolean = (accountfilter.accountyear===''||accountfilter.accountype==='') ? false : true;
+  const title = 'Buchungen' + transactionTitle(filter);
+  const sortedTransactions: Transaction[] = transactionFilter(transactions, filter);
+  const filterSelected: boolean = (filter.year===''||filter.accountype==='') ? false : true;
 
   const ShowTableHeader: React.FC = () => {
     return (
@@ -225,6 +223,7 @@ export const TransactionPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neue Buchung anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        transaction={transaction}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -232,6 +231,7 @@ export const TransactionPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Buchung ' + transaction.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        transaction={transaction}
         onSubmit={actionChange}
         onClose={closeModal}
       />      
@@ -239,6 +239,7 @@ export const TransactionPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Buchung ' + transaction.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        transaction={transaction}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -249,34 +250,27 @@ export const TransactionPage: React.FC = () => {
         onSubmit={actionDelete}
         onClose={closeModal}
       />
-      <AskString
-        header='Person eingeben'
-        prompt='Person eingeben'
-        modalOpen={modalOpen[ModalDialog.AUTHOR]}
-        onSubmit={actionSelectedPerson}
-        onClose={closeModal}
-      />
       <AppHeaderH3 text={title} icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
       <Button as="select" className="ui dropdown" style={styleButton}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Konto', event.currentTarget.value)}>
+        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectedAccount(event.currentTarget.value)}>
         <option value="" style={styleButton}>Konto</option>
         {accounttypeOptions.map((option: string, index: number) => (
-          option===accountfilter.accountype
+          option===filter.accountype
           ?<option key={index} selected={true} value={option} style={styleButton}>{option}</option>
           :<option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
       <Button as="select" className="ui dropdown" style={styleButton}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Jahr', event.currentTarget.value)}>
+        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectedYear(event.currentTarget.value)}>
         <option value="" style={styleButton}>Jahr</option>
         {accountyearOptions.map((option: string, index: number) => (
-          option===accountfilter.accountyear
+          option===filter.year
           ?<option key={index} selected={true} value={option} style={styleButton}>{option}</option>
           :<option key={index} value={option} style={styleButton}>{option}</option>
           ))}
       </Button>
-      <Button style={styleButton} onClick={() => openModalPerson()}>Person</Button>
+      <Input placeholder='Name' onChange={(event: React.FormEvent<HTMLInputElement>) => actionNameInput(event.currentTarget.value)}></Input>
       <Button style={styleButton} onClick={() => actionImportCSV()}>Import</Button>
       <Button style={styleButton} disabled={true} onClick={() => actionImportPG()}>Import PG</Button>
       {!filterSelected&&<AppHeaderH3 text='Konto und Jahr auswählen!' icon='search'/>}

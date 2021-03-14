@@ -1,20 +1,18 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { RootState } from '../../../../state/store';
+import { Activity } from '../../../../../../backend/src/types/sport';
 
 import { AppHeaderH3 } from '../../../basic/header';
 
 
 interface Props {
+    activity: Activity;
     onCancel: () => void;
 }
 
-export const ActivityDetails: React.FC<Props> = ({ onCancel }) => {
-    const activity  = useSelector((state: RootState) => state.activity);
-
+export const ActivityDetails: React.FC<Props> = ({ activity, onCancel }) => {
     return (          
         <div className='App'>
             <AppHeaderH3 text={activity.name} icon='zoom-in'/>

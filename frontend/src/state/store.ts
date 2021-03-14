@@ -3,7 +3,22 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import { pageReducer } from './page/reducers';
-import { groupsReducer } from './groups/reducers';
+import { groupsReducer } from './basic/groups/reducers';
+import { yearsReducer } from './basic/years/reducers';
+
+import { booksReducer } from './book/books/reducers';
+import { tonguesReducer } from './book/tongues/reducers';
+import { formatsReducer } from './book/formats/reducers';
+import { ownershipsReducer } from './book/ownerships/reducers';
+
+import { accounttypesReducer } from './account/accounttypes/reducers';
+import { transactionsReducer } from './account/transactions/reducers';
+
+import { documentsReducer } from './document/documents/reducers';
+
+import { recipesReducer } from './recipe/recipes/reducers';
+
+import { activitiesReducer } from './sport/activities/reducers';
 
 import { yearlistReducer } from './pressure/yearlist/reducers';
 import { selectedyearReducer } from './pressure/selectedyear/reducers';
@@ -18,12 +33,6 @@ import { selectedosReducer } from './network/selectedos/reducers';
 import { versionsReducer } from './network/selectedversions/reducers';
 import { devicelistReducer } from './network/devicelist/reducers';
 import { selecteddeviceReducer } from './network/selecteddevice/reducers';
-
-import { booksReducer } from './book/books/reducers';
-import { bookReducer } from './book/book/reducers';
-import { tonguesReducer } from './book/tongues/reducers';
-import { formatsReducer } from './book/formats/reducers';
-import { ownershipsReducer } from './book/ownerships/reducers';
 
 import { addressgrouplistReducer } from './address/addressgrouplist/reducers';
 import { selectedaddressgroupReducer } from './address/selectedaddressgroup/reducers';
@@ -68,25 +77,6 @@ import { historylinesReducer } from './info/historylines/reducers';
 import { historylineReducer } from './info/historyline/reducers';
 import { infosReducer } from './info/infos/reducers';
 
-import { accounttypesReducer } from './account/accounttypes/reducers';
-import { accounttypeReducer } from './account/accounttype/reducers';
-import { accountyearsReducer } from './account/accountyears/reducers';
-import { accountyearReducer } from './account/accountyear/reducers';
-import { transactionsReducer } from './account/transactions/reducers';
-import { transactionReducer } from './account/transaction/reducers';
-import { accountfilterReducer } from './account/accountfilter/reducers';
-
-import { recipesReducer } from './recipe/recipes/reducers';
-import { recipeReducer } from './recipe/recipe/reducers';
-
-import { documentsReducer } from './document/documents/reducers';
-import { documentReducer } from './document/document/reducers';
-
-import { activitiesReducer } from './sport/activities/reducers';
-import { activityReducer } from './sport/activity/reducers';
-import { sportyearsReducer } from './sport/years/reducers';
-import { sportyearReducer } from './sport/year/reducers';
-
 import { musicgroupsReducer } from './music/groups/reducers';
 import { musicgroupReducer } from './music/group/reducers';
 import { artistsReducer } from './music/artists/reducers';
@@ -98,7 +88,22 @@ import { cdReducer } from './music/cd/reducers';
 const rootReducer = combineReducers({
     page: pageReducer,
     groups: groupsReducer,
+    years: yearsReducer,
 
+    books: booksReducer,
+    formats: formatsReducer,
+    ownerships: ownershipsReducer,
+    tongues: tonguesReducer,
+    
+    accounttypes: accounttypesReducer,
+    transactions: transactionsReducer,
+    
+    documents: documentsReducer,
+    
+    recipes: recipesReducer,
+    
+    activities: activitiesReducer,
+    
     yearlist: yearlistReducer,
     selectedyear: selectedyearReducer,
     openedyear: openedyearReducer,
@@ -112,12 +117,6 @@ const rootReducer = combineReducers({
     versions: versionsReducer,
     devices: devicelistReducer,
     device: selecteddeviceReducer,
-    
-    books: booksReducer,
-    book: bookReducer,
-    formats: formatsReducer,
-    ownerships: ownershipsReducer,
-    tongues: tonguesReducer,
     
     addressgroups: addressgrouplistReducer,
     addressgroup: selectedaddressgroupReducer,
@@ -161,25 +160,6 @@ const rootReducer = combineReducers({
     historylines: historylinesReducer,
     historyline: historylineReducer,
     infos: infosReducer,
-    
-    accounttypes: accounttypesReducer,
-    accounttype: accounttypeReducer,
-    accountyears: accountyearsReducer,
-    accountyear: accountyearReducer,
-    transactions: transactionsReducer,
-    transaction: transactionReducer,
-    accountfilter: accountfilterReducer,
-    
-    recipes: recipesReducer,
-    recipe: recipeReducer,
-    
-    documents: documentsReducer,
-    document: documentReducer,
-    
-    activities: activitiesReducer,
-    activity: activityReducer,
-    sportyears: sportyearsReducer,
-    sportyear: sportyearReducer,
     
     musicgroups: musicgroupsReducer,
     musicgroup: musicgroupReducer,

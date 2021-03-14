@@ -1,7 +1,7 @@
 import { MD5 } from 'crypto-js';
 
 import { Transaction, TransactionNoID, Accounttype } from '../../../../backend/src/types/account';
-import { Accountfilter } from '../../types/account';
+import { Filter } from '../../types/account';
 
 import { getCurrentDate, getSum } from '../basic/basic';
 
@@ -29,14 +29,14 @@ export const newTransaction = (): TransactionNoID => {
     return transaction;
 };
 
-export const nextTransaction = (transactions: Transaction[], accountfilter: Accountfilter): TransactionNoID => {
+export const nextTransaction = (transactions: Transaction[]): TransactionNoID => {
     const currentdate: string = getCurrentDate();
 
     const transaction: TransactionNoID = {
         name: "Buchung #" + nextSeqnr(transactions),
         seqnr: nextSeqnr(transactions),
         checksum: '',
-        accounttype: accountfilter.accountype,
+        accounttype: '',
         date: currentdate,
         year: currentdate.substr(6,4),
         month: currentdate.substr(3,2),
@@ -210,3 +210,29 @@ export const findChecksum = (transactions: Transaction[], checksum: string): boo
 
     return found;
 };
+
+export const newFilter = (): Filter => {
+    const filter: Filter = {
+        accountype: '',
+        year: '',
+        person: ''
+    }
+
+    return filter;
+};
+
+export const transactionTitle = (filter: Filter): string => {
+    let title = (filter.accountype!=="") ? ': ' + filter.accountype : '';
+    title += (filter.year!=="") ? ' - ' + filter.year : '';
+
+    return title;
+};
+
+export const transactionFilter = (transactions: Transaction[], filter: Filter): Transaction[] => {
+    let filteredTransactions = (filter.accountype!=="") ? Object.values(transactions).filter(transaction => transaction.accounttype===filter.accountype) : transactions;
+    filteredTransactions = (filter.year!=="") ? Object.values(filteredTransactions).filter(transaction => transaction.year===filter.year) : filteredTransactions;
+    const sortedTransactions  = (filter.person!=="") ? Object.values(filteredTransactions).filter(transaction => transaction.person.includes(filter.person)) : filteredTransactions;
+
+    return sortedTransactions;
+};
+

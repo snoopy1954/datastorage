@@ -1,22 +1,20 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { RootState } from '../../../../state/store';
-       
+import { Transaction } from '../../../../../../backend/src/types/account';
+
 import { AppHeaderH3 } from "../../../basic/header";
 
 import { getAmount, getFormatedDate } from '../../../../utils/basic/basic';
 
 
 interface Props {
+    transaction: Transaction;
     onCancel: () => void;
 }
 
-export const TransactionDetails: React.FC<Props> = ({ onCancel }) => {
-    const transaction = useSelector((state: RootState) => state.transaction);
-
+export const TransactionDetails: React.FC<Props> = ({ transaction, onCancel }) => {
     return (          
         <div className="App">
             <AppHeaderH3 text={transaction.name} icon='zoom-in'/>

@@ -3,23 +3,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { styleButton } from '../../constants';
 
-import { Accountyear } from '../../../../backend/src/types/account';
+import { Year } from '../../../../backend/src/types/basic';
 
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
 import { initializeAccounttypes } from '../../state/account/accounttypes/actions';
-import { initializeAccountyears } from '../../state/account/accountyears/actions';
+import { initializeYears } from '../../state/basic/years/actions';
 import { initializeTransactions } from '../../state/account/transactions/actions';
-import { setSelectedAccountyear } from '../../state/account/accountyear/actions';
-import { setAccountfilter } from '../../state/account/accountfilter/actions';
 
 import { AppHeaderH2 } from '../basic/header';
 import { AccounttypePage } from './accounttype/AccounttypePage';
-import { AccountyearPage } from './accountyear/AccountyearPage';
+import { YearPage } from '../basic/year/YearPage';
 import { TransactionPage } from './transaction/TransactionPage';
 
-import { getCurrentYear } from '../../utils/basic/basic';
-import { getAccountyear } from '../../utils/account/accountyear';
+import { getAllYearDB, createYearDB, updateYearDB, removeYearDB } from '../../utils/account/year';
 
 
 const Account: React.FC = () => {  
@@ -27,34 +24,22 @@ const Account: React.FC = () => {
 
   const mainpage = useSelector((state: RootState) => state.page.mainpage);      
   const subpage = useSelector((state: RootState) => state.page.subpage);      
-  const years = useSelector((state: RootState) => state.accountyears);      
 
   React.useEffect(() => {
     dispatch(initializeAccounttypes());
   }, [dispatch]);
 
   React.useEffect(() => {
-    dispatch(initializeAccountyears());
+    const fetchYears = async () => {
+      const years: Year[] = await getAllYearDB();
+      dispatch(initializeYears(years));
+    }
+    fetchYears();
   }, [dispatch]);
 
   React.useEffect(() => {
     dispatch(initializeTransactions());
   }, [dispatch]);
-
-  React.useEffect(() => {
-    if (years.length!==0) {
-      const currentYearName: number = +(getCurrentYear());
-      const currentYear: Accountyear = getAccountyear(years, String(currentYearName));
-      if (currentYear.id!=='') {
-        dispatch(setSelectedAccountyear(currentYear));
-        dispatch(setAccountfilter({
-          accountype: 'Diba Giro',
-          accountyear: currentYear.name,
-          person: ''
-        }));
-      }
-    }
-  }, [dispatch, years]);
 
   React.useEffect(() => {
     dispatch(setPage({ mainpage, subpage: 'transaction' }));
@@ -69,10 +54,10 @@ const Account: React.FC = () => {
       <AppHeaderH2 text='Konten' icon='money'/>
       <Button style={styleButton} onClick={() => actionSelect('transaction')}>Buchungen</Button>
       <Button style={styleButton} onClick={() => actionSelect('accounttype')}>Kontotyp</Button>
-      <Button style={styleButton} onClick={() => actionSelect('accountyear')}>Jahr</Button>
+      <Button style={styleButton} onClick={() => actionSelect('years')}>Jahr</Button>
       {subpage==='transaction'&&<TransactionPage/>}
       {subpage==='accounttype'&&<AccounttypePage/>}
-      {subpage==='accountyear'&&<AccountyearPage/>}
+      {subpage==='years'&&<YearPage title='Jahre' createYearDB={createYearDB} updateYearDB={updateYearDB} removeYearDB={removeYearDB}/>}
     </div>
   );
 }

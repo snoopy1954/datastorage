@@ -5,49 +5,45 @@ import { backgroundColor, styleButton } from '../../../../constants';
 
 import { Group, Year } from '../../../../../../backend/src/types/basic';
 import { Activity, ActivityNoID } from '../../../../../../backend/src/types/sport';
+import { Filter } from '../../../../types/sport';
 import { Edittype } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { addActivity, updateActivity, removeActivity } from '../../../../state/sport/activities/actions';
-import { setSelectedActivity, clearSelectedActivity } from '../../../../state/sport/activity/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { ActivityModal } from '../ActivityModal';
 
-import { filterActivities } from '../../../../utils/sport/activity';
+import { filterActivities, emptyActivity, newFilter } from '../../../../utils/sport/activity';
 
 
 export const ActivityPage: React.FC = () => {
-  const [group, setGroup] = useState('')
-  const [year, setYear] = useState('');
+  const [activity, setActivity] = useState(emptyActivity());
+  const [filter, setFilter] = useState<Filter>(newFilter());
 
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
-  const years: Year[] = useSelector((state: RootState) => state.sportyears);      
-  const groups: Group[] = useSelector((state: RootState) => state.groups);      
   const activities: Activity[] = useSelector((state: RootState) => state.activities);
-  const activity: Activity = useSelector((state: RootState) => state.activity);
+  const groups: Group[] = useSelector((state: RootState) => state.groups);      
+  const years: Year[] = useSelector((state: RootState) => state.years);      
 
-  React.useEffect(() => {
-    dispatch(clearSelectedActivity());
-  }, [dispatch]);  
-  
+
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
   const openModalDelete = (activity: Activity): void => {
-    dispatch(setSelectedActivity(activity));
+    setActivity(activity);
     setModalOpen([false, true, false, false]);
   };
       
   const openModalChange = (activity: Activity): void => {
-    dispatch(setSelectedActivity(activity));
+    setActivity(activity);
     setModalOpen([false, false, true, false]);
   };
       
   const openModalShow = (activity: Activity): void => {
-    dispatch(setSelectedActivity(activity));
+    setActivity(activity);
     setModalOpen([false, false, false, true]);
   };
   
@@ -62,16 +58,12 @@ export const ActivityPage: React.FC = () => {
       setModalOpen([false, false, false, false]);
   };
 
-  const actionSelectionClick = (filter: string, selection: string) => {
-    switch (filter) {
-      case 'Gruppe':
-        setGroup(selection);
-        break;
-      case 'Jahr':
-        setYear(selection);
-        break;
-      default:
-    };
+  const actionSelectedGroup = (selection: string) => {
+    setFilter({ ...filter, group: selection });
+  };
+
+  const actionSelectedYear = (selection: string) => {
+    setFilter({ ...filter, year: selection });
   };
 
   const actionAdd = async (values: ActivityNoID) => {
@@ -88,18 +80,18 @@ export const ActivityPage: React.FC = () => {
       id: activity.id,
     };
     dispatch(updateActivity(activityToChange));
-    dispatch(clearSelectedActivity());
+    setActivity(emptyActivity());
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeActivity(activity.id));
-    dispatch(clearSelectedActivity());
+    setActivity(emptyActivity());
     closeModal();
   };  
 
   const actionShow = () => {
-    dispatch(clearSelectedActivity());
+    setActivity(emptyActivity());
     closeModal();
   };
 
@@ -114,7 +106,7 @@ export const ActivityPage: React.FC = () => {
   });
 
   const title = 'Aktivitäten';
-  const sortedActivities = filterActivities(activities, group, year);
+  const sortedActivities = filterActivities(activities, filter);
 
   const ShowTableHeader: React.FC = () => {
     return (
@@ -160,6 +152,7 @@ export const ActivityPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neue Aktivität anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        activity={activity}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -167,6 +160,7 @@ export const ActivityPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Aktivität ' + activity.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        activity={activity}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -174,6 +168,7 @@ export const ActivityPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Aktivität ' + activity.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        activity={activity}
         onSubmit={actionChange}
         onClose={closeModal}
       />
@@ -187,20 +182,20 @@ export const ActivityPage: React.FC = () => {
       <AppHeaderH3 text={title} icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
       <Button as="select" className="ui dropdown" style={styleButton}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Gruppe', event.currentTarget.value)}>
+        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectedGroup(event.currentTarget.value)}>
         <option value="" style={styleButton}>Gruppe</option>
         {groupOptions.map((option: string, index: number) => (
         <option key={index} value={option} style={styleButton}>{option}</option>
         ))}
       </Button>
       <Button as="select" className="ui dropdown" style={styleButton}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick('Jahr', event.currentTarget.value)}>
+        onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectedYear(event.currentTarget.value)}>
         <option value="" style={styleButton}>Jahr</option>
         {yearOptions.map((option: string, index: number) => (
-          option===year
+          option===filter.year
           ?<option key={index} selected={true} value={option} style={styleButton}>{option}</option>
           :<option key={index} value={option} style={styleButton}>{option}</option>
-          ))}
+        ))}
       </Button>
       {Object.values(sortedActivities).length>8&&
         <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>

@@ -1,4 +1,5 @@
 import { Activity, ActivityNoID } from '../../../../backend/src/types/sport';
+import { Filter } from '../../types/sport';
 
 import { getCurrentDate, getCurrentYear } from '../basic/basic';
 
@@ -77,10 +78,23 @@ export const sortActivities = (activities: Activity[]): Activity[] => {
     return activities.sort(sortElements);
 };
 
-export const filterActivities = (activities: Activity[], group: string, year: string): Activity[] => {
-    let filteredActivities = (group!=="") ? Object.values(activities).filter(activity => activity.group===group) : activities;
-    filteredActivities = (year!=="") ? Object.values(filteredActivities).filter(activity => activity.year===year) : filteredActivities;
+export const filterActivities = (activities: Activity[], filter: Filter): Activity[] => {
+    let filteredActivities = (filter.group!=="") 
+        ? Object.values(activities).filter(activity => activity.group===filter.group) 
+        : activities;
+    filteredActivities = (filter.year!=="") 
+        ? Object.values(filteredActivities).filter(activity => activity.year===filter.year) 
+        : filteredActivities;
     const sortedActivitys = sortActivities(Object.values(filteredActivities));
 
     return sortedActivitys;
+};
+
+export const newFilter = (): Filter => {
+    const filter: Filter = {
+        group: '',
+        year: ''
+    }
+
+    return filter;
 };

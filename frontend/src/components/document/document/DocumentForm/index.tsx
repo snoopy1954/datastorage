@@ -6,6 +6,7 @@ import { styleButton }from '../../../../constants';
 
 import { Option, Edittype } from '../../../../types/basic';
 import { Group } from '../../../../../../backend/src/types/basic';
+import { Document } from '../../../../../../backend/src/types/document';
 import { DocumentWithContentsNoID } from '../../../../types/document';
 import { ContentWithFile } from '../../../../types/basic';
 
@@ -25,6 +26,7 @@ import { content2contentwithfile, newContent, sortContents } from '../../../../u
 
 interface Props {
   edittype: Edittype;
+  document: Document;
   onSubmit: (values: DocumentWithContentsNoID) => void;
   onCancel: () => void;
 }
@@ -34,10 +36,8 @@ const emptylineStyle = {
   fontSize: 8
 };
 
-export const DocumentForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
+export const DocumentForm: React.FC<Props> = ({ edittype, document, onSubmit, onCancel }) => {
   const [subgroups, setSubgroups] = useState<Array<string>>([]);
-
-  const document = useSelector((state: RootState) => state.document);
   const documents = useSelector((state: RootState) => state.documents);
   const groups = useSelector((state: RootState) => state.groups);
 

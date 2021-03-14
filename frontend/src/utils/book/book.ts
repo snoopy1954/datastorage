@@ -152,10 +152,18 @@ export const booklistTitle = (filters: Filter): string => {
 };
 
 export const booklistFilter = (books: Book[], filters: Filter, bookgroups: Group[]): Book[] => {
-    let filteredBooks = (filters.group!=="") ? Object.values(books).filter(book => book.bookgroup===filters.group) : books;
-    filteredBooks = (filters.subgroup!=="") ? Object.values(filteredBooks).filter(book => book.subgroup===filters.subgroup) : filteredBooks;
-    filteredBooks = (filters.tongue!=="") ? Object.values(filteredBooks).filter(book => book.tongue===filters.tongue) : filteredBooks;
-    filteredBooks = (filters.author!=="") ? Object.values(filteredBooks).filter(book => book.author.familyname.includes(filters.author)) : filteredBooks;
+    let filteredBooks = (filters.group!=="") 
+      ? Object.values(books).filter(book => book.bookgroup===filters.group) 
+      : books;
+    filteredBooks = (filters.subgroup!=="") 
+      ? Object.values(filteredBooks).filter(book => book.subgroup===filters.subgroup) 
+      : filteredBooks;
+    filteredBooks = (filters.tongue!=="") 
+      ? Object.values(filteredBooks).filter(book => book.tongue===filters.tongue) 
+      : filteredBooks;
+    filteredBooks = (filters.author!=="") 
+      ? Object.values(filteredBooks).filter(book => book.author.familyname.toUpperCase().includes(filters.author.toUpperCase())) 
+      : filteredBooks;
     const sortedBooks = sortBookList(Object.values(filteredBooks), Object.values(bookgroups));
 
     return sortedBooks;

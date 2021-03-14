@@ -39,7 +39,7 @@ import loglinesRouter from './routes/logging/logline';
 import historylinesRouter from './routes/logging/historyline';
 
 import accounttypesRouter from './routes/account/accounttypes';
-import accountyearsRouter from './routes/account/accountyears';
+import accountyearsRouter from './routes/account/years';
 import transactionsRouter from './routes/account/transactions';
 import kontoPGRouter from './routes/account/exchange';
 
@@ -47,9 +47,10 @@ import recipegroupsRouter from './routes/recipe/groups';
 import recipesRouter from './routes/recipe/recipes';
 
 import documentgroupsRouter from './routes/document/groups';
+import documentyearsRouter from './routes/document/years';
 import documentsRouter from './routes/document/documents';
 
-import sportyearsRouter from './routes/sport/sportyears';
+import sportyearsRouter from './routes/sport/years';
 import sportgroupsRouter from './routes/sport/groups';
 import activitiesRouter from './routes/sport/activities';
 
@@ -98,6 +99,7 @@ app.use('/api/transactions', transactionsRouter);
 app.use('/api/kontoPG', kontoPGRouter);
 app.use('/api/recipegroups', recipegroupsRouter);
 app.use('/api/recipes', recipesRouter);
+app.use('/api/documentyears', documentyearsRouter);
 app.use('/api/documentgroups', documentgroupsRouter);
 app.use('/api/documents', documentsRouter);
 app.use('/api/sportyears', sportyearsRouter);

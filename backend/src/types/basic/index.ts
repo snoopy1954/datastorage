@@ -7,19 +7,16 @@ export interface Group extends Name {
     id: string;
     subgroups: string[];
 }
-
 export type GroupNoID = Omit<Group, 'id'>;
+
+export interface Year extends Name {
+    id: string;
+}
+export type YearNoID = Omit<Year, 'id'>;
 
 export interface FileContent {
     filename: string;
     content: string;
-}
-
-export interface Content {
-    filename: string;
-    filetype: string;
-    filesize: string;
-    dataId: string;
 }
 
 export interface Content2 {
@@ -39,10 +36,3 @@ export interface Binarydata {
 }
 
 export type BinarydataNoID = Omit<Binarydata, 'id'>;
-
-export interface Year extends Name {
-    id: string;
-}
-
-export type YearNoID = Omit<Year, 'id'>;
-

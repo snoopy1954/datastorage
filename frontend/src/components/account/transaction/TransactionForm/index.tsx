@@ -4,7 +4,7 @@ import { Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { styleButton }from '../../../../constants';
 
-import { TransactionNoID } from '../../../../../../backend/src/types/account'
+import { Transaction, TransactionNoID } from '../../../../../../backend/src/types/account';
 import { Option, Edittype } from "../../../../types/basic";
 
 import { RootState } from '../../../../state/store';
@@ -17,15 +17,14 @@ import { nextTransaction } from '../../../../utils/account/transaction';
 
 interface Props {
   edittype: Edittype;
+  transaction: Transaction;
   onSubmit: (values: TransactionNoID) => void;
   onCancel: () => void;
 }
 
-export const TransactionForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const transaction = useSelector((state: RootState) => state.transaction);
+export const TransactionForm: React.FC<Props> = ({ edittype, transaction, onSubmit, onCancel }) => {
   const transactions = useSelector((state: RootState) => state.transactions);
   const accounttypes = useSelector((state: RootState) => state.accounttypes);
-  const accountfilter = useSelector((state: RootState) => state.accountfilter);
 
   const accountypeOptions: Option[] = [];
   Object.values(accounttypes).forEach(element => {
@@ -35,7 +34,7 @@ export const TransactionForm: React.FC<Props> = ({ edittype, onSubmit, onCancel 
     })
   });
 
-  const initialValues = edittype===Edittype.EDIT && transaction ? transaction : nextTransaction(transactions, accountfilter);
+  const initialValues = edittype===Edittype.EDIT && transaction ? transaction : nextTransaction(transactions);
   
   return (
     <Formik
