@@ -30,3 +30,18 @@ export const AppHeaderH3 = ({ text, icon }: Props) => {
     </Container>
   )
 };
+
+interface PropsWithClick {
+  onClick: () => void;
+  text: string;
+  icon: SemanticICONS;
+};
+
+export const AppHeaderH1WithClick = ({ text, icon, onClick }: PropsWithClick) => {
+  return (
+    <Container fluid>
+      <Header as="h1" style={{ marginLeft: '1em', marginTop: '10px', marginBottom: '10px' }}><Icon name={icon} color="teal" onClick={onClick}></Icon>{text}</Header>
+    </Container>
+  )
+};
+

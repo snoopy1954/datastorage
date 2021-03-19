@@ -18,13 +18,13 @@ import { newYear } from '../../../../utils/pressure/year';
 
 interface Props {
   edittype: Edittype;
+  year: Year;
   onSubmit: (values: YearNoID) => void;
   onCancel: () => void;
 }
 
-export const YearForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const years: Year[] = useSelector((state: RootState) => state.yearlist);
-  const year: Year = useSelector((state: RootState) => state.selectedyear);
+export const YearForm: React.FC<Props> = ({ edittype, year, onSubmit, onCancel }) => {
+  const years: Year[] = useSelector((state: RootState) => state.pressureyears);
 
   const initialValues = edittype===Edittype.EDIT ? year : newYear(years);
 

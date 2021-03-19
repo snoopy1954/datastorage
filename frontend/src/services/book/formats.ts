@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiBaseUrl } from "../../constants";
-import { Format, FormatNoID } from '../../../../backend/src/types/book';
+import { Format, FormatNoID } from '../../../../backend/src/types/basic';
 
 const getAll = async () => {
     const { data: formats } = await axios.get<Format[]>(

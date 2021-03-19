@@ -14,6 +14,12 @@ export interface Year extends Name {
 }
 export type YearNoID = Omit<Year, 'id'>;
 
+export interface Format extends Name {
+    id: string;
+}
+
+export type FormatNoID = Omit<Format, 'id'>;
+
 export interface FileContent {
     filename: string;
     content: string;

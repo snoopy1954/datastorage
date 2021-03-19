@@ -54,8 +54,9 @@ export const nextSeqnr = (accounttypes: Accounttype[]): number => {
 export const getAccounttypeFromFilename = (accounttypes: Accounttype[], filename: string): Accounttype => {
     let accountype: Accounttype = emptyAccounttype();
 
+    console.log(filename, accounttypes)
     Object.values(accounttypes).forEach(element => {
-        if (filename.includes(element.number)) {
+        if (filename.includes(element.number)&&element.number!=='') {
             accountype = element;
         }
     });

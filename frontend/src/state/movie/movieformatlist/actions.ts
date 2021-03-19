@@ -1,4 +1,4 @@
-import { Movieformat, MovieformatNoID } from '../../../../../backend/src/types/movie';
+import { Format, FormatNoID } from '../../../../../backend/src/types/basic';
 import { 
     SET_MOVIEFORMAT_LIST, 
     ADD_MOVIEFORMAT,
@@ -23,7 +23,7 @@ export const initializeMovieformats = () => {
   }
 }
 
-export const addMovieformat = (movieformat: MovieformatNoID) => {
+export const addMovieformat = (movieformat: FormatNoID) => {
   return async (dispatch: DispatchAddMovieformat) => {
     const newMovieformat = await create(movieformat);
     dispatch({
@@ -33,7 +33,7 @@ export const addMovieformat = (movieformat: MovieformatNoID) => {
   }
 };
 
-export const updateMovieformat = (movieformat: Movieformat) => {
+export const updateMovieformat = (movieformat: Format) => {
   return async (dispatch: DispatchUpdateMovieformat) => {
     const newMovieformat = await update(movieformat.id, movieformat);
     dispatch({

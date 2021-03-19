@@ -7,42 +7,37 @@ import { Edittype } from '../../../../types/basic';
 import { Devicetype, DevicetypeNoID } from '../../../../../../backend/src/types/network';
 
 import { RootState } from '../../../../state/store';
-import { addDevicetype, updateDevicetype, removeDevicetype } from  '../../../../state/network/devicetypelist/actions';
-import { setSelectedDevicetype, clearSelectedDevicetype } from "../../../../state/network/selecteddevicetype/actions";
-import { clearSelectedOs } from  '../../../../state/network/selectedos/actions';
-import { clearSelectedDevice} from  '../../../../state/network/selecteddevice/actions';
+import { addDevicetype, updateDevicetype, removeDevicetype } from  '../../../../state/network/devicetypes/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { DevicetypeModal } from '../DevicetypeModal';
 
+import { emptyDevicetype } from '../../../../utils/network/devicetype';
+
 
 export const DevicetypePage: React.FC = () => {
+  const [devicetype, setDevicetype] = React.useState<Devicetype>(emptyDevicetype());
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+
   const dispatch = useDispatch();
 
     const devicetypes = useSelector((state: RootState) => state.devicetypes);
-    const devicetype = useSelector((state: RootState) => state.devicetype);
-
-    React.useEffect(() => {
-      dispatch(clearSelectedDevice());
-      dispatch(clearSelectedOs());
-    }, [dispatch]);  
 
     const openModalNew = (): void => setModalOpen([true, false, false, false]);
     
     const openModalDelete = (type: Devicetype): void => {
-      dispatch(setSelectedDevicetype(type));
+      setDevicetype(type);
       setModalOpen([false, true, false, false]);
     };
     
     const openModalChange = (type: Devicetype): void => {
-      dispatch(setSelectedDevicetype(type));
+      setDevicetype(type);
       setModalOpen([false, false, true, false]);
     };
     
     const openModalShow = (type: Devicetype): void => {
-      dispatch(setSelectedDevicetype(type));
+      setDevicetype(type);
       setModalOpen([false, false, false, true]);
     };
     
@@ -58,7 +53,7 @@ export const DevicetypePage: React.FC = () => {
     };
 
     const actionShow = () => {
-      dispatch(clearSelectedDevicetype());
+      setDevicetype(emptyDevicetype());
       closeModal();
     };  
 
@@ -73,13 +68,13 @@ export const DevicetypePage: React.FC = () => {
         id: devicetype.id
       }
       dispatch(updateDevicetype(devicetypeToChange));
-      dispatch(clearSelectedDevicetype());
+      setDevicetype(emptyDevicetype());
       closeModal();
     };
 
     const actionDelete = () => {
       dispatch(removeDevicetype(devicetype.id));
-      dispatch(clearSelectedDevicetype());
+      setDevicetype(emptyDevicetype());
       closeModal();
     };  
     
@@ -89,6 +84,7 @@ export const DevicetypePage: React.FC = () => {
             edittype={Edittype.ADD}
             title='Neuen Gerätetyp anlegen'
             modalOpen={modalOpen[ModalDialog.NEW]}
+            devicetype={devicetype}
             onSubmit={actionAdd}
             onClose={closeModal}
           />
@@ -96,6 +92,7 @@ export const DevicetypePage: React.FC = () => {
             edittype={Edittype.SHOW}
             title={'Gerätetyp ' + devicetype.name + ' anzeigen'}
             modalOpen={modalOpen[ModalDialog.SHOW]}
+            devicetype={devicetype}
             onSubmit={actionShow}
             onClose={closeModal}
           />
@@ -103,6 +100,7 @@ export const DevicetypePage: React.FC = () => {
             edittype={Edittype.EDIT}
             title={'Gerätetyp ' + devicetype.name + ' ändern'}
             modalOpen={modalOpen[ModalDialog.CHANGE]}
+            devicetype={devicetype}
             onSubmit={actionChange}
             onClose={closeModal}
           />

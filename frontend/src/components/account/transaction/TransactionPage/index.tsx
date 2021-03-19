@@ -138,7 +138,9 @@ export const TransactionPage: React.FC = () => {
     const fetchList = async () => {
       const list: FileContent[] = formatData(await getOne(directory, 'csv'));
       Object.values(list).forEach(item => {
+        console.log(item)
         const actAccounttype: Accounttype = getAccounttypeFromFilename(accounttypes, item.filename);
+        console.log(actAccounttype)
         let balance = actAccounttype.balance;
         const newTransactions: TransactionNoID[] = getTransactionsFromCSV(item.content, actAccounttype, transactions);
         newTransactions.forEach(newTransaction => {

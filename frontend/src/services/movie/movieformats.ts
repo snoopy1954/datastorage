@@ -1,36 +1,36 @@
 import axios from 'axios';
 import { apiBaseUrl } from "../../constants";
-import { Movieformat, MovieformatNoID } from '../../../../backend/src/types/movie';
+import { Format, FormatNoID } from '../../../../backend/src/types/basic';
 
 const getAll = async () => {
-    const { data: movieformats } = await axios.get<Movieformat[]>(
+    const { data: formats } = await axios.get<Format[]>(
         `${apiBaseUrl}/movieformats`
     );
 
-    return movieformats;
+    return formats;
 }
 
 const getOne = async (id: string) => {
-    const { data: movieformat } = await axios.get<Movieformat>(
+    const { data: format } = await axios.get<Format>(
         `${apiBaseUrl}/movieformats/${id}`
     );
 
-    return movieformat;
+    return format;
 }
 
-const create = async (movieformat: MovieformatNoID) => {
+const create = async (format: FormatNoID) => {
     const response = await axios.post(
         `${apiBaseUrl}/movieformats`,
-        movieformat
+        format
     );
 
     return response.data
 }
 
-const update = async (id: string, movieformat: MovieformatNoID) => {
+const update = async (id: string, format: FormatNoID) => {
     const response = await axios.put(
         `${apiBaseUrl}/movieformats/${id}`, 
-        movieformat
+        format
     );
 
     return response.data

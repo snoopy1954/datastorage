@@ -1,7 +1,7 @@
-import { Movieformat } from '../../../../../backend/src/types/movie';
+import { Format } from '../../../../../backend/src/types/basic';
 import { SET_SELECTED_MOVIEFORMAT, CLEAR_SELECTED_MOVIEFORMAT, ActionTypes } from './types';
 
-export const setSelectedMovieformat = (movieformat: Movieformat) => {
+export const setSelectedMovieformat = (movieformat: Format) => {
     const action: ActionTypes = {
         type: SET_SELECTED_MOVIEFORMAT,
         payload: movieformat

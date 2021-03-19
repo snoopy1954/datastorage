@@ -1,9 +1,9 @@
-import { Movieformat } from '../../../../../backend/src/types/movie';
+import { Format } from '../../../../../backend/src/types/basic';
 import { SET_MOVIEFORMAT_LIST, ADD_MOVIEFORMAT, UPDATE_MOVIEFORMAT, REMOVE_MOVIEFORMAT, ActionTypes } from './types';
 
-const initialState: Movieformat[] = [];
+const initialState: Format[] = [];
 
-export const movieformatlistReducer = (state = initialState, action: ActionTypes): Movieformat[] => {
+export const movieformatlistReducer = (state = initialState, action: ActionTypes): Format[] => {
     switch (action.type) {
         case SET_MOVIEFORMAT_LIST:
             return {

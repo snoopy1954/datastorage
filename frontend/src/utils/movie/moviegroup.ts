@@ -1,7 +1,7 @@
-import { Moviegroup, MoviegroupNoID } from '../../../../backend/src/types/movie';
+import { Group, GroupNoID } from '../../../../backend/src/types/basic';
 
-export const newMoviegroup = (): MoviegroupNoID => {
-    const moviegroup: MoviegroupNoID = {
+export const newGroup = (): GroupNoID => {
+    const moviegroup: GroupNoID = {
         name: "",
         seqnr: 0,
         subgroups: []
@@ -10,8 +10,8 @@ export const newMoviegroup = (): MoviegroupNoID => {
     return moviegroup;
 };
 
-export const emptyMoviegroup = (): Moviegroup => {
-    const moviegroup: Moviegroup = {
+export const emptyGroup = (): Group => {
+    const moviegroup: Group = {
         id: '',
         name: "",
         seqnr: 0,

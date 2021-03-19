@@ -7,35 +7,37 @@ import { Edittype } from '../../../../types/basic';
 import { Year, YearNoID } from '../../../../../../backend/src/types/pressure';
 
 import { RootState } from '../../../../state/store';
-import { addYear, removeYear, updateYear } from  '../../../../state/pressure/yearlist/actions';
-import { clearSelectedYear, setSelectedYear } from '../../../../state/pressure/selectedyear/actions';
+import { addYear, removeYear, updateYear } from  '../../../../state/pressure/years/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { YearModal } from '../YearModal';
 
+import { emptyYear } from '../../../../utils/pressure/year';
+
 
 export const YearPage: React.FC = () => {
+  const [year, setYear] = React.useState<Year>(emptyYear());
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+  
   const dispatch = useDispatch();
 
-  const years: Year[] = useSelector((state: RootState) => state.yearlist);
-  const year: Year = useSelector((state: RootState) => state.selectedyear);
+  const years: Year[] = useSelector((state: RootState) => state.pressureyears);
 
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
   const openModalDelete = async (year: Year): Promise<void> => {
-    dispatch(setSelectedYear(year));
+    setYear(year);
     setModalOpen([false, true, false, false]);
   };
     
   const openModalChange = async (year: Year): Promise<void> => {
-    dispatch(setSelectedYear(year));
+    setYear(year);
     setModalOpen([false, false, true, false]);
   };
 
   const openModalShow = async (year: Year): Promise<void> => {
-    dispatch(setSelectedYear(year));
+    setYear(year);
     setModalOpen([false, false, false, true]);
   };
 
@@ -56,7 +58,7 @@ export const YearPage: React.FC = () => {
   };
       
   const actionShow = () => {
-    dispatch(clearSelectedYear());
+    setYear(emptyYear());
     closeModal();
   };
 
@@ -66,13 +68,13 @@ export const YearPage: React.FC = () => {
       id: year.id
     };
     dispatch(updateYear(yearToChange));
-    dispatch(clearSelectedYear());
+    setYear(emptyYear());
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeYear(year.id));
-    dispatch(clearSelectedYear());
+    setYear(emptyYear());
     closeModal();
   };  
 
@@ -114,6 +116,7 @@ export const YearPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neues Jahr anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        year={year}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -121,6 +124,7 @@ export const YearPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Jahr ' + year.name.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        year={year}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -128,6 +132,7 @@ export const YearPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Jahr ' + year.name.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        year={year}
         onSubmit={actionChange}
         onClose={closeModal}
       />

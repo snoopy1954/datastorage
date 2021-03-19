@@ -1,5 +1,4 @@
 import React from 'react'
-import { useSelector } from 'react-redux';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Table, Button } from "semantic-ui-react";
@@ -7,21 +6,18 @@ import { styleButton } from '../../../../constants';
 
 import { Day, Month } from '../../../../../../backend/src/types/pressure';
 
-import { RootState } from '../../../../state/store';
-
 import { AppHeaderH1 } from "../../../basic/header";
 
 
 interface Props {
+  month: Month;
   onCancel: () => void;
 }
 
 const backgroundColor = 'white';
 
-export const MonthPrint: React.FC<Props> = ({ onCancel }) => {
+export const MonthPrint: React.FC<Props> = ({ month, onCancel }) => {
   const myRef = React.useRef<HTMLDivElement>(null);
-
-  const month: Month = useSelector((state: RootState) => state.selectedmonth);
 
   const actionPrint = async () => {
     const filename: string = month.year + month.month + '.pdf';

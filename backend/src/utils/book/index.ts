@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { FormatNoID, OwnershipNoID, TongueNoID, BookNoID } from '../../types/book';
+import { OwnershipNoID, TongueNoID, BookNoID } from '../../types/book';
 import { parseString, parseNumber, parseDate } from '../basicParser';
 
 
@@ -76,17 +76,17 @@ export const toNewBook = (object: any) => {
 //     return newBookgroup;
 // };
 
-export const toNewFormat = (object: any) => {
-    const name = parseString(object.name);
-    const seqnr = parseNumber(object.seqnr);
+// export const toNewFormat = (object: any) => {
+//     const name = parseString(object.name);
+//     const seqnr = parseNumber(object.seqnr);
 
-    const newFormat: FormatNoID = {
-        name,
-        seqnr
-    };
+//     const newFormat: FormatNoID = {
+//         name,
+//         seqnr
+//     };
 
-    return newFormat;
-};
+//     return newFormat;
+// };
 
 export const toNewOwnership = (object: any) => {
     const name = parseString(object.name);

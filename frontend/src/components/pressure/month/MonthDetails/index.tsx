@@ -1,22 +1,18 @@
 import React from 'react'
-import { useSelector } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
 import { Day, Month } from '../../../../../../backend/src/types/pressure';
 
-import { RootState } from '../../../../state/store';
-
 import { AppHeaderH3 } from "../../../basic/header";
 
 
 interface Props {
+  month: Month;
   onCancel: () => void;
 }
 
-export const MonthDetails: React.FC<Props> = ({ onCancel }) => {
-  const month: Month = useSelector((state: RootState) => state.selectedmonth);
-
+export const MonthDetails: React.FC<Props> = ({ month, onCancel }) => {
   return (
     <div className="App">
       <AppHeaderH3 text={month.monthname + ' ' + month.year} icon='list'/>

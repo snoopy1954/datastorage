@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { GroupNoID, YearNoID } from '../../types/basic';
-import { BinarydataNoID } from '../../types/basic';
+import { BinarydataNoID, FormatNoID, GroupNoID, YearNoID } from '../../types/basic';
 import { parseString, parseNumber, parseStringArray, parseBuffer } from '../basicParser';
 
 export const toGroup = (object: any) => {
@@ -38,5 +38,17 @@ export const toBinarydata = (object: any) => {
     };
 
     return file;
+};
+
+export const toFormat = (object: any) => {
+    const name = parseString(object.name);
+    const seqnr = parseNumber(object.seqnr);
+
+    const format: FormatNoID = {
+        name,
+        seqnr
+    };
+
+    return format;
 };
 

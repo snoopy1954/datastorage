@@ -1,13 +1,10 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { styleButton }from '../../../../constants';
 
 import { Edittype } from '../../../../types/basic';
-import { OsNoID } from '../../../../../../backend/src/types/network';
-
-import { RootState } from '../../../../state/store';
+import { Os, OsNoID } from '../../../../../../backend/src/types/network';
 
 import { TextField } from '../../../basic/formfields/textfield';
 import { TextFieldArray } from '../../../basic/formfields/textfieldarray';
@@ -17,13 +14,12 @@ import { newOs } from '../../../../utils/network/os';
 
 interface Props {
   edittype: Edittype;
+  os: Os;
   onSubmit: (values: OsNoID) => void;
   onCancel: () => void;
 }
 
-export const OsForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const os = useSelector((state: RootState) => state.selectedos);      
-
+export const OsForm: React.FC<Props> = ({ edittype, os, onSubmit, onCancel }) => {
   const initialValues = (edittype===Edittype.EDIT && os) ? os : newOs();
 
   return (

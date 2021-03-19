@@ -1,20 +1,18 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Button, Table } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { RootState } from '../../../../state/store';
+import { Devicetype } from '../../../../../../backend/src/types/network';
 
 import { AppHeaderH3 } from "../../../basic/header";
 
 
 interface Props {
+  devicetype: Devicetype;
   onCancel: () => void;
 };
 
-export const DevicetypeDetails: React.FC<Props> = ({ onCancel }) => {
-  const devicetype = useSelector((state: RootState) => state.devicetype);      
-
+export const DevicetypeDetails: React.FC<Props> = ({ devicetype, onCancel }) => {
   return (
     <div className="App">
       <AppHeaderH3 text={'Gerätetyp ' + devicetype.name} icon='zoom-in'/>

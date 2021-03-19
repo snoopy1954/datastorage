@@ -1,4 +1,5 @@
-import { Address, AddressNoID, Addressgroup, Person } from '../../../../backend/src/types/address';
+import { Address, AddressNoID, Person } from '../../../../backend/src/types/address';
+import { Group } from '../../../../backend/src/types/basic';
 
 
 const sortAddresses = (a: Address, b: Address) => {
@@ -13,14 +14,14 @@ const sortAddresses = (a: Address, b: Address) => {
     return 0;
 };
 
-export const sortAddressList = (addresss: Address[], addressgroups: Addressgroup[]) => {
+export const sortAddressList = (addresss: Address[], groups: Group[]) => {
     let addressListSorted: Address[] = [];
-    let sortedAddressgroup;
+    let sortedGroup;
 
-    addressgroups.forEach(addressgroup => {
-        sortedAddressgroup = [];
-            sortedAddressgroup = addresss.filter(address => address.group===addressgroup.groupname.name);
-            addressListSorted = addressListSorted.concat(sortedAddressgroup.sort(sortAddresses));
+    groups.forEach(group => {
+        sortedGroup = [];
+            sortedGroup = addresss.filter(address => address.group===group.name);
+            addressListSorted = addressListSorted.concat(sortedGroup.sort(sortAddresses));
     });
         
     return addressListSorted;
@@ -91,10 +92,10 @@ export const addresslistTitle = (group: string): string => {
     return filter;
 }
 
-export const addresslistFilter = (addresses: Address[], group: string, addressgroups: Addressgroup[]): Address[] => {
+export const addresslistFilter = (addresses: Address[], group: string, groups: Group[]): Address[] => {
 
     const filteredAddresses = (group!=="") ? Object.values(addresses).filter(address => address.group===group) : addresses;
-    const sortedAddresses = sortAddressList(Object.values(filteredAddresses), Object.values(addressgroups));
+    const sortedAddresses = sortAddressList(Object.values(filteredAddresses), Object.values(groups));
 
     return sortedAddresses;
 }

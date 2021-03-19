@@ -11,7 +11,7 @@ import { initializeInfos } from './state/info/infos/actions';
 
 import { checkService } from "./services/ping";
 
-import { AppHeaderH1 } from "./components/basic/header";
+import { AppHeaderH1WithClick } from "./components/basic/header";
 import { AppFooter } from "./components/basic/footer";
 
 import Home from "./components/home";
@@ -49,11 +49,15 @@ const App: React.FC = () => {
         dispatch(setPage(page));
     };
 
+    const handleHome = () => {
+        const page: Page = { mainpage: 'home', subpage: '' };
+        dispatch(setPage(page));
+    };
+
     return (
         <Router>
             <Container fluid>
-                <AppHeaderH1 text='Datenbanken' icon='database'/>
-                <Button style={styleButton} onClick={() => handleSelection('home')}>Home</Button>
+                <AppHeaderH1WithClick text='Datenbanken' icon='database' onClick={handleHome}/>
                 <Button style={styleButton} onClick={() => handleSelection('document')}>Dokument</Button>
                 <Button style={styleButton} onClick={() => handleSelection('account')}>Konto</Button>
                 <Button style={styleButton} onClick={() => handleSelection('axa')}>AXA</Button>

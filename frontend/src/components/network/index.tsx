@@ -5,9 +5,9 @@ import { styleButton } from '../../constants';
 
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
-import { initializeDevices } from  '../../state/network/devicelist/actions';
-import { initializeDevicetypes } from  '../../state/network/devicetypelist/actions';
-import { initializeOss } from  '../../state/network/oslist/actions';
+import { initializeDevices } from  '../../state/network/devices/actions';
+import { initializeDevicetypes } from  '../../state/network/devicetypes/actions';
+import { initializeOss } from  '../../state/network/oss/actions';
 
 import { AppHeaderH2 } from '../basic/header';
 import { DevicePage } from "./device/DevicePage";

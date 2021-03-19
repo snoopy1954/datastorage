@@ -17,13 +17,13 @@ import { newHistoryline } from '../../../../utils/info/historyline';
 
 interface Props {
   edittype: Edittype;
+  historyline: Historyline;
   onSubmit: (values: HistorylineNoID) => void;
   onCancel: () => void;
 }
 
-export const HistorylineForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
+export const HistorylineForm: React.FC<Props> = ({ edittype, historyline, onSubmit, onCancel }) => {
   const historylines: Historyline[] = useSelector((state: RootState) => state.historylines);
-  const historyline: Historyline = useSelector((state: RootState) => state.historyline);
 
   const initialValues = (edittype===Edittype.EDIT && historyline.id!=='') ? historyline : newHistoryline(historylines);;
 

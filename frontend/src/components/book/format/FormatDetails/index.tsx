@@ -2,7 +2,7 @@ import React from "react";
 import { Table, Button } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { Format } from '../../../../../../backend/src/types/book';
+import { Format } from '../../../../../../backend/src/types/basic';
 
 import { AppHeaderH3 } from "../../../basic/header";
 

@@ -1,20 +1,18 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { RootState } from '../../../../state/store';
+import { Historyline } from '../../../../../../backend/src/types/logging';
 
 import { AppHeaderH3 } from '../../../basic/header';
 
 
 interface Props {
+    historyline: Historyline;
     onCancel: () => void;
 }
   
-export const HistorylineDetails: React.FC<Props> = ({ onCancel }) => {
-    const historyline  = useSelector((state: RootState) => state.historyline);
-
+export const HistorylineDetails: React.FC<Props> = ({ historyline, onCancel }) => {
     return (          
         <div className="App">
             <AppHeaderH3 text={historyline.date.name} icon='zoom-in'/>

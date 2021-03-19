@@ -3,52 +3,40 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Table } from "semantic-ui-react";
 import { backgroundColor, styleButton } from '../../../../constants';
 
-import { Device, DeviceNoID, Os } from '../../../../../../backend/src/types/network';
+import { Device, DeviceNoID } from '../../../../../../backend/src/types/network';
 import { Edittype } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { clearSelectedOs } from  '../../../../state/network/selectedos/actions';
-import { addDevice, updateDevice, removeDevice } from  '../../../../state/network/devicelist/actions'; 
-import { setSelectedDevice, clearSelectedDevice } from  '../../../../state/network/selecteddevice/actions';
-import { clearSelectedVersions, setSelectedVersions } from  '../../../../state/network/selectedversions/actions'; 
+import { addDevice, updateDevice, removeDevice } from  '../../../../state/network/devices/actions'; 
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { DeviceModal } from '../DeviceModal';
 
+import { emptyDevice } from '../../../../utils/network/device';
+
 
 export const DevicePage: React.FC = () => {
+  const [device, setDevice] = React.useState<Device>(emptyDevice());
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
   const devices = useSelector((state: RootState) => state.devices);
-  const device = useSelector((state: RootState) => state.device);
-  const oss = useSelector((state: RootState) => state.oss);
-
-  React.useEffect(() => {
-    dispatch(clearSelectedOs());
-  }, [dispatch]);  
 
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
     
-  const openModalDelete = (type: Device): void => {
-    dispatch(setSelectedDevice(type));
+  const openModalDelete = (device: Device): void => {
+    setDevice(device);
     setModalOpen([false, true, false, false]);
   };
   
   const openModalChange = (device: Device): void => {
-    dispatch(setSelectedDevice(device));
-    dispatch(clearSelectedVersions());
-    device.osversions.forEach((osversion, index) => {
-      const selectedOs: Os[] = Object.values(oss).filter((os => os.name === osversion.name));
-      const selectedversions: string[] = selectedOs.length===0 ? [] : selectedOs[0].versions;
-      dispatch(setSelectedVersions(index, selectedversions));
-    });    
+    setDevice(device);
     setModalOpen([false, false, true, false]);
   };
   
-  const openModalShow = (type: Device): void => {
-    dispatch(setSelectedDevice(type));
+  const openModalShow = (device: Device): void => {
+    setDevice(device);
     setModalOpen([false, false, false, true]);
   };
   
@@ -64,7 +52,7 @@ export const DevicePage: React.FC = () => {
   };
 
   const actionShow = () => {
-    dispatch(clearSelectedDevice());
+    setDevice(emptyDevice());
     closeModal();
   };  
 
@@ -79,13 +67,13 @@ export const DevicePage: React.FC = () => {
       id: device.id
     }
     dispatch(updateDevice(deviceToChange));
-    dispatch(clearSelectedDevice());
+    setDevice(emptyDevice());
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeDevice(device.id));
-    dispatch(clearSelectedDevice());
+    setDevice(emptyDevice());
     closeModal();
   };  
 
@@ -95,6 +83,7 @@ export const DevicePage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neues Gerät anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        device={device}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -102,6 +91,7 @@ export const DevicePage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Gerät ' + device.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        device={device}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -109,6 +99,7 @@ export const DevicePage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Gerät ' + device.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        device={device}
         onSubmit={actionChange}
         onClose={closeModal}
       />

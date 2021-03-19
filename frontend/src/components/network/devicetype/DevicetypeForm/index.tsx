@@ -1,13 +1,10 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { styleButton }from '../../../../constants';
 
 import { Edittype } from '../../../../types/basic';
-import { DevicetypeNoID } from '../../../../../../backend/src/types/network';
-
-import { RootState } from '../../../../state/store';
+import { Devicetype, DevicetypeNoID } from '../../../../../../backend/src/types/network';
 
 import { TextField } from '../../../basic/formfields/textfield';
 
@@ -16,13 +13,12 @@ import { newDevicetype } from '../../../../utils/network/devicetype';
 
 interface Props {
   edittype: Edittype;
+  devicetype: Devicetype;
   onSubmit: (values: DevicetypeNoID) => void;
   onCancel: () => void;
 };
 
-export const DevicetypeForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const devicetype = useSelector((state: RootState) => state.devicetype);      
-
+export const DevicetypeForm: React.FC<Props> = ({ edittype, devicetype, onSubmit, onCancel }) => {
   const initialValues = (edittype===Edittype.EDIT && devicetype) ? devicetype : newDevicetype();
 
   return (

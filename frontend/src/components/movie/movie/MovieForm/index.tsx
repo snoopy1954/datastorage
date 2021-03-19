@@ -5,10 +5,10 @@ import { Field, Formik, Form } from "formik";
 import { styleButton }from '../../../../constants';
 
 import { Option, Edittype } from "../../../../types/basic";
-import { Moviegroup, MovieNoID } from '../../../../../../backend/src/types/movie';
+import { MovieNoID } from '../../../../../../backend/src/types/movie';
+import { Group } from '../../../../../../backend/src/types/basic';
 
 import { RootState } from '../../../../state/store';
-import { setSelectedMoviesubgroups } from '../../../../state/movie/selectedmoviesubgroups/actions';
 
 import { SelectField } from '../../../basic/formfields/selectfield';
 import { SelectFieldWithChange } from '../../../basic/formfields/selectfieldwithchange';
@@ -27,27 +27,28 @@ interface Props {
 }
 
 export const MovieForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
+  const [subgroups, setSubgroups] = React.useState<Array<string>>([]);
+
   const dispatch = useDispatch();
 
   const movie = useSelector((state: RootState) => state.movie);
   const formats = useSelector((state: RootState) => state.movieformats);
-  const moviegroups = useSelector((state: RootState) => state.moviegroups);
-  const subgroups = useSelector((state: RootState) => state.moviesubgroups);
+  const groups = useSelector((state: RootState) => state.groups);
 
   React.useEffect(() => {
-    const selectedGroup: Moviegroup[] = Object.values(moviegroups).filter((moviegroup => moviegroup.name=== movie.moviegroup));
+    const selectedGroup: Group[] = Object.values(groups).filter((moviegroup => moviegroup.name=== movie.moviegroup));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
-    dispatch(setSelectedMoviesubgroups(selectedSubgroups));
-  }, [dispatch, moviegroups, movie]);  
+    setSubgroups(selectedSubgroups);
+  }, [dispatch, groups, movie]);  
 
   const handleGroupSelection = (selection: string) => {
-    const selectedGroup: Moviegroup[] = Object.values(moviegroups).filter((moviegroup => moviegroup.name=== selection));
+    const selectedGroup: Group[] = Object.values(groups).filter((moviegroup => moviegroup.name=== selection));
     const selectedSubgroups: string[] = selectedGroup.length===0 ? [] : selectedGroup[0].subgroups;
-    dispatch(setSelectedMoviesubgroups(selectedSubgroups));
+    setSubgroups(selectedSubgroups);
   }
 
   const groupOptions: Option[] = [];
-  Object.values(moviegroups).forEach(element => {
+  Object.values(groups).forEach(element => {
     groupOptions.push({
       value: element.name,
       label: element.name

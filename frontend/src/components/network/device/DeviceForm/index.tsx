@@ -1,14 +1,13 @@
 import React from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { styleButton }from '../../../../constants';
 
-import { DeviceNoID, Os } from '../../../../../../backend/src/types/network';
+import { Device, DeviceNoID, Os } from '../../../../../../backend/src/types/network';
 import { Option, Edittype } from "../../../../types/basic";
 
 import { RootState } from '../../../../state/store';
-import { setSelectedVersions } from  '../../../../state/network/selectedversions/actions'; 
 
 import { AppHeaderH3 } from "../../../basic/header";
 
@@ -22,26 +21,43 @@ import { newDevice } from '../../../../utils/network/device';
 
 interface Props {
   edittype: Edittype;
+  device: Device;
   onSubmit: (values: DeviceNoID) => void;
   onCancel: () => void;
 }
 
-export const DeviceForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const dispatch = useDispatch();
+export const DeviceForm: React.FC<Props> = ({ edittype, device, onSubmit, onCancel }) => {
+  const [versions, setVersions] = React.useState<Array<string[]>>([]);
 
-  const device = useSelector((state: RootState) => state.device);
   const devicetypes = useSelector((state: RootState) => state.devicetypes);
   const oss = useSelector((state: RootState) => state.oss);
-  const selectedversions = useSelector((state: RootState) => state.versions);
+
+  React.useEffect(() => {
+    const newVersions: string[][] = new Array([]);
+    const fetchVersions = () => {
+    device.osversions.forEach((osversion, index) => {
+      const selectedOs: Os[] = Object.values(oss).filter((os => os.name === osversion.name));
+      const selectedversions: string[] = selectedOs.length===0 ? [] : selectedOs[0].versions;
+      newVersions[index] = selectedversions;
+    });    
+    }
+    fetchVersions();
+    setVersions(newVersions);
+  }, [device, oss, setVersions]);  
 
   const handleOsSelection = (current: number, selection: string) => {
+    const newVersions: string[][] = versions.map(version=>version);
     const selectedOs: Os[] = Object.values(oss).filter((os => os.name === selection));
     const selectedversions: string[] = selectedOs.length===0 ? [] : selectedOs[0].versions;
-    dispatch(setSelectedVersions(current, selectedversions));
+    newVersions[current] = selectedversions;
+    setVersions(newVersions);
   };
 
   const handleOsAdd = () => {
-    dispatch(setSelectedVersions(selectedversions.length, []));
+    const newVersions: string[][] = versions.map(version=>version);
+    const newVersion: string[] = [];
+    newVersions.push(newVersion);
+    setVersions(newVersions);
   };
 
   const devicetypeOptions: Option[] = [];
@@ -61,9 +77,9 @@ export const DeviceForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =>
   });
 
   const versionoptions: Option[][] = [];
-  Object.values(selectedversions).forEach(element => {
+  (versions).forEach(element => {
     const versionoptionsOs: Option[] = [];
-    element.versions.forEach((item) => {
+    element.forEach((item) => {
        versionoptionsOs.push({
          value: item,
          label: item
@@ -76,7 +92,13 @@ export const DeviceForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) =>
   }
 
   const initialValues = edittype===Edittype.EDIT && device.id!=='' ? device : newDevice();
-
+  if (edittype===Edittype.EDIT && device.id!=='' && versions.length===0) {
+    return (
+      <div>
+        <p>Bitte warten</p>
+      </div>
+    )
+  }
   return (
     <Formik
       initialValues={initialValues}

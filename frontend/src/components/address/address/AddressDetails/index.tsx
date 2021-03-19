@@ -1,22 +1,18 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Button, Table, Icon } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { Person } from '../../../../../../backend/src/types/address';
-
-import { RootState } from '../../../../state/store';
+import { Address, Person } from '../../../../../../backend/src/types/address';
 
 import { AppHeaderH3 } from '../../../basic/header';
 
 
 interface Props {
+    address: Address;
     onCancel: () => void;
 };
 
-export const AddressDetails: React.FC<Props> = ({ onCancel }) => {
-    const address  = useSelector((state: RootState) => state.address);
-
+export const AddressDetails: React.FC<Props> = ({ address, onCancel }) => {
     const ShowPerson: React.FC<{ person: Person; index: number }> = ({ person, index }) => {
         return (
           <div>

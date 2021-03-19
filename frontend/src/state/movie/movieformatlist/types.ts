@@ -1,4 +1,4 @@
-import { Movieformat } from '../../../../../backend/src/types/movie';
+import { Format } from '../../../../../backend/src/types/basic';
 
 export const SET_MOVIEFORMAT_LIST = 'SET_MOVIEFORMAT_LIST';
 export const ADD_MOVIEFORMAT  = 'ADD_MOVIEFORMAT';
@@ -7,17 +7,17 @@ export const REMOVE_MOVIEFORMAT = 'REMOVE_MOVIEFORMAT';
 
 interface SetMovieformatListAction {
     type: typeof SET_MOVIEFORMAT_LIST;
-    payload: Movieformat[];
+    payload: Format[];
 }
 
 interface AddMovieformatAction {
     type: typeof ADD_MOVIEFORMAT;
-    payload: Movieformat;
+    payload: Format;
 }
 
 interface UpdateMovieformatAction {
     type: typeof UPDATE_MOVIEFORMAT;
-    payload: Movieformat;
+    payload: Format;
 }
 
 interface RemoveMovieformatAction {

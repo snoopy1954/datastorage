@@ -1,15 +1,13 @@
-import { Movieformat } from '../../../../../backend/src/types/movie';
+import { Format } from '../../../../../backend/src/types/basic';
 import { SET_SELECTED_MOVIEFORMAT, CLEAR_SELECTED_MOVIEFORMAT, ActionTypes } from './types';
 
-const initialState: Movieformat = {
+const initialState: Format = {
     id: '',
-//    formatname: {
-        seqnr: 0,
-        name: ''
-//    }
+    seqnr: 0,
+    name: ''
 };
 
-export const selectedmovieformatReducer = (state = initialState, action: ActionTypes): Movieformat => {
+export const selectedmovieformatReducer = (state = initialState, action: ActionTypes): Format => {
     switch (action.type) {
         case SET_SELECTED_MOVIEFORMAT:
             return {

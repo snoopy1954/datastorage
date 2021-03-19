@@ -4,7 +4,7 @@ import { Table, Button } from "semantic-ui-react";
 import { backgroundColor, styleButton } from '../../../../constants';
 
 import { Edittype } from "../../../../types/basic";
-import { Movieformat, MovieformatNoID } from '../../../../../../backend/src/types/movie';
+import { Format, FormatNoID } from '../../../../../../backend/src/types/basic';
 
 import { RootState } from '../../../../state/store';
 import { addMovieformat, updateMovieformat, removeMovieformat } from '../../../../state/movie/movieformatlist/actions';
@@ -24,17 +24,17 @@ export const MovieformatPage: React.FC = () => {
 
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
-  const openModalDelete = async (account: Movieformat): Promise<void> => {
+  const openModalDelete = async (account: Format): Promise<void> => {
     dispatch(setSelectedMovieformat(account));
     setModalOpen([false, true, false, false]);
   };
       
-  const openModalChange = async (account: Movieformat): Promise<void> => {
+  const openModalChange = async (account: Format): Promise<void> => {
     dispatch(setSelectedMovieformat(account));
     setModalOpen([false, false, true, false]);
   };
   
-  const openModalShow = async (account: Movieformat): Promise<void> => {
+  const openModalShow = async (account: Format): Promise<void> => {
     dispatch(setSelectedMovieformat(account));
     setModalOpen([false, false, false, true]);
   };
@@ -50,7 +50,7 @@ export const MovieformatPage: React.FC = () => {
     setModalOpen([false, false, false, false]);
   };
 
-  const actionAdd = async (values: MovieformatNoID) => {
+  const actionAdd = async (values: FormatNoID) => {
     dispatch(addMovieformat(values));
     closeModal();
   };
@@ -60,8 +60,8 @@ export const MovieformatPage: React.FC = () => {
     closeModal();
   };
 
-  const actionChange = async (values: MovieformatNoID) => {
-    const formatToChange: Movieformat = {
+  const actionChange = async (values: FormatNoID) => {
+    const formatToChange: Format = {
       ...values,
       id: movieformat.id
     };
@@ -116,7 +116,7 @@ export const MovieformatPage: React.FC = () => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {Object.values(movieformats).map((movieformat: Movieformat) => (
+          {Object.values(movieformats).map((movieformat: Format) => (
             <Table.Row key={movieformat.id}>
               <Table.Cell>{movieformat.name}</Table.Cell>
               <Table.Cell>

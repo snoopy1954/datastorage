@@ -6,15 +6,15 @@ export interface Ownership extends Name {
 
 export type OwnershipNoID = Omit<Ownership, 'id'>;
 
-export interface Subgroup {
-    subgroup: string;
-}
+// export interface Subgroup {
+//     subgroup: string;
+// }
 
-export interface Format extends Name {
-    id: string;
-}
+// export interface Format extends Name {
+//     id: string;
+// }
 
-export type FormatNoID = Omit<Format, 'id'>;
+// export type FormatNoID = Omit<Format, 'id'>;
 
 export interface Tongue extends Name {
     id: string;

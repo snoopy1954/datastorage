@@ -1,4 +1,4 @@
-import { Format } from '../../../../../backend/src/types/book';
+import { Format } from '../../../../../backend/src/types/basic';
 
 export const SET_FORMAT_LIST = 'SET_FORMAT_LIST';
 export const ADD_FORMAT  = 'ADD_FORMAT';

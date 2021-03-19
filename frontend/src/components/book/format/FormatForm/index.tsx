@@ -5,7 +5,7 @@ import { Field, Formik, Form } from 'formik';
 import { styleButton }from '../../../../constants';
 
 import { Edittype } from '../../../../types/basic';
-import { Format, FormatNoID } from '../../../../../../backend/src/types/book';
+import { Format, FormatNoID } from '../../../../../../backend/src/types/basic';
 
 import { RootState } from '../../../../state/store';
 

@@ -14,17 +14,18 @@ interface Props {
   edittype: Edittype;
   title: string;
   modalOpen: boolean;
+  month: Month;
   onClose: () => void;
   onSubmit: (values: Month) => void;
 }
 
-export const MonthModal = ({ edittype, title, modalOpen, onClose, onSubmit }: Props) => (
+export const MonthModal = ({ edittype, title, modalOpen, month, onClose, onSubmit }: Props) => (
   <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
     <Modal.Content>
-      {edittype===Edittype.SHOW&&<MonthDetails onCancel={onClose}/>}
-      {edittype===Edittype.PRINT&&<MonthPrint onCancel={onClose}/>}
-      {edittype===Edittype.EXPORT&&<MonthExport onCancel={onClose}/>}
-      {edittype===Edittype.EDIT&&<MonthForm onSubmit={onSubmit} onCancel={onClose}/>}
+      {edittype===Edittype.SHOW&&<MonthDetails month={month} onCancel={onClose}/>}
+      {edittype===Edittype.PRINT&&<MonthPrint month={month} onCancel={onClose}/>}
+      {edittype===Edittype.EXPORT&&<MonthExport month={month} onCancel={onClose}/>}
+      {edittype===Edittype.EDIT&&<MonthForm month={month} onSubmit={onSubmit} onCancel={onClose}/>}
     </Modal.Content>
   </Modal>
 );

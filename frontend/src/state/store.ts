@@ -5,47 +5,34 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { pageReducer } from './page/reducers';
 import { groupsReducer } from './basic/groups/reducers';
 import { yearsReducer } from './basic/years/reducers';
+import { historylinesReducer } from './info/historylines/reducers';
+import { infosReducer } from './info/infos/reducers';
+
+import { transactionsReducer } from './account/transactions/reducers';
+import { accounttypesReducer } from './account/accounttypes/reducers';
+
+import { addressesReducer } from './address/addresses/reducers';
 
 import { booksReducer } from './book/books/reducers';
 import { tonguesReducer } from './book/tongues/reducers';
 import { formatsReducer } from './book/formats/reducers';
 import { ownershipsReducer } from './book/ownerships/reducers';
 
-import { accounttypesReducer } from './account/accounttypes/reducers';
-import { transactionsReducer } from './account/transactions/reducers';
-
 import { documentsReducer } from './document/documents/reducers';
 
 import { recipesReducer } from './recipe/recipes/reducers';
 
+import { devicesReducer } from './network/devices/reducers';
+import { devicetypesReducer } from './network/devicetypes/reducers';
+import { ossReducer } from './network/oss/reducers';
+
 import { activitiesReducer } from './sport/activities/reducers';
 
-import { yearlistReducer } from './pressure/yearlist/reducers';
-import { selectedyearReducer } from './pressure/selectedyear/reducers';
-import { openedyearReducer } from './pressure/openedyear/reducers';
-import { monthlistReducer } from './pressure/monthlist/reducers';
-import { selectedmonthReducer } from './pressure/selectedmonth/reducers';
-
-import { devicetypelistReducer } from './network/devicetypelist/reducers';
-import { selecteddevicetypeReducer } from './network/selecteddevicetype/reducers';
-import { oslistReducer } from './network/oslist/reducers';
-import { selectedosReducer } from './network/selectedos/reducers';
-import { versionsReducer } from './network/selectedversions/reducers';
-import { devicelistReducer } from './network/devicelist/reducers';
-import { selecteddeviceReducer } from './network/selecteddevice/reducers';
-
-import { addressgrouplistReducer } from './address/addressgrouplist/reducers';
-import { selectedaddressgroupReducer } from './address/selectedaddressgroup/reducers';
-import { addresslistReducer } from './address/addresslist/reducers';
-import { selectedaddressReducer } from './address/selectedaddress/reducers';
-import { addressgroupfilterReducer } from './address/addressgroupfilter/reducers';
-import { changedaddresslistReducer } from './address/changedaddresslist/reducers';
+import { monthsReducer } from './pressure/months/reducers';
+import { yearsReducer as pressureyearsReducer } from './pressure/years/reducers';
 
 import { movielistReducer } from './movie/movielist/reducers';
 import { selectedmovieReducer } from './movie/selectedmovie/reducers';
-import { moviegrouplistReducer } from './movie/moviegrouplist/reducers';
-import { selectedmoviegroupReducer } from './movie/selectedmoviegroup/reducers';
-import { moviesubgroupsReducer } from './movie/selectedmoviesubgroups/reducers';
 import { movieformatlistReducer } from './movie/movieformatlist/reducers';
 import { selectedmovieformatReducer } from './movie/selectedmovieformat/reducers';
 import { moviefilterReducer } from './movie/moviefilter/reducers';
@@ -72,10 +59,6 @@ import { selectedbillReducer } from './axa/selectedbill/reducers';
 import { selectedbillsReducer } from './axa/selectedbills/reducers';
 import { axayearsReducer } from './axa/years/reducers';
 import { axayearReducer } from './axa/year/reducers';
-
-import { historylinesReducer } from './info/historylines/reducers';
-import { historylineReducer } from './info/historyline/reducers';
-import { infosReducer } from './info/infos/reducers';
 
 import { musicgroupsReducer } from './music/groups/reducers';
 import { musicgroupReducer } from './music/group/reducers';
@@ -104,32 +87,17 @@ const rootReducer = combineReducers({
     
     activities: activitiesReducer,
     
-    yearlist: yearlistReducer,
-    selectedyear: selectedyearReducer,
-    openedyear: openedyearReducer,
-    monthlist: monthlistReducer,
-    selectedmonth: selectedmonthReducer,
+    pressureyears: pressureyearsReducer,
+    months: monthsReducer,
     
-    devicetypes: devicetypelistReducer,
-    devicetype: selecteddevicetypeReducer,
-    oss: oslistReducer,
-    selectedos: selectedosReducer,
-    versions: versionsReducer,
-    devices: devicelistReducer,
-    device: selecteddeviceReducer,
+    devices: devicesReducer,
+    devicetypes: devicetypesReducer,
+    oss: ossReducer,
     
-    addressgroups: addressgrouplistReducer,
-    addressgroup: selectedaddressgroupReducer,
-    addresses: addresslistReducer,
-    address: selectedaddressReducer,
-    addressgroupfilter: addressgroupfilterReducer,
-    changedaddresslist: changedaddresslistReducer,
+    addresses: addressesReducer,
     
     movies: movielistReducer,
     movie: selectedmovieReducer,
-    moviegroups: moviegrouplistReducer,
-    moviegroup: selectedmoviegroupReducer,
-    moviesubgroups: moviesubgroupsReducer,
     movieformats: movieformatlistReducer,
     movieformat: selectedmovieformatReducer,
     moviefilter: moviefilterReducer,
@@ -158,7 +126,6 @@ const rootReducer = combineReducers({
     axayear: axayearReducer,
     
     historylines: historylinesReducer,
-    historyline: historylineReducer,
     infos: infosReducer,
     
     musicgroups: musicgroupsReducer,

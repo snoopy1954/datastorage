@@ -3,47 +3,45 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { backgroundColor, styleButtonSmall, styleButton } from '../../../../constants';
 
-import { Address, AddressNoID, Addressgroup } from '../../../../../../backend/src/types/address';
+import { Address, AddressNoID } from '../../../../../../backend/src/types/address';
+import { Group } from '../../../../../../backend/src/types/basic';
 import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { addAddress, updateAddress, removeAddress, exchangeAddresses } from '../../../../state/address/addresslist/actions';
-import { setSelectedAddress, clearSelectedAddress } from '../../../../state/address/selectedaddress/actions';
-import { clearSelectedAddressgroup } from '../../../../state/address/selectedaddressgroup/actions';
-import { setAddressgroupFilter, clearAddressgroupFilter} from '../../../../state/address/addressgroupfilter/actions';
-import { addChangedAddress, clearChangedAddress } from '../../../../state/address/changedaddresslist/actions';
+import { addAddress, updateAddress, removeAddress, exchangeAddresses } from '../../../../state/address/addresses/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { AddressModal } from '../AddressModal';
 
-import { addresslistTitle, addresslistFilter } from '../../../../utils/address/address';
+import { addresslistTitle, addresslistFilter, emptyAddress } from '../../../../utils/address/address';
 
 
 export const AddressPage: React.FC = () => {
+    const [address, setAddress] = React.useState<Address>(emptyAddress());
+    const [group, setGroup] = React.useState('');
+    const [addressesChanged, setAddressesChanged] = React.useState<Array<Address>>([]);
     const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+
     const dispatch = useDispatch();
 
-    const addressgroups: Addressgroup[] = useSelector((state: RootState) => state.addressgroups);      
     const addresses: Address[] = useSelector((state: RootState) => state.addresses);
-    const address: Address = useSelector((state: RootState) => state.address);
-    const addressgroupfilter: string = useSelector((state: RootState) => state.addressgroupfilter);
-    const changedAddresses: Address[] = useSelector((state: RootState) => state.changedaddresslist);
+    const groups: Group[] = useSelector((state: RootState) => state.groups);      
 
     const openModalNew = (): void => setModalOpen([true, false, false, false]);
     
     const openModalDelete = (address: Address): void => {
-        dispatch(setSelectedAddress(address));
+        setAddress(address);
         setModalOpen([false, true, false, false]);
     };
     
     const openModalChange = (address: Address): void => {
-        dispatch(setSelectedAddress(address));
+        setAddress(address);
         setModalOpen([false, false, true, false]);
     };
     
     const openModalShow = (address: Address): void => {
-        dispatch(setSelectedAddress(address));
+        setAddress(address);
         setModalOpen([false, false, false, true]);
     };
 
@@ -58,21 +56,15 @@ export const AddressPage: React.FC = () => {
         setModalOpen([false, false, false, false]);
     };
 
-    React.useEffect(() => {
-        dispatch(clearSelectedAddress());
-        dispatch(clearSelectedAddressgroup());
-        dispatch(clearAddressgroupFilter());
-    }, [dispatch]);
-
     const actionSaveSequence = () => {
-        Object.values(changedAddresses).forEach(changedAddress => {
-            dispatch(updateAddress(changedAddress));
+        Object.values(addressesChanged).forEach(addressChanged => {
+            dispatch(updateAddress(addressChanged));
         });
-        dispatch(clearChangedAddress());
+        setAddressesChanged([]);
     };
 
     const actionSelectionClick = ( selection: string) => {
-        dispatch(setAddressgroupFilter(selection));
+        setGroup(selection);
     };
 
     const actionAdd = async (values: AddressNoID) => {
@@ -86,18 +78,18 @@ export const AddressPage: React.FC = () => {
           id: address.id
         };
         dispatch(updateAddress(addressToChange));
-        dispatch(clearSelectedAddress());
+        setAddress(emptyAddress());
         closeModal();
     };
 
     const actionDelete = () => {
         dispatch(removeAddress(address.id));
-        dispatch(clearSelectedAddress());
+        setAddress(emptyAddress());
         closeModal();
     };  
 
     const actionShow = () => {
-        dispatch(clearSelectedAddress());
+        setAddress(emptyAddress());
         closeModal();
     };  
 
@@ -112,17 +104,17 @@ export const AddressPage: React.FC = () => {
         address2.name.seqnr = seqnr1;
         const addressesToChange: Address[] = [address1, address2];
         dispatch(exchangeAddresses(addressesToChange));
-        dispatch(addChangedAddress(address1));
-        dispatch(addChangedAddress(address2));
+        setAddressesChanged(arr => [...arr, address1]);
+        setAddressesChanged(arr => [...arr, address2]);
     };
 
     const addressgroupOptions: string[] = [];
-    Object.values(addressgroups).forEach(element => {
-        addressgroupOptions.push(element.groupname.name);
+    Object.values(groups).forEach(element => {
+        addressgroupOptions.push(element.name);
     });
 
-    const title = 'Kontakte' + addresslistTitle(addressgroupfilter);
-    const sortedAddresses = addresslistFilter(addresses, addressgroupfilter, addressgroups);
+    const title = 'Kontakte' + addresslistTitle(group);
+    const sortedAddresses = addresslistFilter(addresses, group, groups);
 
     const ShowTableHeader: React.FC = () => {
         return (
@@ -130,9 +122,9 @@ export const AddressPage: React.FC = () => {
                 <Table.Row>
                     <Table.HeaderCell style={{ backgroundColor, width: '17%' }} className='center aligned'>Name</Table.HeaderCell>
                     <Table.HeaderCell style={{ backgroundColor, width: '17%' }} className='center aligned'>Telefon</Table.HeaderCell>
-                    {addressgroupfilter==='Gaststätte'&&
+                    {group==='Gaststätte'&&
                         <Table.HeaderCell style={{ backgroundColor, width: '17%' }} className='center aligned'>Kommentar</Table.HeaderCell>}
-                    {addressgroupfilter!=='Gaststätte'&&
+                    {group!=='Gaststätte'&&
                         <Table.HeaderCell style={{ backgroundColor, width: '17%' }} className='center aligned'>Email</Table.HeaderCell>}
                     <Table.HeaderCell style={{ backgroundColor, width: '5%' }} className='center aligned'>Auf/Ab</Table.HeaderCell>
                     <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
@@ -151,16 +143,16 @@ export const AddressPage: React.FC = () => {
                         <Table.Cell style={{ backgroundColor, width: '17%' } } className='left aligned'>{address.persons[0].communication.phone}</Table.Cell>}
                     {address.persons[0].communication.phone===''&&
                         <Table.Cell style={{ backgroundColor, width: '17%' } } className='left aligned'>{address.persons[0].communication.mobile}</Table.Cell>}
-                    {addressgroupfilter==='Gaststätte'&&
+                    {group==='Gaststätte'&&
                         <Table.Cell style={{ backgroundColor, width: '17%' } } className='left aligned'>{address.persons[0].comment}</Table.Cell>}
-                    {addressgroupfilter!=='Gaststätte'&&
+                    {group!=='Gaststätte'&&
                         <Table.Cell style={{ backgroundColor, width: '17%' } } className='left aligned'>{address.persons[0].communication.email}</Table.Cell>}
                     <Table.Cell style={{ backgroundColor, width: '5%' } } className='center aligned'>
-                        <Button className="ui icon button" style={styleButtonSmall} disabled={addressgroupfilter===''} 
+                        <Button className="ui icon button" style={styleButtonSmall} disabled={group===''} 
                             onClick={() => actionUpDown(Direction.UP, index, sortedAddresses) }>
                             <i className="angle up icon"></i>
                         </Button>
-                        <Button className="ui icon button" style={styleButtonSmall} disabled={addressgroupfilter===''} 
+                        <Button className="ui icon button" style={styleButtonSmall} disabled={group===''} 
                             onClick={() => actionUpDown(Direction.DOWN, index, sortedAddresses) }>
                             <i className="angle down icon"></i>
                         </Button>
@@ -182,6 +174,7 @@ export const AddressPage: React.FC = () => {
                 edittype={Edittype.ADD}
                 title='Neuen Kontakt anlegen'
                 modalOpen={modalOpen[ModalDialog.NEW]}
+                address={address}
                 onSubmit={actionAdd}
                 onClose={closeModal}
             />
@@ -189,6 +182,7 @@ export const AddressPage: React.FC = () => {
                 edittype={Edittype.SHOW}
                 title={'Kontakt ' + address.name.name + ' anzeigen'}
                 modalOpen={modalOpen[ModalDialog.SHOW]}
+                address={address}
                 onSubmit={actionShow}
                 onClose={closeModal}
             />
@@ -196,6 +190,7 @@ export const AddressPage: React.FC = () => {
                 edittype={Edittype.EDIT}
                 title={'Kontakt ' + address.name.name + ' ändern'}
                 modalOpen={modalOpen[ModalDialog.CHANGE]}
+                address={address}
                 onSubmit={actionChange}
                 onClose={closeModal}
             />
@@ -215,7 +210,7 @@ export const AddressPage: React.FC = () => {
                     <option key={index} value={option} style={styleButton}>{option}</option>
                 ))}
             </Button>
-            {Object.values(changedAddresses).length>0&&<Button style={styleButton} onClick={() => actionSaveSequence()}>Speichern</Button>}
+            {Object.values(addressesChanged).length>0&&<Button style={styleButton} onClick={() => actionSaveSequence()}>Speichern</Button>}
             {sortedAddresses.length>8&&
                 <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
                     <ShowTableHeader/>

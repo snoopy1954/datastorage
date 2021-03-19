@@ -1,4 +1,5 @@
-import { Movie, MovieNoID, Moviegroup } from '../../../../backend/src/types/movie';
+import { Movie, MovieNoID } from '../../../../backend/src/types/movie';
+import { Group } from '../../../../backend/src/types/basic';
 import { Filter } from '../../types/movie';
 
 const sortMovies = (a: Movie, b: Movie) => {
@@ -13,7 +14,7 @@ const sortMovies = (a: Movie, b: Movie) => {
     return 0;
 };
 
-const sortMovieList = (movies: Movie[], moviegroups: Moviegroup[]) => {
+const sortMovieList = (movies: Movie[], moviegroups: Group[]) => {
     let movieListSorted: Movie[] = [];
     let sortedMoviegroup;
     let sortedSubgroup;
@@ -65,7 +66,7 @@ export const movielistTitle = (filters: Filter): string => {
     return filter;
 };
 
-export const movielistFilter = (movies: Movie[], filters: Filter, moviegroups: Moviegroup[]): Movie[] => {
+export const movielistFilter = (movies: Movie[], filters: Filter, moviegroups: Group[]): Movie[] => {
 
     let filteredMovies = (filters.group!=="") ? Object.values(movies).filter(movie => movie.moviegroup===filters.group) : movies;
     filteredMovies = (filters.subgroup!=="") ? Object.values(filteredMovies).filter(movie => movie.subgroup===filters.subgroup) : filteredMovies;

@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
 
-import { Movie, MovieNoID, Moviegroup } from '../../../../../../backend/src/types/movie';
+import { Movie, MovieNoID } from '../../../../../../backend/src/types/movie';
+import { Group } from '../../../../../../backend/src/types/basic';
 import { Filter } from '../../../../types/movie';
 import { Edittype, Direction } from '../../../../types/basic';
 
@@ -28,7 +29,7 @@ export const MoviePage: React.FC = () => {
 
   const movies: Movie[] = useSelector((state: RootState) => state.movies);
   const movie: Movie = useSelector((state: RootState) => state.movie);
-  const moviegroups: Moviegroup[] = useSelector((state: RootState) => state.moviegroups);      
+  const groups: Group[] = useSelector((state: RootState) => state.groups);      
   const moviefilter: Filter = useSelector((state: RootState) => state.moviefilter);
   const changedMovies: Movie[] = useSelector((state: RootState) => state.changedmovies);
 
@@ -158,12 +159,12 @@ export const MoviePage: React.FC = () => {
   };
 
   const moviegroupOptions: string[] = [];
-  Object.values(moviegroups).forEach(element => {
+  Object.values(groups).forEach(element => {
     moviegroupOptions.push(element.name)
   });
 
-  const getMoviegroup = (moviegroupName: string): Moviegroup | undefined => {
-    const moviegroup = Object.values(moviegroups).filter(moviegroup => moviegroup.name===moviegroupName);
+  const getMoviegroup = (moviegroupName: string): Group | undefined => {
+    const moviegroup = Object.values(groups).filter(moviegroup => moviegroup.name===moviegroupName);
     return moviegroup.length > 0 ? moviegroup[0] : undefined;
   };
 
@@ -177,7 +178,7 @@ export const MoviePage: React.FC = () => {
   const filterSelected = (moviefilter.group!=='' && moviefilter.subgroup!=='') || (moviefilter.group!=='' && getMoviegroup(moviefilter.group)?.subgroups.length===0);
   const sequenceChanged = (Object.values(changedMovies).length > 0);
   const title = 'Filmliste' + movielistTitle(moviefilter);
-  const sortedMovies = movielistFilter(movies, moviefilter, moviegroups);
+  const sortedMovies = movielistFilter(movies, moviefilter, groups);
 
   const ShowTableHeader: React.FC = () => {
     return (

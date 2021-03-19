@@ -6,7 +6,8 @@ import { styleButton }from '../../../../constants';
 
 import { Edittype } from '../../../../types/basic';
 import { Option } from '../../../../types/basic';
-import { Addressgroup, Address, AddressNoID } from '../../../../../../backend/src/types/address';
+import { Address, AddressNoID } from '../../../../../../backend/src/types/address';
+import { Group } from '../../../../../../backend/src/types/basic';
 
 import { RootState } from '../../../../state/store';
 
@@ -20,19 +21,19 @@ import { newAddress } from '../../../../utils/address/address';
 
 interface Props {
   edittype: Edittype;
+  address: Address;
   onSubmit: (values: AddressNoID) => void;
   onCancel: () => void;
 };
 
-export const AddressForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const address: Address = useSelector((state: RootState) => state.address);
-  const addressgroups: Addressgroup[] = useSelector((state: RootState) => state.addressgroups);
+export const AddressForm: React.FC<Props> = ({ edittype, address, onSubmit, onCancel }) => {
+  const groups: Group[] = useSelector((state: RootState) => state.groups);
 
   const addressgroupOptions: Option[] = [];
-  Object.values(addressgroups).forEach(element => {
+  Object.values(groups).forEach(element => {
     addressgroupOptions.push({
-      value: element.groupname.name,
-      label: element.groupname.name
+      value: element.name,
+      label: element.name
     })
   });
 

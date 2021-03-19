@@ -1,36 +1,36 @@
 import axios from 'axios';
 import { apiBaseUrl } from "../../constants";
-import { Moviegroup, MoviegroupNoID } from '../../../../backend/src/types/movie';
+import { Group, GroupNoID } from '../../../../backend/src/types/basic';
 
 const getAll = async () => {
-    const { data: moviegroups } = await axios.get<Moviegroup[]>(
+    const { data: groups } = await axios.get<Group[]>(
         `${apiBaseUrl}/moviegroups`
     );
 
-    return moviegroups;
+    return groups;
 }
 
 const getOne = async (id: string) => {
-    const { data: moviegroup } = await axios.get<Moviegroup>(
+    const { data: group } = await axios.get<Group>(
         `${apiBaseUrl}/moviegroups/${id}`
     );
 
-    return moviegroup;
+    return group;
 }
 
-const create = async (moviegroup: MoviegroupNoID) => {
+const create = async (group: GroupNoID) => {
     const response = await axios.post(
         `${apiBaseUrl}/moviegroups`,
-        moviegroup
+        group
     );
 
     return response.data
 }
 
-const update = async (id: string, moviegroup: MoviegroupNoID) => {
+const update = async (id: string, group: GroupNoID) => {
     const response = await axios.put(
         `${apiBaseUrl}/moviegroups/${id}`, 
-        moviegroup
+        group
     );
 
     return response.data

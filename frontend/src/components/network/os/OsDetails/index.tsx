@@ -1,20 +1,18 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Button, Table } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { RootState } from '../../../../state/store';
+import { Os } from '../../../../../../backend/src/types/network';
 
 import { AppHeaderH3 } from "../../../basic/header";
 
 
 interface Props {
+  os: Os;
   onCancel: () => void;
 };
 
-export const OsDetails: React.FC<Props> = ({ onCancel }) => {
-  const os = useSelector((state: RootState) => state.selectedos);
-
+export const OsDetails: React.FC<Props> = ({ os, onCancel }) => {
   const versions: string[] = Object.values(os.versions);
 
   return (

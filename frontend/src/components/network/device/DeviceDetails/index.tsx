@@ -1,22 +1,18 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Button, Table } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { Network, Osversion } from '../../../../../../backend/src/types/network';
-
-import { RootState } from '../../../../state/store';
+import { Device, Network, Osversion } from '../../../../../../backend/src/types/network';
 
 import { AppHeaderH3 } from "../../../basic/header";
 
 
 interface Props {
+  device: Device;
   onCancel: () => void;
 };
 
-export const DeviceDetails: React.FC<Props> = ({ onCancel }) => {
-  const device = useSelector((state: RootState) => state.device);
-
+export const DeviceDetails: React.FC<Props> = ({ device, onCancel }) => {
   const ShowNetwork: React.FC<{ network: Network; index: number }> = ({ network, index }) => {
     return (
       <div>

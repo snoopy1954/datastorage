@@ -1,11 +1,8 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
 import { Table, Button, Form } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
 import { Day, Month } from '../../../../../../backend/src/types/pressure';
-
-import { RootState } from '../../../../state/store';
 
 import { AppHeaderH3 } from "../../../basic/header";
 
@@ -13,15 +10,14 @@ import { emptyMonth } from '../../../../utils/pressure/month';
 
 
 interface Props {
+  month: Month;
   onCancel: () => void;
   onSubmit: (values: Month) => void;
 }
 
-export const MonthForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+export const MonthForm: React.FC<Props> = ({ month, onSubmit, onCancel }) => {
   const [ changedMonth, setChangedMonth ] = useState(emptyMonth()); 
   const [ currentFocus, setCurrentFocus ] = useState('');
-
-  const month: Month = useSelector((state: RootState) => state.selectedmonth);
 
   React.useEffect(() => {
     setChangedMonth(month);

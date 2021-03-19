@@ -1,22 +1,18 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
 import { Year } from '../../../../../../backend/src/types/pressure';
 
-import { RootState } from '../../../../state/store';
-
 import { AppHeaderH3 } from "../../../basic/header";
 
 
 interface Props {
+  year: Year;
   onCancel: () => void;
 }
 
-export const YearDetails: React.FC<Props> = ({ onCancel }) => {
-  const year: Year = useSelector((state: RootState) => state.selectedyear);
-
+export const YearDetails: React.FC<Props> = ({ year, onCancel }) => {
   return (
     <div className="App">
       <AppHeaderH3 text={'Jahr ' + year.name.name} icon='list'/>

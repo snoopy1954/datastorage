@@ -5,13 +5,11 @@ import { backgroundColor, styleButton } from '../../../../constants';
 
 import { Edittype } from '../../../../types/basic';
 
-import { Month, MonthNoID } from '../../../../../../backend/src/types/pressure';
+import { Month, MonthNoID, Year } from '../../../../../../backend/src/types/pressure';
 
 import { RootState } from '../../../../state/store';
-import { initializeMonths,  addMonth, removeMonth, updateMonth } from '../../../../state/pressure/monthlist/actions';
-import { setSelectedMonth, clearSelectedMonth } from '../../../../state/pressure/selectedmonth/actions';
-import { setOpenedYear } from '../../../../state/pressure/openedyear/actions';
-import { updateYear } from '../../../../state/pressure/yearlist/actions';
+import { initializeMonths, addMonth, removeMonth, updateMonth } from '../../../../state/pressure/months/actions';
+import { addYear, updateYear } from '../../../../state/pressure/years/actions';
 
 import { create } from '../../../../services/pressure/months';
 import { getAll } from '../../../../services/pressure/exchange';
@@ -21,42 +19,53 @@ import { AskModal } from '../../../basic/askModal';
 import { MonthModal } from '../MonthModal';
 
 import { formatData } from '../../../../utils/pressure/migrate';
-import { addStatsToMonth, getNextMonth, getPromptForNextMonth } from '../../../../utils/pressure/month';
+import { addStatsToMonth, getNextMonth, getPromptForNextMonth, emptyMonth } from '../../../../utils/pressure/month';
+import { emptyYear, newYear, getYear } from '../../../../utils/pressure/year';
+import { getCurrentYear } from '../../../../utils/basic/basic';
 
 
 export const MonthPage: React.FC = () => {
+  const [year, setYear] = React.useState<Year>(emptyYear());
+  const [month, setMonth] = React.useState<Month>(emptyMonth());
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean, boolean, boolean]>([false, false, false, false, false, false]);
+
   const dispatch = useDispatch();
 
-  const year = useSelector((state: RootState) => state.openedyear);
-  const years = useSelector((state: RootState) => state.yearlist);
-  const months = useSelector((state: RootState) => state.monthlist); 
-  const month = useSelector((state: RootState) => state.selectedmonth);
+  const months: Month[] = useSelector((state: RootState) => state.months); 
+  const years: Year[] = useSelector((state: RootState) => state.pressureyears);
 
+  React.useEffect(() => {
+    const currentYearName: number = +(getCurrentYear());
+    if (years.length!==0) {
+      const year: Year = getYear(years, String(currentYearName));
+      setYear(year);
+    }
+  }, [years, dispatch]);
+  
   const openModalNew = (): void => setModalOpen([true, false, false, false, false, false]);
 
   const openModalDelete = async (month: Month): Promise<void> => {
-    dispatch(setSelectedMonth(month));
+    setMonth(month);
     setModalOpen([false, true, false, false, false, false]);
   };
     
   const openModalChange = async (month: Month): Promise<void> => {
-    dispatch(setSelectedMonth(month));
+    setMonth(month);
     setModalOpen([false, false, true, false, false, false]);
   };
 
   const openModalShow = async (month: Month): Promise<void> => {
-    dispatch(setSelectedMonth(month));
+    setMonth(month);
     setModalOpen([false, false, false, true, false, false]);
   };
 
   const openModalPrint = async (month: Month): Promise<void> => {
-    dispatch(setSelectedMonth(month));
+    setMonth(month);
     setModalOpen([false, false, false, false, true, false]);
   };
 
   const openModalExport = async (month: Month): Promise<void> => {
-    dispatch(setSelectedMonth(month));
+    setMonth(month);
     setModalOpen([false, false, false, false, false, true]);
   };
 
@@ -79,30 +88,40 @@ export const MonthPage: React.FC = () => {
   };
 
   const actionAdd = async () => {
-    if (year) {
-      const nextMonth: MonthNoID = getNextMonth(year);
-      dispatch(addMonth(nextMonth));
-      year.lastMonth++;
-      dispatch(updateYear(year));
+    const currentYearName: number = +(getCurrentYear());
+    if (years.length!==0) {
+      let year: Year = getYear(years, String(currentYearName));
+      if (year.id==='') {
+        const oldYear: Year = getYear(years, String(currentYearName-1));
+        oldYear.isLastYear = false;
+        dispatch(addYear(newYear(years)));
+        dispatch(updateYear(oldYear));
+      }
+    } else {
+      dispatch(addYear(newYear(years)));
     }
+    const nextMonth: MonthNoID = getNextMonth(year);
+    dispatch(addMonth(nextMonth));
+    year.lastMonth++;
+    dispatch(updateYear(year));
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeMonth(month.id));
-    dispatch(clearSelectedMonth());
+    setMonth(emptyMonth());
     closeModal();
   };  
 
   const actionClose = () => {
-    dispatch(clearSelectedMonth());
+    setMonth(emptyMonth());
     closeModal();
   };  
 
   const actionChange = async (changedMonth: Month) => {
     const addedMonth = addStatsToMonth(changedMonth);
     dispatch(await updateMonth(addedMonth));
-    dispatch(clearSelectedMonth());
+    setMonth(emptyMonth());
     dispatch(initializeMonths());
     closeModal();
   };  
@@ -117,7 +136,7 @@ export const MonthPage: React.FC = () => {
   const actionSelectionClick = ( selection: string) => {
     Object.values(years).forEach(year => {
       if (selection===year.name.name) {
-        dispatch(setOpenedYear(year));
+        setYear(year);
       }
     });
   };
@@ -171,16 +190,17 @@ export const MonthPage: React.FC = () => {
   return (
     <div className='App'>
       <AskModal
-          header='Neuen Monat anlegen'
-          prompt={getPromptForNextMonth(year)}
-          modalOpen={modalOpen[ModalDialog.NEW]}
-          onSubmit={actionAdd}
-          onClose={closeModal}
+        header='Neuen Monat anlegen'
+        prompt={getPromptForNextMonth(year)}
+        modalOpen={modalOpen[ModalDialog.NEW]}
+        onSubmit={actionAdd}
+        onClose={closeModal}
       />
       <MonthModal
         edittype={Edittype.SHOW}
         title={'Monat ' + month.monthname + ' ' + month.year + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        month={month}
         onSubmit={actionClose}
         onClose={closeModal}
       />
@@ -188,6 +208,7 @@ export const MonthPage: React.FC = () => {
         edittype={Edittype.PRINT}
         title={'Monat ' + month.monthname + ' ' + month.year + ' drucken'}
         modalOpen={modalOpen[ModalDialog.PRINT]}
+        month={month}
         onSubmit={actionClose}
         onClose={closeModal}
       />
@@ -195,6 +216,7 @@ export const MonthPage: React.FC = () => {
         edittype={Edittype.EXPORT}
         title={'Monat ' + month.monthname + ' ' + month.year + ' exportieren'}
         modalOpen={modalOpen[ModalDialog.EXPORT]}
+        month={month}
         onSubmit={actionClose}
         onClose={closeModal}
       />
@@ -202,6 +224,7 @@ export const MonthPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Monat ' + month.monthname + ' ' + month.year + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        month={month}
         onSubmit={actionChange}
         onClose={closeModal}
       />

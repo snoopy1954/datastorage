@@ -20,12 +20,12 @@ import formatsRouter from './routes/book/formats';
 import tonguesRouter from './routes/book/tongues';
 import booksRouter from './routes/book/books';
 
-import addressgroupsRouter from './routes/address/addressgroups';
+import addressgroupsRouter from './routes/address/groups';
 import addressesRouter from './routes/address/addresses';
 
 import moviesRouter from './routes/movie/movies';
-import moviegroupsRouter from './routes/movie/moviegroups';
-import movieformatsRouter from './routes/movie/movieformats';
+import moviegroupsRouter from './routes/movie/groups';
+import movieformatsRouter from './routes/movie/formats';
 
 import sudokusRouter from './routes/sudoku/sudoku';
 

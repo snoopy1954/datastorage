@@ -40,12 +40,3 @@ export interface Device {
 }
 
 export type DeviceNoID = Omit<Device, 'id'>;
-
-export interface Version {
-    version: string;
-}
-
-export interface SelectedVersions {
-    id: number;
-    versions: string[];
-}

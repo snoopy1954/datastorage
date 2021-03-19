@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
-import Bookgroup from '../../models/book/bookgroup';
+import Bookgroup from '../../models/book/group';
 import { toGroup } from '../../utils/basic';
 
 

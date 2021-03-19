@@ -8,39 +8,38 @@ import { Edittype } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { addHistoryline, updateHistoryline, removeHistoryline } from  '../../../../state/info/historylines/actions';
-import { setHistoryline, clearHistoryline } from '../../../../state/info/historyline/actions';
 import { updateInfo } from  '../../../../state/info/infos/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { HistoryModal } from '../HistoryModal';
 
-import { sortHistorylines } from '../../../../utils/info/historyline';
+import { sortHistorylines, emptyHistoryline } from '../../../../utils/info/historyline';
 
 
 export const HistoryPage: React.FC = () => {
+  const [historyline, setHistoryline] = React.useState<Historyline>(emptyHistoryline());
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
 
   const dispatch = useDispatch();
 
   const historylines: Historyline[] = useSelector((state: RootState) => state.historylines);
-  const historyline: Historyline = useSelector((state: RootState) => state.historyline);
   const infos = useSelector((state: RootState) => state.infos);
 
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
     
   const openModalDelete = (historyline: Historyline): void => {
-    dispatch(setHistoryline(historyline));
+    setHistoryline(historyline);
     setModalOpen([false, true, false, false]);
   };
     
   const openModalChange = (historyline: Historyline): void => {
-    dispatch(setHistoryline(historyline));
+    setHistoryline(historyline);
     setModalOpen([false, false, true, false]);
   };
     
   const openModalShow = (historyline: Historyline): void => {
-    dispatch(setHistoryline(historyline));
+    setHistoryline(historyline);
     setModalOpen([false, false, false, true]);
   };
 
@@ -72,18 +71,18 @@ export const HistoryPage: React.FC = () => {
       id: historyline.id
     };
     dispatch(updateHistoryline(historylineToChange));
-    dispatch(clearHistoryline());
+    setHistoryline(emptyHistoryline());
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeHistoryline(historyline.id));
-    dispatch(clearHistoryline());
+    setHistoryline(emptyHistoryline());
     closeModal();
   };  
 
   const actionShow = () => {
-    dispatch(clearHistoryline());
+    setHistoryline(emptyHistoryline());
     closeModal();
   };
 
@@ -128,6 +127,7 @@ export const HistoryPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neuen Historyeintrag anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        historyline={historyline}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -135,6 +135,7 @@ export const HistoryPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Historyeintrag ' + historyline.date.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        historyline={historyline}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -142,6 +143,7 @@ export const HistoryPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Historyeintrag ' + historyline.date.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        historyline={historyline}
         onSubmit={actionChange}
         onClose={closeModal}
       />

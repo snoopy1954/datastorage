@@ -7,42 +7,38 @@ import { Edittype } from "../../../../types/basic";
 import { Os, OsNoID } from '../../../../../../backend/src/types/network';
 
 import { RootState } from '../../../../state/store';
-import { addOs, updateOs, removeOs } from  '../../../../state/network/oslist/actions';
-import { setSelectedOs, clearSelectedOs } from  '../../../../state/network/selectedos/actions';
-import { clearSelectedDevice } from  '../../../../state/network/selecteddevice/actions';
+import { addOs, updateOs, removeOs } from  '../../../../state/network/oss/actions';
 
 import { AppHeaderH3 } from "../../../basic/header";
 import { AskModal } from "../../../basic/askModal";
 import { OsModal } from '../OsModal';
 
+import { emptyOs } from '../../../../utils/network/os';
+
 
 export const OsPage: React.FC = () => {
+  const [os, setOs] = React.useState<Os>(emptyOs());
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
   const oss = useSelector((state: RootState) => state.oss);
-  const os = useSelector((state: RootState) => state.selectedos);
-
-  React.useEffect(() => {
-    dispatch(clearSelectedDevice());
-  }, [dispatch]);  
 
   const openModalNew = (): void => {
     setModalOpen([true, false, false, false]);
   };
 
   const openModalDelete = (os: Os): void => {
-    dispatch(setSelectedOs(os));
+    setOs(os);
     setModalOpen([false, true, false, false]);
   };
   
   const openModalChange = (os: Os): void => {
-    dispatch(setSelectedOs(os));
+    setOs(os);
     setModalOpen([false, false, true, false]);
   };
   
   const openModalShow = (os: Os): void => {
-    dispatch(setSelectedOs(os));
+    setOs(os);
     setModalOpen([false, false, false, true]);
   };
   
@@ -63,7 +59,7 @@ export const OsPage: React.FC = () => {
   };
 
   const actionShow = () => {
-    dispatch(clearSelectedOs());
+    setOs(emptyOs);
     closeModal();
   };  
 
@@ -73,13 +69,13 @@ export const OsPage: React.FC = () => {
       id: os.id
     };
     dispatch(updateOs(osToChange));
-    dispatch(clearSelectedOs());
+    setOs(emptyOs);
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeOs(os.id));
-    dispatch(clearSelectedOs());
+    setOs(emptyOs);
     closeModal();
   };  
 
@@ -89,6 +85,7 @@ export const OsPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neues Betriebssystem anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        os={os}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -96,6 +93,7 @@ export const OsPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Betriebssystem ' + os.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        os={os}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -103,6 +101,7 @@ export const OsPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Betriebssystem ' + os.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        os={os}
         onSubmit={actionChange}
         onClose={closeModal}
       />

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import { backgroundColor, styleButton } from '../../../../constants';
 
-import { Format, FormatNoID } from '../../../../../../backend/src/types/book';
+import { Format, FormatNoID } from '../../../../../../backend/src/types/basic';
 import { Edittype } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';

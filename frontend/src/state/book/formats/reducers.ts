@@ -1,4 +1,4 @@
-import { Format } from '../../../../../backend/src/types/book';
+import { Format } from '../../../../../backend/src/types/basic';
 import { SET_FORMAT_LIST, ADD_FORMAT, UPDATE_FORMAT, REMOVE_FORMAT, ActionTypes } from './types';
 
 const initialState: Format[] = [];

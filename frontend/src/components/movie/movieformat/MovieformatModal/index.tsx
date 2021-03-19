@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal } from 'semantic-ui-react';
 
 import { Edittype } from "../../../../types/basic";
-import { MovieformatNoID } from '../../../../../../backend/src/types/movie';
+import { FormatNoID } from '../../../../../../backend/src/types/basic';
 
 import { MovieformatForm } from '../MovieformatForm';
 import { MovieformatDetails } from '../MovieformatDetails';
@@ -13,7 +13,7 @@ interface Props {
   title: string;
   modalOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: MovieformatNoID) => void;
+  onSubmit: (values: FormatNoID) => void;
 }
 
 export const MovieformatModal = ({ edittype, title, modalOpen, onClose, onSubmit }: Props) => (
