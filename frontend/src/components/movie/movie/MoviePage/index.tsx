@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { backgroundColor, styleButton, styleButtonSmall } from '../../../../constants';
@@ -11,47 +11,40 @@ import { Edittype, Direction } from '../../../../types/basic';
 import { getOne } from '../../../../services/filesystem/files';
 
 import { RootState } from '../../../../state/store';
-import { addMovie, updateMovie, exchangeMovies, removeMovie } from '../../../../state/movie/movielist/actions';
-import { setMoviefilter, clearMoviefilter } from '../../../../state/movie/moviefilter/actions';
-import { setSelectedMovie, clearSelectedMovie } from '../../../../state/movie/selectedmovie/actions';
-import { addChangedMovie, clearChangedMovie } from '../../../../state/movie/changedmovielist/actions';
+import { addMovie, updateMovie, exchangeMovies, removeMovie } from '../../../../state/movie/movies/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { MovieModal } from '../MovieModal';
 
-import { movielistTitle, movielistFilter, nextSeqnr, findChecksum, checkSerial } from '../../../../utils/movie/movie';
+import { movielistTitle, movielistFilter, nextSeqnr, findChecksum, checkSerial, newFilter, emptyMovie } from '../../../../utils/movie/movie';
 
 
 export const MoviePage: React.FC = () => {
-  const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+  const [movie, setMovie] = useState<Movie>(emptyMovie());
+  const [filter, setFilter] = useState<Filter>(newFilter());
+  const [moviesChanged, setMoviesChanged] = useState<Array<Movie>>([]);
+  const [modalOpen, setModalOpen] = useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+  
   const dispatch = useDispatch();
 
   const movies: Movie[] = useSelector((state: RootState) => state.movies);
-  const movie: Movie = useSelector((state: RootState) => state.movie);
   const groups: Group[] = useSelector((state: RootState) => state.groups);      
-  const moviefilter: Filter = useSelector((state: RootState) => state.moviefilter);
-  const changedMovies: Movie[] = useSelector((state: RootState) => state.changedmovies);
-
-  React.useEffect(() => {
-    dispatch(clearSelectedMovie());
-    dispatch(clearMoviefilter());
-  }, [dispatch]);  
   
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
     
   const openModalDelete = (movie: Movie): void => {
-    dispatch(setSelectedMovie(movie));
+    setMovie(movie);
     setModalOpen([false, true, false, false]);
   };
     
   const openModalChange = (movie: Movie): void => {
-    dispatch(setSelectedMovie(movie));
+    setMovie(movie);
     setModalOpen([false, false, true, false]);
   };
     
   const openModalShow = (movie: Movie): void => {
-    dispatch(setSelectedMovie(movie));
+    setMovie(movie);
     setModalOpen([false, false, false, true]);
   };
 
@@ -67,11 +60,11 @@ export const MoviePage: React.FC = () => {
   };
 
   const actionGroupSelectionClick = ( selection: string) => {
-    dispatch(setMoviefilter({ group: selection, subgroup: '' }));
+    setFilter({ group: selection, subgroup: '' });
   };
 
   const actionSubgroupSelectionClick = ( selection: string) => {
-    dispatch(setMoviefilter({ group: moviefilter.group, subgroup: selection }));
+    setFilter({ group: filter.group, subgroup: selection });
   };
 
   const actionAdd = async (values: MovieNoID) => {
@@ -87,31 +80,31 @@ export const MoviePage: React.FC = () => {
       id: movie.id
     };
     dispatch(updateMovie(movieToChange));
-    dispatch(clearSelectedMovie());
+    setMovie(emptyMovie);
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeMovie(movie.id));
-    dispatch(clearSelectedMovie());
+    setMovie(emptyMovie);
     closeModal();
   };  
 
   const actionShow = () => {
-    dispatch(clearSelectedMovie());
+    setMovie(emptyMovie);
     closeModal();
   };
 
   const actionImport = async () => {
-    const directory: string = moviefilter.group + (moviefilter.subgroup!=='' ? '|' + moviefilter.subgroup : '');
+    const directory: string = filter.group + (filter.subgroup!=='' ? '|' + filter.subgroup : '');
     const fetchList = async () => {
       const list = await getOne(directory, 'mp4');
       Object.values(list).forEach((item, index) => {
         const [ filename, checksum ] = item.split('|');
         let newMovie: MovieNoID = {
           format: 'MP4',
-          moviegroup: moviefilter.group,
-          subgroup: moviefilter.subgroup,
+          moviegroup: filter.group,
+          subgroup: filter.subgroup,
           title: {
             name: filename.replace('.mp4', ''),
             seqnr: index,
@@ -126,7 +119,7 @@ export const MoviePage: React.FC = () => {
           createdAt: new Date(),
           modifiedAt: new Date()
         };
-        newMovie = checkSerial(newMovie, moviefilter.subgroup);
+        newMovie = checkSerial(newMovie, filter.subgroup);
         console.log(newMovie.title.name);
         if (!findChecksum(movies, checksum)) {
           dispatch(addMovie(newMovie));
@@ -147,15 +140,15 @@ export const MoviePage: React.FC = () => {
     movie2.title.seqnr = seqnr1;
     const moviesToChange: Movie[] = [movie1, movie2];
     dispatch(exchangeMovies(moviesToChange));
-    dispatch(addChangedMovie(movie1));
-    dispatch(addChangedMovie(movie2));
+    setMoviesChanged(arr => [...arr, movie1]);
+    setMoviesChanged(arr => [...arr, movie2]);
   };
 
   const actionSaveSequence = () => {
-    Object.values(changedMovies).forEach(changedMovie => {
-      dispatch(updateMovie(changedMovie));
+    Object.values(moviesChanged).forEach(movieChanged => {
+      dispatch(updateMovie(movieChanged));
     });
-    dispatch(clearChangedMovie());
+    setMoviesChanged([]);
   };
 
   const moviegroupOptions: string[] = [];
@@ -169,16 +162,16 @@ export const MoviePage: React.FC = () => {
   };
 
   const subgroupOptions: string[] = [];
-  const moviegroup = getMoviegroup(moviefilter.group);
+  const moviegroup = getMoviegroup(filter.group);
   if (moviegroup) 
     moviegroup.subgroups.forEach(element => {
       subgroupOptions.push(element);
   });
 
-  const filterSelected = (moviefilter.group!=='' && moviefilter.subgroup!=='') || (moviefilter.group!=='' && getMoviegroup(moviefilter.group)?.subgroups.length===0);
-  const sequenceChanged = (Object.values(changedMovies).length > 0);
-  const title = 'Filmliste' + movielistTitle(moviefilter);
-  const sortedMovies = movielistFilter(movies, moviefilter, groups);
+  const filterSelected = (filter.group!=='' && filter.subgroup!=='') || (filter.group!=='' && getMoviegroup(filter.group)?.subgroups.length===0);
+  const sequenceChanged = (Object.values(moviesChanged).length > 0);
+  const title = 'Filmliste' + movielistTitle(filter);
+  const sortedMovies = movielistFilter(movies, filter, groups);
 
   const ShowTableHeader: React.FC = () => {
     return (
@@ -227,6 +220,7 @@ export const MoviePage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neuen Film anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        movie={movie}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -234,6 +228,7 @@ export const MoviePage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'Film ' + movie.title.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        movie={movie}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -241,6 +236,7 @@ export const MoviePage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Film ' + movie.title.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        movie={movie}
         onSubmit={actionChange}
         onClose={closeModal}
       />

@@ -10,7 +10,7 @@ import { getAll, getOne } from '../../../../services/postgres';
 
 import { RootState } from '../../../../state/store';
 import { addCd, updateCd, removeCd, setCds, clearCds } from '../../../../state/music/cds/actions';
-import { setSelectedCd, clearSelectedCd } from '../../../../state/music/cd/actions';
+// import { setSelectedCd, clearSelectedCd } from '../../../../state/music/cd/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
@@ -20,25 +20,28 @@ import { formatData } from '../../../../utils/basic/import';
 import { getFormatedTime, getFormatedSize } from '../../../../utils/basic/basic';
 import { createImageFromFile } from '../../../../utils/basic/content';
 import { getArtistFromPgident, updateArtistFromPg } from '../../../../utils/music/artist';
-import { createCdFromPgRecord, updateCdFromPg, getFilename, cdTitle, getCdsOfArtist, sortCdsByYear } from '../../../../utils/music/cd';
+import { createCdFromPgRecord, updateCdFromPg, getFilename, cdTitle, getCdsOfArtist, sortCdsByYear, emptyCd } from '../../../../utils/music/cd';
 import { createTrackFromPgRecord } from '../../../../utils/music/track';
 
 
 export const CdPage: React.FC = () => {
+  const [cd, setCd] = React.useState(emptyCd());
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
   const artists: Artist[] = useSelector((state: RootState) => state.artists);  
   const artist: Artist = useSelector((state: RootState) => state.artist);  
   const cds: Cd[] = useSelector((state: RootState) => state.cds);
-  const cd: Cd = useSelector((state: RootState) => state.cd);
+//  const cd: Cd = useSelector((state: RootState) => state.cd);
 
   React.useEffect(() => {
-    dispatch(clearSelectedCd());
+//    dispatch(clearSelectedCd());
     dispatch(clearCds());
     let cdsOfArtist: Cd[] = [];
     const fetchCds = async () => {
+      console.log(artist.name)
       cdsOfArtist = await getCdsOfArtist(artist);
+      console.log(cdsOfArtist)
       dispatch(setCds(cdsOfArtist));
     };
     fetchCds();
@@ -47,17 +50,20 @@ export const CdPage: React.FC = () => {
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
   const openModalDelete = (cd: Cd): void => {
-    dispatch(setSelectedCd(cd));
+    setCd(cd);
+//    dispatch(setSelectedCd(cd));
     setModalOpen([false, true, false, false]);
   };
       
   const openModalChange = (cd: Cd): void => {
-    dispatch(setSelectedCd(cd));
+    setCd(cd);
+//    dispatch(setSelectedCd(cd));
     setModalOpen([false, false, true, false]);
   };
       
   const openModalShow = (cd: Cd): void => {
-    dispatch(setSelectedCd(cd));
+    setCd(cd);
+//    dispatch(setSelectedCd(cd));
     setModalOpen([false, false, false, true]);
   };
   
@@ -86,18 +92,21 @@ export const CdPage: React.FC = () => {
       id: cd.id,
     };
     dispatch(updateCd(cdToChange));
-    dispatch(clearSelectedCd());
+    setCd(emptyCd());
+//    dispatch(clearSelectedCd());
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeCd(cd.id));
-    dispatch(clearSelectedCd());
+    setCd(emptyCd());
+//    dispatch(clearSelectedCd());
     closeModal();
   };  
 
   const actionShow = () => {
-    dispatch(clearSelectedCd());
+    setCd(emptyCd());
+//    dispatch(clearSelectedCd());
     closeModal();
   };
 
@@ -171,8 +180,9 @@ export const CdPage: React.FC = () => {
     <div className='App'>
       <CdModal
         edittype={Edittype.ADD}
-        title='Neuen CD anlegen'
+        title='Neue CD anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        cd={cd}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -180,6 +190,7 @@ export const CdPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={'CD ' + cd.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        cd={cd}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -187,6 +198,7 @@ export const CdPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'CD ' + cd.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        cd={cd}
         onSubmit={actionChange}
         onClose={closeModal}
       />

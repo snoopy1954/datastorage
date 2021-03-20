@@ -17,10 +17,11 @@ import { getOneBinarydata } from '../../../../utils/basic/content'
 
 
 interface Props {
+    cd: Cd;
     onCancel: () => void;
 }
 
-export const CdDetails: React.FC<Props> = ({ onCancel }) => {
+export const CdDetails: React.FC<Props> = ({ cd, onCancel }) => {
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
     const [tracks, setTracks] = React.useState([] as Track[]);
@@ -38,7 +39,7 @@ export const CdDetails: React.FC<Props> = ({ onCancel }) => {
     };
 
     const artists: Artist[] = useSelector((state: RootState) => state.artists);
-    const cd: Cd  = useSelector((state: RootState) => state.cd);
+//    const cd: Cd  = useSelector((state: RootState) => state.cd);
 
     useEffect(() => {
         const fetchTracks = async () => {
@@ -47,13 +48,17 @@ export const CdDetails: React.FC<Props> = ({ onCancel }) => {
         };
         fetchTracks();
         const fetchCover = async () => {
-            const image = await getOneBinarydata(cd.coverident, 'jpg');
-            setCover(getImageUrl(image));
+            if (cd.coverident!=='') {
+                const image = await getOneBinarydata(cd.coverident, 'jpg');
+                setCover(getImageUrl(image));
+            }
         };
         fetchCover();
         const fetchBack = async () => {
-            const image = await getOneBinarydata(cd.backident, 'jpg');
-            setBack(getImageUrl(image));
+            if (cd.backident!=='') {
+                const image = await getOneBinarydata(cd.backident, 'jpg');
+                setBack(getImageUrl(image));
+            }
         };
         fetchBack();
     }, [cd]);  

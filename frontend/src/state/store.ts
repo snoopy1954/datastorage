@@ -5,6 +5,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { pageReducer } from './page/reducers';
 import { groupsReducer } from './basic/groups/reducers';
 import { yearsReducer } from './basic/years/reducers';
+import { formatsReducer } from './basic/formats/reducers';
 import { historylinesReducer } from './info/historylines/reducers';
 import { infosReducer } from './info/infos/reducers';
 
@@ -15,7 +16,6 @@ import { addressesReducer } from './address/addresses/reducers';
 
 import { booksReducer } from './book/books/reducers';
 import { tonguesReducer } from './book/tongues/reducers';
-import { formatsReducer } from './book/formats/reducers';
 import { ownershipsReducer } from './book/ownerships/reducers';
 
 import { documentsReducer } from './document/documents/reducers';
@@ -31,12 +31,11 @@ import { activitiesReducer } from './sport/activities/reducers';
 import { monthsReducer } from './pressure/months/reducers';
 import { yearsReducer as pressureyearsReducer } from './pressure/years/reducers';
 
-import { movielistReducer } from './movie/movielist/reducers';
-import { selectedmovieReducer } from './movie/selectedmovie/reducers';
-import { movieformatlistReducer } from './movie/movieformatlist/reducers';
-import { selectedmovieformatReducer } from './movie/selectedmovieformat/reducers';
-import { moviefilterReducer } from './movie/moviefilter/reducers';
-import { changedmovielistReducer } from './movie/changedmovielist/reducers';
+import { moviesReducer } from './movie/movies/reducers';
+
+import { artistsReducer } from './music/artists/reducers';
+import { artistReducer } from './music/artist/reducers';
+import { cdsReducer } from './music/cds/reducers';
 
 import { selectedfieldReducer } from './sudoku/selectedfield/reducers';
 import { gamefieldsReducer } from './sudoku/gamefields/reducers';
@@ -60,21 +59,14 @@ import { selectedbillsReducer } from './axa/selectedbills/reducers';
 import { axayearsReducer } from './axa/years/reducers';
 import { axayearReducer } from './axa/year/reducers';
 
-import { musicgroupsReducer } from './music/groups/reducers';
-import { musicgroupReducer } from './music/group/reducers';
-import { artistsReducer } from './music/artists/reducers';
-import { artistReducer } from './music/artist/reducers';
-import { cdsReducer } from './music/cds/reducers';
-import { cdReducer } from './music/cd/reducers';
-
 
 const rootReducer = combineReducers({
     page: pageReducer,
     groups: groupsReducer,
     years: yearsReducer,
+    formats: formatsReducer,
 
     books: booksReducer,
-    formats: formatsReducer,
     ownerships: ownershipsReducer,
     tongues: tonguesReducer,
     
@@ -96,12 +88,7 @@ const rootReducer = combineReducers({
     
     addresses: addressesReducer,
     
-    movies: movielistReducer,
-    movie: selectedmovieReducer,
-    movieformats: movieformatlistReducer,
-    movieformat: selectedmovieformatReducer,
-    moviefilter: moviefilterReducer,
-    changedmovies: changedmovielistReducer,
+    movies: moviesReducer,
     
     selectedfield: selectedfieldReducer,
     gamefields: gamefieldsReducer,
@@ -128,12 +115,9 @@ const rootReducer = combineReducers({
     historylines: historylinesReducer,
     infos: infosReducer,
     
-    musicgroups: musicgroupsReducer,
-    musicgroup: musicgroupReducer,
     artists: artistsReducer,
     artist: artistReducer,
     cds: cdsReducer,
-    cd: cdReducer,
     
 });
 

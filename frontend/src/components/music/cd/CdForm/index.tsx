@@ -5,7 +5,7 @@ import { Field, Formik, Form } from 'formik';
 import { styleButton }from '../../../../constants';
 
 import { Option, Edittype } from '../../../../types/basic';
-import { CdNoID } from '../../../../../../backend/src/types/music';
+import { Cd, CdNoID } from '../../../../../../backend/src/types/music';
 
 import { RootState } from '../../../../state/store';
 
@@ -17,14 +17,14 @@ import { nextCd } from '../../../../utils/music/cd';
 
 interface Props {
   edittype: Edittype;
+  cd: Cd;
   onSubmit: (values: CdNoID) => void;
   onCancel: () => void;
 }
 
-export const CdForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const cd = useSelector((state: RootState) => state.cd);
+export const CdForm: React.FC<Props> = ({ edittype, cd, onSubmit, onCancel }) => {
   const cds = useSelector((state: RootState) => state.cds);
-  const musicgroups = useSelector((state: RootState) => state.musicgroups);
+  const musicgroups = useSelector((state: RootState) => state.groups);
 
   const musicgroupOptions: Option[] = [];
   Object.values(musicgroups).forEach(element => {

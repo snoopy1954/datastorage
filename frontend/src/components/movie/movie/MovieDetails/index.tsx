@@ -1,20 +1,18 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
-import { RootState } from '../../../../state/store';
+import { Movie } from '../../../../../../backend/src/types/movie';
 
 import { AppHeaderH3 } from '../../../basic/header';
 
 
 interface Props {
+    movie: Movie;
     onCancel: () => void;
 }
   
-export const MovieDetails: React.FC<Props> = ({ onCancel }) => {
-    const movie  = useSelector((state: RootState) => state.movie);
-
+export const MovieDetails: React.FC<Props> = ({ movie, onCancel }) => {
     return (          
         <div className="App">
             <AppHeaderH3 text={movie.title.name} icon='zoom-in'/>

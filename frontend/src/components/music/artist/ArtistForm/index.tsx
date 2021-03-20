@@ -25,7 +25,7 @@ interface Props {
 export const ArtistForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
   const artist = useSelector((state: RootState) => state.artist);
   const artists = useSelector((state: RootState) => state.artists);
-  const musicgroups = useSelector((state: RootState) => state.musicgroups);
+  const musicgroups = useSelector((state: RootState) => state.groups);
 
   const musicgroupOptions: Option[] = [];
   Object.values(musicgroups).forEach(element => {

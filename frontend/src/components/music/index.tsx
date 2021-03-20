@@ -3,15 +3,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { styleButton } from '../../constants';
 
+import { Group } from '../../../../backend/src/types/basic';
+
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
-import { initializeMusicgroups } from '../../state/music/groups/actions';
+import { initializeGroups } from '../../state/basic/groups/actions';
 import { initializeArtists } from '../../state/music/artists/actions';
 
 import { AppHeaderH2 } from '../basic/header';
-import { GroupPage } from './group/GroupPage';
+import { GroupPage } from '../basic/group/GroupPage';
 import { ArtistPage } from './artist/ArtistPage';
 import { CdPage } from './cd/CdPage';
+
+import { getAllDB, createDB, updateDB, removeDB } from '../../utils/music/group';
 
 
 const Music: React.FC = () => {  
@@ -21,7 +25,11 @@ const Music: React.FC = () => {
   const subpage = useSelector((state: RootState) => state.page.subpage);      
 
   React.useEffect(() => {
-    dispatch(initializeMusicgroups());
+    const fetchGroups = async () => {
+      const groups: Group[] = await getAllDB();
+      dispatch(initializeGroups(groups));
+    }
+    fetchGroups();
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -29,7 +37,7 @@ const Music: React.FC = () => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    dispatch(setPage({ mainpage, subpage: 'artist' }));
+    dispatch(setPage({ mainpage, subpage: 'artists' }));
   }, [mainpage, dispatch]);
 
   const actionSelect = (selected: string) => {
@@ -39,12 +47,12 @@ const Music: React.FC = () => {
   return (
     <div className='App'>
       <AppHeaderH2 text='Musik' icon='music'/>
-      <Button style={styleButton} onClick={() => actionSelect('artist')}>Interpreten</Button>
-      <Button style={styleButton} onClick={() => actionSelect('cd')}>CDs</Button>
-      <Button style={styleButton} onClick={() => actionSelect('group')}>Gruppen</Button>
-      {subpage==='artist'&&<ArtistPage/>}
-      {subpage==='cd'&&<CdPage/>}
-      {subpage==='group'&&<GroupPage/>}
+      <Button style={styleButton} onClick={() => actionSelect('artists')}>Interpreten</Button>
+      <Button style={styleButton} onClick={() => actionSelect('cds')}>CDs</Button>
+      <Button style={styleButton} onClick={() => actionSelect('groups')}>Gruppen</Button>
+      {subpage==='artists'&&<ArtistPage/>}
+      {subpage==='cds'&&<CdPage/>}
+      {subpage==='groups'&&<GroupPage title='Gruppe' createGroupDB={createDB} updateGroupDB={updateDB} removeGroupDB={removeDB}/>}
     </div>
   );
 }

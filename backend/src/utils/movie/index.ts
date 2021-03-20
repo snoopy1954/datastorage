@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { MovieNoID, MoviegroupNoID, MovieformatNoID } from '../../types/movie';
-import { parseString, parseNumber, parseStringArray, parseDate } from '../basicParser';
+import { MovieNoID } from '../../types/movie';
+import { parseString, parseNumber, parseDate } from '../basicParser';
 
 
 export const toNewMovie = (object: any) => {
@@ -59,31 +59,4 @@ export const toNewMovie = (object: any) => {
 
     return newMovie;
 };
-
-export const toNewMoviegroup = (object: any) => {
-    const name = parseString(object.name);
-    const seqnr = parseNumber(object.seqnr);
-    const subgroups = parseStringArray(object.subgroups);
-    const newMoviegroup: MoviegroupNoID = {
-        name,
-        seqnr,
-        subgroups
-    };
-
-    return newMoviegroup;
-};
-
-export const toNewMovieformat = (object: any) => {
-    const name = parseString(object.name);
-    const seqnr = parseNumber(object.seqnr);
-
-    const newMovieformat: MovieformatNoID = {
-        name,
-        seqnr
-    };
-
-    return newMovieformat;
-};
-
-
 

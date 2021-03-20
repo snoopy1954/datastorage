@@ -3,12 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { styleButton } from '../../constants';
 
-import { Group } from '../../../../backend/src/types/basic';
+import { Group, Format } from '../../../../backend/src/types/basic';
 
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
 import { initializeTongues } from '../../state/book/tongues/actions';
-import { initializeFormats } from '../../state/book/formats/actions';
+import { initializeFormats } from '../../state/basic/formats/actions';
 import { initializeOwnerships } from '../../state/book/ownerships/actions';
 import { initializeGroups } from '../../state/basic/groups/actions';
 import { initializeBooks } from '../../state/book/books/actions';
@@ -17,11 +17,12 @@ import { AppHeaderH2 } from '../basic/header';
 
 import { BookPage } from './book/BookPage';
 import { OwnershipPage } from './ownership/OwnershipPage';
-import { FormatPage } from './format/FormatPage';
 import { TonguePage } from './tongue/TonguePage';
 import { GroupPage } from '../basic/group/GroupPage';
+import { FormatPage } from '../basic/format/FormatPage';
 
 import { getAllDB, createDB, updateDB, removeDB } from '../../utils/book/group';
+import { getAllFormatDB, createFormatDB, updateFormatDB, removeFormatDB } from '../../utils/book/format';
 
 
 const Book: React.FC = () => {
@@ -43,7 +44,11 @@ const Book: React.FC = () => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    dispatch(initializeFormats());
+    const fetchFormats = async () => {
+      const formats: Format[] = await getAllFormatDB();
+      dispatch(initializeFormats(formats));
+    }
+    fetchFormats();
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -68,12 +73,12 @@ const Book: React.FC = () => {
       <Button style={styleButton} onClick={() => actionSelect('books')}>Bücher</Button>
       <Button style={styleButton} onClick={() => actionSelect('groups')}>Gruppe</Button>
       <Button style={styleButton} onClick={() => actionSelect('ownership')}>Besitz</Button>
-      <Button style={styleButton} onClick={() => actionSelect('format')}>Format</Button>
+      <Button style={styleButton} onClick={() => actionSelect('formats')}>Format</Button>
       <Button style={styleButton} onClick={() => actionSelect('tongue')}>Sprache</Button>
       {subpage==='books'&&<BookPage/>}
       {subpage==='groups'&&<GroupPage title='Buchgruppe' createGroupDB={createDB} updateGroupDB={updateDB} removeGroupDB={removeDB}/>}
       {subpage==='ownership'&&<OwnershipPage/>}
-      {subpage==='format'&&<FormatPage/>}
+      {subpage==='formats'&&<FormatPage title='Format' createFormatDB={createFormatDB} updateFormatDB={updateFormatDB} removeFormatDB={removeFormatDB}/>}
       {subpage==='tongue'&&<TonguePage/>}
     </div>
   );

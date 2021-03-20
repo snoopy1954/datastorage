@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
 import Format from '../../models/book/format';
-import { toNewFormat } from '../../utils/book';
+import { toFormat } from '../../utils/basic';
 
 const formatsRouter = express.Router();
 
@@ -24,7 +24,7 @@ formatsRouter.get('/:id', async (request, response) => {
 
 formatsRouter.post('/', async (request, response) => {
     try {
-        const newFormat = new Format(toNewFormat(request.body));
+        const newFormat = new Format(toFormat(request.body));
         void await newFormat.save();
         response.json(newFormat);
     } catch (e) {
@@ -44,7 +44,7 @@ formatsRouter.delete('/:id', async (request, response) => {
   
 formatsRouter.put('/:id', async (request, response) => {
     try {
-        const newFormat = new Format(toNewFormat(request.body)); 
+        const newFormat = new Format(toFormat(request.body)); 
         const format = await Format.findByIdAndUpdate(request.params.id, newFormat, { new: true });
         if (format) response.json(format.toJSON());
         else response.status(404).end();

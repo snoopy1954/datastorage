@@ -29,7 +29,7 @@ export const ArtistPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
-  const groups: Group[] = useSelector((state: RootState) => state.musicgroups);      
+  const groups: Group[] = useSelector((state: RootState) => state.groups);      
   const artists: Artist[] = useSelector((state: RootState) => state.artists);
   const artist: Artist = useSelector((state: RootState) => state.artist);
 
@@ -72,7 +72,7 @@ export const ArtistPage: React.FC = () => {
 
   const actionArtistSelection = async (artist: Artist) => {
     dispatch(setSelectedArtist(artist));
-    dispatch(setPage({ mainpage: 'music', subpage: 'cd' }));
+    dispatch(setPage({ mainpage: 'music', subpage: 'cds' }));
   };
 
   const actionAdd = async (values: ArtistNoID) => {

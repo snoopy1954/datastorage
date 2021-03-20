@@ -59,6 +59,30 @@ export const newMovie = (): MovieNoID => {
     return movie;
 };
 
+export const emptyMovie = (): Movie => {
+    const movie = {
+        id: '',
+        title: {
+            name: "",
+            seqnr: 0
+        },
+        comment: "",
+        filename: "",
+        checksum: "",
+        moviegroup: "",
+        subgroup: "",
+        format: "",
+        season: '',
+        serial: '',
+        maximal: '',
+        launched: '',
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+    };
+
+    return movie;
+};
+
 export const movielistTitle = (filters: Filter): string => {
     let filter = (filters.group!=="") ? ': ' + filters.group : '';
     filter += (filters.subgroup!=="") ? ' - ' + filters.subgroup : '';
@@ -170,3 +194,11 @@ export const checkSerial = (movie: MovieNoID, subgroup: string): MovieNoID => {
     return newMovie;
 };
 
+export const newFilter = (): Filter => {
+    const filter: Filter = {
+        group: '',
+        subgroup: ''
+    }
+
+    return filter;
+};

@@ -5,7 +5,7 @@ import { Field, Formik, Form } from "formik";
 import { styleButton }from '../../../../constants';
 
 import { Option, Edittype } from "../../../../types/basic";
-import { MovieNoID } from '../../../../../../backend/src/types/movie';
+import { Movie, MovieNoID } from '../../../../../../backend/src/types/movie';
 import { Group } from '../../../../../../backend/src/types/basic';
 
 import { RootState } from '../../../../state/store';
@@ -22,17 +22,17 @@ import { newMovie } from '../../../../utils/movie/movie';
 
 interface Props {
   edittype: Edittype;
+  movie: Movie;
   onSubmit: (values: MovieNoID) => void;
   onCancel: () => void;
 }
 
-export const MovieForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
+export const MovieForm: React.FC<Props> = ({ edittype, movie, onSubmit, onCancel }) => {
   const [subgroups, setSubgroups] = React.useState<Array<string>>([]);
 
   const dispatch = useDispatch();
 
-  const movie = useSelector((state: RootState) => state.movie);
-  const formats = useSelector((state: RootState) => state.movieformats);
+  const formats = useSelector((state: RootState) => state.formats);
   const groups = useSelector((state: RootState) => state.groups);
 
   React.useEffect(() => {

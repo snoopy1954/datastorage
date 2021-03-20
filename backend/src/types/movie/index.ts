@@ -1,18 +1,5 @@
 import { Name } from '../basic';
 
-// export interface Moviegroup extends Name {
-//     id: string;
-//     subgroups: string[];
-// }
-
-// export type MoviegroupNoID = Omit<Moviegroup, 'id'>;
-
-// export interface Movieformat extends Name {
-//     id: string;
-// }
-
-// export type MovieformatNoID = Omit<Movieformat, 'id'>;
-
 export interface Movie {
     id: string;
     title: Name;
