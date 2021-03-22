@@ -33,4 +33,3 @@ export interface BillWithFileDatesNoID extends BillNoID {
 export interface AccountWithFileDateNoID extends AccountNoID {
     note: FileDate;
 }
-

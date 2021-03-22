@@ -6,9 +6,10 @@ import { styleButton, backgroundColor } from '../../../../constants';
 import { Account, Bill, Note, Details } from '../../../../../../backend/src/types/axa';
 import { Binarydata } from '../../../../../../backend/src/types/basic';
 
+import { getOne as getBill} from '../../../../services/axa/bills';
+
 import { RootState } from '../../../../state/store';
 import { setPage } from '../../../../state/page/actions';
-import { setSelectedBill } from '../../../../state/axa/selectedbill/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { ShowModalPDF } from '../../../basic/showModalPDF';
@@ -19,18 +20,31 @@ import { getSumAmounts } from '../../../../utils/axa/bill';
 
 
 interface Props {
+  account: Account;
   onCancel: () => void;
 }
 
-export const AccountDetails: React.FC<Props> = ({ onCancel }) => {
+export const AccountDetails: React.FC<Props> = ({ account, onCancel }) => {
   const [url, setUrl] = React.useState('');
+  const [bills, setBills] = React.useState<Array<Bill>>([]);
  
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const dispatch = useDispatch();
 
   const mainpage: string = useSelector((state: RootState) => state.page.mainpage);      
-  const account: Account = useSelector((state: RootState) => state.account);
-  const selectedbills: Bill[] = useSelector((state: RootState) => state.selectedbills);
+
+  React.useEffect(() => {
+    setBills([]);
+    account.billIDs.forEach(async billID => {
+      if(billID!=='') {
+        const fetchBill = async () => {
+          const newBill: Bill = await getBill(billID);
+          setBills(arr => [...arr, newBill]);
+        };
+        await fetchBill();
+      }
+    });
+  }, [dispatch, account]);  
 
   const openModalShow = (): void => setModalOpen(true);
 
@@ -49,7 +63,6 @@ export const AccountDetails: React.FC<Props> = ({ onCancel }) => {
   };
 
   const handleBillSelection = (bill: Bill) => {
-    dispatch(setSelectedBill(bill));
     dispatch(setPage({ mainpage, subpage: 'bills' }));
   };
 
@@ -109,7 +122,7 @@ export const AccountDetails: React.FC<Props> = ({ onCancel }) => {
             <Table.Cell>Antragsdatum</Table.Cell>
             <Table.Cell>{account.passed}</Table.Cell>
           </Table.Row>
-            {Object.values(selectedbills).map((bill: Bill, index: number) =>  (
+            {Object.values(bills).map((bill: Bill, index: number) =>  (
               <Table.Row key={bill.id} onClick={() => handleBillSelection(bill)}>
                 <Table.Cell>Rechnung #{index+1}</Table.Cell>
                 <Table.Cell><ShowBill actbill={bill}/></Table.Cell>

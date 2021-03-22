@@ -17,12 +17,12 @@ import { newBiller } from '../../../../utils/axa/biller';
 
 interface Props {
   edittype: Edittype;
+  biller: Biller;
   onSubmit: (values: BillerNoID) => void;
   onCancel: () => void;
 }
 
-export const BillerForm: React.FC<Props> = ({ edittype,  onSubmit, onCancel }) => {
-  const biller: Biller = useSelector((state: RootState) => state.biller);
+export const BillerForm: React.FC<Props> = ({ edittype, biller, onSubmit, onCancel }) => {
   const billers: Biller[] = useSelector((state: RootState) => state.billers);
 
   const initialValues = (edittype===Edittype.EDIT && biller) ? biller : newBiller(billers);

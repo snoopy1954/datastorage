@@ -6,6 +6,7 @@ import { styleButton }from '../../../../constants';
 
 import { Edittype, Option } from "../../../../types/basic";
 import { AccountStatus, FileDate, AccountWithFileDateNoID } from '../../../../types/axa';
+import { Account } from '../../../../../../backend/src/types/axa';
 
 import { RootState } from '../../../../state/store';
 
@@ -23,14 +24,14 @@ import { newAccount } from '../../../../utils/axa/account';
 
 interface Props {
   edittype: Edittype;
+  account: Account;
   onSubmit: (values: AccountWithFileDateNoID) => void;
   onCancel: () => void;
 }
 
-export const AccountForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
+export const AccountForm: React.FC<Props> = ({ edittype, account, onSubmit, onCancel }) => {
   const [ addNote, setAddNote ] = useState(false); 
 
-  const account = useSelector((state: RootState) => state.account);
   const accounts = useSelector((state: RootState) => state.accounts);
 
   const statusOptions: Option[] = [];

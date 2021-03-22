@@ -10,7 +10,6 @@ import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { addDocument, updateDocument, exchangeDocuments, removeDocument } from '../../../../state/document/documents/actions';
-import { clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
@@ -45,7 +44,6 @@ export const DocumentPage: React.FC = () => {
       
   const openModalShow = (document: Document): void => {
     setDocument(document);
-    dispatch(clearPdfUrl());
     setModalOpen([false, false, false, true]);
   };
   

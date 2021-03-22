@@ -3,54 +3,58 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Table, Button } from "semantic-ui-react";
 import { backgroundColor, styleButton } from '../../../../constants';
 
-import { Account, AccountNoID, Bill, Year, Note } from '../../../../../../backend/src/types/axa';
+import { Edittype } from "../../../../types/basic";
+import { Account, AccountNoID, Year, Note } from '../../../../../../backend/src/types/axa';
 import { AccountWithFileDateNoID, FileDate } from '../../../../types/axa';
 import { Content2 } from '../../../../../../backend/src/types/basic';
 import { ContentWithFile } from '../../../../types/basic';
 
-import { Edittype } from "../../../../types/basic";
-
-import { getOne as getAccount } from '../../../../services/axa/accounts';
-import { getOne as getBill} from '../../../../services/axa/bills';
-
 import { RootState } from '../../../../state/store';
-import { addAccount, refreshAccount, removeAccount, updateAccount } from  '../../../../state/axa/accountlist/actions';
-import { clearSelectedAccount, setSelectedAccount } from '../../../../state/axa/selectedaccount/actions';
-import { addSelectedBill, clearSelectedBills } from '../../../../state/axa/selectedbills/actions';
-import { setSelectedYear } from '../../../../state/axa/year/actions';
+import { addAccount, removeAccount, updateAccount } from  '../../../../state/axa/accounts/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { AccountModal } from '../AccountModal';
 
 import { getAmount } from '../../../../utils/basic/basic';
-import { newContent } from '../../../../utils/basic/content';
-import { createContent } from '../../../../utils/basic/content';
+import { newContent, createContent } from '../../../../utils/basic/content';
+import { emptyYear } from '../../../../utils/axa/year';
+import { emptyAccount } from '../../../../utils/axa/account';
 
 
 export const AccountPage: React.FC = () => {
+  const [account, setAccount] = React.useState<Account>(emptyAccount());
+  const [year, setYear] = React.useState<Year>(emptyYear());
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+
   const dispatch = useDispatch();
 
   const accounts: Account[] = useSelector((state: RootState) => state.accounts);
-  const account: Account = useSelector((state: RootState) => state.account);
   const years: Year[] = useSelector((state: RootState) => state.axayears);
-  const year: Year = useSelector((state: RootState) => state.axayear);
+
+  React.useEffect(() => {
+    const actYear = String(new Date().getFullYear());
+    Object.values(years).forEach(year => {
+      if (actYear===year.name) {
+        setYear(year);
+      }
+    })
+  }, [dispatch, years]);
 
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
   const openModalDelete = async (account: Account): Promise<void> => {
-    dispatch(setSelectedAccount(account));
+    setAccount(account);
     setModalOpen([false, true, false, false]);
   };
     
   const openModalChange = async (account: Account): Promise<void> => {
-    dispatch(setSelectedAccount(account));
+    setAccount(account);
     setModalOpen([false, false, true, false]);
   };
 
   const openModalShow = async (account: Account): Promise<void> => {
-    dispatch(setSelectedAccount(account));
+    setAccount(account);
     setModalOpen([false, false, false, true]);
   };
 
@@ -65,41 +69,21 @@ export const AccountPage: React.FC = () => {
     setModalOpen([false, false, false, false]);
   };
 
-  const handleSelection = async (account: Account) => {
-    const fetchAccount = async () => {
-      const actAccount: Account = await getAccount(account.id);
-      dispatch(refreshAccount(actAccount));
-      dispatch(clearSelectedBills());
-      actAccount.billIDs.forEach(async billID => {
-        if(billID!=='') {
-          const fetchBill = async () => {
-            const newBill: Bill = await getBill(billID);
-            dispatch(addSelectedBill(newBill));
-          };
-          await fetchBill();
-        }
-      });
-      dispatch(setSelectedAccount(actAccount));    
-    };
-    fetchAccount();
-  };
-
   const actionAdd = async (values: AccountNoID) => {
     dispatch(addAccount(values));
-    // offenen Account setzen, vorher Status prüfen
     closeModal();
   };
 
   const actionSelectionClick = ( selection: string) => {
     Object.values(years).forEach(year => {
-      if (selection===year.name.name) {
-        dispatch(setSelectedYear(year));
+      if (selection===year.name) {
+        setYear(year);
       }
     });
   };
 
   const actionShow = () => {
-    dispatch(clearSelectedAccount());
+    setAccount(emptyAccount());
     closeModal();
   };
 
@@ -119,22 +103,22 @@ export const AccountPage: React.FC = () => {
       accountToChange.notes.push(newNote);
     }
     dispatch(updateAccount(accountToChange));
-    dispatch(clearSelectedAccount());
+    setAccount(emptyAccount());
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeAccount(account.id));
-    dispatch(clearSelectedAccount());
+    setAccount(emptyAccount());
     closeModal();
   };  
 
   const yearOptions: string[] = [];
   Object.values(years).forEach(element => {
-    yearOptions.push(element.name.name);
+    yearOptions.push(element.name);
   });
 
-  const accountsToShow: Account[] = Object.values(accounts).filter(item => item.details[0].year.includes(year.name.name));
+  const accountsToShow: Account[] = Object.values(accounts).filter(item => item.details[0].year.includes(year.name));
   const remarkToRest: string = year.id==='' ? '' : ' (Rest Selbstbehalt = ' + year.vital750 + ' €)';
 
   const ShowTableHeader: React.FC = () => {
@@ -159,7 +143,7 @@ export const AccountPage: React.FC = () => {
     return (
         <Table.Body>
           {Object.values(accountsToShow).map((account: Account) => (
-            <Table.Row key={account.id}  onClick={() => handleSelection(account)}>
+            <Table.Row key={account.id}>
               <Table.Cell style={{ backgroundColor, width: '15%' } } className='left aligned'>{account.name.name}</Table.Cell>
               <Table.Cell style={{ backgroundColor, width: '10%' } } className='left aligned'>{account.status}</Table.Cell>
               <Table.Cell style={{ backgroundColor, width: '5%' } } className='right aligned'>{getAmount(account.details[0].amount)}</Table.Cell>
@@ -185,6 +169,7 @@ export const AccountPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neue Abrechnung anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        account={account}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -192,6 +177,7 @@ export const AccountPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={`Abrechnung ${account.name.name} anzeigen`}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        account={account}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -199,6 +185,7 @@ export const AccountPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={`Abrechnung ${account.name.name} ändern`}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        account={account}
         onSubmit={actionChange}
         onClose={closeModal}
       />
@@ -209,13 +196,13 @@ export const AccountPage: React.FC = () => {
         onSubmit={actionDelete}
         onClose={closeModal}
       />
-      <AppHeaderH3 text={'Abrechnungen ' + year.name.name + remarkToRest} icon='list'/>
+      <AppHeaderH3 text={'Abrechnungen ' + year.name + remarkToRest} icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
       <Button as="select" className="ui dropdown" style={styleButton}
         onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick(event.currentTarget.value)}>
         <option value="" style={styleButton}>Jahr</option>
         {yearOptions.map((option: string, index: number) => (
-          option===year.name.name
+          option===year.name
           ?<option key={index} selected={true} value={option} style={styleButton}>{option}</option>
           :<option key={index} value={option} style={styleButton}>{option}</option>
         ))}

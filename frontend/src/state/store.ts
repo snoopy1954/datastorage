@@ -14,6 +14,11 @@ import { accounttypesReducer } from './account/accounttypes/reducers';
 
 import { addressesReducer } from './address/addresses/reducers';
 
+import { accountsReducer } from './axa/accounts/reducers';
+import { billsReducer } from './axa/bills/reducers';
+import { axayearsReducer } from './axa/years/reducers';
+import { billersReducer } from './axa/billers/reducers';
+
 import { booksReducer } from './book/books/reducers';
 import { tonguesReducer } from './book/tongues/reducers';
 import { ownershipsReducer } from './book/ownerships/reducers';
@@ -37,27 +42,8 @@ import { artistsReducer } from './music/artists/reducers';
 import { artistReducer } from './music/artist/reducers';
 import { cdsReducer } from './music/cds/reducers';
 
-import { selectedfieldReducer } from './sudoku/selectedfield/reducers';
-import { gamefieldsReducer } from './sudoku/gamefields/reducers';
-import { sudokulistReducer } from './sudoku/sudokulist/reducers';
-import { flagsReducer } from './sudoku/flags/reducers';
-import { solutionfieldsReducer } from './sudoku/solutionfields/reducers';
-import { sequenceReducer } from './sudoku/sequence/reducers';
-import { candidatesReducer } from './sudoku/candidates/reducers';
-import { positionsReducer } from './sudoku/positions/reducers';
+import { sudokusReducer } from './sudoku/sudokus/reducers';
 import { notificationReducer } from './sudoku/notification/reducers';
-
-import { billerlistReducer } from './axa/billerlist/reducers';
-import { changedbillerlistReducer } from './axa/changedbillerlist/reducers';
-import { selectedbillerReducer } from './axa/selectedbiller/reducers';
-import { accountlistReducer } from './axa/accountlist/reducers';
-import { selectedaccountReducer } from './axa/selectedaccount/reducers';
-import { openaccountReducer } from './axa/openaccount/reducers';
-import { billlistReducer } from './axa/billlist/reducers';
-import { selectedbillReducer } from './axa/selectedbill/reducers';
-import { selectedbillsReducer } from './axa/selectedbills/reducers';
-import { axayearsReducer } from './axa/years/reducers';
-import { axayearReducer } from './axa/year/reducers';
 
 
 const rootReducer = combineReducers({
@@ -65,13 +51,22 @@ const rootReducer = combineReducers({
     groups: groupsReducer,
     years: yearsReducer,
     formats: formatsReducer,
-
-    books: booksReducer,
-    ownerships: ownershipsReducer,
-    tongues: tonguesReducer,
+    historylines: historylinesReducer,
+    infos: infosReducer,
     
     accounttypes: accounttypesReducer,
     transactions: transactionsReducer,
+    
+    addresses: addressesReducer,
+    
+    accounts: accountsReducer,
+    bills: billsReducer,
+    axayears: axayearsReducer,
+    billers: billersReducer,
+    
+    books: booksReducer,
+    ownerships: ownershipsReducer,
+    tongues: tonguesReducer,
     
     documents: documentsReducer,
     
@@ -86,38 +81,14 @@ const rootReducer = combineReducers({
     devicetypes: devicetypesReducer,
     oss: ossReducer,
     
-    addresses: addressesReducer,
-    
     movies: moviesReducer,
-    
-    selectedfield: selectedfieldReducer,
-    gamefields: gamefieldsReducer,
-    sudokus: sudokulistReducer,
-    flags: flagsReducer,
-    solutionfields: solutionfieldsReducer,
-    sequence: sequenceReducer,
-    candidates: candidatesReducer, 
-    positions: positionsReducer,
-    notification: notificationReducer,
-    
-    billers: billerlistReducer,
-    changedbillers: changedbillerlistReducer,
-    biller: selectedbillerReducer,
-    accounts: accountlistReducer,
-    account: selectedaccountReducer,
-    openaccount: openaccountReducer,
-    bills: billlistReducer,
-    bill: selectedbillReducer,
-    selectedbills: selectedbillsReducer,
-    axayears: axayearsReducer,
-    axayear: axayearReducer,
-    
-    historylines: historylinesReducer,
-    infos: infosReducer,
     
     artists: artistsReducer,
     artist: artistReducer,
     cds: cdsReducer,
+    
+    sudokus: sudokusReducer,
+    notification: notificationReducer,
     
 });
 

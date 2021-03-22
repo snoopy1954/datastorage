@@ -4,19 +4,15 @@ import { Table, Button } from "semantic-ui-react";
 import { backgroundColor, styleButton } from '../../../../constants';
 
 import { Bill, BillNoID, Note, Account, Year } from '../../../../../../backend/src/types/axa';
-import { BillWithFileDatesNoID, FileDate } from '../../../../types/axa';
+import { BillWithFileDatesNoID, FileDate, AccountStatus } from '../../../../types/axa';
 import { Edittype } from "../../../../types/basic";
 import { Content2 } from '../../../../../../backend/src/types/basic';
 import { ContentWithFile } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { addBill, removeBill, updateBill } from  '../../../../state/axa/billlist/actions';
-import { clearSelectedBill, setSelectedBill } from "../../../../state/axa/selectedbill/actions";
-import { setSelectedAccount } from "../../../../state/axa/selectedaccount/actions";
-import { setSelectedYear } from '../../../../state/axa/year/actions';
-import { initializeAccounts } from  '../../../../state/axa/accountlist/actions';
-
-import { getOne } from '../../../../services/axa/accounts';
+import { addBill, removeBill, updateBill } from  '../../../../state/axa/bills/actions';
+// import { clearSelectedBill, setSelectedBill } from "../../../../state/axa/selectedbill/actions";
+import { initializeAccounts } from  '../../../../state/axa/accounts/actions';
 
 import { AppHeaderH3 } from "../../../basic/header";
 import { AskModal } from '../../../basic/askModal';
@@ -26,39 +22,55 @@ import { getSumAmounts } from '../../../../utils/axa/bill';
 import { getAmount } from '../../../../utils/basic/basic';
 import { newContent } from '../../../../utils/basic/content';
 import { createContent, removeContent } from '../../../../utils/basic/content';
+import { emptyBill } from '../../../../utils/axa/bill';
+import { emptyYear } from '../../../../utils/axa/year';
+import { emptyAccount } from '../../../../utils/axa/account';
 
 
 export const BillPage: React.FC = () => {
+  const [bill, setBill] = React.useState<Bill>(emptyBill());
+  const [year, setYear] = React.useState<Year>(emptyYear());
+  const [account, setAccount] = React.useState<Account>(emptyAccount());
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
   const bills: Bill[] = useSelector((state: RootState) => state.bills);
-  const bill: Bill = useSelector((state: RootState) => state.bill);
-  const openaccount: Account = useSelector((state: RootState) => state.openaccount);
+//  const bill: Bill = useSelector((state: RootState) => state.bill);
+  const accounts: Account[] = useSelector((state: RootState) => state.accounts);
   const years: Year[] = useSelector((state: RootState) => state.axayears);
-  const year: Year = useSelector((state: RootState) => state.axayear);
 
+  React.useEffect(() => {
+    setAccount(emptyAccount());
+    Object.values(accounts).forEach(account => {
+      if(account.status===AccountStatus.OPEN) {
+        setAccount(account);
+      }
+    })
+  }, [accounts, dispatch]);
 
+  React.useEffect(() => {
+    const actYear = String(new Date().getFullYear());
+    Object.values(years).forEach(year => {
+      if (actYear===year.name) {
+        setYear(year);
+      }
+    })
+  }, [dispatch, years]);
+  
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
 
   const openModalDelete = async (bill: Bill): Promise<void> => {
-    dispatch(setSelectedBill(bill));
-    const account: Account = await getOne(bill.accountID);
-    dispatch(setSelectedAccount(account));
+    setBill(bill);
     setModalOpen([false, true, false, false]);
   };
     
   const openModalChange = async (bill: Bill): Promise<void> => {
-    dispatch(setSelectedBill(bill));
-    const account: Account = await getOne(bill.accountID);
-    dispatch(setSelectedAccount(account));
+    setBill(bill);
     setModalOpen([false, false, true, false]);
   };
 
   const openModalShow = async (bill: Bill): Promise<void> => {
-    dispatch(setSelectedBill(bill));
-    const account: Account = await getOne(bill.accountID);
-    dispatch(setSelectedAccount(account));
+    setBill(bill);
     setModalOpen([false, false, false, true]);
   };
 
@@ -98,7 +110,7 @@ export const BillPage: React.FC = () => {
     const billToSubmit: BillNoID = {
       ...billdata,
       notes: notes,
-      accountID: openaccount.id
+      accountID: account.id
     };
     dispatch(addBill(billToSubmit));
     dispatch(initializeAccounts());
@@ -111,7 +123,7 @@ export const BillPage: React.FC = () => {
       id: bill.id
     };
     dispatch(updateBill(billToChange));
-    dispatch(clearSelectedBill());
+    setBill(emptyBill());
     closeModal();
   };
 
@@ -119,29 +131,29 @@ export const BillPage: React.FC = () => {
     if (bill.notes.length>0) await removeContent(bill.notes[0].dataId, 'pdf');
     if (bill.notes.length>1) await removeContent(bill.notes[1].dataId, 'pdf');
     dispatch(removeBill(bill.id));
-    dispatch(clearSelectedBill());
+    setBill(emptyBill());
     closeModal();
   };  
 
   const actionShow = () => {
-    dispatch(clearSelectedBill());
+    setBill(emptyBill());
     closeModal();
   };  
 
   const actionSelectionClick = ( selection: string) => {
     Object.values(years).forEach(year => {
-      if (selection===year.name.name) {
-        dispatch(setSelectedYear(year));
+      if (selection===year.name) {
+        setYear(year);
       }
     });
   };
     
   const yearOptions: string[] = [];
     Object.values(years).forEach(element => {
-      yearOptions.push(element.name.name);
+      yearOptions.push(element.name);
   });
     
-  const billsToShow: Bill[] = Object.values(bills).filter(item => item.details[0].year.includes(year.name.name));
+  const billsToShow: Bill[] = Object.values(bills).filter(item => item.details[0].year.includes(year.name));
 
   const ShowTableHeader: React.FC = () => {
     return (
@@ -176,10 +188,11 @@ export const BillPage: React.FC = () => {
   };
   return (
     <div className="App">
-      {openaccount.name.name!==''&&<BillModal
+      {account.name.name!==''&&<BillModal
         edittype={Edittype.ADD}
         title='Neue Rechnung anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        bill={bill}
         onSubmit={actionAdd}
         onClose={closeModal}
       />}
@@ -187,6 +200,7 @@ export const BillPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={`Rechnung ${bill.name.name} anzeigen`}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        bill={bill}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -194,6 +208,7 @@ export const BillPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Rechnung ' + bill.name.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        bill={bill}
         onSubmit={actionChange}
         onClose={closeModal}
       />
@@ -204,7 +219,7 @@ export const BillPage: React.FC = () => {
         onSubmit={actionDelete}
         onClose={closeModal}
       />
-      <AppHeaderH3 text={'Rechnungen ' + year.name.name} icon='list'/>
+      <AppHeaderH3 text={'Rechnungen ' + year.name} icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
       <Button as="select" className="ui dropdown" style={styleButton}
         onChange={(event: React.FormEvent<HTMLInputElement>) => actionSelectionClick(event.currentTarget.value)}>

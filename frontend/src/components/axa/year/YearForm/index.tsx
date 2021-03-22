@@ -17,12 +17,12 @@ import { newYear } from '../../../../utils/axa/year';
 
 interface Props {
   edittype: Edittype;
+  year: Year;
   onSubmit: (values: YearNoID) => void;
   onCancel: () => void;
 }
 
-export const YearForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
-  const year: Year = useSelector((state: RootState) => state.axayear);
+export const YearForm: React.FC<Props> = ({ edittype, year, onSubmit, onCancel }) => {
   const years: Year[] = useSelector((state: RootState) => state.axayears);
 
   const initialValues = (edittype===Edittype.EDIT && year) ? year : newYear(years);
@@ -34,7 +34,7 @@ export const YearForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
       validate={values => {
         const requiredError = "Field is required";
         const errors: { [field: string]: string } = {};
-        if (!values.name.name) {
+        if (!values.name) {
           errors.name = requiredError;
         }
         return errors;
@@ -46,14 +46,14 @@ export const YearForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
             <Field
               label="Seqnr"
               placeholder="Seqnr"
-              name="name.seqnr"
+              name="seqnr"
               component={NumberField}
               min='0'
             />
             <Field
               label="Name"
               placeholder="Name"
-              name="name.name"
+              name="name"
               component={TextField}
             />
             <Field
@@ -68,7 +68,7 @@ export const YearForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
               name="vital750"
               component={TextField}
             />
-            <Button style={styleButton} type="submit" disabled={!dirty || !isValid}>Speichern</Button>
+            <Button style={styleButton} type="submit" disabled={!isValid}>Speichern</Button>
             <Button style={styleButton} onClick={() => onCancel()}>Abbrechen</Button>
           </Form>
         );

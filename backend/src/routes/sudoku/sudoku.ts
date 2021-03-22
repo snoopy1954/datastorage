@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express from 'express';
 import Sudoku from '../../models/sudoku';
-import { toNewSudoku } from '../../utils/sudoku/parameters';
+import { toSudoku } from '../../utils/sudoku';
 
 const sudokusRouter = express.Router();
 
@@ -26,7 +26,7 @@ sudokusRouter.get('/:id', async (request, response) => {
 
 sudokusRouter.post('/', async (request, response) => {
     try {
-        const newSudoku = new Sudoku(toNewSudoku(request.body));
+        const newSudoku = new Sudoku(toSudoku(request.body));
         void await newSudoku.save();
         response.json(newSudoku);
     } catch (e) {
@@ -46,7 +46,7 @@ sudokusRouter.delete('/:id', async (request, response) => {
   
 sudokusRouter.put('/:id', async (request, response) => {
     try {
-        const newSudoku = toNewSudoku(request.body); 
+        const newSudoku = toSudoku(request.body); 
         const sudoku = await Sudoku.findByIdAndUpdate(request.params.id, newSudoku, { new: true });
         if (sudoku) response.json(sudoku.toJSON());
         else response.status(404).end();

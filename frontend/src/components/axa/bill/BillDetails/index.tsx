@@ -16,21 +16,32 @@ import { getOneBinarydata } from '../../../../utils/basic/content'
 import { getImageUrl } from '../../../../utils/basic/binarydata';
 import { getSumAmounts } from '../../../../utils/axa/bill';
 import { getFolderFromAxaAccountname } from '../../../../utils/basic/basic';
+import { emptyAccount } from '../../../../utils/axa/account';
 
 
 interface Props {
+  bill: Bill;
   onCancel: () => void;
 };
 
-export const BillDetails: React.FC<Props> = ({ onCancel }) => {
+export const BillDetails: React.FC<Props> = ({ bill, onCancel }) => {
+  const [account, setAccount] = React.useState<Account>(emptyAccount());
   const [url, setUrl] = React.useState('');
 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const dispatch = useDispatch();
 
   const mainpage: string = useSelector((state: RootState) => state.page.mainpage);      
-  const bill: Bill = useSelector((state: RootState) => state.bill);
-  const account: Account = useSelector((state: RootState) => state.account);
+  const accounts: Account[] = useSelector((state: RootState) => state.accounts);
+
+React.useEffect(() => {
+  setAccount(emptyAccount());
+  Object.values(accounts).forEach(account => {
+    if(account.id===bill.accountID) {
+      setAccount(account);
+    }
+  })
+}, [accounts, bill, dispatch]);
 
   const openModalShow = (): void => setModalOpen(true);
 
@@ -58,7 +69,7 @@ export const BillDetails: React.FC<Props> = ({ onCancel }) => {
     dispatch(setPage({ mainpage, subpage: 'accounts' }));
   };
 
-  const folder: string = account.details[0].year + '/' + getFolderFromAxaAccountname(account.name.name) + '/';
+  const folder: string = account.id!=='' ? account.details[0].year + '/' + getFolderFromAxaAccountname(account.name.name) + '/' : '';
 
   return (
     <div className="App">

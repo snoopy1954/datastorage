@@ -4,7 +4,7 @@ import { Year, YearNoID } from '../../../../backend/src/types/axa';
 
 const getAll = async () => {
     const { data: years } = await axios.get<Year[]>(
-        `${apiBaseUrl}/years`
+        `${apiBaseUrl}/axayears`
     );
 
     return years;
@@ -12,7 +12,7 @@ const getAll = async () => {
 
 const getOne = async (id: string) => {
     const { data: year } = await axios.get<Year>(
-        `${apiBaseUrl}/years/${id}`
+        `${apiBaseUrl}/axayears/${id}`
     );
 
     return year;
@@ -20,7 +20,7 @@ const getOne = async (id: string) => {
 
 const create = async (year: YearNoID) => {
     const response = await axios.post(
-        `${apiBaseUrl}/years`,
+        `${apiBaseUrl}/axayears`,
         year
     );
 
@@ -29,7 +29,7 @@ const create = async (year: YearNoID) => {
 
 const update = async (id: string, year: YearNoID) => {
     const response = await axios.put(
-        `${apiBaseUrl}/years/${id}`, 
+        `${apiBaseUrl}/axayears/${id}`, 
         year
     );
 
@@ -38,7 +38,7 @@ const update = async (id: string, year: YearNoID) => {
 
 const remove = async (id: string) => {
     const response = await axios.delete(
-        `${apiBaseUrl}/years/${id}`
+        `${apiBaseUrl}/axayears/${id}`
     );
 
     return response.data

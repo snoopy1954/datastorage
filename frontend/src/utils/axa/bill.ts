@@ -1,4 +1,5 @@
-import { BillNoID, Bill, Name } from '../../../../backend/src/types/axa';
+import { BillNoID, Bill } from '../../../../backend/src/types/axa';
+import { Name } from '../../../../backend/src/types/basic';
 
 import { BillStatus } from '../../types/axa';
 import { newDetails } from './axa';
@@ -23,13 +24,14 @@ export const newBill = (bills: Bill[]): BillNoID => {
     return bill;
 };
 
-export const emptyBill = (): BillNoID => {
+export const emptyBill = (): Bill => {
     const name: Name = {
         name: '',
         seqnr: 0
     };
 
-    const bill: BillNoID = {
+    const bill: Bill = {
+        id: '',
         name: name,
         status: BillStatus.RECEIVED,
         invoicingparty: '',

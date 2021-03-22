@@ -8,21 +8,13 @@ import { BillNoID, AccountNoID, Note, Details, AccountStatus, BillStatus, Biller
 import { parseString, parseStringArray, parseNumber } from './../basicParser';
 
 export const toNewAccount = (object: any): AccountNoID => {
-    // console.log(object);
     const name = parseString(object.name.name);
-    // console.log(`name='${name.name}'`);
     const seqnr = parseNumber(object.name.seqnr);
-    // console.log(`seqnr='${name.seqnr}'`);
     const status: AccountStatus = parseAccountStatus(object.status);
-    // console.log(`status='${status}'`);
     const passed: string = parseString(object.passed);
-    // console.log(`passed='${passed}'`);
     const notes: Note[] = parseNotes(object.notes);
-    // console.log(`notes='${notes}'`);
     const details: Details[] = parseDetails(object.details);
-    // console.log(`details='${details}'`);
     const billIDs: string[] = parseStringArray(object.billIDs);
-    // console.log(`billIDs='${billIDs}'`);
 
     const account : AccountNoID = {
         name: {
@@ -36,27 +28,17 @@ export const toNewAccount = (object: any): AccountNoID => {
         notes,
     };
 
-    // console.log(account);
-
     return account;
 };
 
 export const toNewBill = (object: any): BillNoID => {
-    // console.log(object);
     const name = parseString(object.name.name);
-    // console.log(`name='${name.name}'`);
     const seqnr = parseNumber(object.name.seqnr);
-    // console.log(`seqnr='${name.seqnr}'`);
     const status: BillStatus = parseBillStatus(object.status);
-    // console.log(`status='${status}'`);
     const invoicingparty: string = parseString(object.invoicingparty);
-    // console.log(`invoicingparty='${invoicingparty}'`);
     const notes: Note[] = parseNotes(object.notes);
-    // console.log(`notes='${notes}'`);
     const details: Details[] = parseDetails(object.details);
-    // console.log(`details='${details}'`);
     const accountID: string = parseString(object.accountID);
-    // console.log(`accountID='${accountID}'`);
     
     const bill: BillNoID = {
         name: {
@@ -70,19 +52,13 @@ export const toNewBill = (object: any): BillNoID => {
         notes,
     };
 
-    // console.log(bill);
-
     return bill;
 };
 
 export const toNewBiller = (object: any): BillerNoID => {
-    // console.log(object);
     const name = parseString(object.name.name);
-    // console.log(`name='${name.name}'`);
     const seqnr = parseNumber(object.name.seqnr);
-    // console.log(`seqnr='${name.seqnr}'`);
     const person: string = parseString(object.person);
-    // console.log(`person='${person}'`);
 
     const biller: BillerNoID = {
         name: {
@@ -92,32 +68,21 @@ export const toNewBiller = (object: any): BillerNoID => {
         person
     };
 
-    // console.log(biller);
-
     return biller;
 };
 
-export const toNewYear = (object: any): YearNoID => {
-    // console.log(object);
-    const name = parseString(object.name.name);
-    // console.log(`name='${name.name}'`);
-    const seqnr = parseNumber(object.name.seqnr);
-    // console.log(`seqnr='${name.seqnr}'`);
+export const toYear = (object: any): YearNoID => {
+    const name = parseString(object.name);
+    const seqnr = parseNumber(object.seqnr);
     const z100s: string = parseString(object.z100s);
-    // console.log(`z100s='${z100s}'`);
     const vital750: string = parseString(object.vital750);
-    // console.log(`vital750='${vital750}'`);
 
     const year: YearNoID = {
-        name: {
-            seqnr,
-            name
-        },
+        seqnr,
+        name,
         z100s,
         vital750
     };
-
-    // console.log(year);
 
     return year;
 };

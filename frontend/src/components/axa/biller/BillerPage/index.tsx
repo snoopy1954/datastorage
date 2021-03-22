@@ -7,39 +7,38 @@ import { Biller, BillerNoID } from '../../../../../../backend/src/types/axa';
 import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
-import { addBiller, removeBiller, updateBiller, exchangeBillers } from  '../../../../state/axa/billerlist/actions';
-import { clearSelectedBiller, setSelectedBiller } from '../../../../state/axa/selectedbiller/actions';
-import { addChangedBiller, clearChangedBiller } from '../../../../state/axa/changedbillerlist/actions';
+import { addBiller, removeBiller, updateBiller, exchangeBillers } from  '../../../../state/axa/billers/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { BillerModal } from '../BillerModal';
 
-import { sortBillerList } from '../../../../utils/axa/biller';
+import { sortBillerList, emptyBiller } from '../../../../utils/axa/biller';
 
 
 export const BillerPage: React.FC = () => {
+  const [biller, setBiller] = React.useState<Biller>(emptyBiller());
+  const [billersChanged, setBillersChanged] = React.useState<Array<Biller>>([]);
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
+
   const dispatch = useDispatch();
 
   const billers = useSelector((state: RootState) => state.billers);
-  const biller = useSelector((state: RootState) => state.biller);
-  const changedBillers: Biller[] = useSelector((state: RootState) => state.changedbillers);
 
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
     
   const openModalDelete = (biller: Biller): void => {
-    dispatch(setSelectedBiller(biller));
+    setBiller(biller);
     setModalOpen([false, true, false, false]);
   };
     
   const openModalChange = (biller: Biller): void => {
-    dispatch(setSelectedBiller(biller));
+    setBiller(biller);
     setModalOpen([false, false, true, false]);
   };
     
   const openModalShow = (biller: Biller): void => {
-    dispatch(setSelectedBiller(biller));
+    setBiller(biller);
     setModalOpen([false, false, false, true]);
   };
 
@@ -55,10 +54,10 @@ export const BillerPage: React.FC = () => {
   };
 
   const actionSaveSequence = () => {
-    Object.values(changedBillers).forEach(changedBiller => {
-        dispatch(updateBiller(changedBiller));
+    Object.values(billersChanged).forEach(billerChanged => {
+        dispatch(updateBiller(billerChanged));
     });
-    dispatch(clearChangedBiller());
+    setBillersChanged([]);
   };
 
   const actionAdd = async (values: BillerNoID) => {
@@ -72,18 +71,18 @@ export const BillerPage: React.FC = () => {
       id: biller.id
     };
     dispatch(updateBiller(billerToChange));
-    dispatch(clearSelectedBiller());
+    setBiller(emptyBiller());
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeBiller(biller.id));
-    dispatch(clearSelectedBiller());
+    setBiller(emptyBiller());
     closeModal();
   };  
 
   const actionShow = () => {
-    dispatch(clearSelectedBiller());
+    setBiller(emptyBiller());
     closeModal();
   };  
 
@@ -98,8 +97,8 @@ export const BillerPage: React.FC = () => {
     biller2.name.seqnr = seqnr1;
     const billersToChange: Biller[] = [biller1, biller2];
     dispatch(exchangeBillers(billersToChange));
-    dispatch(addChangedBiller(biller1));
-    dispatch(addChangedBiller(biller2));
+    setBillersChanged(arr => [...arr, biller1]);
+    setBillersChanged(arr => [...arr, biller2]);
   };
 
   const sortedBillers = sortBillerList(billers);
@@ -152,6 +151,7 @@ export const BillerPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neuen Rechnungssteller anlegen'
         modalOpen={modalOpen[ModalDialog.NEW]}
+        biller={biller}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
@@ -159,6 +159,7 @@ export const BillerPage: React.FC = () => {
         edittype={Edittype.SHOW}
         title={`Rechnungssteller ${biller.name.name} anzeigen`}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        biller={biller}
         onSubmit={actionShow}
         onClose={closeModal}
       />
@@ -166,6 +167,7 @@ export const BillerPage: React.FC = () => {
         edittype={Edittype.EDIT}
         title={'Rechnungssteller ' + biller.name.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        biller={biller}
         onSubmit={actionChange}
         onClose={closeModal}
       />
@@ -178,7 +180,7 @@ export const BillerPage: React.FC = () => {
       />
       <AppHeaderH3 text='Rechnungssteller' icon='list'/>
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
-      {Object.values(changedBillers).length>0&&<Button style={styleButton} onClick={() => actionSaveSequence()}>Speichern</Button>}
+      {Object.values(billersChanged).length>0&&<Button style={styleButton} onClick={() => actionSaveSequence()}>Speichern</Button>}
       {sortedBillers.length>8&&
         <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
           <ShowTableHeader/>

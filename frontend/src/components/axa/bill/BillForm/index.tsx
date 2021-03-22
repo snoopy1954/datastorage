@@ -24,15 +24,15 @@ import { newBill } from '../../../../utils/axa/bill';
 
 interface Props {
   edittype: Edittype;
+  bill: Bill;
   onSubmit: (values: BillWithFileDatesNoID) => void;
   onCancel: () => void;
 }
 
-export const BillForm: React.FC<Props> = ({ edittype, onSubmit, onCancel }) => {
+export const BillForm: React.FC<Props> = ({ edittype, bill, onSubmit, onCancel }) => {
   const [ editInvoice, setEditInvoice ] = useState(false); 
   const [ editRecipe, setEditRecipe ] = useState(false); 
 
-  const bill: Bill = useSelector((state: RootState) => state.bill);
   const bills: Bill[] = useSelector((state: RootState) => state.bills);
   const billers: Biller[] = useSelector((state: RootState) => state.billers);
 

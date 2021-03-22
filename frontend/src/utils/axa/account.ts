@@ -1,4 +1,5 @@
-import { AccountNoID, Account, Name, Details, BillNoID } from '../../../../backend/src/types/axa';
+import { AccountNoID, Account, Details, BillNoID } from '../../../../backend/src/types/axa';
+import { Name } from '../../../../backend/src/types/basic';
 
 import { AccountStatus } from '../../types/axa';
 
@@ -24,13 +25,14 @@ export const newAccount = (accounts: Account[]): AccountNoID => {
     return account;
 };
 
-export const emptyAccount = (): AccountNoID => {
+export const emptyAccount = (): Account => {
     const name: Name = {
         name: '',
         seqnr: 0
     };
 
-    const account: AccountNoID = {
+    const account: Account = {
+        id: '',
         name: name,
         status: AccountStatus.OPEN,
         passed: '',

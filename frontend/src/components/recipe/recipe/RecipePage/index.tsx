@@ -10,7 +10,6 @@ import { Edittype, Direction } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { addRecipe, updateRecipe, exchangeRecipes, removeRecipe } from '../../../../state/recipe/recipes/actions';
-import { clearPdfUrl } from '../../../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskString, Value } from '../../../basic/askString';
@@ -46,7 +45,6 @@ export const RecipePage: React.FC = () => {
       
   const openModalShow = (recipe: Recipe): void => {
     setRecipe(recipe);
-    dispatch(clearPdfUrl());
     setModalOpen([false, false, false, true, false]);
   };
   

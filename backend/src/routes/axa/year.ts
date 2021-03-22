@@ -2,17 +2,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import express from 'express';
 import Year from '../../models/axa/year';
-import { toNewYear } from '../../utils/axa';
+import { toYear } from '../../utils/axa';
 
-const yearsRouter = express.Router();
+const axayearsRouter = express.Router();
 
-yearsRouter.get('/', async (_request, response) => {
+axayearsRouter.get('/', async (_request, response) => {
     const years = await Year.find({});
   
     response.json(years.map(year => year.toJSON()));
 });
 
-yearsRouter.get('/:id', async (request, response) => {
+axayearsRouter.get('/:id', async (request, response) => {
     try {
         const year = await Year.findById(request.params.id);
         if (year) response.json(year.toJSON());
@@ -22,9 +22,9 @@ yearsRouter.get('/:id', async (request, response) => {
     }
 });
 
-yearsRouter.post('/', async (request, response) => {
+axayearsRouter.post('/', async (request, response) => {
     try {
-        const newYear = new Year(toNewYear(request.body));
+        const newYear = new Year(toYear(request.body));
         void await newYear.save();
         response.json(newYear);
     } catch (e) {
@@ -32,7 +32,7 @@ yearsRouter.post('/', async (request, response) => {
     }
 });
 
-yearsRouter.delete('/:id', async (request, response) => {
+axayearsRouter.delete('/:id', async (request, response) => {
     try {
         const year = await Year.findByIdAndRemove(request.params.id);
         if (year) response.json(year.toJSON());
@@ -42,9 +42,9 @@ yearsRouter.delete('/:id', async (request, response) => {
     }
 });
   
-yearsRouter.put('/:id', async (request, response) => {
+axayearsRouter.put('/:id', async (request, response) => {
     try {
-        const newYear = toNewYear(request.body); 
+        const newYear = toYear(request.body); 
         const year = await Year.findByIdAndUpdate(request.params.id, newYear, { new: true });
         if (year) response.json(year.toJSON());
         else response.status(404).end();
@@ -53,4 +53,4 @@ yearsRouter.put('/:id', async (request, response) => {
     }
 });
 
-export default yearsRouter;
+export default axayearsRouter;

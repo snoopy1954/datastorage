@@ -1,6 +1,4 @@
-import { YearNoID, Year, Name } from '../../../../backend/src/types/axa';
-
-import { newName } from '../basic/basic';
+import { YearNoID, Year } from '../../../../backend/src/types/axa';
 
 import { z100s, vital750 } from '../../constants';
 
@@ -9,21 +7,17 @@ export const newYear = (years: Year[]): YearNoID => {
     let maxNumber = 0;
     let maxName = '0';
     Object.values(years).forEach(year => {
-        if (year.name.seqnr>maxNumber) {
-            maxNumber = year.name.seqnr;
-            maxName = year.name.name
+        if (year.seqnr>maxNumber) {
+            maxNumber = year.seqnr;
+            maxName = year.name
         }
     });
 
     maxName = maxName==='0' ? maxName = '2020' : String(+maxName+1);
 
-    const name: Name = {
-        name: maxName,
-        seqnr: maxNumber + 1
-    };
-
     const year: YearNoID = {
-        name: name,
+        name: maxName,
+        seqnr: maxNumber + 1,
         z100s: z100s,
         vital750: vital750
     };
@@ -34,7 +28,8 @@ export const newYear = (years: Year[]): YearNoID => {
 export const emptyYear = (): Year => {
     const year: Year = {
         id: '',
-        name: newName(),
+        name: '',
+        seqnr: 0,
         z100s: '',
         vital750: ''
     };
@@ -43,8 +38,8 @@ export const emptyYear = (): Year => {
 };
 
 const sortYearlist = (a: Year, b: Year) => {
-    const nameA = a.name.seqnr;
-    const nameB = b.name.seqnr;
+    const nameA = a.seqnr;
+    const nameB = b.seqnr;
     if (nameA < nameB) {
         return -1;
     }

@@ -1,22 +1,18 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Button, Table } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
 import { Biller } from '../../../../../../backend/src/types/axa';
 
-import { RootState } from '../../../../state/store';
-
 import { AppHeaderH3 } from "../../../basic/header";
 
 
 interface Props {
+  biller: Biller;
   onCancel: () => void;
 };
 
-export const BillerDetails: React.FC<Props> = ({ onCancel }) => {
-  const biller: Biller = useSelector((state: RootState) => state.biller);
-
+export const BillerDetails: React.FC<Props> = ({ biller, onCancel }) => {
   return (
     <div className="App">
       <AppHeaderH3 text={'Rechnungssteller ' + biller.name.name} icon='list'/>

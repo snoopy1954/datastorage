@@ -1,25 +1,21 @@
 import React from "react";
-import { useSelector } from 'react-redux';
 import { Button, Table } from "semantic-ui-react";
 import { styleButton, backgroundColor } from '../../../../constants';
 
 import { Year } from '../../../../../../backend/src/types/axa';
 
-import { RootState } from '../../../../state/store';
-
 import { AppHeaderH3 } from "../../../basic/header";
 
 
 interface Props {
+  year: Year;
   onCancel: () => void;
 };
 
-export const YearDetails: React.FC<Props> = ({ onCancel }) => {
-  const year: Year = useSelector((state: RootState) => state.axayear);
-
+export const YearDetails: React.FC<Props> = ({ year, onCancel }) => {
   return (
     <div className="App">
-      <AppHeaderH3 text={'Jahr ' + year.name.name} icon='list'/>
+      <AppHeaderH3 text={'Jahr ' + year.name} icon='list'/>
       <Table celled compact small='true' style={{ backgroundColor }}>
         <Table.Header>
           <Table.Row>
@@ -30,7 +26,7 @@ export const YearDetails: React.FC<Props> = ({ onCancel }) => {
         <Table.Body>
           <Table.Row>
             <Table.Cell>Name</Table.Cell>
-            <Table.Cell>{year.name.name}</Table.Cell>
+            <Table.Cell>{year.name}</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>Z100S</Table.Cell>

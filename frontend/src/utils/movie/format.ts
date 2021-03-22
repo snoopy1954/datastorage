@@ -1,5 +1,5 @@
 import { Format, FormatNoID } from '../../../../backend/src/types/basic';
-import  { getAll, getOne, create, update, remove } from '../../services/movie/movieformats';
+import  { getAll, getOne, create, update, remove } from '../../services/movie/formats';
 
 
 export const getAllFormatDB = async (): Promise<Format[]> => {

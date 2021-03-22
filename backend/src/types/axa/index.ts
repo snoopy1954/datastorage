@@ -1,11 +1,7 @@
-export interface Name {
-    seqnr: number;
-    name: string;
-}
+import { Name } from '../basic';
 
-export interface Year {
+export interface Year extends Name {
     id: string;
-    name: Name;
     z100s: string;
     vital750: string;
 }

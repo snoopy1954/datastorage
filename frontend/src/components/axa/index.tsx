@@ -3,18 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from "semantic-ui-react";
 import { styleButton } from '../../constants';
 
-import { Account, Year } from '../../../../backend/src/types/axa';
-import { AccountStatus } from '../../types/axa';
-
 import { RootState } from '../../state/store';
 import { setPage } from '../../state/page/actions';
-import { initializeAccounts } from  '../../state/axa/accountlist/actions';
-import { initializeBillers } from  '../../state/axa/billerlist/actions';
-import { initializeBills } from  '../../state/axa/billlist/actions';
+import { initializeAccounts } from  '../../state/axa/accounts/actions';
+import { initializeBillers } from  '../../state/axa/billers/actions';
+import { initializeBills } from  '../../state/axa/bills/actions';
 import { initializeYears } from  '../../state/axa/years/actions';
-import { setOpenAccount, clearOpenAccount } from '../../state/axa/openaccount/actions';
-import { setSelectedYear } from '../../state/axa/year/actions';
-import { clearPdfUrl } from '../../state/axa/pdfUrl/actions';
 
 import { AppHeaderH2 } from '../basic/header';
 import { AccountPage } from './account/AccountPage';
@@ -28,8 +22,6 @@ const Axa: React.FC = () => {
 
   const mainpage = useSelector((state: RootState) => state.page.mainpage);      
   const subpage = useSelector((state: RootState) => state.page.subpage);
-  const accounts: Account[] = useSelector((state: RootState) => state.accounts); 
-  const years: Year[] = useSelector((state: RootState) => state.axayears);
 
   React.useEffect(() => {
     dispatch(initializeBillers());
@@ -46,28 +38,6 @@ const Axa: React.FC = () => {
   React.useEffect(() => {
     dispatch(initializeBills());
   }, [dispatch]);
-
-  React.useEffect(() => {
-    const actYear = String(new Date().getFullYear());
-    Object.values(years).forEach(year => {
-      if (actYear===year.name.name) {
-        dispatch(setSelectedYear(year));
-      }
-    })
-  }, [dispatch, years]);
-
-  React.useEffect(() => {
-    dispatch(clearOpenAccount());
-    Object.values(accounts).forEach(account => {
-      if(account.status===AccountStatus.OPEN) {
-        dispatch(setOpenAccount(account));
-      }
-    })
-  }, [accounts, dispatch]);
-
-  React.useEffect(() => {
-    dispatch(clearPdfUrl())
-  }, [mainpage, dispatch]);
 
   React.useEffect(() => {
     dispatch(setPage({ mainpage, subpage: 'accounts' }));

@@ -32,7 +32,7 @@ import sudokusRouter from './routes/sudoku/sudoku';
 import billsRouter from './routes/axa/bill';
 import billersRouter from './routes/axa/biller';
 import accountsRouter from './routes/axa/account';
-import yearsRouter from './routes/axa/year';
+import axayearsRouter from './routes/axa/year';
 
 import infosRouter from './routes/logging/info';
 import loglinesRouter from './routes/logging/logline';
@@ -89,7 +89,7 @@ app.use('/api/sudokus', sudokusRouter);
 app.use('/api/bills', billsRouter);
 app.use('/api/billers', billersRouter);
 app.use('/api/accounts', accountsRouter);
-app.use('/api/years', yearsRouter);
+app.use('/api/axayears', axayearsRouter);
 app.use('/api/loglines', loglinesRouter);
 app.use('/api/historylines', historylinesRouter);
 app.use('/api/accounttypes', accounttypesRouter);

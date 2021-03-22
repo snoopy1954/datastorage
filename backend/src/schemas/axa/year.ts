@@ -3,13 +3,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import * as mongoose from 'mongoose';
 
-const nameSchema = new mongoose.Schema({
-    seqnr: { type: Number, required: true },
-    name: { type: String, required: true }
-});
-
 const yearSchema = new mongoose.Schema({
-  name: nameSchema,
+  seqnr: { type: Number, required: true },
+  name: { type: String, required: true },
   z100s: { type: String, required: true },
   vital750: { type: String, required: true }
 });

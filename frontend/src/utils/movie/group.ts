@@ -1,5 +1,5 @@
 import { Group, GroupNoID } from '../../../../backend/src/types/basic';
-import  { getAll, getOne, create, update, remove } from '../../services/movie/moviegroups';
+import  { getAll, getOne, create, update, remove } from '../../services/movie/groups';
 
 
 export const getAllDB = async (): Promise<Group[]> => {

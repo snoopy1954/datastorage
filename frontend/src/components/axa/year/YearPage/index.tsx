@@ -8,36 +8,36 @@ import { Edittype } from '../../../../types/basic';
 
 import { RootState } from '../../../../state/store';
 import { addYear, removeYear, updateYear } from  '../../../../state/axa/years/actions';
-import { clearSelectedYear, setSelectedYear } from '../../../../state/axa/year/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { YearModal } from '../YearModal';
 
 import { getAmount } from '../../../../utils/basic/basic';
+import { emptyYear } from '../../../../utils/axa/year';
 
 
 export const YearPage: React.FC = () => {
+  const [year, setYear] = React.useState<Year>(emptyYear());
   const [modalOpen, setModalOpen] = React.useState<[boolean, boolean, boolean, boolean]>([false, false, false, false]);
   const dispatch = useDispatch();
 
   const years: Year[] = useSelector((state: RootState) => state.axayears);
-  const year: Year = useSelector((state: RootState) => state.axayear);
 
   const openModalNew = (): void => setModalOpen([true, false, false, false]);
     
   const openModalDelete = (year: Year): void => {
-    dispatch(setSelectedYear(year));
+    setYear(year);
     setModalOpen([false, true, false, false]);
   };
     
   const openModalChange = (year: Year): void => {
-    dispatch(setSelectedYear(year));
+    setYear(year);
     setModalOpen([false, false, true, false]);
   };
     
   const openModalShow = (year: Year): void => {
-    dispatch(setSelectedYear(year));
+    setYear(year);
     setModalOpen([false, false, false, true]);
   };
 
@@ -53,6 +53,7 @@ export const YearPage: React.FC = () => {
   };
 
   const actionAdd = async (values: YearNoID) => {
+    console.log(values)
     dispatch(addYear(values));
     closeModal();
   };
@@ -63,18 +64,18 @@ export const YearPage: React.FC = () => {
       id: year.id
     };
     dispatch(updateYear(yearToChange));
-    dispatch(clearSelectedYear());
+    setYear(emptyYear());
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeYear(year.id));
-    dispatch(clearSelectedYear());
+    setYear(emptyYear());
     closeModal();
   };  
 
   const actionShow = () => {
-    dispatch(clearSelectedYear());
+    setYear(emptyYear());
     closeModal();
   };  
 
@@ -96,7 +97,7 @@ export const YearPage: React.FC = () => {
       <Table.Body>
         {Object.values(years).map((year: Year) => (
           <Table.Row key={year.id}>
-            <Table.Cell style={{ backgroundColor, width: '35%' } } className='left aligned'>{year.name.name}</Table.Cell>
+            <Table.Cell style={{ backgroundColor, width: '35%' } } className='left aligned'>{year.name}</Table.Cell>
             <Table.Cell style={{ backgroundColor, width: '10%' } } className='right aligned'>{getAmount(year.vital750)}</Table.Cell>
             <Table.Cell style={{ backgroundColor, width: '10%' } } className='right aligned'>{getAmount(year.z100s)}</Table.Cell>
             <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
@@ -116,26 +117,29 @@ export const YearPage: React.FC = () => {
         edittype={Edittype.ADD}
         title='Neues Jahr anlegen'            
         modalOpen={modalOpen[ModalDialog.NEW]}
+        year={year}
         onSubmit={actionAdd}
         onClose={closeModal}
       />
       <YearModal
         edittype={Edittype.SHOW}
-        title={'Jahr ' + year.name.name + ' anzeigen'}
+        title={'Jahr ' + year.name + ' anzeigen'}
         modalOpen={modalOpen[ModalDialog.SHOW]}
+        year={year}
         onSubmit={actionShow}
         onClose={closeModal}
       />
       <YearModal
         edittype={Edittype.EDIT}
-        title={'Jahr ' + year.name.name + ' ändern'}
+        title={'Jahr ' + year.name + ' ändern'}
         modalOpen={modalOpen[ModalDialog.CHANGE]}
+        year={year}
         onSubmit={actionChange}
         onClose={closeModal}
       />
       <AskModal
         header='Jahr löschen'
-        prompt={'Jahr ' + year.name.name + ' löschen?'}
+        prompt={'Jahr ' + year.name + ' löschen?'}
         modalOpen={modalOpen[ModalDialog.DELETE]}
         onSubmit={actionDelete}
         onClose={closeModal}
