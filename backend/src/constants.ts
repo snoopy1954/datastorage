@@ -7,3 +7,5 @@ export const dumpMGBasename = 'pressure';
 export const dumpMGExtension = '.xml';
 
 export const mp4Folder = '/mnt/MP4';
+
+export const pressureFolder = '/mnt/DATA/Dokumente/Pressure';

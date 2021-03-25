@@ -17,7 +17,7 @@ interface Props {
 export const MonthExport: React.FC<Props> = ({ month, onCancel }) => {
   const actionExport = async () => {
     if (month) {
-      await create(month);
+      await create(month, 'xml');
     }
     onCancel();
   };

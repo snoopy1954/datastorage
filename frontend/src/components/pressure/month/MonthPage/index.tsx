@@ -12,7 +12,8 @@ import { initializeMonths, addMonth, removeMonth, updateMonth } from '../../../.
 import { addYear, updateYear } from '../../../../state/pressure/years/actions';
 
 import { create } from '../../../../services/pressure/months';
-import { getAll } from '../../../../services/pressure/exchange';
+import { create as createPDF, getAll } from '../../../../services/pressure/exchange';
+
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
@@ -113,6 +114,16 @@ export const MonthPage: React.FC = () => {
     closeModal();
   };  
 
+  const actionPrint = () => {
+    const createPDFofMonth = async () => { 
+        const filename = await createPDF(month, 'pdf');
+        console.log(filename)
+    }
+    createPDFofMonth();
+    setMonth(emptyMonth());
+    closeModal();
+  };  
+
   const actionClose = () => {
     setMonth(emptyMonth());
     closeModal();
@@ -204,12 +215,11 @@ export const MonthPage: React.FC = () => {
         onSubmit={actionClose}
         onClose={closeModal}
       />
-      <MonthModal
-        edittype={Edittype.PRINT}
-        title={'Monat ' + month.monthname + ' ' + month.year + ' drucken'}
+      <AskModal
+        header='PDF erzeugen'
+        prompt={'PDF zu Monat ' + month.monthname + ' ' + month.year + ' erzeugen'}
         modalOpen={modalOpen[ModalDialog.PRINT]}
-        month={month}
-        onSubmit={actionClose}
+        onSubmit={actionPrint}
         onClose={closeModal}
       />
       <MonthModal

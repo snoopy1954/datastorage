@@ -10,9 +10,9 @@ const getAll = async () => {
     return monthListFromApi;
 }
 
-const create = async (month: Month) => {
+const create = async (month: Month, type: string) => {
     const response = await axios.post(
-        `${apiBaseUrl}/exchange`,
+        `${apiBaseUrl}/exchange?type=${type}`,
         month
     );
 
