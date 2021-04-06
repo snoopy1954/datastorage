@@ -64,6 +64,8 @@ import selectionRouter from './routes/music/selection';
 
 const app = express();
 app.use(express.static('build'));
+// app.use(express.static('public'));
+app.use('/MP3', express.static('/public/MP3'));
 app.use(express.json());
 app.use(cors());
 app.use('/api/files', filesRouter);

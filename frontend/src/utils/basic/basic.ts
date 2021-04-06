@@ -140,6 +140,15 @@ export const getFormatedTime = (value: string): string => {
     return time;
 };
 
+export const secondsToMinutes = (seconds: string): string => {
+    const iMinutes: number = Math.floor(+seconds/60);
+    const iSeconds: number = +seconds - (iMinutes*60);
+    const sMinutes = iMinutes>0 ? String(iMinutes) : '0';
+    const sSeconds = iSeconds>9 ? String(iSeconds) : '0' + String(iSeconds);
+    
+    return sMinutes + ':' + sSeconds;
+}
+
 export const getFormatedSize = (value: string): string => {
     let size: string = String(+value / (1024*1024));
     if (size.includes('.')) {
@@ -150,3 +159,11 @@ export const getFormatedSize = (value: string): string => {
     
     return size;
 };
+
+export const toUrl = (value1: string, value2: string): string => {
+    /** Relevante ASCII-Zeichen in Prozentdarstellung
+        ␣	!	"	#	$	%	&	'	(	)	*	+	,	-	.	/	:	;	<	=	>	?	@	[	\	]	{	|	}
+        %20	%21	%22	%23	%24	%25	%26	%27	%28	%29	%2A	%2B	%2C	%2D	%2E	%2F	%3A	%3B	%3C	%3D	%3E	%3F	%40	%5B	%5C	%5D	%7B	%7C	%7D
+     */
+    return ((value1.endsWith('/') ? value1 : value1 + '/') + value2).replace('#','%23');
+}

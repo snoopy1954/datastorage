@@ -14,6 +14,7 @@ import { AppHeaderH2 } from '../basic/header';
 import { GroupPage } from '../basic/group/GroupPage';
 import { ArtistPage } from './artist/ArtistPage';
 import { CdPage } from './cd/CdPage';
+import { Audioplayer } from '../basic/audioplayer';
 
 import { getAllDB, createDB, updateDB, removeDB } from '../../utils/music/group';
 
@@ -50,6 +51,7 @@ const Music: React.FC = () => {
       <Button style={styleButton} onClick={() => actionSelect('artists')}>Interpreten</Button>
       <Button style={styleButton} onClick={() => actionSelect('cds')}>CDs</Button>
       <Button style={styleButton} onClick={() => actionSelect('groups')}>Gruppen</Button>
+      <Audioplayer/>
       {subpage==='artists'&&<ArtistPage/>}
       {subpage==='cds'&&<CdPage/>}
       {subpage==='groups'&&<GroupPage title='Gruppe' createGroupDB={createDB} updateGroupDB={updateDB} removeGroupDB={removeDB}/>}

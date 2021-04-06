@@ -5,16 +5,18 @@ import { backgroundColor, styleButton } from '../../../../constants';
 
 import { Cd, CdNoID, Artist, Track } from '../../../../../../backend/src/types/music';
 import { Edittype } from '../../../../types/basic';
+import { TrackToPlay } from '../../../../types/music';
 
 import { getAll, getOne } from '../../../../services/postgres';
 
 import { RootState } from '../../../../state/store';
 import { addCd, updateCd, removeCd, setCds, clearCds } from '../../../../state/music/cds/actions';
-// import { setSelectedCd, clearSelectedCd } from '../../../../state/music/cd/actions';
+import { addTrack, removeTrack, exchangeTracks } from '../../../../state/music/tracks/actions';
 
 import { AppHeaderH3 } from '../../../basic/header';
 import { AskModal } from '../../../basic/askModal';
 import { CdModal } from '../CdModal';
+// import { Audioplayer } from '../../../basic/audioplayer';
 
 import { formatData } from '../../../../utils/basic/import';
 import { getFormatedTime, getFormatedSize } from '../../../../utils/basic/basic';
@@ -22,6 +24,7 @@ import { createImageFromFile } from '../../../../utils/basic/content';
 import { getArtistFromPgident, updateArtistFromPg } from '../../../../utils/music/artist';
 import { createCdFromPgRecord, updateCdFromPg, getFilename, cdTitle, getCdsOfArtist, sortCdsByYear, emptyCd } from '../../../../utils/music/cd';
 import { createTrackFromPgRecord } from '../../../../utils/music/track';
+import { getTracksOfCd } from '../../../../utils/music/track';
 
 
 export const CdPage: React.FC = () => {
@@ -32,16 +35,12 @@ export const CdPage: React.FC = () => {
   const artists: Artist[] = useSelector((state: RootState) => state.artists);  
   const artist: Artist = useSelector((state: RootState) => state.artist);  
   const cds: Cd[] = useSelector((state: RootState) => state.cds);
-//  const cd: Cd = useSelector((state: RootState) => state.cd);
 
   React.useEffect(() => {
-//    dispatch(clearSelectedCd());
     dispatch(clearCds());
     let cdsOfArtist: Cd[] = [];
     const fetchCds = async () => {
-      console.log(artist.name)
       cdsOfArtist = await getCdsOfArtist(artist);
-      console.log(cdsOfArtist)
       dispatch(setCds(cdsOfArtist));
     };
     fetchCds();
@@ -51,19 +50,16 @@ export const CdPage: React.FC = () => {
 
   const openModalDelete = (cd: Cd): void => {
     setCd(cd);
-//    dispatch(setSelectedCd(cd));
     setModalOpen([false, true, false, false]);
   };
       
   const openModalChange = (cd: Cd): void => {
     setCd(cd);
-//    dispatch(setSelectedCd(cd));
     setModalOpen([false, false, true, false]);
   };
       
   const openModalShow = (cd: Cd): void => {
     setCd(cd);
-//    dispatch(setSelectedCd(cd));
     setModalOpen([false, false, false, true]);
   };
   
@@ -93,21 +89,36 @@ export const CdPage: React.FC = () => {
     };
     dispatch(updateCd(cdToChange));
     setCd(emptyCd());
-//    dispatch(clearSelectedCd());
     closeModal();
   };
 
   const actionDelete = () => {
     dispatch(removeCd(cd.id));
     setCd(emptyCd());
-//    dispatch(clearSelectedCd());
     closeModal();
   };  
 
   const actionShow = () => {
     setCd(emptyCd());
-//    dispatch(clearSelectedCd());
     closeModal();
+  };
+
+  const actionPlay = async (cd: Cd) => {
+    const fetchTracks = async () => {
+      const tracks: Track[] = await getTracksOfCd(cd);
+      tracks.forEach((_track, index) => {
+        const year = cd.year!=='' ? `${cd.year} - ` : '';
+        const trackname = `MP3-${cd.group}-${cd.source}/${artist.name}/${year}${cd.name}/${tracks[index].name}`;
+        const trackToPlay: TrackToPlay = {
+          id: tracks[index].id,
+          path: trackname,
+          artist: artist.name,
+          title: tracks[index].name
+        };
+        dispatch(addTrack(trackToPlay))
+      });
+    }
+    await fetchTracks();
   };
 
   const actionImport = async () => {
@@ -144,12 +155,12 @@ export const CdPage: React.FC = () => {
     return (
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell style={{ backgroundColor, width: '20%' }} className='center aligned'>Name</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Name</Table.HeaderCell>
             <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Jahr</Table.HeaderCell>
             <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Stücke</Table.HeaderCell>
             <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Zeit</Table.HeaderCell>
             <Table.HeaderCell style={{ backgroundColor, width: '10%' }} className='center aligned'>Größe</Table.HeaderCell>
-            <Table.HeaderCell style={{ backgroundColor, width: '15%' }} className='center aligned'>Aktion</Table.HeaderCell>
+            <Table.HeaderCell style={{ backgroundColor, width: '20%' }} className='center aligned'>Aktion</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
     );
@@ -160,12 +171,13 @@ export const CdPage: React.FC = () => {
         <Table.Body>
           {Object.values(sortedCds).map((cd: Cd, index: number) => (
             <Table.Row key={cd.id}>
-              <Table.Cell style={{ backgroundColor, width: '20%' } } className='left aligned'>{cd.name}</Table.Cell>
+              <Table.Cell style={{ backgroundColor, width: '15%' } } className='left aligned'>{cd.name}</Table.Cell>
               <Table.Cell style={{ backgroundColor, width: '10%' } } className='center aligned'>{cd.year}</Table.Cell>
               <Table.Cell style={{ backgroundColor, width: '10%' } } className='center aligned'>{cd.tracknumber}</Table.Cell>
               <Table.Cell style={{ backgroundColor, width: '10%' } } className='center aligned'>{getFormatedTime(cd.time)}</Table.Cell>
               <Table.Cell style={{ backgroundColor, width: '10%' } } className='center aligned'>{getFormatedSize(cd.size)}</Table.Cell>
-              <Table.Cell style={{ backgroundColor, width: '15%' } } className='center aligned'>
+              <Table.Cell style={{ backgroundColor, width: '20%' } } className='center aligned'>
+                <Button style={styleButton} onClick={() => actionPlay(cd)}>Abspielen</Button>
                 <Button style={styleButton} onClick={() => openModalShow(cd)}>Anzeigen</Button>
                 <Button style={styleButton} onClick={() => openModalChange(cd)}>Ändern</Button>
                 <Button style={styleButton} onClick={() => openModalDelete(cd)}>Löschen</Button>
@@ -175,6 +187,8 @@ export const CdPage: React.FC = () => {
         </Table.Body>        
     );
   };
+
+//  console.log('tracks', tracks)
 
   return (
     <div className='App'>
@@ -213,6 +227,7 @@ export const CdPage: React.FC = () => {
       <Button style={styleButton} onClick={() => openModalNew()}>Neu</Button>
       <Button style={styleButton} onClick={() => actionImport()} disabled={true}>Import</Button>
       {!filterSelected&&<AppHeaderH3 text='Interpret auswählen!' icon='search'/>}
+      {/* {tracks.length>0&&<Audioplayer track={tracks[0]}/>} */}
       {Object.values(sortedCds).length>8&&filterSelected&&
         <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>
           <ShowTableHeader/>

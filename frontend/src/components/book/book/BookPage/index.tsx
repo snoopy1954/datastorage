@@ -76,6 +76,10 @@ export const BookPage: React.FC = () => {
     setFilter({ ...filter, author: name });
   };
 
+  const actionClearNameInput = () => {
+    setFilter({ ...filter, author: '' });
+  };
+
   const actionAdd = async (values: BookWithContentNoID) => {
     const bookToAdd: BookNoID = {
       ...values
@@ -264,6 +268,7 @@ export const BookPage: React.FC = () => {
         ))}
       </Button>
       <Input placeholder='Name' onChange={(event: React.FormEvent<HTMLInputElement>) => actionNameInput(event.currentTarget.value)}></Input>
+      <Button style={styleButton} onClick={() => actionClearNameInput()}>Löschen</Button>
       <Button style={styleButton} disabled={!sequenceChanged} onClick={() => actionSaveSequence()}>Speichern</Button>
       {sortedBooks.length>8&&
         <Table celled style={{ backgroundColor, marginBottom: '0px', borderBottom: "none", width: '99.36%' }}>

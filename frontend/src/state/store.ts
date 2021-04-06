@@ -41,6 +41,7 @@ import { moviesReducer } from './movie/movies/reducers';
 import { artistsReducer } from './music/artists/reducers';
 import { artistReducer } from './music/artist/reducers';
 import { cdsReducer } from './music/cds/reducers';
+import { tracksReducer } from './music/tracks/reducers';
 
 import { sudokusReducer } from './sudoku/sudokus/reducers';
 import { notificationReducer } from './sudoku/notification/reducers';
@@ -86,6 +87,7 @@ const rootReducer = combineReducers({
     artists: artistsReducer,
     artist: artistReducer,
     cds: cdsReducer,
+    tracks: tracksReducer,
     
     sudokus: sudokusReducer,
     notification: notificationReducer,

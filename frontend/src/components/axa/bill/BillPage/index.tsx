@@ -24,6 +24,7 @@ import { newContent } from '../../../../utils/basic/content';
 import { createContent, removeContent } from '../../../../utils/basic/content';
 import { emptyBill } from '../../../../utils/axa/bill';
 import { emptyYear } from '../../../../utils/axa/year';
+import { newNote } from '../../../../utils/axa/axa';
 import { emptyAccount } from '../../../../utils/axa/account';
 
 
@@ -117,11 +118,32 @@ export const BillPage: React.FC = () => {
     closeModal();
   };
 
-  const actionChange = async (values: BillNoID) => {
+  const actionChange = async (values: BillWithFileDatesNoID) => {
     const billToChange: Bill = {
       ...values,
       id: bill.id
     };
+    const recipe: FileDate = values.recipe;
+    const invoice: FileDate = values.invoice;
+    let note = newNote();
+    if (invoice.file.size > 0) {
+      const contentwithfile: ContentWithFile = { ...newContent(), file: invoice.file };
+      const content: Content2 = await createContent(contentwithfile, 'pdf');
+      note = {
+        ...content,
+        received: invoice.date
+      }
+      billToChange.notes.length>0 ? billToChange.notes[0] = note : billToChange.notes.push(note);
+    }
+    if (recipe.file.size > 0) {
+      const contentwithfile: ContentWithFile = { ...newContent(), file: recipe.file };
+      const content: Content2 = await createContent(contentwithfile, 'pdf');
+      const note: Note = {
+        ...content,
+        received: recipe.date
+      }
+      billToChange.notes.length>1 ? billToChange.notes[1] = note : billToChange.notes.push(note);
+    }
     dispatch(updateBill(billToChange));
     setBill(emptyBill());
     closeModal();

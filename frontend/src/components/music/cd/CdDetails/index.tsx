@@ -39,7 +39,6 @@ export const CdDetails: React.FC<Props> = ({ cd, onCancel }) => {
     };
 
     const artists: Artist[] = useSelector((state: RootState) => state.artists);
-//    const cd: Cd  = useSelector((state: RootState) => state.cd);
 
     useEffect(() => {
         const fetchTracks = async () => {
@@ -111,7 +110,7 @@ export const CdDetails: React.FC<Props> = ({ cd, onCancel }) => {
                         <Table.Cell>Stücke</Table.Cell>
                         <Table.Cell>
                             {tracks.map((track, index) => (
-                                <p>{track.name} (Dauer: {getFormatedTime(track.time)})</p>
+                                <p key={index} >{track.name} (Dauer: {getFormatedTime(track.time)})</p>
                             ))}
                         </Table.Cell>
                     </Table.Row>
