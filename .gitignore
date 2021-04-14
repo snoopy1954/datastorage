@@ -3,3 +3,6 @@ backend/build/
 frontend/node_modules/
 backend/node_modules/
 frontend/public/pdfjs-2.5.207-dist
+frontend/public/pdfjs-2.5.207-dist.off
+frontend/public/pdfjs-2.7.570-dist
+backend/.env
